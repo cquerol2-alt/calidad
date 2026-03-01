@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIA-FORM-PROD-002 — Registro de Producción Diego</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #1B5E20;
+            --light-green: #4CAF50;
+            --pale-green: #E8F5E9;
+            --red-warning: #D32F2F;
+            --gray-light: #F5F5F5;
+            --gray-medium: #BDBDBD;
+            --text-dark: #212121;
+            --text-light: #757575;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            color: var(--text-dark);
+        }
+
+        body {
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 16px;
+        }
+
+        .header {
+            background: var(--primary-green);
+            color: white;
+            padding: 20px 16px;
+            margin: -16px -16px 20px -16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-green);
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--primary-green);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title.warning {
+            color: var(--red-warning);
+            border-bottom-color: var(--red-warning);
+        }
+
+        .warning-box {
+            background: #FFEBEE;
+            border-left: 4px solid var(--red-warning);
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #CCCCCC;
+            border-radius: 6px;
+            font-family: inherit;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
+        }
+
+        input[type="date"], input[type="time"], input[type="number"] {
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .card {
+            background: var(--pale-green);
+            border: 1px solid #C8E6C9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lot-box {
+            background: #A5D6A7;
+            border: 2px solid var(--primary-green);
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .lot-box label {
+            font-size: 11px;
+            margin-bottom: 4px;
+            opacity: 0.9;
+            display: block;
+        }
+
+        .lot-box .lot-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-green);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .search-button {
+            background: var(--light-green);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .search-button:active {
+            background: var(--primary-green);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            align-items: stretch;
+        }
+
+        .button-group input {
+            flex: 1;
+        }
+
+        .button-group .search-button {
+            flex-shrink: 0;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #CCCCCC;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+
+        .toggle-btn.active.danger {
+            background: var(--red-warning);
+            border-color: var(--red-warning);
+        }
+
+        .collapsible {
+            background: var(--gray-light);
+            border: 1px solid #CCCCCC;
+            border-radius: 6px;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .collapsible-header {
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .collapsible.active .collapsible-header {
+            background: var(--pale-green);
+            border-bottom: 1px solid #C8E6C9;
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .collapsible.active .collapsible-content {
+            display: block;
+        }
+
+        .order-line {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .order-line:active {
+            background: #FFF9C4;
+            border-color: #FFB74D;
+        }
+
+        .order-line.completed {
+            opacity: 0.6;
+        }
+
+        .order-line-text {
+            font-size: 13px;
+            flex: 1;
+        }
+
+        .order-line-badge {
+            background: var(--light-green);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .order-line.completed .order-line-badge {
+            background: var(--gray-medium);
+            content: '✓';
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        table th {
+            background: var(--pale-green);
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #C8E6C9;
+        }
+
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        table input {
+            padding: 6px;
+            font-size: 13px;
+        }
+
+        .add-row-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            background: var(--pale-green);
+            border: 1px dashed #C8E6C9;
+            border-radius: 4px;
+            color: var(--primary-green);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .add-row-btn:active {
+            background: #C8E6C9;
+        }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #CCCCCC;
+            padding: 8px 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .bottom-bar button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-export {
+            background: #90CAF9;
+            color: white;
+        }
+
+        .btn-export:active {
+            background: #42A5F5;
+        }
+
+        .btn-save {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-save:active {
+            background: #0D3818;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 16px;
+        }
+
+        .modal-body {
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .summary-item {
+            background: var(--pale-green);
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-item-label {
+            font-weight: 500;
+        }
+
+        .summary-item-value {
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-btn-cancel {
+            background: var(--gray-light);
+            color: var(--text-dark);
+        }
+
+        .modal-btn-confirm {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .camera-input-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .camera-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .camera-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--light-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .camera-button:active {
+            background: var(--primary-green);
+        }
+
+        .photo-preview {
+            margin-top: 12px;
+            border-radius: 6px;
+            max-width: 100%;
+            max-height: 300px;
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                margin: 0 auto;
+            }
+        }
+
+        .no-results {
+            padding: 16px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 13px;
+            background: var(--gray-light);
+            border-radius: 4px;
+        }
+
+        .chip {
+            display: inline-block;
+            background: var(--pale-green);
+            border: 1px solid #C8E6C9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 2px;
+            color: var(--primary-green);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Registro de Producción</h1>
+            <p>RIA-FORM-PROD-002 — Diego</p>
+        </div>
+
+        <form id="prodForm">
+            <!-- SECTION 1: DATOS GENERALES -->
+            <div class="section">
+                <div class="section-title">Datos Generales</div>
+
+                <div class="form-group">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="operador">Operador</label>
+                    <select id="operador" name="operador" required>
+                        <option value="">-- Seleccionar --</option>
+                        <option value="Diego P.">Diego P.</option>
+                        <option value="Jerónimo A.">Jerónimo A.</option>
+                        <option value="Cristina Q.">Cristina Q.</option>
+                    </select>
+                </div>
+
+                <!-- COLLAPSIBLE: ORDEN DEL DÍA -->
+                <div class="form-group">
+                    <label>Orden del Día</label>
+                    <div class="collapsible" id="ordenCollapsible">
+                        <div class="collapsible-header">
+                            📋 Líneas planificadas
+                            <span>▼</span>
+                        </div>
+                        <div class="collapsible-content" id="ordenContent">
+                            <div class="no-results">Sin líneas planificadas. Abre el Plan de Cristina primero.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="producto">Producto</label>
+                    <select id="producto" name="producto" required>
+                        <option value="">-- Seleccionar --</option>
+                        <optgroup label="La Santa">
+                            <option value="Pescado 260">Pescado 260</option>
+                            <option value="Pescado bulk">Pescado bulk</option>
+                            <option value="Negro 260">Negro 260</option>
+                            <option value="Negro bulk">Negro bulk</option>
+                            <option value="Pollo 260">Pollo 260</option>
+                            <option value="Pollo 1300">Pollo 1300</option>
+                            <option value="Verduras 260">Verduras 260</option>
+                            <option value="Verduras 1300">Verduras 1300</option>
+                            <option value="Verduras 2kg">Verduras 2kg</option>
+                        </optgroup>
+                        <optgroup label="Risotto/Cremosos">
+                            <option value="Risotto 260">Risotto 260</option>
+                            <option value="Risotto 1300">Risotto 1300</option>
+                            <option value="Cremoso Ibérico 220">Cremoso Ibérico 220</option>
+                            <option value="Cremoso Setas 220">Cremoso Setas 220</option>
+                            <option value="Cremoso Tartufata 220">Cremoso Tartufata 220</option>
+                            <option value="Cremoso Setas 300">Cremoso Setas 300</option>
+                            <option value="Cremoso Ibérico 300">Cremoso Ibérico 300</option>
+                        </optgroup>
+                        <optgroup label="Maestro">
+                            <option value="Maestro 190">Maestro 190</option>
+                            <option value="Maestro 380">Maestro 380</option>
+                            <option value="Maestro 450">Maestro 450</option>
+                            <option value="Maestro 1330">Maestro 1330</option>
+                        </optgroup>
+                        <optgroup label="Marca Blanca">
+                            <option value="Campofrío Negro">Campofrío Negro</option>
+                            <option value="Campofrío Pescado">Campofrío Pescado</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad">Cantidad (redes)</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1" required>
+                </div>
+
+                <!-- PRODUCTION LOT (highlighted) -->
+                <div class="lot-box">
+                    <label>Nº Lote Producción</label>
+                    <div class="lot-value" id="loteProd">RIA-PROD-260301-01</div>
+                </div>
+
+                <div class="two-col">
+                    <div class="form-group">
+                        <label for="horaInicio">Hora Inicio</label>
+                        <input type="time" id="horaInicio" name="horaInicio">
+                    </div>
+                    <div class="form-group">
+                        <label for="horaFin">Hora Fin</label>
+                        <input type="time" id="horaFin" name="horaFin">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: MATERIAS PRIMAS -->
+            <div class="section">
+                <div class="section-title">Materias Primas</div>
+
+                <!-- CARD: ARROZ -->
+                <div class="card">
+                    <div class="card-title">
+                        🌾 Arroz
+                        <span id="arrozQty">(0 redes)</span>
+                    </div>
+
+                    <!-- Para Maestro: elegir variedad -->
+                    <div class="form-group" id="arrozVariedadGroup" style="display:none;">
+                        <label for="arrozVariedad">Variedad</label>
+                        <select id="arrozVariedad" name="arrozVariedad">
+                            <option value="Bahía (Illa de Riu)">Bahía (Illa de Riu)</option>
+                            <option value="Marisma (Doña Ana)">Marisma (Doña Ana)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="arrozVariedadText" style="display:none;">
+                        <label>Variedad</label>
+                        <input type="text" value="Maratelli (Arrocera del Pirineo)" readonly style="background: #F5F5F5;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrozProveedor">Proveedor</label>
+                        <input type="text" id="arrozProveedor" name="arrozProveedor" readonly style="background: #F5F5F5;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrozLote">Lote Proveedor</label>
+                        <input type="text" id="arrozLote" name="arrozLote" placeholder="ej: LT-2024-001">
+                    </div>
+                </div>
+
+                <!-- CARD: JARRA (PREELABORACIÓN) -->
+                <div class="card">
+                    <div class="card-title">
+                        🫖 Jarra (Preelaboración)
+                        <span id="jarraQty">(0 u)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jarraLote">Lote Preelaboración</label>
+                        <div class="button-group">
+                            <input type="text" id="jarraLote" name="jarraLote" placeholder="Ingresar lote">
+                            <button type="button" class="search-button" id="buscarJarraBtn">Buscar</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="caldoLoteAuto">Caldo asociado (auto)</label>
+                        <input type="text" id="caldoLoteAuto" name="caldoLoteAuto" readonly style="background: #F5F5F5;" placeholder="Se rellenará automáticamente">
+                    </div>
+                </div>
+
+                <!-- CARD: CALDO (para no-Maestro) -->
+                <div class="card" id="caldoCard" style="display:none;">
+                    <div class="card-title">🥣 Caldo</div>
+
+                    <div class="form-group">
+                        <label>Tipo Caldo</label>
+                        <input type="text" id="caldoTipo" name="caldoTipo" readonly style="background: #F5F5F5;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="caldoLote">Lote Caldo</label>
+                        <div class="button-group">
+                            <input type="text" id="caldoLote" name="caldoLote" placeholder="Ingresar lote">
+                            <button type="button" class="search-button" id="buscarCaldoBtn">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD: SALSA (para no-Maestro) -->
+                <div class="card" id="salsaCard" style="display:none;">
+                    <div class="card-title">🍲 Salsa</div>
+
+                    <div class="form-group">
+                        <label>Tipo Salsa</label>
+                        <input type="text" id="salsaTipo" name="salsaTipo" readonly style="background: #F5F5F5;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Origen</label>
+                        <div class="toggle-group">
+                            <button type="button" class="toggle-btn active" data-origen="en_stock">En stock</button>
+                            <button type="button" class="toggle-btn" data-origen="del_dia">Del día</button>
+                        </div>
+                        <input type="hidden" id="salsaOrigen" name="salsaOrigen" value="en_stock">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salsaLote">Lote Salsa</label>
+                        <div class="button-group">
+                            <input type="text" id="salsaLote" name="salsaLote" placeholder="Ingresar lote">
+                            <button type="button" class="search-button" id="buscarSalsaBtn">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD: INGREDIENTE EXTRA (solo cremosos) -->
+                <div class="card" id="ingredientCard" style="display:none;">
+                    <div class="card-title" id="ingredientTitle">🧂 Ingrediente Extra</div>
+
+                    <div class="form-group">
+                        <label for="ingredientProveedor">Proveedor</label>
+                        <select id="ingredientProveedor" name="ingredientProveedor">
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Arrocera del Pirineo">Arrocera del Pirineo</option>
+                            <option value="Illa de Riu">Illa de Riu</option>
+                            <option value="Doña Ana">Doña Ana</option>
+                            <option value="Mannatelli">Mannatelli</option>
+                            <option value="RIA">RIA</option>
+                            <option value="Taste">Taste</option>
+                            <option value="Conqueso">Conqueso</option>
+                            <option value="COREUSA">COREUSA</option>
+                            <option value="MAKNO">MAKNO</option>
+                            <option value="Sonabia">Sonabia</option>
+                            <option value="Nortindal">Nortindal</option>
+                            <option value="Poeller">Poeller</option>
+                            <option value="Dalomat">Dalomat</option>
+                            <option value="Azuconsa">Azuconsa</option>
+                            <option value="HORZA">HORZA</option>
+                            <option value="Gorduria">Gorduria</option>
+                            <option value="LEDA">LEDA</option>
+                            <option value="Ancto">Ancto</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ingredientLote">Lote</label>
+                        <input type="text" id="ingredientLote" name="ingredientLote" placeholder="Lote del ingrediente">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ingredientCantidad">Cantidad</label>
+                        <input type="text" id="ingredientCantidad" name="ingredientCantidad" placeholder="ej: 500g, 2 kg">
+                    </div>
+                </div>
+
+                <!-- CARD: ENVASES -->
+                <div class="card">
+                    <div class="card-title">📦 Envases</div>
+
+                    <div class="form-group">
+                        <label for="formatoBandeja">Formato Bandeja</label>
+                        <select id="formatoBandeja" name="formatoBandeja" required>
+                            <option value="Pequeña 190-300g">Pequeña 190-300g</option>
+                            <option value="Alta 380-450g">Alta 380-450g</option>
+                            <option value="Bulk 1300-1330g">Bulk 1300-1330g</option>
+                        </select>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label for="loteBandeja">Lote Bandeja</label>
+                            <input type="text" id="loteBandeja" name="loteBandeja" placeholder="ej: LB-2024-001">
+                        </div>
+                        <div class="form-group">
+                            <label for="loteFilm">Lote Film</label>
+                            <input type="text" id="loteFilm" name="loteFilm" placeholder="ej: LF-2024-001">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: TRATAMIENTOS TÉRMICOS (PCC) -->
+            <div class="section">
+                <div class="section-title warning">🌡️ Tratamientos Térmicos (PCC)</div>
+                <div class="warning-box">
+                    Cocción: T° final ≥70°C. Abatimiento: de 65°C a &lt;4°C en máx. 2h.
+                </div>
+
+                <!-- COCCIÓN -->
+                <div class="card">
+                    <div class="card-title">Cocción</div>
+
+                    <div class="form-group">
+                        <label for="coccionTipo">Tipo</label>
+                        <select id="coccionTipo" name="coccionTipo">
+                            <option value="Pasteurización">Pasteurización</option>
+                            <option value="Cocción">Cocción</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label for="coccionInicio">Hora Inicio</label>
+                            <input type="time" id="coccionInicio" name="coccionInicio">
+                        </div>
+                        <div class="form-group">
+                            <label for="coccionFin">Hora Fin</label>
+                            <input type="time" id="coccionFin" name="coccionFin">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coccionTemp">T° Final (°C) — mín. 70°C</label>
+                        <input type="number" id="coccionTemp" name="coccionTemp" min="70" placeholder="70">
+                    </div>
+                </div>
+
+                <!-- ABATIMIENTO -->
+                <div class="card">
+                    <div class="card-title">Abatimiento</div>
+
+                    <div class="two-col">
+                        <div class="form-group">
+                            <label for="abatInicio">Hora Inicio</label>
+                            <input type="time" id="abatInicio" name="abatInicio">
+                        </div>
+                        <div class="form-group">
+                            <label for="abatFin">Hora Fin</label>
+                            <input type="time" id="abatFin" name="abatFin">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="abatTemp">T° Final (°C) — máx. 4°C</label>
+                        <input type="number" id="abatTemp" name="abatTemp" max="4" placeholder="4">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: DETECTOR DE METALES (PCC) -->
+            <div class="section">
+                <div class="section-title warning">🔍 Detector de Metales (PCC)</div>
+                <div class="warning-box">
+                    3 testigos (Fe, No Fe, SS) al inicio y final. Si &gt;2h, cada 2h.
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Momento</th>
+                            <th>Hora</th>
+                            <th>Fe</th>
+                            <th>No Fe</th>
+                            <th>SS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metalTableBody">
+                        <tr>
+                            <td><input type="text" value="Inicio" readonly style="background: #F5F5F5;"></td>
+                            <td><input type="time" class="metalHora"></td>
+                            <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                            <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                            <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" value="Final" readonly style="background: #F5F5F5;"></td>
+                            <td><input type="time" class="metalHora"></td>
+                            <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                            <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                            <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" class="add-row-btn" id="addMetalRow">+ Añadir intermedio</button>
+            </div>
+
+            <!-- SECTION 5: CONTROL CIERRE -->
+            <div class="section">
+                <div class="section-title">Control Cierre</div>
+
+                <div class="card">
+                    <div class="form-group">
+                        <label>Vacío</label>
+                        <div class="toggle-group">
+                            <button type="button" class="toggle-btn active" data-control="vacio" data-value="ok">OK</button>
+                            <button type="button" class="toggle-btn danger" data-control="vacio" data-value="nok">NOK</button>
+                        </div>
+                        <input type="hidden" id="vacio" name="vacio" value="ok">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Termosellado</label>
+                        <div class="toggle-group">
+                            <button type="button" class="toggle-btn active" data-control="termosellado" data-value="ok">OK</button>
+                            <button type="button" class="toggle-btn danger" data-control="termosellado" data-value="nok">NOK</button>
+                        </div>
+                        <input type="hidden" id="termosellado" name="termosellado" value="ok">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numPaquetes">Nº Paquetes o Peso</label>
+                        <input type="text" id="numPaquetes" name="numPaquetes" placeholder="ej: 240 paq., 150 kg">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: ETIQUETADO -->
+            <div class="section">
+                <div class="section-title">Etiquetado</div>
+
+                <div class="card">
+                    <div class="form-group">
+                        <label>Correcto</label>
+                        <div class="toggle-group">
+                            <button type="button" class="toggle-btn active" data-control="etiquetado" data-value="ok">OK</button>
+                            <button type="button" class="toggle-btn danger" data-control="etiquetado" data-value="nok">NOK</button>
+                        </div>
+                        <input type="hidden" id="etiquetado" name="etiquetado" value="ok">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loteEtiqueta">Lote en Etiqueta</label>
+                        <input type="text" id="loteEtiqueta" name="loteEtiqueta" readonly style="background: #F5F5F5;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaConsumo">Fecha Consumo Preferente</label>
+                        <input type="date" id="fechaConsumo" name="fechaConsumo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fotoEtiqueta">📷 Foto Etiqueta</label>
+                        <div class="camera-input-wrapper">
+                            <input type="file" id="fotoEtiqueta" name="fotoEtiqueta" accept="image/*" capture="environment">
+                            <button type="button" class="camera-button" id="cameraBtn">Tomar Foto</button>
+                        </div>
+                        <img id="photoPreview" class="photo-preview hidden" alt="Vista previa">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 7: INCIDENCIAS -->
+            <div class="section">
+                <div class="section-title">Incidencias</div>
+
+                <div class="form-group">
+                    <label for="incidencias">Notas / Incidencias</label>
+                    <textarea id="incidencias" name="incidencias" placeholder="Registrar cualquier incidencia o nota importante..."></textarea>
+                </div>
+            </div>
+
+            <!-- SPACER FOR BOTTOM BAR -->
+            <div style="height: 20px;"></div>
+        </form>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+        <button type="button" class="btn-export" id="exportBtn">📊 Exportar CSV</button>
+        <button type="button" class="btn-save" id="saveBtn">💾 Guardar</button>
+    </div>
+
+    <!-- MODAL: SAVE SUMMARY -->
+    <div class="modal-overlay" id="saveModal">
+        <div class="modal-content">
+            <div class="modal-header">✓ Resumen de Registro</div>
+            <div class="modal-body" id="summaryContent"></div>
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn-cancel" id="modalCancel">Editar</button>
+                <button type="button" class="modal-btn-confirm" id="modalConfirm">Confirmar Guardado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ============================================================
+        // UTILITIES & CONSTANTS
+        // ============================================================
+
+        const PRODUCTOS_MAESTRO = ['Maestro 190', 'Maestro 380', 'Maestro 450', 'Maestro 1330'];
+        const PRODUCTOS_CREMOSOS = ['Cremoso Ibérico 220', 'Cremoso Setas 220', 'Cremoso Tartufata 220', 'Cremoso Setas 300', 'Cremoso Ibérico 300'];
+
+        const PROVEEDORES = [
+            'Arrocera del Pirineo', 'Illa de Riu', 'Doña Ana', 'Mannatelli', 'RIA', 'Taste',
+            'Conqueso', 'COREUSA', 'MAKNO', 'Sonabia', 'Nortindal', 'Poeller', 'Dalomat',
+            'Azuconsa', 'HORZA', 'Gorduria', 'LEDA', 'Ancto', 'Otro'
+        ];
+
+        // Generate production lot: RIA-PROD-YYMMDD-NN
+        function generateProdLot(dateStr) {
+            const d = new Date(dateStr || new Date());
+            const yy = String(d.getFullYear()).slice(-2);
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            const key = 'ria_prod_lot_' + d.toISOString().split('T')[0];
+
+            let counter = 1;
+            try {
+                counter = (parseInt(localStorage.getItem(key)) || 0) + 1;
+                localStorage.setItem(key, counter);
+            } catch(e) {}
+
+            return 'RIA-PROD-' + yy + mm + dd + '-' + String(counter).padStart(2, '0');
+        }
+
+        // Get default bandeja format based on product
+        function getDefaultBandeja(product) {
+            const p = product.toLowerCase();
+            if (p.includes('1300') || p.includes('1330') || p.includes('bulk') || p.includes('2kg') || p.includes('2000')) {
+                return 'Bulk 1300-1330g';
+            }
+            if (p.includes('380') || p.includes('450')) {
+                return 'Alta 380-450g';
+            }
+            return 'Pequeña 190-300g';
+        }
+
+        // Get caldo type based on product
+        function getCaldoType(product) {
+            const p = product.toLowerCase();
+            if (p.includes('pescado')) return 'Caldo Pescado';
+            if (p.includes('negro')) return 'Caldo Pescado + Tinta';
+            if (p.includes('pollo')) return 'Caldo Pollo';
+            if (p.includes('verduras')) return 'Caldo Verduras';
+            if (p.includes('risotto') || p.includes('cremoso')) return 'Caldo Risotto';
+            return 'Caldo';
+        }
+
+        // Get salsa type based on product
+        function getSalsaType(product) {
+            const p = product.toLowerCase();
+            if (p.includes('pescado')) return 'Salsa Pescado';
+            if (p.includes('negro')) return 'Salsa Negra';
+            if (p.includes('pollo')) return 'Salsa Pollo';
+            if (p.includes('verduras')) return 'Salsa Verduras';
+            if (p.includes('risotto')) return 'Salsa Risotto';
+            if (p.includes('cremoso')) return 'Salsa Cremoso';
+            return 'Salsa';
+        }
+
+        // Get proveedor for arroz based on variety
+        function getArrozProveedor(variety) {
+            if (variety.includes('Bahía')) return 'Illa de Riu';
+            if (variety.includes('Marisma')) return 'Doña Ana';
+            return 'Arrocera del Pirineo';
+        }
+
+        // Get ingredient name for cremosos
+        function getIngredientName(product) {
+            const p = product.toLowerCase();
+            if (p.includes('ibérico')) return 'Jamón Ibérico';
+            if (p.includes('setas')) return 'Setas';
+            if (p.includes('tartufata')) return 'Tartufata';
+            return 'Ingrediente Extra';
+        }
+
+        // ============================================================
+        // DOM ELEMENTS
+        // ============================================================
+
+        const form = document.getElementById('prodForm');
+        const fechaInput = document.getElementById('fecha');
+        const operadorSelect = document.getElementById('operador');
+        const productoSelect = document.getElementById('producto');
+        const cantidadInput = document.getElementById('cantidad');
+        const loteInput = document.getElementById('loteProd');
+        const formatoBandejaSelect = document.getElementById('formatoBandeja');
+
+        // Arroz
+        const arrozProveedor = document.getElementById('arrozProveedor');
+        const arrozVariedadGroup = document.getElementById('arrozVariedadGroup');
+        const arrozVariedadText = document.getElementById('arrozVariedadText');
+        const arrozVariedadSelect = document.getElementById('arrozVariedad');
+        const arrozLote = document.getElementById('arrozLote');
+        const arrozQtySpan = document.getElementById('arrozQty');
+
+        // Jarra
+        const jarraLote = document.getElementById('jarraLote');
+        const caldoLoteAuto = document.getElementById('caldoLoteAuto');
+        const jarraQtySpan = document.getElementById('jarraQty');
+
+        // Caldo
+        const caldoCard = document.getElementById('caldoCard');
+        const caldoTipo = document.getElementById('caldoTipo');
+        const caldoLote = document.getElementById('caldoLote');
+
+        // Salsa
+        const salsaCard = document.getElementById('salsaCard');
+        const salsaTipo = document.getElementById('salsaTipo');
+        const salsaOrigen = document.getElementById('salsaOrigen');
+        const salsaLote = document.getElementById('salsaLote');
+
+        // Ingrediente
+        const ingredientCard = document.getElementById('ingredientCard');
+        const ingredientTitle = document.getElementById('ingredientTitle');
+
+        // Etiquetado
+        const loteEtiqueta = document.getElementById('loteEtiqueta');
+        const fotoEtiqueta = document.getElementById('fotoEtiqueta');
+        const photoPreview = document.getElementById('photoPreview');
+        const cameraBtn = document.getElementById('cameraBtn');
+
+        // Orden del día
+        const ordenCollapsible = document.getElementById('ordenCollapsible');
+        const ordenContent = document.getElementById('ordenContent');
+
+        // Buttons
+        const saveBtn = document.getElementById('saveBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const buscarJarraBtn = document.getElementById('buscarJarraBtn');
+        const buscarCaldoBtn = document.getElementById('buscarCaldoBtn');
+        const buscarSalsaBtn = document.getElementById('buscarSalsaBtn');
+        const addMetalRow = document.getElementById('addMetalRow');
+
+        // Modal
+        const saveModal = document.getElementById('saveModal');
+        const summaryContent = document.getElementById('summaryContent');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalConfirm = document.getElementById('modalConfirm');
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+
+        function init() {
+            // Set today's date
+            const today = new Date().toISOString().split('T')[0];
+            fechaInput.value = today;
+
+            // Generate production lot
+            updateProductionLot();
+
+            // Load from URL params
+            loadFromURLParams();
+
+            // Load orden del día from localStorage
+            loadOrdenDelDia();
+
+            // Attach event listeners
+            productoSelect.addEventListener('change', onProductoChange);
+            cantidadInput.addEventListener('input', onCantidadChange);
+            fechaInput.addEventListener('change', updateProductionLot);
+            arrozVariedadSelect.addEventListener('change', onArrozVariedadChange);
+
+            // Collapsible
+            ordenCollapsible.addEventListener('click', () => {
+                ordenCollapsible.classList.toggle('active');
+            });
+
+            // Salsa origen toggle
+            document.querySelectorAll('[data-origen]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('[data-origen]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    salsaOrigen.value = btn.dataset.origen;
+                });
+            });
+
+            // Control toggles (OK/NOK)
+            document.querySelectorAll('[data-control]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const control = btn.dataset.control;
+                    const value = btn.dataset.value;
+
+                    // Remove active from siblings
+                    btn.parentElement.querySelectorAll('button[data-control="' + control + '"]').forEach(b => {
+                        b.classList.remove('active', 'danger');
+                    });
+
+                    // Add active to this
+                    btn.classList.add(value === 'nok' ? 'danger' : 'active');
+
+                    // Set hidden input
+                    document.getElementById(control).value = value;
+                });
+            });
+
+            // Metal detector toggles
+            document.querySelectorAll('.metalOk').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    btn.classList.toggle('active');
+                });
+            });
+
+            // Search buttons
+            buscarJarraBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                searchFromHistory('preelaboraciones', jarraLote);
+            });
+
+            buscarCaldoBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                searchFromHistory('caldos', caldoLote);
+            });
+
+            buscarSalsaBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                searchFromHistory('salsas', salsaLote);
+            });
+
+            // Camera button
+            cameraBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                fotoEtiqueta.click();
+            });
+
+            // Photo preview
+            fotoEtiqueta.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        photoPreview.src = event.target.result;
+                        photoPreview.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Add metal row
+            addMetalRow.addEventListener('click', (e) => {
+                e.preventDefault();
+                addMetalTestRow();
+            });
+
+            // Save & Export
+            saveBtn.addEventListener('click', onSave);
+            exportBtn.addEventListener('click', onExport);
+
+            // Modal buttons
+            modalCancel.addEventListener('click', () => {
+                saveModal.classList.remove('active');
+            });
+
+            modalConfirm.addEventListener('click', () => {
+                confirmSave();
+            });
+
+            // Initial state
+            onProductoChange();
+        }
+
+        // ============================================================
+        // URL PARAMS & LOCALSTORAGE
+        // ============================================================
+
+        function loadFromURLParams() {
+            const params = new URLSearchParams(window.location.search);
+
+            if (params.has('product')) {
+                productoSelect.value = params.get('product');
+            }
+            if (params.has('qty')) {
+                cantidadInput.value = params.get('qty');
+            }
+            if (params.has('variety')) {
+                const variety = params.get('variety');
+                if (variety.toLowerCase() === 'bahia') {
+                    arrozVariedadSelect.value = 'Bahía (Illa de Riu)';
+                } else if (variety.toLowerCase() === 'marisma') {
+                    arrozVariedadSelect.value = 'Marisma (Doña Ana)';
+                }
+            }
+            if (params.has('format')) {
+                formatoBandejaSelect.value = params.get('format');
+            }
+
+            onProductoChange();
+            onCantidadChange();
+        }
+
+        function loadOrdenDelDia() {
+            try {
+                const planData = localStorage.getItem('ria_plan_dia');
+                if (!planData) {
+                    return;
+                }
+
+                const lines = JSON.parse(planData);
+                const today = new Date().toISOString().split('T')[0];
+                const historyKey = 'ria_prod_history_' + today;
+                const completedLines = new Set();
+
+                try {
+                    const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+                    history.forEach(rec => {
+                        completedLines.add(rec.producto + '|' + rec.cantidad);
+                    });
+                } catch(e) {}
+
+                if (!Array.isArray(lines) || lines.length === 0) {
+                    ordenContent.innerHTML = '<div class="no-results">Sin líneas planificadas.</div>';
+                    return;
+                }
+
+                let html = '';
+                lines.forEach((line, idx) => {
+                    const key = line.product + '|' + line.qty;
+                    const completed = completedLines.has(key);
+                    const badgeText = completed ? '✓ Completado' : 'Pendiente';
+
+                    html += `
+                        <div class="order-line ${completed ? 'completed' : ''}" data-idx="${idx}">
+                            <div class="order-line-text">
+                                <strong>${line.product}</strong> - ${line.qty} redes
+                                ${line.variety ? '<br><small>' + line.variety + '</small>' : ''}
+                            </div>
+                            <div class="order-line-badge">${badgeText}</div>
+                        </div>
+                    `;
+                });
+
+                ordenContent.innerHTML = html;
+
+                // Attach click handlers
+                document.querySelectorAll('.order-line').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const idx = el.dataset.idx;
+                        const line = lines[idx];
+
+                        // Fill form from line
+                        productoSelect.value = line.product;
+                        cantidadInput.value = line.qty;
+
+                        if (line.variety && PRODUCTOS_MAESTRO.some(m => m.includes(line.product))) {
+                            if (line.variety.toLowerCase().includes('bahia')) {
+                                arrozVariedadSelect.value = 'Bahía (Illa de Riu)';
+                            } else if (line.variety.toLowerCase().includes('marisma')) {
+                                arrozVariedadSelect.value = 'Marisma (Doña Ana)';
+                            }
+                        }
+
+                        onProductoChange();
+                        onCantidadChange();
+
+                        // Collapse orden
+                        ordenCollapsible.classList.remove('active');
+                    });
+                });
+            } catch(e) {
+                console.error('Error loading orden del día:', e);
+            }
+        }
+
+        // ============================================================
+        // EVENT HANDLERS
+        // ============================================================
+
+        function onProductoChange() {
+            const product = productoSelect.value;
+
+            // Show/hide arroz variety selector
+            const isMaestro = PRODUCTOS_MAESTRO.some(m => m === product);
+            arrozVariedadGroup.style.display = isMaestro ? 'block' : 'none';
+            arrozVariedadText.style.display = isMaestro ? 'none' : 'block';
+
+            if (!isMaestro) {
+                arrozProveedor.value = 'Arrocera del Pirineo';
+            } else {
+                onArrozVariedadChange();
+            }
+
+            // Show/hide caldo & salsa
+            const isMaestroOnly = PRODUCTOS_MAESTRO.some(m => m === product);
+            caldoCard.style.display = isMaestroOnly ? 'none' : 'block';
+            salsaCard.style.display = isMaestroOnly ? 'none' : 'block';
+
+            // Update caldo type
+            if (!isMaestroOnly) {
+                caldoTipo.value = getCaldoType(product);
+                salsaTipo.value = getSalsaType(product);
+            }
+
+            // Show/hide ingrediente for cremosos
+            const isCremoso = PRODUCTOS_CREMOSOS.some(c => c === product);
+            ingredientCard.style.display = isCremoso ? 'block' : 'none';
+            if (isCremoso) {
+                ingredientTitle.textContent = '🧂 ' + getIngredientName(product);
+            }
+
+            // Update bandeja format
+            formatoBandejaSelect.value = getDefaultBandeja(product);
+
+            // Update lote etiqueta
+            loteEtiqueta.value = loteInput.textContent;
+        }
+
+        function onArrozVariedadChange() {
+            const variety = arrozVariedadSelect.value;
+            arrozProveedor.value = getArrozProveedor(variety);
+        }
+
+        function onCantidadChange() {
+            const qty = cantidadInput.value || 0;
+            arrozQtySpan.textContent = '(' + qty + ' redes)';
+            jarraQtySpan.textContent = '(' + qty + ' u)';
+        }
+
+        function updateProductionLot() {
+            const dateStr = fechaInput.value;
+            const newLot = generateProdLot(dateStr);
+            loteInput.textContent = newLot;
+            loteEtiqueta.value = newLot;
+        }
+
+        // ============================================================
+        // SEARCH FUNCTIONS
+        // ============================================================
+
+        function searchFromHistory(type, targetInput) {
+            // In a real app, this would search localStorage history
+            // For now, just show a simple prompt
+            const lotValue = prompt('Buscar lote de hoy (' + type + '):');
+            if (lotValue) {
+                targetInput.value = lotValue;
+            }
+        }
+
+        // ============================================================
+        // METAL DETECTOR TABLE
+        // ============================================================
+
+        function addMetalTestRow() {
+            const tbody = document.getElementById('metalTableBody');
+            const rowCount = tbody.rows.length + 1;
+
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td><input type="text" value="Intermedio ${rowCount - 1}" readonly style="background: #F5F5F5;"></td>
+                <td><input type="time" class="metalHora"></td>
+                <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+                <td><button type="button" class="toggle-btn metalOk" data-value="ok">OK</button></td>
+            `;
+
+            row.querySelectorAll('.metalOk').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    btn.classList.toggle('active');
+                });
+            });
+        }
+
+        // ============================================================
+        // SAVE & EXPORT
+        // ============================================================
+
+        function onSave() {
+            // Basic validation
+            if (!productoSelect.value || !cantidadInput.value || !operadorSelect.value) {
+                alert('Por favor completa los campos obligatorios: Producto, Cantidad, Operador');
+                return;
+            }
+
+            // Build summary
+            showSaveSummary();
+        }
+
+        function showSaveSummary() {
+            const data = getFormData();
+
+            let html = `
+                <div class="summary-item">
+                    <span class="summary-item-label">Fecha</span>
+                    <span class="summary-item-value">${data.fecha}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-item-label">Operador</span>
+                    <span class="summary-item-value">${data.operador}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-item-label">Producto</span>
+                    <span class="summary-item-value">${data.producto}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-item-label">Cantidad (redes)</span>
+                    <span class="summary-item-value">${data.cantidad}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-item-label">Lote Producción</span>
+                    <span class="summary-item-value">${data.loteProd}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-item-label">Bandeja</span>
+                    <span class="summary-item-value">${data.formatoBandeja}</span>
+                </div>
+            `;
+
+            if (data.incidencias) {
+                html += `
+                    <div class="summary-item">
+                        <span class="summary-item-label">Incidencias</span>
+                        <span class="summary-item-value">${data.incidencias}</span>
+                    </div>
+                `;
+            }
+
+            summaryContent.innerHTML = html;
+            saveModal.classList.add('active');
+        }
+
+        function confirmSave() {
+            const data = getFormData();
+
+            // Save to localStorage
+            const today = new Date().toISOString().split('T')[0];
+            const historyKey = 'ria_prod_history_' + today;
+
+            try {
+                const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+                history.push(data);
+                localStorage.setItem(historyKey, JSON.stringify(history));
+            } catch(e) {
+                console.error('Error saving to localStorage:', e);
+            }
+
+            saveModal.classList.remove('active');
+            alert('✓ Registro guardado correctamente');
+
+            // Reset form
+            form.reset();
+            init();
+        }
+
+        function getFormData() {
+            return {
+                fecha: fechaInput.value,
+                operador: operadorSelect.value,
+                producto: productoSelect.value,
+                cantidad: cantidadInput.value,
+                loteProd: loteInput.textContent,
+                horaInicio: document.getElementById('horaInicio').value,
+                horaFin: document.getElementById('horaFin').value,
+
+                // Arroz
+                arrozVariedad: PRODUCTOS_MAESTRO.some(m => m === productoSelect.value)
+                    ? arrozVariedadSelect.value
+                    : 'Maratelli (Arrocera del Pirineo)',
+                arrozProveedor: arrozProveedor.value,
+                arrozLote: arrozLote.value,
+
+                // Jarra
+                jarraLote: jarraLote.value,
+                caldoLoteAuto: caldoLoteAuto.value,
+
+                // Caldo
+                caldoTipo: caldoTipo.value,
+                caldoLote: caldoLote.value,
+
+                // Salsa
+                salsaTipo: salsaTipo.value,
+                salsaOrigen: salsaOrigen.value,
+                salsaLote: salsaLote.value,
+
+                // Ingrediente
+                ingredientProveedor: document.getElementById('ingredientProveedor').value,
+                ingredientLote: document.getElementById('ingredientLote').value,
+                ingredientCantidad: document.getElementById('ingredientCantidad').value,
+
+                // Envases
+                formatoBandeja: formatoBandejaSelect.value,
+                loteBandeja: document.getElementById('loteBandeja').value,
+                loteFilm: document.getElementById('loteFilm').value,
+
+                // Tratamientos
+                coccionTipo: document.getElementById('coccionTipo').value,
+                coccionInicio: document.getElementById('coccionInicio').value,
+                coccionFin: document.getElementById('coccionFin').value,
+                coccionTemp: document.getElementById('coccionTemp').value,
+                abatInicio: document.getElementById('abatInicio').value,
+                abatFin: document.getElementById('abatFin').value,
+                abatTemp: document.getElementById('abatTemp').value,
+
+                // Control cierre
+                vacio: document.getElementById('vacio').value,
+                termosellado: document.getElementById('termosellado').value,
+                numPaquetes: document.getElementById('numPaquetes').value,
+
+                // Etiquetado
+                etiquetado: document.getElementById('etiquetado').value,
+                loteEtiqueta: loteEtiqueta.value,
+                fechaConsumo: document.getElementById('fechaConsumo').value,
+
+                // Incidencias
+                incidencias: document.getElementById('incidencias').value
+            };
+        }
+
+        function onExport() {
+            const data = getFormData();
+
+            // Build CSV
+            let csv = 'REGISTRO DE PRODUCCIÓN RIA-FORM-PROD-002\n';
+            csv += '======================================\n\n';
+
+            csv += 'DATOS GENERALES\n';
+            csv += 'Fecha,' + data.fecha + '\n';
+            csv += 'Operador,' + data.operador + '\n';
+            csv += 'Producto,' + data.producto + '\n';
+            csv += 'Cantidad (redes),' + data.cantidad + '\n';
+            csv += 'Lote Producción,' + data.loteProd + '\n';
+            csv += 'Hora Inicio,' + data.horaInicio + '\n';
+            csv += 'Hora Fin,' + data.horaFin + '\n\n';
+
+            csv += 'MATERIAS PRIMAS\n';
+            csv += 'Arroz Variedad,' + data.arrozVariedad + '\n';
+            csv += 'Arroz Proveedor,' + data.arrozProveedor + '\n';
+            csv += 'Arroz Lote,' + data.arrozLote + '\n';
+            csv += 'Jarra Lote,' + data.jarraLote + '\n';
+            csv += 'Caldo Tipo,' + data.caldoTipo + '\n';
+            csv += 'Caldo Lote,' + data.caldoLote + '\n';
+            csv += 'Salsa Tipo,' + data.salsaTipo + '\n';
+            csv += 'Salsa Origen,' + data.salsaOrigen + '\n';
+            csv += 'Salsa Lote,' + data.salsaLote + '\n';
+            csv += 'Bandeja Formato,' + data.formatoBandeja + '\n';
+            csv += 'Bandeja Lote,' + data.loteBandeja + '\n';
+            csv += 'Film Lote,' + data.loteFilm + '\n\n';
+
+            csv += 'TRATAMIENTOS\n';
+            csv += 'Cocción Tipo,' + data.coccionTipo + '\n';
+            csv += 'Cocción T° Final,' + data.coccionTemp + '\n';
+            csv += 'Abatimiento T° Final,' + data.abatTemp + '\n\n';
+
+            csv += 'CONTROL\n';
+            csv += 'Vacío,' + data.vacio + '\n';
+            csv += 'Termosellado,' + data.termosellado + '\n';
+            csv += 'Paquetes,' + data.numPaquetes + '\n\n';
+
+            csv += 'INCIDENCIAS\n';
+            csv += data.incidencias + '\n';
+
+            // Download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'RIA-PROD-' + data.fecha + '.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ============================================================
+        // STARTUP
+        // ============================================================
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
