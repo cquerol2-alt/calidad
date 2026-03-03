@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIA-FORM-PLAN-001 | Plan de Producción</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #1B5E20;
+            --light-green: #E8F5E9;
+            --alert-red: #C62828;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --border-light: #BDBDBD;
+            --white: #FFFFFF;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #F5F5F5;
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, var(--primary-green) 0%, #0D3817 100%);
+            color: var(--white);
+            padding: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-content {
+            max-width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .header-date {
+            font-size: 12px;
+            opacity: 0.9;
+            text-align: right;
+            min-width: 140px;
+        }
+
+        .header-date input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--white);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            width: 120px;
+        }
+
+        .header-date input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .header-date input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .header-date-notice {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-top: 4px;
+            color: #FFE082;
+        }
+
+        .header-time {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 100%;
+            padding: 16px;
+            padding-bottom: 120px;
+        }
+
+        /* INPUT AREA */
+        .input-section {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 12px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
+        }
+
+        .error-toast {
+            background-color: var(--alert-red);
+            color: var(--white);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .error-toast.fade-out {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        /* BUTTONS */
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0D3817;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 1.5px solid var(--primary-green);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--light-green);
+        }
+
+        .btn-danger {
+            background-color: var(--alert-red);
+            color: var(--white);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #B71C1C;
+            transform: scale(1.05);
+        }
+
+        .btn-small {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-small:hover {
+            background-color: #0D3817;
+        }
+
+        /* FORM STYLES */
+        .manual-add-section {
+            background-color: var(--light-green);
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #C8E6C9;
+            display: none;
+        }
+
+        .manual-add-section.show {
+            display: block;
+        }
+
+        .form-row {
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row select,
+        .form-row input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-row select:focus,
+        .form-row input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
+        }
+
+        /* CARDS */
+        .cards-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .production-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-green);
+            transition: all 0.2s ease;
+        }
+
+        .production-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-product {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--primary-green);
+        }
+
+        .card-format {
+            font-size: 12px;
+            background-color: var(--light-green);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .card-quantity {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .card-delete {
+            margin-left: auto;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(27, 94, 32, 0.1);
+        }
+
+        .card-row:last-child {
+            border-bottom: none;
+        }
+
+        .card-label {
+            font-weight: 600;
+            color: var(--text-light);
+            min-width: 140px;
+        }
+
+        .card-value {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .card-value.alert {
+            color: var(--alert-red);
+            font-weight: 700;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: flex-end;
+        }
+
+        /* SUMMARY */
+        .summary-section {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .summary-item {
+            background-color: var(--light-green);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #C8E6C9;
+        }
+
+        .summary-item-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .summary-item-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .summary-list-item {
+            padding: 8px 12px;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(27, 94, 32, 0.1);
+        }
+
+        /* MODALS */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            width: 100%;
+            max-width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-order-section {
+            margin-bottom: 20px;
+        }
+
+        .order-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-green);
+        }
+
+        .order-item {
+            background-color: var(--light-green);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            border: 1px solid #C8E6C9;
+        }
+
+        .order-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .order-buttons .btn-primary {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* BOTTOM ACTIONS */
+        .bottom-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, var(--white) 0%, var(--white) 85%, transparent 100%);
+            padding: 12px 16px 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 999;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .bottom-actions button {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-actions .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--white);
+            margin-bottom: 0;
+        }
+
+        .bottom-actions .btn-primary:hover {
+            background-color: #0D3817;
+        }
+
+        .bottom-actions .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 1.5px solid var(--primary-green);
+            margin-bottom: 0;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* UTILITIES */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <div>
+                <div class="header-title">RIA-FORM-PLAN-001</div>
+                <div class="header-title" style="font-size: 13px; font-weight: 500; opacity: 0.95;">Plan de Producción</div>
+            </div>
+            <div class="header-date">
+                <input type="date" id="planDate" onchange="onDateChange()">
+                <div id="dateNotice" class="header-date-notice" style="display:none;"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <!-- INPUT SECTION -->
+        <div class="input-section">
+            <label class="section-label">Dicta o escribe la producción</label>
+            <div id="errorToastContainer"></div>
+            <textarea id="productionInput" placeholder="Ej: 4 cajas pescado 260, 3 cajas maestro, 16 redes maestro, 2 cajas ibérico all-included"></textarea>
+            <button class="btn-primary" id="interpretBtn" onclick="interpretProduction()">Interpretar</button>
+
+            <!-- MANUAL ADD FORM -->
+            <div id="manualAddForm" class="manual-add-section">
+                <div class="form-row">
+                    <label class="form-label">Producto</label>
+                    <select id="productSelect" onchange="updateFormatOptions()">
+                        <option value="Pescado">Pescado</option>
+                        <option value="Pollo">Pollo</option>
+                        <option value="Negro">Negro</option>
+                        <option value="Verduras">Verduras</option>
+                        <option value="Risotto">Risotto</option>
+                        <option value="Maestro">Maestro</option>
+                        <option value="Ibérico">Ibérico Cremoso</option>
+                        <option value="Setas">Setas Cremoso</option>
+                        <option value="Tartufata">Tartufata Cremoso</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Formato</label>
+                    <select id="formatSelect">
+                        <option value="260g">260g x24</option>
+                        <option value="bulk">Bulk</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" id="quantityInput" min="1" value="1" style="font-size: 16px;">
+                </div>
+                <button class="btn-primary" onclick="addLineManually()">Añadir línea</button>
+            </div>
+
+            <button class="btn-secondary" id="toggleManualBtn" onclick="toggleManualForm()">+ Añadir línea manualmente</button>
+        </div>
+
+        <!-- PRODUCTION CARDS -->
+        <div class="cards-section" id="cardsSection"></div>
+
+        <!-- SUMMARY PANEL -->
+        <div class="summary-section" id="summarySection" style="display: none;">
+            <div class="summary-title">Resumen del día</div>
+            <div class="summary-grid" id="summaryGrid"></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM ACTION BUTTONS -->
+    <div class="bottom-actions">
+        <button class="btn-primary" onclick="openDiegoOrder()">📦 Enviar a Diego</button>
+        <button class="btn-primary" onclick="openIsabelOrder()">🍲 Enviar a Isabel</button>
+    </div>
+
+    <!-- DIEGO MODAL -->
+    <div id="diegoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">📦 Orden para Diego (Operador)</div>
+            <div id="diegoContent"></div>
+        </div>
+    </div>
+
+    <!-- ISABEL MODAL -->
+    <div id="isabelModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">🍲 Orden para Isabel (Caldos & Salsas)</div>
+            <div id="isabelContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================================
+        // DATA & STATE
+        // ============================================================================
+
+        let productionLines = [];
+
+        const PRODUCTS = {
+            pescado: { name: 'Pescado', aliases: ['pes', 'fish'] },
+            pollo: { name: 'Pollo', aliases: ['pol', 'chicken'] },
+            negro: { name: 'Negro', aliases: ['neg', 'black'] },
+            verduras: { name: 'Verduras', aliases: ['ver', 'verd', 'vegetables'] },
+            risotto: { name: 'Risotto', aliases: ['ris', 'risotto'] },
+            maestro: { name: 'Maestro', aliases: ['mae', 'master'] },
+            iberico: { name: 'Ibérico', aliases: ['ibe', 'iberico'] },
+            setas: { name: 'Setas', aliases: ['set', 'mushroom'] },
+            tartufata: { name: 'Tartufata', aliases: ['tar', 'truffle'] }
+        };
+
+        // ============================================================================
+        // INITIALIZATION
+        // ============================================================================
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initializePlanDate();
+            loadFromLocalStorage();
+            renderCards();
+            updateTimestamp();
+            updateFormatOptions();
+        });
+
+        function initializePlanDate() {
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0];
+            document.getElementById('planDate').value = dateStr;
+            checkIfPastDate();
+        }
+
+        function onDateChange() {
+            checkIfPastDate();
+            saveToLocalStorage();
+        }
+
+        function checkIfPastDate() {
+            const selected = new Date(document.getElementById('planDate').value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            selected.setHours(0, 0, 0, 0);
+
+            const notice = document.getElementById('dateNotice');
+            if (selected < today) {
+                notice.textContent = 'Fecha anterior al día de hoy';
+                notice.style.display = 'block';
+            } else {
+                notice.style.display = 'none';
+            }
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function toggleManualForm() {
+            document.getElementById('manualAddForm').classList.toggle('show');
+        }
+
+        function addLineManually() {
+            const product = document.getElementById('productSelect').value;
+            const format = document.getElementById('formatSelect').value;
+            const quantity = parseInt(document.getElementById('quantityInput').value);
+
+            if (isNaN(quantity) || quantity < 1) {
+                alert('Por favor, ingresa una cantidad válida');
+                return;
+            }
+
+            productionLines.push({
+                product: product,
+                format: format,
+                quantity: quantity,
+                isDirectRedes: false
+            });
+
+            saveToLocalStorage();
+            renderCards();
+            document.getElementById('quantityInput').value = '1';
+            updateTimestamp();
+        }
+
+        // ============================================================================
+        // CONVERSION LOGIC
+        // ============================================================================
+
+        function getConversions(product, format) {
+            const p = product.toLowerCase();
+            const isCremoso = ['ibérico', 'setas', 'tartufata'].includes(p);
+            const isMaestro = p === 'maestro';
+
+            let redes = 0;
+            let jarras = 0;
+
+            if (isMaestro) {
+                if (format === '380g') {
+                    redes = 3;
+                } else if (format === '450g') {
+                    redes = Math.ceil((450 * 20) / (380 * 20) * 3);
+                } else if (format === '190g') {
+                    redes = Math.ceil((190 * 24) / (380 * 20) * 3);
+                } else if (format === '1330g') {
+                    redes = Math.ceil((1330 * 6) / (380 * 20) * 3);
+                } else if (format === 'redes') {
+                    return { redes: 0, jarras: 0, caldoType: null, caldoLiters: 0, needsSalsa: false, salsaNote: '', redesType: 'maestro' };
+                }
+            } else if (isCremoso) {
+                if (format.includes('bulk')) {
+                    redes = 5;
+                } else {
+                    redes = 3;
+                }
+            } else {
+                if (format === 'bulk') {
+                    redes = 5;
+                } else {
+                    redes = 2;
+                }
+            }
+
+            jarras = redes;
+
+            let caldoLiters = redes;
+            let caldoType = null;
+
+            if (p === 'pescado' || p === 'negro') {
+                caldoType = p === 'negro' ? 'Caldo de Pescado (con tinta)' : 'Caldo de Pescado';
+            } else if (p === 'pollo') {
+                caldoType = 'Caldo de Pollo';
+            } else if (p === 'verduras') {
+                caldoType = 'Caldo de Verduras';
+            } else if (p === 'risotto' || isCremoso) {
+                caldoType = 'Caldo de Risotto';
+            }
+
+            // If caldoType is null, set caldoLiters to 0
+            if (caldoType === null) {
+                caldoLiters = 0;
+            }
+
+            let needsSalsa = false;
+            let salsaNote = '';
+            if (isMaestro) {
+                needsSalsa = false;
+            } else if (p === 'pescado' || p === 'pollo' || p === 'verduras' || p === 'negro') {
+                needsSalsa = true;
+                salsaNote = 'En stock';
+            } else if (p === 'risotto') {
+                needsSalsa = true;
+                salsaNote = 'Sobres (stock o del día)';
+            } else if (isCremoso) {
+                needsSalsa = true;
+                if (format.includes('all-included')) {
+                    salsaNote = 'SIEMPRE ese día';
+                } else {
+                    salsaNote = 'Sobres (stock o del día)';
+                }
+            }
+
+            return {
+                redes,
+                jarras,
+                caldoType,
+                caldoLiters,
+                needsSalsa,
+                salsaNote
+            };
+        }
+
+        // ============================================================================
+        // SPANISH NUMBER CONVERTER
+        // ============================================================================
+
+        function spanishWordsToNumbers(text) {
+            // Dictionary of Spanish number words to digits
+            const singles = {
+                'cero': 0, 'uno': 1, 'dos': 2, 'tres': 3, 'cuatro': 4, 'cinco': 5,
+                'seis': 6, 'siete': 7, 'ocho': 8, 'nueve': 9, 'diez': 10,
+                'once': 11, 'doce': 12, 'trece': 13, 'catorce': 14, 'quince': 15,
+                'dieciséis': 16, 'dieciseis': 16, 'diecisiete': 17, 'dieciocho': 18, 'diecinueve': 19,
+                'veinte': 20, 'veintiuno': 21, 'veintidos': 22, 'veintitrés': 23, 'veintitres': 23,
+                'veinticuatro': 24, 'veinticinco': 25, 'veintiséis': 26, 'veintiseis': 26,
+                'veintisiete': 27, 'veintiocho': 28, 'veintinueve': 29
+            };
+
+            const tens = {
+                'treinta': 30, 'cuarenta': 40, 'cincuenta': 50, 'sesenta': 60,
+                'setenta': 70, 'ochenta': 80, 'noventa': 90
+            };
+
+            const hundreds = {
+                'cien': 100, 'ciento': 100, 'doscientos': 200, 'doscientas': 200,
+                'trescientos': 300, 'trescientas': 300, 'cuatrocientos': 400, 'cuatrocientas': 400,
+                'quinientos': 500, 'quinientas': 500, 'seiscientos': 600, 'seiscientas': 600,
+                'setecientos': 700, 'setecientas': 700, 'ochocientos': 800, 'ochocientas': 800,
+                'novecientos': 900, 'novecientas': 900
+            };
+
+            const scales = {
+                'mil': 1000, 'millón': 1000000
+            };
+
+            text = text.toLowerCase();
+            let result = '';
+            const words = text.split(/\s+/);
+            let i = 0;
+
+            while (i < words.length) {
+                const word = words[i];
+                let converted = false;
+
+                // Try to match number patterns
+                if (singles[word] !== undefined) {
+                    result = result.replace(/\s+$/, '') + singles[word] + ' ';
+                    converted = true;
+                } else if (tens[word] !== undefined) {
+                    result = result.replace(/\s+$/, '') + tens[word] + ' ';
+                    converted = true;
+                } else if (hundreds[word] !== undefined) {
+                    result = result.replace(/\s+$/, '') + hundreds[word] + ' ';
+                    converted = true;
+                } else if (scales[word] !== undefined) {
+                    const lastNum = parseInt(result.trim().split(/\s+/).pop());
+                    if (!isNaN(lastNum)) {
+                        result = result.substring(0, result.lastIndexOf(lastNum)) + (lastNum * scales[word]) + ' ';
+                    } else {
+                        result = result.replace(/\s+$/, '') + scales[word] + ' ';
+                    }
+                    converted = true;
+                }
+
+                if (!converted) {
+                    result += word + ' ';
+                }
+
+                i++;
+            }
+
+            return result.trim();
+        }
+
+        // ============================================================================
+        // PARSING LOGIC
+        // ============================================================================
+
+        function fuzzyMatch(input, product) {
+            input = input.toLowerCase().trim();
+            const name = product.name.toLowerCase();
+            const aliases = product.aliases || [];
+
+            if (name.startsWith(input)) return true;
+            return aliases.some(alias => alias.startsWith(input));
+        }
+
+        function parseProduction(text) {
+            // Convert Spanish number words to digits
+            text = spanishWordsToNumbers(text);
+
+            const lines = [];
+            const textLower = text.toLowerCase();
+
+            // Split by comma or newline
+            const entries = text.split(/[,\n]+/).map(e => e.trim()).filter(e => e);
+
+            for (const entry of entries) {
+                const parts = entry.split(/\s+/);
+                if (parts.length < 2) continue;
+
+                const quantity = parseInt(parts[0]);
+                if (isNaN(quantity)) continue;
+
+                const rest = entry.substring(parts[0].length).trim();
+
+                // Check for "redes" keyword
+                if (rest.toLowerCase().includes('redes')) {
+                    const restLower = rest.toLowerCase();
+                    const withoutRedes = restLower.replace(/\bredes\b/, '').trim();
+                    const productWords = withoutRedes.split(/\s+/).filter(w => w);
+
+                    let matched = false;
+                    for (const [key, product] of Object.entries(PRODUCTS)) {
+                        const matchesProduct = productWords.some(w => fuzzyMatch(w, product)) || fuzzyMatch(withoutRedes, product);
+                        if (matchesProduct) {
+                            let variety = '';
+                            if (key === 'maestro') {
+                                if (restLower.includes('bahia') || restLower.includes('bahía')) variety = 'bahia';
+                                else if (restLower.includes('marisma')) variety = 'marisma';
+                            }
+                            lines.push({
+                                product: product.name,
+                                format: 'redes',
+                                quantity: quantity,
+                                isDirectRedes: true,
+                                variety: variety
+                            });
+                            matched = true;
+                            break;
+                        }
+                    }
+                    if (matched) continue;
+                }
+
+                // Check for "cajas" keyword - handle "de" filler word and "bulk" anywhere
+                if (rest.toLowerCase().includes('caja')) {
+                    const afterCajas = rest.split(/cajas?/i)[1]?.trim() || '';
+                    let productInput = '';
+                    let format = '260g';
+                    let special = '';
+
+                    // Remove "de" filler word
+                    const cleanedAfterCajas = afterCajas.replace(/\bde\b/i, '').trim();
+                    const words = cleanedAfterCajas.split(/\s+/);
+
+                    // Check for special formats
+                    if (cleanedAfterCajas.toLowerCase().includes('all')) {
+                        format = 'all-included';
+                        special = 'all';
+                        productInput = words[0];
+                    } else if (cleanedAfterCajas.toLowerCase().includes('separado')) {
+                        format = 'separado';
+                        special = 'separado';
+                        productInput = words[0];
+                    } else if (cleanedAfterCajas.toLowerCase().includes('bulk')) {
+                        format = 'bulk';
+                        special = 'bulk';
+                        productInput = words[0];
+                    } else {
+                        // Normal format: try to extract product and size
+                        productInput = words[0];
+                        if (words[1]) {
+                            if (words[1].includes('260')) {
+                                format = '260g';
+                            } else if (words[1].includes('380')) {
+                                format = '380g';
+                            } else if (words[1].includes('450')) {
+                                format = '450g';
+                            } else if (words[1].includes('190')) {
+                                format = '190g';
+                            } else if (words[1].includes('1330')) {
+                                format = '1330g';
+                            }
+                        }
+                    }
+
+                    // Match product
+                    for (const [key, product] of Object.entries(PRODUCTS)) {
+                        if (fuzzyMatch(productInput, product)) {
+                            // Default format for maestro
+                            if (product.name === 'Maestro' && format === '260g') {
+                                format = '380g';
+                            }
+                            lines.push({
+                                product: product.name,
+                                format: format,
+                                quantity: quantity,
+                                isDirectRedes: false
+                            });
+                            break;
+                        }
+                    }
+                }
+
+                // FALLBACK: no "redes" ni "cajas"
+                if (!rest.toLowerCase().includes('redes') && !rest.toLowerCase().includes('caja')) {
+                    const restLower = rest.toLowerCase();
+                    const words = restLower.split(/\s+/);
+                    for (const [key, product] of Object.entries(PRODUCTS)) {
+                        if (words.some(w => fuzzyMatch(w, product)) || fuzzyMatch(restLower, product)) {
+                            let variety = '';
+                            let format = 'redes';
+                            if (key === 'maestro') {
+                                if (restLower.includes('bahia') || restLower.includes('bahía')) variety = 'bahia';
+                                else if (restLower.includes('marisma')) variety = 'marisma';
+                            }
+                            // Check for format hints
+                            if (restLower.includes('bulk')) format = 'bulk';
+                            else if (restLower.includes('all')) format = 'all-included';
+                            else if (restLower.includes('separado')) format = 'separado';
+                            else if (restLower.includes('380')) format = '380g';
+                            else if (restLower.includes('450')) format = '450g';
+                            else if (restLower.includes('190')) format = '190g';
+                            else if (restLower.includes('1330')) format = '1330g';
+                            else if (restLower.includes('260')) format = '260g';
+
+                            lines.push({
+                                product: product.name,
+                                format: format,
+                                quantity: quantity,
+                                isDirectRedes: format === 'redes',
+                                variety: variety
+                            });
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Post-process: detect "salsa nueva"
+            const fullLower = text.toLowerCase();
+            if (fullLower.includes('salsa nueva') || fullLower.includes('hacer salsa') || fullLower.includes('salsa del dia') || fullLower.includes('salsa del día')) {
+                lines.forEach(l => { l.salsaMode = 'nueva'; });
+            }
+
+            return lines;
+        }
+
+        function showErrorToast(message) {
+            const container = document.getElementById('errorToastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'error-toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => {
+                    container.removeChild(toast);
+                }, 300);
+            }, 5000);
+        }
+
+        function interpretProduction() {
+            const text = document.getElementById('productionInput').value.trim();
+            if (!text) return;
+
+            const newLines = parseProduction(text);
+            if (newLines.length === 0) {
+                showErrorToast('⚠️ No se ha podido interpretar. Prueba: "4 cajas pescado 260" o "16 redes maestro marisma"');
+                return;
+            }
+
+            productionLines = productionLines.concat(newLines);
+            saveToLocalStorage();
+            renderCards();
+            document.getElementById('productionInput').value = '';
+            updateTimestamp();
+        }
+
+        function updateFormatOptions() {
+            const product = document.getElementById('productSelect').value;
+            const select = document.getElementById('formatSelect');
+            const isMaestro = product === 'Maestro';
+            const isCremoso = ['Ibérico', 'Setas', 'Tartufata'].includes(product);
+            const isNonMaestroNonCremoso = !isMaestro && !isCremoso;
+
+            // Reset options
+            select.innerHTML = '';
+
+            if (isMaestro) {
+                select.innerHTML = `
+                    <option value="380g">380g x20</option>
+                    <option value="450g">450g x20</option>
+                    <option value="190g">190g x24</option>
+                    <option value="1330g">1330g x6</option>
+                    <option value="redes">Redes directas</option>
+                `;
+            } else if (isCremoso) {
+                select.innerHTML = `
+                    <option value="260g">260g x24</option>
+                    <option value="all-included">All-Included (300g)</option>
+                    <option value="separado">Separado (220g+sobre)</option>
+                    <option value="bulk">Bulk</option>
+                `;
+            } else {
+                // Non-maestro, non-cremoso: only 260g and bulk
+                select.innerHTML = `
+                    <option value="260g">260g x24</option>
+                    <option value="bulk">Bulk</option>
+                `;
+            }
+        }
+
+        // ============================================================================
+        // RENDERING
+        // ============================================================================
+
+        function renderCards() {
+            const container = document.getElementById('cardsSection');
+            const summarySection = document.getElementById('summarySection');
+
+            if (productionLines.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-text">Aún no hay líneas de producción.<br>Dicta o añade líneas manualmente.</div>
+                    </div>
+                `;
+                summarySection.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            for (let i = 0; i < productionLines.length; i++) {
+                const line = productionLines[i];
+                const conv = getConversions(line.product, line.format);
+
+                const isMaestroLine = line.product.toLowerCase() === 'maestro';
+                let redesValue = line.isDirectRedes ? line.quantity : conv.redes * line.quantity;
+                let jarrasValue = line.isDirectRedes ? line.quantity : conv.jarras * line.quantity;
+                let caldoValue = line.isDirectRedes ? (conv.caldoType ? line.quantity : 0) : conv.caldoLiters * line.quantity;
+
+                const formatDisplay = line.format === 'redes' ? 'Redes directas' :
+                    line.format === 'all-included' ? 'All-Included (300g)' :
+                    line.format === 'separado' ? 'Separado (220g+sobre)' :
+                    line.format === 'bulk' ? 'Bulk' :
+                    line.format;
+
+                html += `
+                    <div class="production-card">
+                        <div class="card-header">
+                            <div class="card-product">${line.product}</div>
+                            <div class="card-format">${formatDisplay}</div>
+                            <div class="card-quantity">x${line.quantity}</div>
+                            <button class="btn-danger card-delete" onclick="deleteCard(${i})">✕</button>
+                        </div>
+                        <div class="card-body">
+                            ${isMaestroLine ? `
+                            <div class="card-row" style="margin-bottom:8px;">
+                                <span class="card-label">Variedad arroz:</span>
+                                <select class="card-variety" onchange="setVariety(${i}, this.value)" style="padding:6px 10px; border:1.5px solid var(--border-light); border-radius:6px; font-size:14px; background:white;">
+                                    <option value="" ${!line.variety ? 'selected' : ''}>— Seleccionar —</option>
+                                    <option value="bahia" ${line.variety === 'bahia' ? 'selected' : ''}>Bahía (Illa de Riu)</option>
+                                    <option value="marisma" ${line.variety === 'marisma' ? 'selected' : ''}>Marisma (Doña Ana)</option>
+                                </select>
+                            </div>
+                            ` : ''}
+                            <div class="card-row">
+                                <span class="card-label">Redes:</span>
+                                <span class="card-value">${redesValue}</span>
+                            </div>
+                            ${jarrasValue > 0 ? `
+                            <div class="card-row">
+                                <span class="card-label">Jarras:</span>
+                                <span class="card-value">${jarrasValue}</span>
+                            </div>
+                            ` : ''}
+                            ${caldoValue > 0 && conv.caldoType ? `
+                            <div class="card-row">
+                                <span class="card-label">Litros caldo:</span>
+                                <span class="card-value">${caldoValue}L ${conv.caldoType}</span>
+                            </div>
+                            ` : ''}
+                            ${conv.needsSalsa ? `
+                            <div class="card-row" style="align-items:center;">
+                                <span class="card-label">Salsa:</span>
+                                ${conv.salsaNote.includes('SIEMPRE') ?
+                                    `<span class="card-value alert">${conv.salsaNote}</span>` :
+                                    `<select onchange="setSalsaMode(${i}, this.value)" style="padding:5px 8px; border:1.5px solid var(--border-light); border-radius:6px; font-size:13px; background:white;">
+                                        <option value="stock" ${(line.salsaMode || 'stock') === 'stock' ? 'selected' : ''}>En stock</option>
+                                        <option value="nueva" ${line.salsaMode === 'nueva' ? 'selected' : ''}>Hacer nueva</option>
+                                        <option value="pendiente" ${line.salsaMode === 'pendiente' ? 'selected' : ''}>No lo sé</option>
+                                    </select>`
+                                }
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="card-actions">
+                            ${i > 0 ? `<button class="btn-small" onclick="moveCard(${i}, -1)">↑</button>` : ''}
+                            ${i < productionLines.length - 1 ? `<button class="btn-small" onclick="moveCard(${i}, 1)">↓</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+            renderSummary();
+            summarySection.style.display = 'block';
+        }
+
+        function setSalsaMode(index, mode) {
+            productionLines[index].salsaMode = mode;
+            saveToLocalStorage();
+            renderCards();
+        }
+
+        function setVariety(index, variety) {
+            productionLines[index].variety = variety;
+            saveToLocalStorage();
+            updateTimestamp();
+        }
+
+        function deleteCard(index) {
+            productionLines.splice(index, 1);
+            saveToLocalStorage();
+            renderCards();
+            updateTimestamp();
+        }
+
+        function moveCard(index, direction) {
+            if (direction === -1 && index > 0) {
+                [productionLines[index], productionLines[index - 1]] = [productionLines[index - 1], productionLines[index]];
+            } else if (direction === 1 && index < productionLines.length - 1) {
+                [productionLines[index], productionLines[index + 1]] = [productionLines[index + 1], productionLines[index]];
+            }
+            saveToLocalStorage();
+            renderCards();
+            updateTimestamp();
+        }
+
+        function renderSummary() {
+            const summary = calculateSummary();
+            const grid = document.getElementById('summaryGrid');
+
+            let html = `
+                <div class="summary-item">
+                    <div class="summary-item-label">Redes Maratelli</div>
+                    <div class="summary-item-value">${summary.redesMaratelli}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-label">Redes Bahía</div>
+                    <div class="summary-item-value">${summary.redesBahia}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-label">Redes Marisma</div>
+                    <div class="summary-item-value">${summary.redesMarisma}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-label">Redes Maestro (sin asignar)</div>
+                    <div class="summary-item-value">${summary.redesMaestroSinAsignar}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-label">Jarras Pescado</div>
+                    <div class="summary-item-value">${summary.jarrasPescado}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-label">Jarras Verdura</div>
+                    <div class="summary-item-value">${summary.jarrasVerdura}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-label">Jarras Risotto</div>
+                    <div class="summary-item-value">${summary.jarrasRisotto}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-label">Jarras Maestro</div>
+                    <div class="summary-item-value">${summary.jarrasMaestro}</div>
+                </div>
+            `;
+
+            // Caldos
+            for (const [type, liters] of Object.entries(summary.caldos)) {
+                if (liters > 0) {
+                    html += `
+                        <div class="summary-item">
+                            <div class="summary-item-label">${type}</div>
+                            <div class="summary-item-value">${liters}L</div>
+                        </div>
+                    `;
+                }
+            }
+
+            html += '<div style="grid-column: 1 / -1;">';
+            if (Object.keys(summary.salsas).length > 0) {
+                html += `
+                    <div class="summary-list-item" style="border: none; font-weight: 600; color: var(--primary-green); margin-bottom: 8px;">
+                        Salsas necesarias:
+                    </div>
+                `;
+                for (const [type, note] of Object.entries(summary.salsas)) {
+                    const isAlert = note.includes('SIEMPRE');
+                    html += `
+                        <div class="summary-list-item" style="${isAlert ? 'background-color: #FFEBEE; padding: 6px; border-radius: 4px; border: none; margin-bottom: 4px;' : 'border-bottom: 1px solid rgba(27, 94, 32, 0.1);'}">
+                            <strong>${type}:</strong> ${note}
+                        </div>
+                    `;
+                }
+            } else {
+                html += '<div class="summary-list-item" style="border: none; color: var(--text-light);">Sin salsas requeridas</div>';
+            }
+            html += '</div>';
+
+            grid.innerHTML = html;
+        }
+
+        function calculateSummary() {
+            const summary = {
+                redesMaratelli: 0,
+                redesBahia: 0,
+                redesMarisma: 0,
+                redesMaestroSinAsignar: 0,
+                jarrasPescado: 0,
+                jarrasVerdura: 0,
+                jarrasRisotto: 0,
+                jarrasMaestro: 0,
+                caldos: {},
+                salsas: {}
+            };
+
+            for (const line of productionLines) {
+                const conv = getConversions(line.product, line.format);
+                const qty = line.quantity;
+                const p = line.product.toLowerCase();
+
+                let redesVal = line.isDirectRedes ? qty : conv.redes * qty;
+                let jarrasVal = line.isDirectRedes ? qty : conv.jarras * qty;
+
+                // Categorize redes by type
+                if (p === 'maestro') {
+                    if (line.variety === 'bahia') {
+                        summary.redesBahia += redesVal;
+                    } else if (line.variety === 'marisma') {
+                        summary.redesMarisma += redesVal;
+                    } else {
+                        summary.redesMaestroSinAsignar += redesVal;
+                    }
+                    summary.jarrasMaestro += jarrasVal;
+                } else {
+                    // Redes Maratelli for: pescado, pollo, negro, risotto (all "La Santa" products)
+                    summary.redesMaratelli += redesVal;
+
+                    // Categorize jarras by type
+                    if (['pescado', 'negro', 'pollo'].includes(p)) {
+                        summary.jarrasPescado += jarrasVal;
+                    } else if (p === 'verduras') {
+                        summary.jarrasVerdura += jarrasVal;
+                    } else if (['risotto', 'ibérico', 'setas', 'tartufata'].includes(p)) {
+                        summary.jarrasRisotto += jarrasVal;
+                    }
+                }
+
+                // Caldos
+                if (conv.caldoType) {
+                    if (!summary.caldos[conv.caldoType]) {
+                        summary.caldos[conv.caldoType] = 0;
+                    }
+                    if (line.isDirectRedes) {
+                        summary.caldos[conv.caldoType] += qty;
+                    } else {
+                        summary.caldos[conv.caldoType] += conv.caldoLiters * qty;
+                    }
+                }
+
+                // Salsas
+                if (conv.needsSalsa) {
+                    const salsaType = getSalsaType(line.product);
+                    const salsaMode = line.salsaMode || 'stock';
+                    let note = conv.salsaNote;
+
+                    if (!conv.salsaNote.includes('SIEMPRE')) {
+                        if (salsaMode === 'nueva') {
+                            note = '⚡ HACER NUEVA';
+                        } else if (salsaMode === 'pendiente') {
+                            note = '⏳ Pendiente';
+                        } else {
+                            note = 'En stock';
+                        }
+                    }
+
+                    if (!summary.salsas[salsaType]) {
+                        summary.salsas[salsaType] = note;
+                    } else if (conv.salsaNote.includes('SIEMPRE')) {
+                        summary.salsas[salsaType] = conv.salsaNote;
+                    } else if (note.includes('HACER NUEVA')) {
+                        summary.salsas[salsaType] = note;
+                    }
+                }
+            }
+
+            return summary;
+        }
+
+        function getSalsaType(product) {
+            const p = product.toLowerCase();
+            if (p === 'maestro') return '';
+            if (['ibérico', 'setas', 'tartufata'].includes(p)) return `Salsa ${product}`;
+            return `Salsa ${product}`;
+        }
+
+        // ============================================================================
+        // ORDER VIEWS
+        // ============================================================================
+
+        function openDiegoOrder() {
+            const content = generateDiegoOrder();
+            document.getElementById('diegoContent').innerHTML = content;
+            document.getElementById('diegoModal').classList.add('show');
+        }
+
+        function closeDiegoOrder() {
+            document.getElementById('diegoModal').classList.remove('show');
+        }
+
+        function generateDiegoOrder() {
+            if (productionLines.length === 0) {
+                return `<div class="empty-state"><p>No hay líneas de producción aún.</p></div>`;
+            }
+
+            const grouped = {};
+            for (const line of productionLines) {
+                const key = line.product + '|' + line.format;
+                if (!grouped[key]) {
+                    grouped[key] = { product: line.product, format: line.format, quantity: 0 };
+                }
+                grouped[key].quantity += line.quantity;
+            }
+
+            let html = '<div class="modal-order-section">';
+            html += '<div class="order-section-title">Productos a procesar</div>';
+
+            for (const key in grouped) {
+                const item = grouped[key];
+                const conv = getConversions(item.product, item.format);
+                const redesVal = item.quantity * (item.format === 'redes' ? 1 : conv.redes);
+                const jarrasVal = item.quantity * conv.jarras;
+
+                const formatDisplay = item.format === 'redes' ? 'Redes directas' :
+                    item.format === 'all-included' ? 'All-Included (300g)' :
+                    item.format === 'separado' ? 'Separado' : item.format;
+
+                const varietyInfo = item.variety ? (item.variety === 'bahia' ? ' [Bahía - Illa de Riu]' : ' [Marisma - Doña Ana]') : '';
+                html += `
+                    <div class="order-item">
+                        <strong>${item.product}</strong> - ${formatDisplay} x${item.quantity}${varietyInfo}<br>
+                        Redes: ${redesVal} | Jarras: ${jarrasVal}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            html += `
+                <div class="order-buttons">
+                    <button class="btn-primary" onclick="copyDiegoToClipboard()">📋 Copiar al portapapeles</button>
+                    <button class="btn-primary" onclick="shareDiegoWhatsApp()">💬 Compartir WhatsApp</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function copyDiegoToClipboard() {
+            const text = generateDiegoText();
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copiado al portapapeles');
+            });
+        }
+
+        function generateDiegoText() {
+            let text = '📦 ORDEN PARA DIEGO\n\n';
+            const summary = calculateSummary();
+
+            for (const line of productionLines) {
+                const conv = getConversions(line.product, line.format);
+                const redesVal = line.isDirectRedes ? line.quantity : conv.redes * line.quantity;
+                const jarrasVal = line.isDirectRedes ? line.quantity : conv.jarras * line.quantity;
+
+                let varietyTxt = '';
+                if (line.variety === 'bahia') varietyTxt = ' [Bahía]';
+                else if (line.variety === 'marisma') varietyTxt = ' [Marisma]';
+
+                const salsaTxt = line.salsaMode === 'nueva' ? ' ⚡SALSA NUEVA' : '';
+                const formatTxt = line.isDirectRedes ? 'redes directas' : line.format;
+                text += `• ${line.product} (${formatTxt}): ${line.quantity}${varietyTxt}${salsaTxt}\n`;
+                text += `  └─ Redes: ${redesVal} | Jarras: ${jarrasVal}\n`;
+            }
+
+            text += `\n📊 TOTALES\n`;
+            text += `Redes Maratelli: ${summary.redesMaratelli} | Bahía: ${summary.redesBahia} | Marisma: ${summary.redesMarisma}\n`;
+            text += `Jarras: ${summary.jarrasPescado + summary.jarrasVerdura + summary.jarrasRisotto + summary.jarrasMaestro}`;
+
+            return text;
+        }
+
+        function shareDiegoWhatsApp() {
+            const text = generateDiegoText();
+            const url = `whatsapp://send?phone=34644646303&text=${encodeURIComponent(text)}`;
+            window.location.href = url;
+        }
+
+        function openIsabelOrder() {
+            const content = generateIsabelOrder();
+            document.getElementById('isabelContent').innerHTML = content;
+            document.getElementById('isabelModal').classList.add('show');
+        }
+
+        function closeIsabelOrder() {
+            document.getElementById('isabelModal').classList.remove('show');
+        }
+
+        function generateIsabelOrder() {
+            if (productionLines.length === 0) {
+                return `<div class="empty-state"><p>No hay líneas de producción aún.</p></div>`;
+            }
+
+            const summary = calculateSummary();
+            let html = '';
+
+            // Caldos
+            html += '<div class="modal-order-section">';
+            html += '<div class="order-section-title">Caldos necesarios</div>';
+            if (Object.keys(summary.caldos).length > 0) {
+                for (const [type, liters] of Object.entries(summary.caldos)) {
+                    if (liters > 0) {
+                        html += `<div class="order-item"><strong>${type}</strong><br>${liters} litros</div>`;
+                    }
+                }
+            } else {
+                html += '<div class="order-item">Sin caldos requeridos</div>';
+            }
+            html += '</div>';
+
+            // Salsas
+            html += '<div class="modal-order-section">';
+            html += '<div class="order-section-title">Salsas necesarias</div>';
+            if (Object.keys(summary.salsas).length > 0) {
+                for (const [type, note] of Object.entries(summary.salsas)) {
+                    const isAlert = note.includes('SIEMPRE');
+                    const style = isAlert ? 'background-color: #FFEBEE; color: var(--alert-red); font-weight: 700;' : '';
+                    html += `<div class="order-item" style="${style}"><strong>${type}</strong><br>${note}</div>`;
+                }
+            } else {
+                html += '<div class="order-item">Sin salsas requeridas</div>';
+            }
+            html += '</div>';
+
+            // Jarras
+            html += '<div class="modal-order-section">';
+            html += '<div class="order-section-title">Jarras a preparar</div>';
+            const totalJarras = summary.jarrasPescado + summary.jarrasVerdura + summary.jarrasRisotto + summary.jarrasMaestro;
+            html += `<div class="order-item"><strong>Total:</strong> ${totalJarras} jarras</div>`;
+            html += '</div>';
+
+            html += `
+                <div class="order-buttons">
+                    <button class="btn-primary" onclick="copyIsabelToClipboard()">📋 Copiar al portapapeles</button>
+                    <button class="btn-primary" onclick="shareIsabelWhatsApp()">💬 Compartir WhatsApp</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function copyIsabelToClipboard() {
+            const text = generateIsabelText();
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copiado al portapapeles');
+            });
+        }
+
+        function generateIsabelText() {
+            let text = '🍲 ORDEN PARA ISABEL\n\n';
+            const summary = calculateSummary();
+
+            text += '🥘 CALDOS\n';
+            if (Object.keys(summary.caldos).length > 0) {
+                for (const [type, liters] of Object.entries(summary.caldos)) {
+                    if (liters > 0) {
+                        text += `• ${type}: ${liters}L\n`;
+                    }
+                }
+            } else {
+                text += '• Sin caldos requeridos\n';
+            }
+
+            text += '\n🌶️ SALSAS\n';
+            if (Object.keys(summary.salsas).length > 0) {
+                for (const [type, note] of Object.entries(summary.salsas)) {
+                    const displayNote = note.includes('Pendiente') ? '❓ PENDIENTE' : note;
+                    text += `• ${type}: ${displayNote}\n`;
+                }
+            } else {
+                text += '• Sin salsas requeridas\n';
+            }
+
+            text += `\n🏺 JARRAS: ${summary.jarrasPescado + summary.jarrasVerdura + summary.jarrasRisotto + summary.jarrasMaestro} jarras`;
+
+            return text;
+        }
+
+        function shareIsabelWhatsApp() {
+            const text = generateIsabelText();
+            const url = `whatsapp://send?phone=34644646303&text=${encodeURIComponent(text)}`;
+            window.location.href = url;
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (event) => {
+            const diegoModal = document.getElementById('diegoModal');
+            const isabelModal = document.getElementById('isabelModal');
+            if (event.target === diegoModal) {
+                closeDiegoOrder();
+            }
+            if (event.target === isabelModal) {
+                closeIsabelOrder();
+            }
+        });
+
+        // ============================================================================
+        // LOCAL STORAGE
+        // ============================================================================
+
+        function saveToLocalStorage() {
+            const planDate = document.getElementById('planDate').value;
+            const data = {
+                ria_plan_dia: planDate,
+                production_lines: productionLines
+            };
+            localStorage.setItem('riaFormData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const data = localStorage.getItem('riaFormData');
+            if (data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    productionLines = parsed.production_lines || [];
+                    if (parsed.ria_plan_dia) {
+                        document.getElementById('planDate').value = parsed.ria_plan_dia;
+                    }
+                } catch (e) {
+                    console.error('Error loading from localStorage:', e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
