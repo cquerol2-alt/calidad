@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIA Registro Caldos, Salsas y Preelaboraciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #1B5E20;
+            --primary-green-light: #2E7D32;
+            --primary-green-lighter: #66BB6A;
+            --danger-red: #D32F2F;
+            --warning-orange: #F57C00;
+            --success-green: #388E3C;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --border-gray: #BDBDBD;
+            --bg-light: #FAFAFA;
+            --bg-white: #FFFFFF;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background-color: var(--bg-white);
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-gray);
+            overflow-x: auto;
+            position: sticky;
+            top: 68px;
+            z-index: 50;
+        }
+
+        .tab-button {
+            flex-shrink: 0;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .tab-button:hover {
+            background-color: var(--primary-green-lighter);
+            color: white;
+        }
+
+        .tab-button.active {
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 100%;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            padding: 12px;
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            background-color: var(--bg-white);
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
+        }
+
+        input.error,
+        select.error {
+            border-color: var(--danger-red);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Section styling */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-top: 24px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--primary-green);
+        }
+
+        /* Ingredients table */
+        .ingredients-table {
+            width: 100%;
+            margin-bottom: 16px;
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border-gray);
+        }
+
+        .ingredients-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ingredients-table th {
+            background-color: var(--bg-light);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--border-gray);
+        }
+
+        .ingredients-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .ingredients-table td:last-child {
+            border-right: none;
+        }
+
+        .ingredients-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ingredients-table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .add-ingredient-btn {
+            background-color: var(--primary-green-lighter);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .add-ingredient-btn:hover {
+            background-color: var(--primary-green);
+        }
+
+        /* Sobrante section */
+        .sobrante-section {
+            background-color: var(--bg-white);
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .sobrante-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .envasado-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .envasado-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .envasado-item label {
+            margin-bottom: 0;
+            flex: 0 0 auto;
+            min-width: 60px;
+        }
+
+        .envasado-item input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--border-gray);
+            border-radius: 4px;
+        }
+
+        .conservation-method {
+            margin-top: 16px;
+        }
+
+        .conservation-method label {
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .conservation-method select {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .conservation-details {
+            display: none;
+            background-color: var(--bg-light);
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .conservation-details.visible {
+            display: block;
+        }
+
+        .conservation-details .form-group {
+            margin-bottom: 12px;
+        }
+
+        /* Quantity multiplier */
+        .quantity-multiplier {
+            background-color: var(--bg-white);
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .quantity-multiplier-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .quantity-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .quantity-row input {
+            padding: 10px;
+            border: 2px solid var(--border-gray);
+            border-radius: 4px;
+        }
+
+        .quantity-row .remove-qty {
+            background-color: var(--danger-red);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .quantity-row .remove-qty:hover {
+            background-color: #B71C1C;
+        }
+
+        .add-quantity-btn {
+            background-color: var(--primary-green-lighter);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .add-quantity-btn:hover {
+            background-color: var(--primary-green);
+        }
+
+        /* Button styles */
+        button.btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-green);
+            color: white;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        button.btn-primary:hover {
+            background-color: var(--primary-green-light);
+            box-shadow: 0 4px 8px rgba(27, 94, 32, 0.3);
+        }
+
+        button.btn-primary:active {
+            transform: translateY(2px);
+        }
+
+        button.btn-secondary {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border-gray);
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        button.btn-secondary:hover {
+            background-color: white;
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        button.btn-small {
+            padding: 10px 16px;
+            font-size: 14px;
+            min-height: auto;
+        }
+
+        button.btn-success {
+            background-color: var(--success-green);
+            color: white;
+        }
+
+        button.btn-success:hover {
+            background-color: #2E7D32;
+        }
+
+        button.btn-share {
+            background-color: #25D366;
+            color: white;
+            width: 100%;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button.btn-share:hover {
+            background-color: #20BA58;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 16px;
+            right: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            animation: slideUp 0.3s ease;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .toast.success {
+            background-color: var(--success-green);
+        }
+
+        .toast.error {
+            background-color: var(--danger-red);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* History section */
+        .history-section {
+            margin-top: 32px;
+            padding: 16px;
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            border: 2px solid var(--border-gray);
+        }
+
+        .history-header {
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 12px;
+            background-color: var(--bg-light);
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .history-content {
+            display: none;
+            padding: 12px;
+        }
+
+        .history-content.open {
+            display: block;
+        }
+
+        .history-item {
+            padding: 12px;
+            background-color: var(--bg-light);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .nav-buttons a {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border-gray);
+        }
+
+        .nav-buttons a:hover {
+            background-color: white;
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .nav-buttons a.back-home {
+            background-color: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+
+        .nav-buttons a.back-home:hover {
+            background-color: var(--primary-green-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .envasado-group {
+                grid-template-columns: 1fr;
+            }
+
+            .quantity-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .tabs-container {
+                gap: 4px;
+            }
+
+            .tab-button {
+                min-width: 90px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Isabel — Caldos, Salsas y Preelaboraciones</h1>
+        <p>RIA-FORM-CALD-001 | Rice in Action</p>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+        <button class="tab-button active" data-tab="caldos">Caldos</button>
+        <button class="tab-button" data-tab="salsas">Salsas</button>
+        <button class="tab-button" data-tab="preelaboraciones">Preelaboraciones</button>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+        <!-- TAB: CALDOS -->
+        <div id="caldos" class="tab-content active">
+            <form id="formCaldos">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="caldos-fecha">Fecha</label>
+                        <input type="date" id="caldos-fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="caldos-operador">Operador</label>
+                        <input type="text" id="caldos-operador" placeholder="Tu nombre" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="caldos-tipo">Tipo de Caldo</label>
+                    <select id="caldos-tipo" required>
+                        <option value="">Selecciona un tipo</option>
+                        <option value="pescado">Caldo de Pescado</option>
+                        <option value="negro">Caldo Negro</option>
+                        <option value="verduras">Caldo de Verduras</option>
+                        <option value="risotto">Caldo de Risotto</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="caldos-lote">Número de Lote</label>
+                    <input type="text" id="caldos-lote" placeholder="Se auto-genera" readonly>
+                </div>
+
+                <div class="section-title">Ingredientes</div>
+                <div class="ingredients-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingrediente</th>
+                                <th>Cantidad Estándar</th>
+                                <th>Lote</th>
+                            </tr>
+                        </thead>
+                        <tbody id="caldos-ingredients">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label for="caldos-cantidad">Cantidad Total (litros)</label>
+                    <input type="number" id="caldos-cantidad" placeholder="20" step="0.1" min="0" required>
+                </div>
+
+                <div class="section-title">Sobrante / Conservación</div>
+                <div class="sobrante-section">
+                    <div class="sobrante-title">Envasado</div>
+                    <div class="envasado-group">
+                        <div class="envasado-item">
+                            <label>Bidones</label>
+                            <input type="number" id="caldos-bidones" placeholder="0" min="0" value="0">
+                        </div>
+                        <div class="envasado-item">
+                            <label>Bolsas</label>
+                            <input type="number" id="caldos-bolsas" placeholder="0" min="0" value="0">
+                        </div>
+                    </div>
+
+                    <div class="conservation-method">
+                        <label for="caldos-conservacion">Método de Conservación</label>
+                        <select id="caldos-conservacion" required>
+                            <option value="">Selecciona método</option>
+                            <option value="caliente">Guardado en caliente</option>
+                            <option value="pasteurizado">Pasteurizado</option>
+                            <option value="abatido">Abatido</option>
+                        </select>
+
+                        <div id="caldos-conservacion-details" class="conservation-details">
+                            <div class="form-group" id="caldos-temp-group">
+                                <label for="caldos-temperatura">Temperatura (°C)</label>
+                                <input type="number" id="caldos-temperatura" placeholder="65" step="0.1">
+                            </div>
+                            <div class="form-group" id="caldos-tiempo-group" style="display: none;">
+                                <label for="caldos-tiempo-pasteur">Tiempo de Pasteurización (minutos)</label>
+                                <input type="number" id="caldos-tiempo-pasteur" placeholder="30" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="saveCaldos()">Guardar Caldo</button>
+                <button type="button" class="btn btn-share" onclick="shareViaWhatsApp('caldos')">
+                    📱 Compartir por WhatsApp
+                </button>
+            </form>
+
+            <div class="history-section">
+                <div class="history-header" onclick="toggleHistory('caldos')">
+                    <span>Historial de Caldos</span>
+                    <span id="caldos-history-toggle">▼</span>
+                </div>
+                <div id="caldos-history" class="history-content">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: SALSAS -->
+        <div id="salsas" class="tab-content">
+            <form id="formSalsas">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salsas-fecha">Fecha</label>
+                        <input type="date" id="salsas-fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="salsas-operador">Operador</label>
+                        <input type="text" id="salsas-operador" placeholder="Tu nombre" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="salsas-tipo">Tipo de Salsa</label>
+                    <select id="salsas-tipo" required>
+                        <option value="">Selecciona un tipo</option>
+                        <option value="pescado">Salsa de Pescado</option>
+                        <option value="negra">Salsa Negra</option>
+                        <option value="verduras">Salsa de Verduras</option>
+                        <option value="pollo">Salsa de Pollo</option>
+                        <option value="boletus">Salsa de Boletus</option>
+                        <option value="setas">Salsa de Setas</option>
+                        <option value="tartufata">Salsa Tartufata</option>
+                        <option value="queso">Salsa de Queso</option>
+                        <option value="iberico">Salsa Ibérico</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="salsas-lote">Número de Lote</label>
+                    <input type="text" id="salsas-lote" placeholder="Se auto-genera" readonly>
+                </div>
+
+                <div class="section-title">Ingredientes</div>
+                <div class="ingredients-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingrediente</th>
+                                <th>Cantidad Estándar</th>
+                                <th>Lote</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salsas-ingredients">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label for="salsas-cantidad">Cantidad Total (litros)</label>
+                    <input type="number" id="salsas-cantidad" placeholder="20" step="0.1" min="0" required>
+                </div>
+
+                <div class="section-title">Sobrante / Conservación</div>
+                <div class="sobrante-section">
+                    <div class="sobrante-title">Envasado</div>
+                    <div class="envasado-group">
+                        <div class="envasado-item">
+                            <label>Bidones</label>
+                            <input type="number" id="salsas-bidones" placeholder="0" min="0" value="0">
+                        </div>
+                        <div class="envasado-item">
+                            <label>Bolsas</label>
+                            <input type="number" id="salsas-bolsas" placeholder="0" min="0" value="0">
+                        </div>
+                    </div>
+
+                    <div class="conservation-method">
+                        <label for="salsas-conservacion">Método de Conservación</label>
+                        <select id="salsas-conservacion" required>
+                            <option value="">Selecciona método</option>
+                            <option value="caliente">Guardado en caliente</option>
+                            <option value="pasteurizado">Pasteurizado</option>
+                            <option value="abatido">Abatido</option>
+                        </select>
+
+                        <div id="salsas-conservacion-details" class="conservation-details">
+                            <div class="form-group" id="salsas-temp-group">
+                                <label for="salsas-temperatura">Temperatura (°C)</label>
+                                <input type="number" id="salsas-temperatura" placeholder="65" step="0.1">
+                            </div>
+                            <div class="form-group" id="salsas-tiempo-group" style="display: none;">
+                                <label for="salsas-tiempo-pasteur">Tiempo de Pasteurización (minutos)</label>
+                                <input type="number" id="salsas-tiempo-pasteur" placeholder="30" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="saveSalsas()">Guardar Salsa</button>
+                <button type="button" class="btn btn-share" onclick="shareViaWhatsApp('salsas')">
+                    📱 Compartir por WhatsApp
+                </button>
+            </form>
+
+            <div class="history-section">
+                <div class="history-header" onclick="toggleHistory('salsas')">
+                    <span>Historial de Salsas</span>
+                    <span id="salsas-history-toggle">▼</span>
+                </div>
+                <div id="salsas-history" class="history-content">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: PREELABORACIONES -->
+        <div id="preelaboraciones" class="tab-content">
+            <form id="formPreelaboraciones">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prelab-fecha">Fecha</label>
+                        <input type="date" id="prelab-fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prelab-operador">Operador</label>
+                        <input type="text" id="prelab-operador" placeholder="Tu nombre" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="prelab-categoria">Categoría</label>
+                    <select id="prelab-categoria" required onchange="updatePrelabTypes()">
+                        <option value="">Selecciona categoría</option>
+                        <option value="jarras">Jarras</option>
+                        <option value="bases">Bases</option>
+                        <option value="caldos">Preparados para Caldos</option>
+                        <option value="salsas">Preparados para Salsas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prelab-tipo">Tipo de Preelaboración</label>
+                    <select id="prelab-tipo" required onchange="updatePrelabLot(); updatePrelabIngredients()">
+                        <option value="">Selecciona tipo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prelab-lote">Número de Lote</label>
+                    <input type="text" id="prelab-lote" placeholder="Se auto-genera" readonly>
+                </div>
+
+                <div class="section-title">Cantidades</div>
+                <div class="quantity-multiplier">
+                    <div class="quantity-multiplier-title">Cantidad en Formato Cantidad × Volumen</div>
+                    <div id="prelab-quantities">
+                        <div class="quantity-row">
+                            <input type="number" class="qty-number" placeholder="2" min="1" value="1">
+                            <input type="number" class="qty-volume" placeholder="1500" min="1" step="10" value="1000">
+                            <span style="color: var(--text-light);">ml</span>
+                        </div>
+                    </div>
+                    <button type="button" class="add-quantity-btn" onclick="addQuantityRow()">+ Agregar cantidad</button>
+                </div>
+
+                <div class="section-title">Ingredientes</div>
+                <div class="ingredients-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingrediente</th>
+                                <th>Cantidad</th>
+                                <th>Proveedor</th>
+                                <th>Lote</th>
+                            </tr>
+                        </thead>
+                        <tbody id="prelab-ingredients">
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="add-ingredient-btn" onclick="addIngredientRow()">+ Agregar ingrediente</button>
+
+                <button type="button" class="btn btn-primary" onclick="savePreelaboracion()">Guardar Preelaboración</button>
+                <button type="button" class="btn btn-share" onclick="shareViaWhatsApp('preelaboraciones')">
+                    📱 Compartir por WhatsApp
+                </button>
+            </form>
+
+            <div class="history-section">
+                <div class="history-header" onclick="toggleHistory('preelaboraciones')">
+                    <span>Historial de Preelaboraciones</span>
+                    <span id="preelaboraciones-history-toggle">▼</span>
+                </div>
+                <div id="preelaboraciones-history" class="history-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-buttons" style="position: fixed; bottom: 16px; left: 16px; right: 16px; z-index: 40; background: var(--bg-light); padding: 12px; border-radius: 8px;">
+        <a href="index.html" class="back-home">← Volver al Inicio</a>
+    </div>
+
+    <script>
+        // Recipes for caldos
+        const caldosRecipes = {
+            pescado: [
+                { ingredient: 'Preelaboración jarra pescado', qty: '1', unit: 'jarra', lot: 'RIA-' },
+                { ingredient: 'Agua', qty: '12', unit: 'L', lot: '' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            negro: [
+                { ingredient: 'Preelaboración jarra pescado', qty: '1', unit: 'jarra', lot: 'RIA-' },
+                { ingredient: 'Agua', qty: '12', unit: 'L', lot: '' },
+                { ingredient: 'Tinta de calamar', qty: '', unit: 'según receta', lot: '' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            verduras: [
+                { ingredient: 'Preelaboración jarra verduras', qty: '1', unit: 'jarra', lot: 'RIA-' },
+                { ingredient: 'Agua', qty: '12', unit: 'L', lot: '' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            risotto: [
+                { ingredient: 'Preelaboración jarra risotto', qty: '1', unit: 'jarra', lot: 'RIA-' },
+                { ingredient: 'Agua', qty: '12', unit: 'L', lot: '' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ]
+        };
+
+        // Recipes for salsas
+        const salsasRecipes = {
+            pescado: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Caldo de pescado', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            negra: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Caldo de pescado', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Tinta de calamar', qty: '', unit: 'según receta', lot: '' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            verduras: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Caldo de verduras', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            pollo: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Caldo de pollo', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            boletus: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Boletus deshidratado', qty: '', unit: 'según receta', lot: '' },
+                { ingredient: 'Caldo', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            setas: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Setas', qty: '', unit: 'según receta', lot: '' },
+                { ingredient: 'Caldo', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            tartufata: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Trufa', qty: '', unit: 'según receta', lot: '' },
+                { ingredient: 'Caldo', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            queso: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Queso', qty: '', unit: 'según receta', lot: '' },
+                { ingredient: 'Caldo', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ],
+            iberico: [
+                { ingredient: 'Base salmorreta', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Ibérico', qty: '', unit: 'según receta', lot: '' },
+                { ingredient: 'Caldo', qty: '', unit: 'según receta', lot: 'RIA-' },
+                { ingredient: 'Sal', qty: '', unit: 'al gusto', lot: '' }
+            ]
+        };
+
+        // Preelaboraciones types and ingredients
+        const prelabTypes = {
+            jarras: {
+                'jarra-pescado': {
+                    label: 'Jarra de Pescado',
+                    ingredients: [
+                        { ingredient: 'Gamba', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Rape', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Sepia', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Galera', qty: '', unit: 'kg', supplier: '', lot: '' }
+                    ]
+                },
+                'jarra-verduras': {
+                    label: 'Jarra de Verduras',
+                    ingredients: [
+                        { ingredient: 'Puerro', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Cebolla', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Zanahoria', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Apio', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Tomate', qty: '', unit: 'kg', supplier: '', lot: '' }
+                    ]
+                },
+                'jarra-risotto': {
+                    label: 'Jarra de Risotto',
+                    ingredients: [
+                        { ingredient: 'Parmesano', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Mantequilla', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Cebolla', qty: '', unit: 'kg', supplier: '', lot: '' }
+                    ]
+                },
+                'jarra-maestro': {
+                    label: 'Jarra de Maestro',
+                    ingredients: [
+                        { ingredient: 'Preelaboración polvos', qty: '', unit: 'kg', supplier: '', lot: 'RIA-' },
+                        { ingredient: 'Hazelnut', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Sal', qty: '', unit: 'kg', supplier: '', lot: '' }
+                    ]
+                }
+            },
+            bases: {
+                'agua-azafran': {
+                    label: 'Agua Azafrán',
+                    ingredients: [
+                        { ingredient: 'Agua', qty: '', unit: 'L', supplier: '', lot: '' },
+                        { ingredient: 'Azafrán', qty: '', unit: 'g', supplier: '', lot: '' }
+                    ]
+                },
+                'aceite-ajo': {
+                    label: 'Aceite Ajo',
+                    ingredients: [
+                        { ingredient: 'Aceite de oliva', qty: '', unit: 'L', supplier: '', lot: '' },
+                        { ingredient: 'Ajo', qty: '', unit: 'kg', supplier: '', lot: '' }
+                    ]
+                },
+                'aceite-nora': {
+                    label: 'Aceite Ñora',
+                    ingredients: [
+                        { ingredient: 'Aceite de oliva', qty: '', unit: 'L', supplier: '', lot: '' },
+                        { ingredient: 'Ñora', qty: '', unit: 'kg', supplier: '', lot: '' }
+                    ]
+                },
+                'salmorreta': {
+                    label: 'Salmorreta',
+                    ingredients: [
+                        { ingredient: 'Tomate', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Ñora', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Ajo', qty: '', unit: 'kg', supplier: '', lot: '' },
+                        { ingredient: 'Aceite', qty: '', unit: 'L', supplier: '', lot: '' }
+                    ]
+                }
+            },
+            caldos: {
+                'prep-verdura': {
+                    label: 'Preparado Verdura',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-risotto': {
+                    label: 'Preparado Risotto',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                }
+            },
+            salsas: {
+                'prep-pescado': {
+                    label: 'Preparado Pescado',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-verduras': {
+                    label: 'Preparado Verduras',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-negro': {
+                    label: 'Preparado Negro',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-boletus': {
+                    label: 'Preparado Boletus',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-setas': {
+                    label: 'Preparado Setas',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-tartufata': {
+                    label: 'Preparado Tartufata',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-queso': {
+                    label: 'Preparado Queso',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                },
+                'prep-iberico': {
+                    label: 'Preparado Ibérico',
+                    ingredients: [
+                        { ingredient: 'Ingrediente 1', qty: '', unit: '', supplier: '', lot: '' }
+                    ]
+                }
+            }
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeDateFields();
+            initializeConservationListeners();
+            loadHistories();
+        });
+
+        function initializeTabs() {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        }
+
+        function initializeDateFields() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('caldos-fecha').value = today;
+            document.getElementById('salsas-fecha').value = today;
+            document.getElementById('prelab-fecha').value = today;
+        }
+
+        function formatDate(date) {
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = String(d.getFullYear()).slice(-2);
+            return `${day}${month}${year}`;
+        }
+
+        function generateCaldosLot() {
+            const tipo = document.getElementById('caldos-tipo').value;
+            const fecha = document.getElementById('caldos-fecha').value;
+            const dateStr = formatDate(fecha);
+
+            const prefixes = {
+                pescado: 'RIA-PESCADO',
+                negro: 'RIA-NEGRO',
+                verduras: 'RIA-VERDURAS',
+                risotto: 'RIA-RISOTTO'
+            };
+
+            if (prefixes[tipo]) {
+                document.getElementById('caldos-lote').value = `${prefixes[tipo]}-${dateStr}`;
+            }
+        }
+
+        function generateSalsasLot() {
+            const tipo = document.getElementById('salsas-tipo').value;
+            const fecha = document.getElementById('salsas-fecha').value;
+            const dateStr = formatDate(fecha);
+
+            const prefixes = {
+                pescado: 'RIA-SALSA-PESCADO',
+                negra: 'RIA-SALSA-NEGRA',
+                verduras: 'RIA-SALSA-VERDURAS',
+                pollo: 'RIA-SALSA-POLLO',
+                boletus: 'RIA-SALSA-BOLETUS',
+                setas: 'RIA-SALSA-SETAS',
+                tartufata: 'RIA-SALSA-TARTUFATA',
+                queso: 'RIA-SALSA-QUESO',
+                iberico: 'RIA-SALSA-IBERICO'
+            };
+
+            if (prefixes[tipo]) {
+                document.getElementById('salsas-lote').value = `${prefixes[tipo]}-${dateStr}`;
+            }
+        }
+
+        function updatePrelabTypes() {
+            const categoria = document.getElementById('prelab-categoria').value;
+            const tipoSelect = document.getElementById('prelab-tipo');
+            tipoSelect.innerHTML = '<option value="">Selecciona tipo</option>';
+
+            if (categoria && prelabTypes[categoria]) {
+                Object.entries(prelabTypes[categoria]).forEach(([key, data]) => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = data.label;
+                    tipoSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updatePrelabLot() {
+            const categoria = document.getElementById('prelab-categoria').value;
+            const tipo = document.getElementById('prelab-tipo').value;
+            const fecha = document.getElementById('prelab-fecha').value;
+            const dateStr = formatDate(fecha);
+
+            if (categoria && tipo) {
+                const typeData = prelabTypes[categoria][tipo];
+                const typeShort = tipo.replace('jarra-', 'J').replace('prep-', 'P').replace('agua-', 'A').replace('aceite-', 'AC').replace('-', '').toUpperCase().substring(0, 8);
+                document.getElementById('prelab-lote').value = `RIA-PRELAB-${typeShort}-${dateStr}`;
+            }
+        }
+
+        function updatePrelabIngredients() {
+            const categoria = document.getElementById('prelab-categoria').value;
+            const tipo = document.getElementById('prelab-tipo').value;
+            const tbody = document.getElementById('prelab-ingredients');
+            tbody.innerHTML = '';
+
+            if (categoria && tipo && prelabTypes[categoria][tipo]) {
+                const ingredients = prelabTypes[categoria][tipo].ingredients;
+                ingredients.forEach((ing, idx) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="text" value="${ing.ingredient}" placeholder="Ingrediente"></td>
+                        <td><input type="number" value="${ing.qty}" placeholder="Cantidad" step="0.1"></td>
+                        <td><input type="text" value="${ing.supplier}" placeholder="Proveedor"></td>
+                        <td><input type="text" value="${ing.lot}" placeholder="Lote"></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function populateCaldosIngredients() {
+            const tipo = document.getElementById('caldos-tipo').value;
+            const tbody = document.getElementById('caldos-ingredients');
+            tbody.innerHTML = '';
+
+            if (caldosRecipes[tipo]) {
+                caldosRecipes[tipo].forEach(ing => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${ing.ingredient}</td>
+                        <td>${ing.qty ? ing.qty + ' ' + ing.unit : ing.unit}</td>
+                        <td><input type="text" placeholder="Lote" value="${ing.lot}"></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function populateSalsasIngredients() {
+            const tipo = document.getElementById('salsas-tipo').value;
+            const tbody = document.getElementById('salsas-ingredients');
+            tbody.innerHTML = '';
+
+            if (salsasRecipes[tipo]) {
+                salsasRecipes[tipo].forEach(ing => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${ing.ingredient}</td>
+                        <td>${ing.qty ? ing.qty + ' ' + ing.unit : ing.unit}</td>
+                        <td><input type="text" placeholder="Lote" value="${ing.lot}"></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function initializeConservationListeners() {
+            document.getElementById('caldos-conservacion').addEventListener('change', updateConservationFields('caldos'));
+            document.getElementById('salsas-conservacion').addEventListener('change', updateConservationFields('salsas'));
+
+            document.getElementById('caldos-tipo').addEventListener('change', function() {
+                generateCaldosLot();
+                populateCaldosIngredients();
+            });
+
+            document.getElementById('salsas-tipo').addEventListener('change', function() {
+                generateSalsasLot();
+                populateSalsasIngredients();
+            });
+
+            document.getElementById('caldos-fecha').addEventListener('change', generateCaldosLot);
+            document.getElementById('salsas-fecha').addEventListener('change', generateSalsasLot);
+            document.getElementById('prelab-fecha').addEventListener('change', updatePrelabLot);
+        }
+
+        function updateConservationFields(type) {
+            return function() {
+                const method = document.getElementById(`${type}-conservacion`).value;
+                const details = document.getElementById(`${type}-conservacion-details`);
+                const tempGroup = document.getElementById(`${type}-temp-group`);
+                const timeGroup = document.getElementById(`${type}-tiempo-group`);
+
+                if (method === 'caliente') {
+                    details.classList.add('visible');
+                    tempGroup.style.display = 'block';
+                    timeGroup.style.display = 'none';
+                } else if (method === 'pasteurizado') {
+                    details.classList.add('visible');
+                    tempGroup.style.display = 'block';
+                    timeGroup.style.display = 'block';
+                } else if (method === 'abatido') {
+                    details.classList.remove('visible');
+                } else {
+                    details.classList.remove('visible');
+                }
+            };
+        }
+
+        function addQuantityRow() {
+            const container = document.getElementById('prelab-quantities');
+            const row = document.createElement('div');
+            row.className = 'quantity-row';
+            row.innerHTML = `
+                <input type="number" class="qty-number" placeholder="2" min="1" value="1">
+                <input type="number" class="qty-volume" placeholder="1500" min="1" step="10" value="1000">
+                <button type="button" class="remove-qty" onclick="this.parentElement.remove()">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function addIngredientRow() {
+            const tbody = document.getElementById('prelab-ingredients');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" placeholder="Ingrediente"></td>
+                <td><input type="number" placeholder="Cantidad" step="0.1"></td>
+                <td><input type="text" placeholder="Proveedor"></td>
+                <td><input type="text" placeholder="Lote"></td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        function saveCaldos() {
+            const data = {
+                fecha: document.getElementById('caldos-fecha').value,
+                operador: document.getElementById('caldos-operador').value,
+                tipo: document.getElementById('caldos-tipo').value,
+                lote: document.getElementById('caldos-lote').value,
+                cantidad: document.getElementById('caldos-cantidad').value,
+                bidones: document.getElementById('caldos-bidones').value,
+                bolsas: document.getElementById('caldos-bolsas').value,
+                conservacion: document.getElementById('caldos-conservacion').value,
+                temperatura: document.getElementById('caldos-temperatura').value,
+                tiempo: document.getElementById('caldos-tiempo-pasteur').value,
+                ingredientes: []
+            };
+
+            document.querySelectorAll('#caldos-ingredients tr').forEach(row => {
+                const lotInput = row.querySelector('input');
+                if (lotInput) {
+                    data.ingredientes.push({
+                        ingrediente: row.cells[0].textContent,
+                        cantidad: row.cells[1].textContent,
+                        lote: lotInput.value
+                    });
+                }
+            });
+
+            let caldos = JSON.parse(localStorage.getItem('caldos') || '[]');
+            caldos.push(data);
+            localStorage.setItem('caldos', JSON.stringify(caldos));
+
+            showToast('Caldo guardado exitosamente');
+            document.getElementById('formCaldos').reset();
+            initializeDateFields();
+            loadHistories();
+        }
+
+        function saveSalsas() {
+            const data = {
+                fecha: document.getElementById('salsas-fecha').value,
+                operador: document.getElementById('salsas-operador').value,
+                tipo: document.getElementById('salsas-tipo').value,
+                lote: document.getElementById('salsas-lote').value,
+                cantidad: document.getElementById('salsas-cantidad').value,
+                bidones: document.getElementById('salsas-bidones').value,
+                bolsas: document.getElementById('salsas-bolsas').value,
+                conservacion: document.getElementById('salsas-conservacion').value,
+                temperatura: document.getElementById('salsas-temperatura').value,
+                tiempo: document.getElementById('salsas-tiempo-pasteur').value,
+                ingredientes: []
+            };
+
+            document.querySelectorAll('#salsas-ingredients tr').forEach(row => {
+                const lotInput = row.querySelector('input');
+                if (lotInput) {
+                    data.ingredientes.push({
+                        ingrediente: row.cells[0].textContent,
+                        cantidad: row.cells[1].textContent,
+                        lote: lotInput.value
+                    });
+                }
+            });
+
+            let salsas = JSON.parse(localStorage.getItem('salsas') || '[]');
+            salsas.push(data);
+            localStorage.setItem('salsas', JSON.stringify(salsas));
+
+            showToast('Salsa guardada exitosamente');
+            document.getElementById('formSalsas').reset();
+            initializeDateFields();
+            loadHistories();
+        }
+
+        function savePreelaboracion() {
+            const quantities = [];
+            document.querySelectorAll('#prelab-quantities .quantity-row').forEach(row => {
+                const number = row.querySelector('.qty-number').value;
+                const volume = row.querySelector('.qty-volume').value;
+                quantities.push({ number, volume });
+            });
+
+            const ingredientes = [];
+            document.querySelectorAll('#prelab-ingredients tr').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                ingredientes.push({
+                    ingrediente: inputs[0].value,
+                    cantidad: inputs[1].value,
+                    proveedor: inputs[2].value,
+                    lote: inputs[3].value
+                });
+            });
+
+            const data = {
+                fecha: document.getElementById('prelab-fecha').value,
+                operador: document.getElementById('prelab-operador').value,
+                categoria: document.getElementById('prelab-categoria').value,
+                tipo: document.getElementById('prelab-tipo').value,
+                lote: document.getElementById('prelab-lote').value,
+                cantidades: quantities,
+                ingredientes: ingredientes
+            };
+
+            let preelaboraciones = JSON.parse(localStorage.getItem('preelaboraciones') || '[]');
+            preelaboraciones.push(data);
+            localStorage.setItem('preelaboraciones', JSON.stringify(preelaboraciones));
+
+            showToast('Preelaboración guardada exitosamente');
+            document.getElementById('formPreelaboraciones').reset();
+            initializeDateFields();
+            updatePrelabTypes();
+            loadHistories();
+        }
+
+        function loadHistories() {
+            loadCaldosHistory();
+            loadSalsasHistory();
+            loadPrelabHistory();
+        }
+
+        function loadCaldosHistory() {
+            const caldos = JSON.parse(localStorage.getItem('caldos') || '[]');
+            const container = document.getElementById('caldos-history');
+            container.innerHTML = '';
+
+            if (caldos.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light);">Sin registros</p>';
+                return;
+            }
+
+            caldos.slice().reverse().forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <strong class="history-item-lote">${item.lote}</strong><br>
+                    Fecha: ${item.fecha} | Operador: ${item.operador}<br>
+                    Tipo: ${item.tipo} | Cantidad: ${item.cantidad}L<br>
+                    Conservación: ${item.conservacion}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadSalsasHistory() {
+            const salsas = JSON.parse(localStorage.getItem('salsas') || '[]');
+            const container = document.getElementById('salsas-history');
+            container.innerHTML = '';
+
+            if (salsas.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light);">Sin registros</p>';
+                return;
+            }
+
+            salsas.slice().reverse().forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <strong class="history-item-lote">${item.lote}</strong><br>
+                    Fecha: ${item.fecha} | Operador: ${item.operador}<br>
+                    Tipo: ${item.tipo} | Cantidad: ${item.cantidad}L<br>
+                    Conservación: ${item.conservacion}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function loadPrelabHistory() {
+            const prelab = JSON.parse(localStorage.getItem('preelaboraciones') || '[]');
+            const container = document.getElementById('preelaboraciones-history');
+            container.innerHTML = '';
+
+            if (prelab.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light);">Sin registros</p>';
+                return;
+            }
+
+            prelab.slice().reverse().forEach(item => {
+                const cantidades = item.cantidades.map(c => `${c.number}x${c.volume}ml`).join(', ');
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <strong class="history-item-lote">${item.lote}</strong><br>
+                    Fecha: ${item.fecha} | Operador: ${item.operador}<br>
+                    Tipo: ${item.tipo} | Cantidades: ${cantidades}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleHistory(type) {
+            const content = document.getElementById(`${type}-history`);
+            const toggle = document.getElementById(`${type}-history-toggle`);
+            content.classList.toggle('open');
+            toggle.textContent = content.classList.contains('open') ? '▲' : '▼';
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast success';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideDown 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        function shareViaWhatsApp(type) {
+            let message = '';
+            const phone = '+34651459196';
+
+            if (type === 'caldos') {
+                const lote = document.getElementById('caldos-lote').value;
+                const cantidad = document.getElementById('caldos-cantidad').value;
+                const conservacion = document.getElementById('caldos-conservacion').value;
+                message = `Registro Caldo - Lote: ${lote}\nCantidad: ${cantidad}L\nConservación: ${conservacion}`;
+            } else if (type === 'salsas') {
+                const lote = document.getElementById('salsas-lote').value;
+                const cantidad = document.getElementById('salsas-cantidad').value;
+                const conservacion = document.getElementById('salsas-conservacion').value;
+                message = `Registro Salsa - Lote: ${lote}\nCantidad: ${cantidad}L\nConservación: ${conservacion}`;
+            } else if (type === 'preelaboraciones') {
+                const lote = document.getElementById('prelab-lote').value;
+                const cantidades = document.querySelectorAll('#prelab-quantities .quantity-row');
+                let cantStr = '';
+                cantidades.forEach(row => {
+                    const num = row.querySelector('.qty-number').value;
+                    const vol = row.querySelector('.qty-volume').value;
+                    cantStr += `${num}x${vol}ml `;
+                });
+                message = `Registro Preelaboración - Lote: ${lote}\nCantidades: ${cantStr}`;
+            }
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
