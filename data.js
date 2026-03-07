@@ -266,35 +266,80 @@ const RIA_DATA = {
     recetasCaldos: {
         pescado: {
             nombre: 'Caldo de Pescado',
+            codigo: 'REC-CALDO-001',
+            rendimiento: 25,
             ingredientes: [
-                { nombre: 'Preelaboración jarra pescado', cantidad: '1', unidad: 'jarra', lotePrefijo: 'RIA-' },
-                { nombre: 'Agua', cantidad: '12', unidad: 'L', lotePrefijo: '' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Caldo Aneto (12 bricks x 1,5L)', cantidad: '18000', unidad: 'ml', tipo: 'proveedor', codigoMP: 'MP01', proveedor: 'Aneto' },
+                { nombre: 'Aceite rojo de ñora', cantidad: '5000', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-NORA', codigoMP: 'MP45' },
+                { nombre: 'Aceite de ajo', cantidad: '800', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
+                { nombre: 'Umami (Givaudan)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
+                { nombre: 'Goma xantana', cantidad: '10', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP07' },
+                { nombre: 'Agua de azafrán', cantidad: '500', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' }
             ]
         },
         negro: {
             nombre: 'Caldo Negro',
+            codigo: 'REC-CALDO-002',
+            rendimiento: 25,
             ingredientes: [
-                { nombre: 'Preelaboración jarra pescado', cantidad: '1', unidad: 'jarra', lotePrefijo: 'RIA-' },
-                { nombre: 'Agua', cantidad: '12', unidad: 'L', lotePrefijo: '' },
-                { nombre: 'Tinta de calamar', cantidad: '', unidad: 'según receta', lotePrefijo: '' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Caldo Aneto (9 bricks x 1,5L)', cantidad: '13500', unidad: 'ml', tipo: 'proveedor', codigoMP: 'MP01', proveedor: 'Aneto' },
+                { nombre: 'Agua', cantidad: '5500', unidad: 'ml', tipo: 'na' },
+                { nombre: 'Aceite de girasol alto oleico', cantidad: '5000', unidad: 'ml', tipo: 'proveedor', codigoMP: 'MP04', proveedor: 'Coreysa' },
+                { nombre: 'Aceite de ajo', cantidad: '800', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
+                { nombre: 'Umami (Givaudan)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
+                { nombre: 'Goma xantana', cantidad: '10', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP07' },
+                { nombre: 'Tinta negra', cantidad: '1400', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP08' }
+            ]
+        },
+        pollo: {
+            nombre: 'Caldo de Pollo',
+            codigo: 'REC-CALDO-003',
+            rendimiento: 25,
+            ingredientes: [
+                { nombre: 'Paeller de Pollo (6 latas x 3L)', cantidad: '18000', unidad: 'ml', tipo: 'proveedor', codigoMP: 'MP03', proveedor: 'Paeller' },
+                { nombre: 'Aceite de ajo', cantidad: '2310', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
+                { nombre: 'Aceite de oliva', cantidad: '1385', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP05', proveedor: 'Castillo de Canena' },
+                { nombre: 'Aceite de girasol', cantidad: '2000', unidad: 'ml', tipo: 'proveedor', codigoMP: 'MP04', proveedor: 'Coreysa' },
+                { nombre: 'Umami (Givaudan)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
+                { nombre: 'Goma xantana', cantidad: '10', unidad: 'g', tipo: 'proveedor', proveedor: '', codigoMP: 'MP07' },
+                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' },
+                { nombre: 'Salmorreta', cantidad: '120', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-SALMORRETA', codigoMP: 'MP43' },
+                { nombre: 'Hazelnut (colorante Sensient)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP09', proveedor: 'Sensient' }
             ]
         },
         verduras: {
             nombre: 'Caldo de Verduras',
+            codigo: 'REC-CALDO-004',
+            rendimiento: 17,
+            preelaboracionPesado: 'pesado-verduras',
             ingredientes: [
-                { nombre: 'Preelaboración jarra verduras', cantidad: '1', unidad: 'jarra', lotePrefijo: 'RIA-' },
-                { nombre: 'Agua', cantidad: '12', unidad: 'L', lotePrefijo: '' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Agua caliente', cantidad: '14800', unidad: 'ml', tipo: 'na' },
+                { nombre: 'Pesado Verduras (espinaca + cebolla)', cantidad: '700', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PESADO-VERD', codigoPrelab: 'pesado-verduras' },
+                { nombre: 'Aceite de ajo', cantidad: '1310', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
+                { nombre: 'Aceite de girasol', cantidad: '3321', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP04', proveedor: 'Coreysa' },
+                { nombre: 'Aceite de oliva', cantidad: '1000', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP05', proveedor: 'Castillo de Canena' },
+                { nombre: 'Aroma de hierbas', cantidad: '20', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP11' },
+                { nombre: 'Umami (Givaudan)', cantidad: '150', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
+                { nombre: 'Salmorreta', cantidad: '350', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-SALMORRETA', codigoMP: 'MP43' },
+                { nombre: 'Pimentón', cantidad: '60', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP10' },
+                { nombre: 'Goma xantana', cantidad: '8.26', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP07' },
+                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' }
             ]
         },
         risotto: {
             nombre: 'Caldo de Risotto',
+            codigo: 'REC-CALDO-005',
+            rendimiento: 23,
+            preelaboracionPesado: 'pesado-risotto',
             ingredientes: [
-                { nombre: 'Preelaboración jarra risotto', cantidad: '1', unidad: 'jarra', lotePrefijo: 'RIA-' },
-                { nombre: 'Agua', cantidad: '12', unidad: 'L', lotePrefijo: '' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Agua', cantidad: '19000', unidad: 'ml', tipo: 'na' },
+                { nombre: 'Pesado Risotto (pollo + puerro + cebolla)', cantidad: '2355', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PESADO-RIS', codigoPrelab: 'pesado-risotto' },
+                { nombre: 'Aceite de ajo', cantidad: '1447', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
+                { nombre: 'Mantequilla', cantidad: '800', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP13', proveedor: 'Presidente' },
+                { nombre: 'Aceite de girasol alto oleico', cantidad: '2500', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP04', proveedor: 'Coreysa' },
+                { nombre: 'Goma xantana', cantidad: '10.8', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP07' },
+                { nombre: 'Umami (Givaudan)', cantidad: '180', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
+                { nombre: 'Almidón', cantidad: '38', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP12' }
             ]
         }
     },
@@ -429,50 +474,75 @@ const RIA_DATA = {
         // --- Bases ---
         bases: {
             'agua-azafran': {
-                nombre: 'Agua Azafrán',
+                nombre: 'Agua de Azafrán',
+                codigo: 'PRELAB-AZAFRAN',
+                lotePrefijo: 'RIA-PRELAB-AZAFRAN',
+                codigoMP: 'MP48',
                 ingredientes: [
-                    { nombre: 'Agua', cantidad: '', unidad: 'L' },
-                    { nombre: 'Azafrán', cantidad: '', unidad: 'g' }
-                ]
+                    { nombre: 'Agua', cantidad: '400', unidad: 'g', tipo: 'na' },
+                    { nombre: 'Azafrán', cantidad: '7', unidad: 'g', codigoMP: 'MP19', tipo: 'proveedor' }
+                ],
+                notas: 'Infusión: calentar agua, añadir azafrán, dejar reposar'
             },
             'aceite-ajo': {
-                nombre: 'Aceite Ajo',
+                nombre: 'Aceite de Ajo',
+                codigo: 'PRELAB-AJO',
+                lotePrefijo: 'RIA-PRELAB-AJO',
+                codigoMP: 'MP46',
                 ingredientes: [
-                    { nombre: 'Aceite de oliva', cantidad: '', unidad: 'L' },
-                    { nombre: 'Ajo', cantidad: '', unidad: 'kg' }
-                ]
+                    { nombre: 'Aceite de oliva', cantidad: '', unidad: 'L', tipo: 'proveedor' },
+                    { nombre: 'Ajo', cantidad: '', unidad: 'kg', tipo: 'proveedor' }
+                ],
+                notas: 'Receta pendiente de completar'
             },
             'aceite-nora': {
-                nombre: 'Aceite Ñora',
+                nombre: 'Aceite Rojo de Ñora',
+                codigo: 'PRELAB-NORA',
+                lotePrefijo: 'RIA-PRELAB-NORA',
+                codigoMP: 'MP45',
                 ingredientes: [
-                    { nombre: 'Aceite de oliva', cantidad: '', unidad: 'L' },
-                    { nombre: 'Ñora', cantidad: '', unidad: 'kg' }
-                ]
+                    { nombre: 'Aceite de oliva', cantidad: '', unidad: 'L', tipo: 'proveedor' },
+                    { nombre: 'Ñora', cantidad: '', unidad: 'kg', tipo: 'proveedor' }
+                ],
+                notas: 'Receta pendiente de completar'
             },
             'salmorreta': {
                 nombre: 'Salmorreta',
+                codigo: 'PRELAB-SALMORRETA',
+                lotePrefijo: 'RIA-PRELAB-SALMORRETA',
+                codigoMP: 'MP43',
                 ingredientes: [
-                    { nombre: 'Tomate', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Ñora', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Ajo', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Aceite', cantidad: '', unidad: 'L' }
-                ]
+                    { nombre: 'Ajo', cantidad: '', unidad: 'kg', tipo: 'proveedor' },
+                    { nombre: 'Aceite', cantidad: '', unidad: 'L', tipo: 'proveedor' },
+                    { nombre: 'Carne de ñora', cantidad: '', unidad: 'kg', tipo: 'proveedor' },
+                    { nombre: 'Tomate deshidratado', cantidad: '', unidad: 'kg', tipo: 'proveedor' }
+                ],
+                notas: 'Receta pendiente de completar'
             }
         },
 
-        // --- Preparados para Caldos ---
+        // --- Pesado para Caldos (preelaboración de pesado) ---
         preparadosCaldos: {
-            'prep-verdura': {
-                nombre: 'Preparado Verdura',
+            'pesado-verduras': {
+                nombre: 'Pesado Verduras (Deshidratadas)',
+                codigo: 'PRELAB-PESADO-VERD',
+                lotePrefijo: 'RIA-PESADO-VERD',
                 ingredientes: [
-                    { nombre: 'Ingrediente 1', cantidad: '', unidad: '' }
-                ]
+                    { nombre: 'Espinaca deshidratada', cantidad: '500', unidad: 'g', codigoMP: 'MP33', tipo: 'proveedor' },
+                    { nombre: 'Cebolla deshidratada', cantidad: '200', unidad: 'g', codigoMP: 'MP34', tipo: 'proveedor' }
+                ],
+                notas: 'Se pesa y se registra lote antes de incorporar al caldo'
             },
-            'prep-risotto': {
-                nombre: 'Preparado Risotto',
+            'pesado-risotto': {
+                nombre: 'Pesado Risotto (Pollo + Verdura)',
+                codigo: 'PRELAB-PESADO-RIS',
+                lotePrefijo: 'RIA-PESADO-RIS',
                 ingredientes: [
-                    { nombre: 'Ingrediente 1', cantidad: '', unidad: '' }
-                ]
+                    { nombre: 'Pollo deshidratado', cantidad: '1500', unidad: 'g', codigoMP: 'MP35', tipo: 'proveedor' },
+                    { nombre: 'Puerro deshidratado', cantidad: '555', unidad: 'g', codigoMP: 'MP36', tipo: 'proveedor' },
+                    { nombre: 'Cebolla deshidratada', cantidad: '300', unidad: 'g', codigoMP: 'MP34', tipo: 'proveedor' }
+                ],
+                notas: 'Se pesa pollo y verduras juntos, se registra lote antes de incorporar al caldo'
             }
         },
 
@@ -499,44 +569,119 @@ const RIA_DATA = {
     ],
 
     // ========================================================================
-    // PROVEEDORES
+    // MATERIA PRIMA MAESTRO (MP01-MP58)
     // ========================================================================
-    proveedores: {
-        // Se irán completando. Estructura: clave → { nombre, contacto, productos[] }
-        // Ejemplo:
-        // proveedor1: { nombre: 'Proveedor X', contacto: '...', productos: ['Gamba', 'Rape'] }
+    materiaPrima: {
+        // --- Caldos base ---
+        MP01: { nombre: 'Caldo Natural Aneto Pescado Restauración', proveedor: 'Aneto', formato: 'Tetra Brik 1,5L (cajas 10 uds)', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaLocal: '0560_001 PROFESIONAL PESCADO (AL PUNTO DE SAL-SEP25).pdf', vidaUtil: '12 meses', alergenos: ['pescado', 'apio', 'crustáceos (posible)', 'moluscos (posible)'], codigoAneto: '101050113' },
+        MP02: { nombre: 'Caldo Aneto Pollo', proveedor: 'Aneto', formato: 'Brick 1L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true },
+        MP03: { nombre: 'Caldo Paeller Pollo', proveedor: 'Paeller', formato: 'Lata 3L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/14_x5-3o3-J60TGEDsdF06wc7s06x797K' },
+        // --- Aceites ---
+        MP04: { nombre: 'Aceite girasol alto oleico', proveedor: 'Coreysa', formato: 'Garrafa 25L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/18gxWTtodrnT9g_ktuvZhvKq5eKukf9cf' },
+        MP05: { nombre: 'Aceite de oliva virgen extra', proveedor: 'Dalmau', formato: 'Garrafa 5L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/123tPERK4BqmmOFwmLbDyvgTBEa0K5M5v' },
+        // --- Aromas y aditivos ---
+        MP06: { nombre: 'Umami (Givaudan)', proveedor: 'Givaudan', formato: 'Bote 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq' },
+        MP07: { nombre: 'Goma xantana', proveedor: 'Solchem', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1s9knhOB4VdRdygbT7NmsiDlY7rSxS7Dp' },
+        MP08: { nombre: 'Tinta de calamar', proveedor: 'Nortindal', formato: 'Frasco 100g', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1xoggA9ZKcb-jHNwAdoXwDumm4bsiFUHX' },
+        MP09: { nombre: 'Hazelnut (colorante Sensient)', proveedor: 'Sensient', formato: 'Bote 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1gH58oWgfF30HguhBabwFPU3aYdPQS2KF' },
+        MP10: { nombre: 'Pimentón', proveedor: 'Coato', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/15fObM80xHzaYjncbQBq_TLkCAEgg80My' },
+        MP11: { nombre: 'Hierbas (mezcla)', proveedor: 'Expressions Aromatiques', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1IT3K-bek2mM8iRcgfphHc6-wWyH00ewh' },
+        MP12: { nombre: 'Almidón', proveedor: 'Ingredion', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1W4DRpTJzUE4WF7gKSv9ER1IsRpOpTNWG' },
+        // --- Mantequilla y lácteos ---
+        MP13: { nombre: 'Mantequilla', proveedor: 'Presidente', formato: 'Bloque 2,5kg', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true },
+        MP14: { nombre: 'Queso parmesano', proveedor: '', formato: 'Cuña', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1kAaJnflNAL66nUzOcxYCig6vM3PEloEc' },
+        // --- (MP15-MP18 eliminados: gamba, rape, sepia, galera no se usan como ingrediente) ---
+        // --- Especias ---
+        MP19: { nombre: 'Azafrán', proveedor: 'Verdú Cantó', formato: 'Sobres 1g', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Fjkdysu9PyUo8el9pdcDWsJDhPaKrmFC' },
+        // --- Embutido ---
+        MP20: { nombre: 'Ibérico (secreto/pluma)', proveedor: 'Enrique Tomás', formato: 'Pieza envasada', conservacion: 'Congelación', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1VXZ5E4jgj4B6OyN6mHkMoZweataGnI-j' },
+        // --- Setas y hongos ---
+        MP21: { nombre: 'Harina Fina de Boletus', proveedor: 'Honza', formato: 'Bolsa plástico (5 uds/caja)', conservacion: 'Tª Ambiente (lugar fresco y seco)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '020 - F - CA - HARINA FINA DE BOLETUS.pdf', vidaUtil: '3 años desde deshidratación', alergenos: [], certificaciones: ['IFS Food'] },
+        MP22: { nombre: 'Mezcla de Setas Básica con Boletus', proveedor: 'Honza', formato: 'Granel 10kg (bolsa polietileno)', conservacion: 'Congelación (-18°C)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '123-CA - MEZCLA DE SETAS BASICA.pdf', vidaUtil: '3 años desde congelación', alergenos: [], certificaciones: ['IFS Food'] },
+        MP23: { nombre: 'Tartufata (pasta de trufa)', proveedor: 'Solchem', formato: 'Tarro', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1ILIbFB6shtYxY02QKBR4Dsd69rASSBQ0' },
+        // --- Arroces ---
+        MP24: { nombre: 'Arroz Elaborado Variedad Nuovo Maratelli', proveedor: 'Arrocera del Pirineo', formato: 'Saco 25kg (también 1kg, 5kg, 20kg)', conservacion: 'Tª Ambiente (lugar limpio, fresco, seco)', tipo: 'ingrediente', fichaDrive: '', fichaLocal: 'Ficha técnica arroz n.maratelli ene-25.pdf', vidaUtil: '18 meses', alergenos: [], categoría: 'Extra', clasificacion: 'Oryza sativa, Subespecie Japónica' },
+        MP25: { nombre: 'Arroz Bahía (Illa de Riu)', proveedor: 'Illa de Riu', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '' },
+        MP26: { nombre: 'Arroz Marisma (Doña Ana)', proveedor: 'Doña Ana', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '' },
+        MP27: { nombre: 'Arroz Maestro', proveedor: 'Arrozua', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/150CMCFcXsy2k34qx8_Nn5T7NddcTxIxV' },
+        // --- Tomate ---
+        MP30: { nombre: 'Tomate deshidratado', proveedor: 'Mas Tomate', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1jzY5Y02cEe6SHLdAvi0S4xFicqxNGn9K' },
+        MP31: { nombre: 'Ñora', proveedor: 'Rajope', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/14Y5TrAfb7BcJCH82AS6mG4rKlL3Vay8s' },
+        // --- (MP32 eliminado: salsa de pescado ya no se usa) ---
+        // --- Verduras deshidratadas ---
+        MP33: { nombre: 'Espinaca deshidratada', proveedor: 'Vegenat', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0' },
+        MP34: { nombre: 'Cebolla deshidratada', proveedor: 'Vegenat', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0' },
+        MP35: { nombre: 'Pollo deshidratado', proveedor: 'Ugeave', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1AxRLbDkx66WHYQnzU34ivpTsCI9NIXCP' },
+        MP36: { nombre: 'Puerro deshidratado', proveedor: 'Vegenat', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0' },
+        // --- Otros ingredientes con ficha ---
+        MP37: { nombre: 'Sal', proveedor: 'La Margarita', formato: 'Saco', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1zUCFdwS4WkNvzhGsjBpjFnwdefTCyVeo' },
+        MP38: { nombre: 'Ãcido tartárico', proveedor: '', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true },
+        MP39: { nombre: 'Azúcar', proveedor: '', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true },
+        MP41: { nombre: 'Aditivos (Solchem)', proveedor: 'Solchem', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1ILIbFB6shtYxY02QKBR4Dsd69rASSBQ0' },
+        MP42: { nombre: 'Ruca', proveedor: 'Ruca', formato: '', conservacion: '', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1rkdsbJe30uuexAvs186VDR0mBJrJ_mvf' },
+        // --- Elaboraciones intermedias (fabricación propia) ---
+        MP43: { nombre: 'Salmorreta', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Refrigeración', tipo: 'preelaboracion', fichaDrive: '' },
+        MP44: { nombre: 'Aceite de gamba', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
+        MP45: { nombre: 'Aceite rojo de ñora', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
+        MP46: { nombre: 'Aceite de ajo', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
+        MP47: { nombre: 'Aceite de trufa', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
+        MP48: { nombre: 'Agua de azafrán', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Refrigeración', tipo: 'preelaboracion', fichaDrive: '' },
+        // --- Packaging: Bandejas ---
+        MP50: { nombre: 'Bandeja EOS-35 (190-300g)', proveedor: 'Sarabia', formato: 'PP/PPEVOHPP 1000µ', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Raciones individuales 190-300g', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'EOS-35 PP o PPEVOHPP 1000µ.pdf' },
+        MP55: { nombre: 'Bandeja EOS-50 (380-450g)', proveedor: 'Sarabia', formato: 'PP/PPEVOHPP', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Raciones grandes 380-450g', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: '230-1.pdf / 230-2.pdf' },
+        MP56: { nombre: 'Bandeja Bulk (GN1225)', proveedor: 'Sarabia', formato: 'PPEVOHPP 800µ', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Formato Bulk (3 redes)', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'GN1225 PPEVOHPP 800µ.pdf' },
+        // --- Packaging: Film (mismo para barquetas y salsas) ---
+        MP51: { nombre: 'Film top-seal (LFX501T062-K59)', proveedor: 'Adrados', formato: 'Bobina PE Fest/PP Peel/AF', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Sellado de todas las bandejas y salsas', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'FT-FILM LFX501T062---K59 - 2023.08.29.pdf' },
+        // --- Packaging: Otros ---
+        MP52: { nombre: 'Etiqueta producto', proveedor: '', formato: 'Bobina', conservacion: 'Tª Ambiente', tipo: 'packaging', fichaDrive: '' },
+        MP53: { nombre: 'Caja cartón', proveedor: 'Femasa', formato: 'Palet', conservacion: 'Tª Ambiente', tipo: 'packaging', fichaDrive: '' },
+        MP54: { nombre: 'Precinto/cinta', proveedor: '', formato: 'Rollo', conservacion: 'Tª Ambiente', tipo: 'packaging', fichaDrive: '' }
     },
 
     // ========================================================================
-    // INGREDIENTES MAESTROS
+    // PROVEEDORES
     // ========================================================================
-    // Catálogo de ingredientes con su proveedor habitual
-    ingredientes: {
-        gamba:          { nombre: 'Gamba', unidad: 'kg', proveedorHabitual: '' },
-        rape:           { nombre: 'Rape', unidad: 'kg', proveedorHabitual: '' },
-        sepia:          { nombre: 'Sepia', unidad: 'kg', proveedorHabitual: '' },
-        galera:         { nombre: 'Galera', unidad: 'kg', proveedorHabitual: '' },
-        puerro:         { nombre: 'Puerro', unidad: 'kg', proveedorHabitual: '' },
-        cebolla:        { nombre: 'Cebolla', unidad: 'kg', proveedorHabitual: '' },
-        zanahoria:      { nombre: 'Zanahoria', unidad: 'kg', proveedorHabitual: '' },
-        apio:           { nombre: 'Apio', unidad: 'kg', proveedorHabitual: '' },
-        tomate:         { nombre: 'Tomate', unidad: 'kg', proveedorHabitual: '' },
-        parmesano:      { nombre: 'Parmesano', unidad: 'kg', proveedorHabitual: '' },
-        mantequilla:    { nombre: 'Mantequilla', unidad: 'kg', proveedorHabitual: '' },
-        aceiteOliva:    { nombre: 'Aceite de oliva', unidad: 'L', proveedorHabitual: '' },
-        ajo:            { nombre: 'Ajo', unidad: 'kg', proveedorHabitual: '' },
-        nora:           { nombre: 'Ñora', unidad: 'kg', proveedorHabitual: '' },
-        azafran:        { nombre: 'Azafrán', unidad: 'g', proveedorHabitual: '' },
-        sal:            { nombre: 'Sal', unidad: 'kg', proveedorHabitual: '' },
-        tintaCalamar:   { nombre: 'Tinta de calamar', unidad: '', proveedorHabitual: '' },
-        trufa:          { nombre: 'Trufa', unidad: 'kg', proveedorHabitual: '' },
-        queso:          { nombre: 'Queso', unidad: 'kg', proveedorHabitual: '' },
-        ibericoIng:     { nombre: 'Ibérico', unidad: 'kg', proveedorHabitual: '' },
-        boletusDesh:    { nombre: 'Boletus deshidratado', unidad: 'kg', proveedorHabitual: '' },
-        setasIng:       { nombre: 'Setas', unidad: 'kg', proveedorHabitual: '' },
-        hazelnut:       { nombre: 'Hazelnut', unidad: 'kg', proveedorHabitual: '' },
-        preelabPolvos:  { nombre: 'Preelaboración polvos', unidad: 'kg', proveedorHabitual: '' },
-        agua:           { nombre: 'Agua', unidad: 'L', proveedorHabitual: '' }
+    proveedores: {
+        aneto:              { nombre: 'Aneto', productos: ['MP01', 'MP02'] },
+        paeller:            { nombre: 'Paeller', productos: ['MP03'], fichaDrive: 'https://drive.google.com/drive/folders/14_x5-3o3-J60TGEDsdF06wc7s06x797K' },
+        coreysa:            { nombre: 'Coreysa', productos: ['MP04'], fichaDrive: 'https://drive.google.com/drive/folders/18gxWTtodrnT9g_ktuvZhvKq5eKukf9cf' },
+        dalmau:             { nombre: 'Dalmau', productos: ['MP05'], fichaDrive: 'https://drive.google.com/drive/folders/123tPERK4BqmmOFwmLbDyvgTBEa0K5M5v' },
+        givaudan:           { nombre: 'Givaudan', productos: ['MP06'], fichaDrive: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq' },
+        solchem:            { nombre: 'Solchem', productos: ['MP07', 'MP41'], fichaDrive: 'https://drive.google.com/drive/folders/1ILIbFB6shtYxY02QKBR4Dsd69rASSBQ0' },
+        nortindal:          { nombre: 'Nortindal', productos: ['MP08'], fichaDrive: 'https://drive.google.com/drive/folders/1xoggA9ZKcb-jHNwAdoXwDumm4bsiFUHX' },
+        sensient:           { nombre: 'Sensient', productos: ['MP09'], fichaDrive: 'https://drive.google.com/drive/folders/1gH58oWgfF30HguhBabwFPU3aYdPQS2KF' },
+        coato:              { nombre: 'Coato', productos: ['MP10'], fichaDrive: 'https://drive.google.com/drive/folders/15fObM80xHzaYjncbQBq_TLkCAEgg80My' },
+        expressionsArom:    { nombre: 'Expressions Aromatiques', productos: ['MP11'], fichaDrive: 'https://drive.google.com/drive/folders/1IT3K-bek2mM8iRcgfphHc6-wWyH00ewh' },
+        ingredion:          { nombre: 'Ingredion', productos: ['MP12'], fichaDrive: 'https://drive.google.com/drive/folders/1W4DRpTJzUE4WF7gKSv9ER1IsRpOpTNWG' },
+        verduCanto:         { nombre: 'Verdú Cantó', productos: ['MP19'], fichaDrive: 'https://drive.google.com/drive/folders/1Fjkdysu9PyUo8el9pdcDWsJDhPaKrmFC' },
+        enriqueTomas:       { nombre: 'Enrique Tomás', productos: ['MP20'], fichaDrive: 'https://drive.google.com/drive/folders/1VXZ5E4jgj4B6OyN6mHkMoZweataGnI-j' },
+        honza:              { nombre: 'Honza', productos: ['MP21', 'MP22'], fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI' },
+        arroceraPirineo:    { nombre: 'Arrocera del Pirineo', productos: ['MP24'] },
+        illaDeRiu:          { nombre: 'Illa de Riu', productos: ['MP25'] },
+        donaAna:            { nombre: 'Doña Ana', productos: ['MP26'] },
+        arrozua:            { nombre: 'Arrozua', productos: ['MP27'], fichaDrive: 'https://drive.google.com/drive/folders/150CMCFcXsy2k34qx8_Nn5T7NddcTxIxV' },
+        masTomate:          { nombre: 'Mas Tomate', productos: ['MP30'], fichaDrive: 'https://drive.google.com/drive/folders/1jzY5Y02cEe6SHLdAvi0S4xFicqxNGn9K' },
+        rajope:             { nombre: 'Rajope', productos: ['MP31'], fichaDrive: 'https://drive.google.com/drive/folders/14Y5TrAfb7BcJCH82AS6mG4rKlL3Vay8s' },
+        vegenat:            { nombre: 'Vegenat', productos: ['MP33', 'MP34', 'MP36'], fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0' },
+        ugeave:             { nombre: 'Ugeave', productos: ['MP35'], fichaDrive: 'https://drive.google.com/drive/folders/1AxRLbDkx66WHYQnzU34ivpTsCI9NIXCP' },
+        laMargarita:        { nombre: 'La Margarita', productos: ['MP37'], fichaDrive: 'https://drive.google.com/drive/folders/1zUCFdwS4WkNvzhGsjBpjFnwdefTCyVeo' },
+        ruca:               { nombre: 'Ruca', productos: ['MP42'], fichaDrive: 'https://drive.google.com/drive/folders/1rkdsbJe30uuexAvs186VDR0mBJrJ_mvf' },
+        makro:              { nombre: 'Makro', productos: ['MP14'], fichaDrive: 'https://drive.google.com/drive/folders/1MAAqJjeW3rWXdIMt4tjzlpMORppLZbMO' },
+        presidente:         { nombre: 'Presidente', productos: ['MP13'] },
+        sarabia:            { nombre: 'Sarabia', productos: ['MP50', 'MP55', 'MP56'], fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn' },
+        adrados:            { nombre: 'Adrados', productos: ['MP51'], fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn' },
+        femasa:             { nombre: 'Femasa', productos: ['MP53'] }
+    },
+
+    // ========================================================================
+    // ENVASES POR FORMATO DE PRODUCTO
+    // ========================================================================
+    envasePorFormato: {
+        // formato → código MP del envase + film
+        'individual-pequeno': { bandeja: 'MP50', film: 'MP51', descripcion: 'EOS-35 (190-300g)' },
+        'individual-grande':  { bandeja: 'MP55', film: 'MP51', descripcion: 'EOS-50 (380-450g)' },
+        'bulk':               { bandeja: 'MP56', film: 'MP51', descripcion: 'Bulk GN1225' },
+        'salsa':              { bandeja: null, film: 'MP51', descripcion: 'Solo film (sin bandeja)' }
     },
 
     // ========================================================================
