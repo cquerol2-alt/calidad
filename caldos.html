@@ -438,21 +438,6 @@
             background-color: #2E7D32;
         }
 
-        button.btn-share {
-            background-color: #25D366;
-            color: white;
-            width: 100%;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        button.btn-share:hover {
-            background-color: #20BA58;
-        }
-
         /* Toast notifications */
         .toast {
             position: fixed;
@@ -519,12 +504,90 @@
         }
 
         .history-item {
-            padding: 12px;
+            padding: 0;
             background-color: var(--bg-light);
             border-radius: 4px;
             margin-bottom: 8px;
             font-size: 13px;
             line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .history-item-header {
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item-header:hover {
+            background-color: rgba(27, 94, 32, 0.05);
+        }
+
+        .history-item-body {
+            display: none;
+            padding: 0 12px 12px;
+            border-top: 1px solid var(--border-gray);
+        }
+
+        .history-item.open .history-item-body {
+            display: block;
+        }
+
+        .history-item .history-arrow {
+            transition: transform 0.2s;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .history-item.open .history-arrow {
+            transform: rotate(90deg);
+        }
+
+        .history-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .history-detail:last-child {
+            border-bottom: none;
+        }
+
+        .history-detail-label {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .history-detail-value {
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .history-ingredients {
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .history-ingredients table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+
+        .history-ingredients th,
+        .history-ingredients td {
+            padding: 3px 6px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 11px;
+        }
+
+        .history-ingredients th {
+            font-weight: 600;
+            color: var(--text-light);
         }
 
         /* Navigation buttons */
@@ -720,9 +783,6 @@
                 </div>
 
                 <button type="button" class="btn btn-primary" onclick="saveCaldos()">Guardar Caldo</button>
-                <button type="button" class="btn btn-share" onclick="shareViaWhatsApp('caldos')">
-                    📱 Compartir por WhatsApp
-                </button>
             </form>
 
             <div class="history-section">
@@ -834,9 +894,6 @@
                 </div>
 
                 <button type="button" class="btn btn-primary" onclick="saveSalsas()">Guardar Salsa</button>
-                <button type="button" class="btn btn-share" onclick="shareViaWhatsApp('salsas')">
-                    📱 Compartir por WhatsApp
-                </button>
             </form>
 
             <div class="history-section">
@@ -952,9 +1009,6 @@
                 </div>
 
                 <button type="button" class="btn btn-primary" onclick="savePreelaboracion()">Guardar Preelaboración</button>
-                <button type="button" class="btn btn-share" onclick="shareViaWhatsApp('preelaboraciones')">
-                    📱 Compartir por WhatsApp
-                </button>
             </form>
 
             <div class="history-section">
@@ -1496,6 +1550,21 @@
             loadPrelabHistory();
         }
 
+        function renderIngredientesTable(ingredientes) {
+            if (!ingredientes || ingredientes.length === 0) return '';
+            let html = '<div class="history-ingredients"><strong>Ingredientes:</strong><table><tr><th>Ingrediente</th><th>Cant.</th><th>Lote</th></tr>';
+            ingredientes.forEach(ing => {
+                const cantText = ing.cantidadProporcional || ing.cantidad || '';
+                html += `<tr><td>${ing.ingrediente}</td><td>${cantText}</td><td>${ing.lote || '—'}</td></tr>`;
+            });
+            html += '</table></div>';
+            return html;
+        }
+
+        function toggleHistoryItem(el) {
+            el.closest('.history-item').classList.toggle('open');
+        }
+
         function loadCaldosHistory() {
             const caldos = JSON.parse(localStorage.getItem('caldos') || '[]');
             const container = document.getElementById('caldos-history');
@@ -1510,10 +1579,23 @@
                 const div = document.createElement('div');
                 div.className = 'history-item';
                 div.innerHTML = `
-                    <strong class="history-item-lote">${item.lote}</strong><br>
-                    Fecha: ${item.fecha} | Operador: ${item.operador}<br>
-                    Tipo: ${item.tipo} | Cantidad: ${item.cantidad}L<br>
-                    Conservación: ${item.conservacion}
+                    <div class="history-item-header" onclick="toggleHistoryItem(this)">
+                        <div><strong>${item.lote}</strong> — ${item.tipo} (${item.fecha})</div>
+                        <span class="history-arrow">▶</span>
+                    </div>
+                    <div class="history-item-body">
+                        <div class="history-detail"><span class="history-detail-label">Fecha</span><span class="history-detail-value">${item.fecha || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Operador</span><span class="history-detail-value">${item.operador || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Tipo de caldo</span><span class="history-detail-value">${item.tipo || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Lote</span><span class="history-detail-value">${item.lote || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Cantidad</span><span class="history-detail-value">${item.cantidad || '—'} L</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Bidones</span><span class="history-detail-value">${item.bidones || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Bolsas</span><span class="history-detail-value">${item.bolsas || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Conservación</span><span class="history-detail-value">${item.conservacion || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Temperatura</span><span class="history-detail-value">${item.temperatura || '—'}°C</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Tiempo pasteurización</span><span class="history-detail-value">${item.tiempo || '—'} min</span></div>
+                        ${renderIngredientesTable(item.ingredientes)}
+                    </div>
                 `;
                 container.appendChild(div);
             });
@@ -1533,10 +1615,23 @@
                 const div = document.createElement('div');
                 div.className = 'history-item';
                 div.innerHTML = `
-                    <strong class="history-item-lote">${item.lote}</strong><br>
-                    Fecha: ${item.fecha} | Operador: ${item.operador}<br>
-                    Tipo: ${item.tipo} | Cantidad: ${item.cantidad}L<br>
-                    Conservación: ${item.conservacion}
+                    <div class="history-item-header" onclick="toggleHistoryItem(this)">
+                        <div><strong>${item.lote}</strong> — ${item.tipo} (${item.fecha})</div>
+                        <span class="history-arrow">▶</span>
+                    </div>
+                    <div class="history-item-body">
+                        <div class="history-detail"><span class="history-detail-label">Fecha</span><span class="history-detail-value">${item.fecha || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Operador</span><span class="history-detail-value">${item.operador || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Tipo de salsa</span><span class="history-detail-value">${item.tipo || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Lote</span><span class="history-detail-value">${item.lote || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Cantidad</span><span class="history-detail-value">${item.cantidad || '—'} L</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Bidones</span><span class="history-detail-value">${item.bidones || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Bolsas</span><span class="history-detail-value">${item.bolsas || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Conservación</span><span class="history-detail-value">${item.conservacion || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Temperatura</span><span class="history-detail-value">${item.temperatura || '—'}°C</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Tiempo pasteurización</span><span class="history-detail-value">${item.tiempo || '—'} min</span></div>
+                        ${renderIngredientesTable(item.ingredientes)}
+                    </div>
                 `;
                 container.appendChild(div);
             });
@@ -1553,13 +1648,34 @@
             }
 
             prelab.slice().reverse().forEach(item => {
-                const cantidades = item.cantidades.map(c => `${c.number}x${c.volume}ml`).join(', ');
+                const cantidades = item.cantidades ? item.cantidades.map(c => `${c.number}x${c.volume}ml`).join(', ') : '—';
                 const div = document.createElement('div');
                 div.className = 'history-item';
+                let coccionHtml = '';
+                if (item.categoria === 'bases') {
+                    coccionHtml = `
+                        <div class="history-detail"><span class="history-detail-label">Cocción hora</span><span class="history-detail-value">${item.coccionHora || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Cocción temp.</span><span class="history-detail-value">${item.coccionTemp || '—'}°C</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Abatimiento inicio</span><span class="history-detail-value">${item.abatHoraInicio || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Abatimiento fin</span><span class="history-detail-value">${item.abatHoraFin || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Abatimiento temp.</span><span class="history-detail-value">${item.abatTemp || '—'}°C</span></div>
+                    `;
+                }
                 div.innerHTML = `
-                    <strong class="history-item-lote">${item.lote}</strong><br>
-                    Fecha: ${item.fecha} | Operador: ${item.operador}<br>
-                    Tipo: ${item.tipo} | Cantidades: ${cantidades}
+                    <div class="history-item-header" onclick="toggleHistoryItem(this)">
+                        <div><strong>${item.lote}</strong> — ${item.tipo} (${item.fecha})</div>
+                        <span class="history-arrow">▶</span>
+                    </div>
+                    <div class="history-item-body">
+                        <div class="history-detail"><span class="history-detail-label">Fecha</span><span class="history-detail-value">${item.fecha || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Operador</span><span class="history-detail-value">${item.operador || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Categoría</span><span class="history-detail-value">${item.categoria || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Tipo</span><span class="history-detail-value">${item.tipo || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Lote</span><span class="history-detail-value">${item.lote || '—'}</span></div>
+                        <div class="history-detail"><span class="history-detail-label">Cantidades</span><span class="history-detail-value">${cantidades}</span></div>
+                        ${coccionHtml}
+                        ${renderIngredientesTable(item.ingredientes)}
+                    </div>
                 `;
                 container.appendChild(div);
             });
@@ -1582,37 +1698,6 @@
                 toast.style.animation = 'slideDown 0.3s ease';
                 setTimeout(() => toast.remove(), 300);
             }, 2500);
-        }
-
-        function shareViaWhatsApp(type) {
-            let message = '';
-            const phone = RIA_DATA.empleados.isabel.whatsapp;
-
-            if (type === 'caldos') {
-                const lote = document.getElementById('caldos-lote').value;
-                const cantidad = document.getElementById('caldos-cantidad').value;
-                const conservacion = document.getElementById('caldos-conservacion').value;
-                message = `Registro Caldo - Lote: ${lote}\nCantidad: ${cantidad}L\nConservación: ${conservacion}`;
-            } else if (type === 'salsas') {
-                const lote = document.getElementById('salsas-lote').value;
-                const cantidad = document.getElementById('salsas-cantidad').value;
-                const conservacion = document.getElementById('salsas-conservacion').value;
-                message = `Registro Salsa - Lote: ${lote}\nCantidad: ${cantidad}L\nConservación: ${conservacion}`;
-            } else if (type === 'preelaboraciones') {
-                const lote = document.getElementById('prelab-lote').value;
-                const cantidades = document.querySelectorAll('#prelab-quantities .quantity-row');
-                let cantStr = '';
-                cantidades.forEach(row => {
-                    const num = row.querySelector('.qty-number').value;
-                    const vol = row.querySelector('.qty-volume').value;
-                    cantStr += `${num}x${vol}ml `;
-                });
-                message = `Registro Preelaboración - Lote: ${lote}\nCantidades: ${cantStr}`;
-            }
-
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
         }
 
         // === ENVÍO A GOOGLE SHEETS ===
