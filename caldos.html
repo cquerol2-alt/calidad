@@ -661,24 +661,26 @@
                     <input type="text" id="caldos-lote" placeholder="Se auto-genera" readonly>
                 </div>
 
+                <div class="form-group">
+                    <label for="caldos-cantidad">Cantidad Total Producida (litros)</label>
+                    <input type="number" id="caldos-cantidad" placeholder="Ej: 20" step="0.1" min="0" required oninput="recalcCaldosProportional()">
+                    <small id="caldos-rendimiento-info" style="color: #666; display: none;"></small>
+                </div>
+
                 <div class="section-title">Ingredientes</div>
                 <div class="ingredients-table">
                     <table>
                         <thead>
                             <tr>
                                 <th>Ingrediente</th>
-                                <th>Cantidad Estándar</th>
+                                <th>Receta Estándar</th>
+                                <th>Cantidad Proporcional</th>
                                 <th>Lote</th>
                             </tr>
                         </thead>
                         <tbody id="caldos-ingredients">
                         </tbody>
                     </table>
-                </div>
-
-                <div class="form-group">
-                    <label for="caldos-cantidad">Cantidad Total (litros)</label>
-                    <input type="number" id="caldos-cantidad" placeholder="20" step="0.1" min="0" required>
                 </div>
 
                 <div class="section-title">Sobrante / Conservación</div>
@@ -773,24 +775,26 @@
                     <input type="text" id="salsas-lote" placeholder="Se auto-genera" readonly>
                 </div>
 
+                <div class="form-group">
+                    <label for="salsas-cantidad">Cantidad Total Producida (litros)</label>
+                    <input type="number" id="salsas-cantidad" placeholder="Ej: 20" step="0.1" min="0" required oninput="recalcSalsasProportional()">
+                    <small id="salsas-rendimiento-info" style="color: #666; display: none;"></small>
+                </div>
+
                 <div class="section-title">Ingredientes</div>
                 <div class="ingredients-table">
                     <table>
                         <thead>
                             <tr>
                                 <th>Ingrediente</th>
-                                <th>Cantidad Estándar</th>
+                                <th>Receta Estándar</th>
+                                <th>Cantidad Proporcional</th>
                                 <th>Lote</th>
                             </tr>
                         </thead>
                         <tbody id="salsas-ingredients">
                         </tbody>
                     </table>
-                </div>
-
-                <div class="form-group">
-                    <label for="salsas-cantidad">Cantidad Total (litros)</label>
-                    <input type="number" id="salsas-cantidad" placeholder="20" step="0.1" min="0" required>
                 </div>
 
                 <div class="section-title">Sobrante / Conservación</div>
@@ -1183,17 +1187,52 @@
             const tbody = document.getElementById('caldos-ingredients');
             tbody.innerHTML = '';
 
+            // Mostrar rendimiento estándar
+            const infoEl = document.getElementById('caldos-rendimiento-info');
+            if (tipo && RIA_DATA.recetasCaldos[tipo]) {
+                const rend = RIA_DATA.recetasCaldos[tipo].rendimiento;
+                infoEl.textContent = `Receta estándar: ${rend} litros`;
+                infoEl.style.display = 'block';
+            } else {
+                infoEl.style.display = 'none';
+            }
+
             if (caldosRecipes[tipo]) {
                 caldosRecipes[tipo].forEach(ing => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${ing.ingredient}</td>
                         <td>${ing.qty ? ing.qty + ' ' + ing.unit : ing.unit}</td>
+                        <td class="proporcional" data-qty="${ing.qty || 0}" data-unit="${ing.unit}">—</td>
                         <td><input type="text" placeholder="Lote" value="${ing.lot}"></td>
                     `;
                     tbody.appendChild(row);
                 });
             }
+            recalcCaldosProportional();
+        }
+
+        function recalcCaldosProportional() {
+            const tipo = document.getElementById('caldos-tipo').value;
+            if (!tipo || !RIA_DATA.recetasCaldos[tipo]) return;
+            const rendimiento = RIA_DATA.recetasCaldos[tipo].rendimiento;
+            const cantidadReal = parseFloat(document.getElementById('caldos-cantidad').value) || 0;
+            const factor = rendimiento > 0 ? cantidadReal / rendimiento : 0;
+
+            document.querySelectorAll('#caldos-ingredients .proporcional').forEach(cell => {
+                const qtyBase = parseFloat(cell.dataset.qty) || 0;
+                const unit = cell.dataset.unit;
+                if (factor > 0 && qtyBase > 0) {
+                    const propQty = Math.round(qtyBase * factor * 10) / 10;
+                    cell.textContent = propQty + ' ' + unit;
+                    cell.style.fontWeight = 'bold';
+                    cell.style.color = '#1a7f37';
+                } else {
+                    cell.textContent = '—';
+                    cell.style.fontWeight = 'normal';
+                    cell.style.color = '#666';
+                }
+            });
         }
 
         function populateSalsasIngredients() {
@@ -1201,17 +1240,52 @@
             const tbody = document.getElementById('salsas-ingredients');
             tbody.innerHTML = '';
 
+            // Mostrar rendimiento estándar
+            const infoEl = document.getElementById('salsas-rendimiento-info');
+            if (tipo && RIA_DATA.recetasSalsas[tipo]) {
+                const rend = RIA_DATA.recetasSalsas[tipo].rendimiento;
+                infoEl.textContent = `Receta estándar: ${rend} litros`;
+                infoEl.style.display = 'block';
+            } else {
+                infoEl.style.display = 'none';
+            }
+
             if (salsasRecipes[tipo]) {
                 salsasRecipes[tipo].forEach(ing => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${ing.ingredient}</td>
                         <td>${ing.qty ? ing.qty + ' ' + ing.unit : ing.unit}</td>
+                        <td class="proporcional-salsa" data-qty="${ing.qty || 0}" data-unit="${ing.unit}">—</td>
                         <td><input type="text" placeholder="Lote" value="${ing.lot}"></td>
                     `;
                     tbody.appendChild(row);
                 });
             }
+            recalcSalsasProportional();
+        }
+
+        function recalcSalsasProportional() {
+            const tipo = document.getElementById('salsas-tipo').value;
+            if (!tipo || !RIA_DATA.recetasSalsas[tipo]) return;
+            const rendimiento = RIA_DATA.recetasSalsas[tipo].rendimiento;
+            const cantidadReal = parseFloat(document.getElementById('salsas-cantidad').value) || 0;
+            const factor = rendimiento > 0 ? cantidadReal / rendimiento : 0;
+
+            document.querySelectorAll('#salsas-ingredients .proporcional-salsa').forEach(cell => {
+                const qtyBase = parseFloat(cell.dataset.qty) || 0;
+                const unit = cell.dataset.unit;
+                if (factor > 0 && qtyBase > 0) {
+                    const propQty = Math.round(qtyBase * factor * 10) / 10;
+                    cell.textContent = propQty + ' ' + unit;
+                    cell.style.fontWeight = 'bold';
+                    cell.style.color = '#1a7f37';
+                } else {
+                    cell.textContent = '—';
+                    cell.style.fontWeight = 'normal';
+                    cell.style.color = '#666';
+                }
+            });
         }
 
         function initializeConservationListeners() {
@@ -1300,7 +1374,8 @@
                 if (lotInput) {
                     data.ingredientes.push({
                         ingrediente: row.cells[0].textContent,
-                        cantidad: row.cells[1].textContent,
+                        cantidadEstandar: row.cells[1].textContent,
+                        cantidadProporcional: row.cells[2].textContent,
                         lote: lotInput.value
                     });
                 }
@@ -1336,7 +1411,8 @@
                 if (lotInput) {
                     data.ingredientes.push({
                         ingrediente: row.cells[0].textContent,
-                        cantidad: row.cells[1].textContent,
+                        cantidadEstandar: row.cells[1].textContent,
+                        cantidadProporcional: row.cells[2].textContent,
                         lote: lotInput.value
                     });
                 }
