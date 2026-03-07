@@ -1631,16 +1631,18 @@
         document.getElementById('salsaType').addEventListener('change', updateSalsaFieldsVisibility);
 
         // === ENVÍO A GOOGLE SHEETS ===
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-PZ4TljiVxX3z0K-3pl2tKfZMo2H_Bw-yolprSd77bSYSQqNzJVzdwy4YNsblCCQM/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-PZ4TljiVxX3z0K-3pl2tKfZMo2H_Bw-yolprSd77bSYSQqNzJVzdwy4YNsbICCQM/exec';
 
         function enviarASheets(datos) {
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos)
-            }).then(() => {
-                console.log('Datos enviados a Google Sheets');
+            }).then(r => r.json()).then(res => {
+                if (res.exitoso) {
+                    console.log('Datos enviados a Google Sheets:', res.mensaje);
+                } else {
+                    console.error('Error en Sheets:', res.mensaje);
+                }
             }).catch(err => {
                 console.error('Error enviando a Sheets:', err);
             });
