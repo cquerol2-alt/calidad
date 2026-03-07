@@ -304,20 +304,91 @@
             background: white;
             border: 1px solid #DDD;
             border-radius: 4px;
-            padding: 12px;
             margin-bottom: 8px;
             font-size: 13px;
+            overflow: hidden;
+        }
+
+        .orden-item-header {
+            padding: 12px;
             cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
         }
 
-        .orden-item:hover {
+        .orden-item-header:hover {
             background: var(--pale-green);
-            border-color: var(--light-green);
         }
 
-        .orden-item strong {
+        .orden-item-header strong {
             color: var(--primary-green);
+        }
+
+        .orden-item-header .orden-arrow {
+            font-size: 16px;
+            transition: transform 0.3s;
+            color: var(--text-light);
+        }
+
+        .orden-item.active .orden-arrow {
+            transform: rotate(90deg);
+        }
+
+        .orden-item.active .orden-item-header {
+            background: var(--pale-green);
+            border-bottom: 1px solid #DDD;
+        }
+
+        .orden-item-body {
+            display: none;
+            padding: 12px;
+            background: #FAFAFA;
+        }
+
+        .orden-item.active .orden-item-body {
+            display: block;
+        }
+
+        .orden-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #EEE;
+            font-size: 13px;
+        }
+
+        .orden-detail:last-child {
+            border-bottom: none;
+        }
+
+        .orden-detail .detail-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .orden-detail .detail-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .btn-use-line {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--light-green);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-use-line:hover {
+            background: #45A049;
         }
 
         .hidden-section {
@@ -386,7 +457,7 @@
 
                     <div class="form-group">
                         <label for="produccionLot">Lote de Producción</label>
-                        <div class="lot-display" id="lotDisplay">L-000000</div>
+                        <div class="lot-display" id="lotDisplay">---YYMMDD</div>
                         <input type="hidden" id="produccionLot">
                     </div>
 
@@ -416,11 +487,9 @@
                         <select id="envaseType">
                             <option value="">-- Seleccionar --</option>
                             <option value="Sobre">Sobre</option>
-                            <option value="Tarro 260">Tarro 260</option>
-                            <option value="Tarro 450">Tarro 450</option>
-                            <option value="Tarro 1330">Tarro 1330</option>
-                            <option value="Gourmet">Gourmet</option>
-                            <option value="Bolsa">Bolsa</option>
+                            <option value="Barqueta 260">Barqueta 260</option>
+                            <option value="Barqueta 450">Barqueta 450</option>
+                            <option value="Barqueta 1330">Barqueta 1330</option>
                         </select>
                     </div>
 
@@ -628,6 +697,33 @@
             </div>
         </div>
 
+        <!-- ABATIMIENTO SECTION -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection(this)">
+                <span class="toggle-icon">▼</span>
+                Abatimiento
+            </div>
+            <div class="section-content">
+                <div class="card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="abatHoraInicio">Hora Inicio</label>
+                            <input type="time" id="abatHoraInicio">
+                        </div>
+                        <div class="form-group">
+                            <label for="abatHoraFin">Hora Fin</label>
+                            <input type="time" id="abatHoraFin">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="abatTemp">Temperatura Final (°C)</label>
+                        <input type="number" id="abatTemp" min="-30" max="20" step="0.1" placeholder="Ej: 3">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- DETECTOR METALES SECTION -->
         <div class="section">
             <div class="section-title" onclick="toggleSection(this)">
@@ -637,22 +733,35 @@
             <div class="section-content">
                 <div class="card">
                     <div class="form-group">
-                        <label>Registros de Detección</label>
+                        <label>Verificación de Metales</label>
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 40%;">Hora</th>
-                                    <th style="width: 30%;">Resultado</th>
-                                    <th style="width: 30%;">Envases</th>
+                                    <th style="width: 25%;">Hora</th>
+                                    <th style="width: 20%;">Ferroso</th>
+                                    <th style="width: 20%;">No Ferroso</th>
+                                    <th style="width: 20%;">Ac. Inox.</th>
+                                    <th style="width: 15%;">Envases</th>
                                 </tr>
                             </thead>
                             <tbody id="metalDetectorTable">
                                 <tr>
                                     <td><input type="time" class="metal-hora"></td>
                                     <td>
-                                        <select class="metal-resultado">
-                                            <option value="">--</option>
-                                            <option value="OK">OK</option>
+                                        <select class="metal-ferroso">
+                                            <option value="OK" selected>OK</option>
+                                            <option value="NOK">NOK</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="metal-noferroso">
+                                            <option value="OK" selected>OK</option>
+                                            <option value="NOK">NOK</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="metal-inox">
+                                            <option value="OK" selected>OK</option>
                                             <option value="NOK">NOK</option>
                                         </select>
                                     </td>
@@ -715,7 +824,7 @@
                 <div class="card">
                     <div class="form-group">
                         <label for="etiquetaLot">Lote en Etiqueta</label>
-                        <div class="lot-display" id="etiquetaLotDisplay">L-000000</div>
+                        <div class="lot-display" id="etiquetaLotDisplay">---YYMMDD</div>
                     </div>
 
                     <div class="form-group">
@@ -885,17 +994,93 @@
                     const formatDisplay = line.format || 'Sin formato';
                     const productDisplay = line.product || 'Sin producto';
 
+                    // Find product key + data from RIA_DATA (busca por nombre exacto o parcial)
+                    let foundKey = null;
+                    let producto = null;
+                    Object.entries(RIA_DATA.productos).forEach(([key, prod]) => {
+                        if (prod.nombre === productDisplay ||
+                            productDisplay.toLowerCase().includes(prod.nombre.toLowerCase()) ||
+                            prod.nombre.toLowerCase().includes(productDisplay.toLowerCase())) {
+                            foundKey = key;
+                            producto = prod;
+                        }
+                    });
+
+                    // Compute lot code
+                    const today = new Date();
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const yy = String(today.getFullYear()).slice(-2);
+                    let lotCode = '—';
+                    if (producto) {
+                        let varCode = producto.codigoLote || '';
+                        if (producto.variantes && producto.variantes[formatDisplay]) {
+                            varCode = producto.variantes[formatDisplay];
+                        }
+                        lotCode = `${varCode}-${yy}${mm}${dd}`;
+                    }
+
+                    // Determine rice type
+                    const arrozDisplay = producto && producto.arroz ? producto.arroz : '—';
+
+                    // Determine redes (from line data if available)
+                    const redesDisplay = line.redes || line.quantity || '—';
+
+                    // Determine caldo
+                    let caldoDisplay = '—';
+                    if (producto) {
+                        if (producto.tieneCaldo && producto.caldoTipo) {
+                            caldoDisplay = producto.caldoTipo.charAt(0).toUpperCase() + producto.caldoTipo.slice(1);
+                        } else {
+                            caldoDisplay = 'Sin caldo';
+                        }
+                    }
+
+                    // Determine jarra
+                    const jarraDisplay = producto && producto.tipoJarra
+                        ? producto.tipoJarra.charAt(0).toUpperCase() + producto.tipoJarra.slice(1)
+                        : '—';
+
                     html += `
-                        <div class="orden-item" onclick="applyOrdenItem(this, '${line.product}', '${line.format}', ${line.quantity})">
-                            <strong>${idx + 1}. ${productDisplay}</strong> — ${formatDisplay} (${line.quantity} envases)
-                            <br><small style="color: #666;">Variedad: ${varietyDisplay}</small>
+                        <div class="orden-item" id="orden-${idx}">
+                            <div class="orden-item-header" onclick="toggleOrdenItem(${idx})">
+                                <div>
+                                    <strong>${idx + 1}. ${productDisplay}</strong> — ${formatDisplay} (${line.quantity} uds.)
+                                </div>
+                                <span class="orden-arrow">▶</span>
+                            </div>
+                            <div class="orden-item-body">
+                                <div class="orden-detail">
+                                    <span class="detail-label">Lote producción</span>
+                                    <span class="detail-value">${lotCode}</span>
+                                </div>
+                                <div class="orden-detail">
+                                    <span class="detail-label">Tipo de arroz</span>
+                                    <span class="detail-value">${arrozDisplay}</span>
+                                </div>
+                                <div class="orden-detail">
+                                    <span class="detail-label">Tipo de jarra</span>
+                                    <span class="detail-value">${jarraDisplay}</span>
+                                </div>
+                                <div class="orden-detail">
+                                    <span class="detail-label">Caldo</span>
+                                    <span class="detail-value">${caldoDisplay}</span>
+                                </div>
+                                <div class="orden-detail">
+                                    <span class="detail-label">Cantidad</span>
+                                    <span class="detail-value">${line.quantity} envases</span>
+                                </div>
+                                <button type="button" class="btn-use-line" onclick="event.stopPropagation(); applyOrdenItem('${foundKey || ''}', '${formatDisplay}', ${line.quantity})">
+                                    Usar esta línea
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
 
                 document.getElementById('ordenDelDiaContainer').innerHTML = html;
                 document.getElementById('ordenInfo').innerHTML =
-                    `<strong>Plan del ${data.ria_plan_dia || 'día'}</strong> — ${productionLines.length} línea(s) planificada(s)`;
+                    `<strong>Plan del ${data.ria_plan_dia || 'día'}</strong> — ${productionLines.length} línea(s). Toca una para ver los detalles.`;
             } catch (e) {
                 console.error('Error loading orden del día:', e);
                 document.getElementById('ordenInfo').innerHTML =
@@ -903,21 +1088,26 @@
             }
         }
 
-        // Apply orden item selection (click to auto-fill)
-        function applyOrdenItem(element, product, format, quantity) {
-            // Find product key in RIA_DATA
-            let foundKey = null;
-            Object.entries(RIA_DATA.productos).forEach(([key, prod]) => {
-                if (prod.nombre === product) {
-                    foundKey = key;
-                }
+        // Toggle orden item accordion
+        function toggleOrdenItem(idx) {
+            const item = document.getElementById('orden-' + idx);
+            // Close other open items
+            document.querySelectorAll('.orden-item.active').forEach(el => {
+                if (el.id !== 'orden-' + idx) el.classList.remove('active');
             });
+            item.classList.toggle('active');
+        }
 
-            if (foundKey) {
-                const optionValue = `${foundKey}|${format}`;
+        // Apply orden item selection (click "Usar esta línea")
+        function applyOrdenItem(productKey, format, quantity) {
+            if (productKey) {
+                const optionValue = `${productKey}|${format}`;
                 document.getElementById('produccionProduct').value = optionValue;
                 document.getElementById('produccionQuantity').value = quantity;
                 updateProductDependents();
+
+                // Scroll down to the form
+                document.getElementById('produccionProduct').closest('.section').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
@@ -970,7 +1160,13 @@
             const caldoSection = document.getElementById('caldoSection');
             if (!isSalsa) {
                 caldoSection.classList.add('visible');
-                if (!producto.tieneCaldo) {
+                if (producto.tieneCaldo) {
+                    // Pre-select "Con caldo" for La Santa y Risottos/Cremosos
+                    const conCaldoBtn = caldoSection.querySelector('[data-caldo-option="con-caldo"]');
+                    if (conCaldoBtn) {
+                        toggleCaldoOption(conCaldoBtn);
+                    }
+                } else {
                     // Pre-select "Sin caldo" for Maestro
                     const sinCaldoBtn = caldoSection.querySelector('[data-caldo-option="sin-caldo"]');
                     if (sinCaldoBtn) {
@@ -1001,8 +1197,8 @@
             const productValue = document.getElementById('produccionProduct').value;
 
             if (!dateInput || !productValue) {
-                document.getElementById('lotDisplay').textContent = 'L-000000';
-                document.getElementById('etiquetaLotDisplay').textContent = 'L-000000';
+                document.getElementById('lotDisplay').textContent = '---YYMMDD';
+                document.getElementById('etiquetaLotDisplay').textContent = '---YYMMDD';
                 return;
             }
 
@@ -1022,7 +1218,7 @@
                 varianteCode = producto.codigoLote;
             }
 
-            const lot = `${varianteCode}-L-${dd}${mm}${yy}`;
+            const lot = `${varianteCode}-${yy}${mm}${dd}`;
             document.getElementById('produccionLot').value = lot;
             document.getElementById('lotDisplay').textContent = lot;
             document.getElementById('etiquetaLotDisplay').textContent = lot;
@@ -1113,9 +1309,20 @@
             tr.innerHTML = `
                 <td><input type="time" class="metal-hora"></td>
                 <td>
-                    <select class="metal-resultado">
-                        <option value="">--</option>
-                        <option value="OK">OK</option>
+                    <select class="metal-ferroso">
+                        <option value="OK" selected>OK</option>
+                        <option value="NOK">NOK</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="metal-noferroso">
+                        <option value="OK" selected>OK</option>
+                        <option value="NOK">NOK</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="metal-inox">
+                        <option value="OK" selected>OK</option>
                         <option value="NOK">NOK</option>
                     </select>
                 </td>
@@ -1149,6 +1356,9 @@
                 pastHoraInicio: document.getElementById('pastHoraInicio').value,
                 pastHoraFin: document.getElementById('pastHoraFin').value,
                 pastTempFinal: document.getElementById('pastTempFinal').value,
+                abatHoraInicio: document.getElementById('abatHoraInicio').value,
+                abatHoraFin: document.getElementById('abatHoraFin').value,
+                abatTemp: document.getElementById('abatTemp').value,
                 etiquetaDate: document.getElementById('etiquetaDate').value,
                 etiquetaCheck: document.getElementById('etiquetaCheck').value,
                 etiquetaNotes: document.getElementById('etiquetaNotes').value,
@@ -1178,10 +1388,12 @@
             const metalRows = [];
             document.querySelectorAll('#metalDetectorTable tr').forEach(row => {
                 const hora = row.querySelector('.metal-hora').value;
-                const resultado = row.querySelector('.metal-resultado').value;
+                const ferroso = row.querySelector('.metal-ferroso').value;
+                const noferroso = row.querySelector('.metal-noferroso').value;
+                const inox = row.querySelector('.metal-inox').value;
                 const envases = row.querySelector('.metal-envases').value;
-                if (hora || resultado || envases) {
-                    metalRows.push({ hora, resultado, envases });
+                if (hora || envases) {
+                    metalRows.push({ hora, ferroso, noferroso, inox, envases });
                 }
             });
             formData.metalDetector = metalRows;
@@ -1234,6 +1446,9 @@
             document.getElementById('pastHoraInicio').value = data.pastHoraInicio || '';
             document.getElementById('pastHoraFin').value = data.pastHoraFin || '';
             document.getElementById('pastTempFinal').value = data.pastTempFinal || '';
+            document.getElementById('abatHoraInicio').value = data.abatHoraInicio || '';
+            document.getElementById('abatHoraFin').value = data.abatHoraFin || '';
+            document.getElementById('abatTemp').value = data.abatTemp || '';
             document.getElementById('etiquetaDate').value = data.etiquetaDate || '';
             document.getElementById('etiquetaCheck').value = data.etiquetaCheck || '';
             document.getElementById('etiquetaNotes').value = data.etiquetaNotes || '';
@@ -1252,10 +1467,21 @@
                     tr.innerHTML = `
                         <td><input type="time" class="metal-hora" value="${row.hora || ''}"></td>
                         <td>
-                            <select class="metal-resultado">
-                                <option value="">--</option>
-                                <option value="OK" ${row.resultado === 'OK' ? 'selected' : ''}>OK</option>
-                                <option value="NOK" ${row.resultado === 'NOK' ? 'selected' : ''}>NOK</option>
+                            <select class="metal-ferroso">
+                                <option value="OK" ${(row.ferroso || 'OK') === 'OK' ? 'selected' : ''}>OK</option>
+                                <option value="NOK" ${row.ferroso === 'NOK' ? 'selected' : ''}>NOK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="metal-noferroso">
+                                <option value="OK" ${(row.noferroso || 'OK') === 'OK' ? 'selected' : ''}>OK</option>
+                                <option value="NOK" ${row.noferroso === 'NOK' ? 'selected' : ''}>NOK</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="metal-inox">
+                                <option value="OK" ${(row.inox || 'OK') === 'OK' ? 'selected' : ''}>OK</option>
+                                <option value="NOK" ${row.inox === 'NOK' ? 'selected' : ''}>NOK</option>
                             </select>
                         </td>
                         <td><input type="number" class="metal-envases" min="0" placeholder="Nº" value="${row.envases || ''}"></td>
@@ -1325,14 +1551,21 @@
             csvContent += `Hora Fin Pasteurización,${document.getElementById('pastHoraFin').value}\n`;
             csvContent += `Temperatura Final,${document.getElementById('pastTempFinal').value}\n\n`;
 
+            csvContent += 'ABATIMIENTO\n';
+            csvContent += `Hora Inicio,${document.getElementById('abatHoraInicio').value}\n`;
+            csvContent += `Hora Fin,${document.getElementById('abatHoraFin').value}\n`;
+            csvContent += `Temperatura Final,${document.getElementById('abatTemp').value}\n\n`;
+
             csvContent += 'DETECTOR DE METALES\n';
-            csvContent += 'Hora,Resultado,Envases\n';
+            csvContent += 'Hora,Ferroso,No Ferroso,Ac. Inox.,Envases\n';
             document.querySelectorAll('#metalDetectorTable tr').forEach(row => {
                 const hora = row.querySelector('.metal-hora').value;
-                const resultado = row.querySelector('.metal-resultado').value;
+                const ferroso = row.querySelector('.metal-ferroso').value;
+                const noferroso = row.querySelector('.metal-noferroso').value;
+                const inox = row.querySelector('.metal-inox').value;
                 const envases = row.querySelector('.metal-envases').value;
-                if (hora || resultado || envases) {
-                    csvContent += `${hora},${resultado},${envases}\n`;
+                if (hora || envases) {
+                    csvContent += `${hora},${ferroso},${noferroso},${inox},${envases}\n`;
                 }
             });
 
