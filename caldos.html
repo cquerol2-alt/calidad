@@ -635,7 +635,12 @@
                     </div>
                     <div class="form-group">
                         <label for="caldos-operador">Operador</label>
-                        <input type="text" id="caldos-operador" placeholder="Tu nombre" required>
+                        <select id="caldos-operador" required>
+                            <option value="">Selecciona operador</option>
+                            <option value="Isabel">Isabel</option>
+                            <option value="Cristina">Cristina</option>
+                            <option value="Diego">Diego</option>
+                        </select>
                     </div>
                 </div>
 
@@ -645,6 +650,7 @@
                         <option value="">Selecciona un tipo</option>
                         <option value="pescado">Caldo de Pescado</option>
                         <option value="negro">Caldo Negro</option>
+                        <option value="pollo">Caldo de Pollo</option>
                         <option value="verduras">Caldo de Verduras</option>
                         <option value="risotto">Caldo de Risotto</option>
                     </select>
@@ -737,7 +743,12 @@
                     </div>
                     <div class="form-group">
                         <label for="salsas-operador">Operador</label>
-                        <input type="text" id="salsas-operador" placeholder="Tu nombre" required>
+                        <select id="salsas-operador" required>
+                            <option value="">Selecciona operador</option>
+                            <option value="Isabel">Isabel</option>
+                            <option value="Cristina">Cristina</option>
+                            <option value="Diego">Diego</option>
+                        </select>
                     </div>
                 </div>
 
@@ -844,7 +855,12 @@
                     </div>
                     <div class="form-group">
                         <label for="prelab-operador">Operador</label>
-                        <input type="text" id="prelab-operador" placeholder="Tu nombre" required>
+                        <select id="prelab-operador" required>
+                            <option value="">Selecciona operador</option>
+                            <option value="Isabel">Isabel</option>
+                            <option value="Cristina">Cristina</option>
+                            <option value="Diego">Diego</option>
+                        </select>
                     </div>
                 </div>
 
@@ -900,6 +916,36 @@
                     </table>
                 </div>
                 <button type="button" class="add-ingredient-btn" onclick="addIngredientRow()">+ Agregar ingrediente</button>
+
+                <!-- Cocción y Abatimiento (solo para bases) -->
+                <div id="prelab-coccion-section" style="display: none; margin-top: 16px;">
+                    <div class="section-title">Cocción</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prelab-coccion-hora">Hora Cocción</label>
+                            <input type="time" id="prelab-coccion-hora">
+                        </div>
+                        <div class="form-group">
+                            <label for="prelab-coccion-temp">Temperatura (°C)</label>
+                            <input type="number" id="prelab-coccion-temp" placeholder="Ej: 80" step="0.1" min="0" max="200">
+                        </div>
+                    </div>
+                    <div class="section-title">Abatimiento</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prelab-abat-hora-inicio">Hora Inicio</label>
+                            <input type="time" id="prelab-abat-hora-inicio">
+                        </div>
+                        <div class="form-group">
+                            <label for="prelab-abat-hora-fin">Hora Fin</label>
+                            <input type="time" id="prelab-abat-hora-fin">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prelab-abat-temp">Temperatura Final (°C)</label>
+                        <input type="number" id="prelab-abat-temp" placeholder="Ej: 3" step="0.1" min="-30" max="20">
+                    </div>
+                </div>
 
                 <button type="button" class="btn btn-primary" onclick="savePreelaboracion()">Guardar Preelaboración</button>
                 <button type="button" class="btn btn-share" onclick="shareViaWhatsApp('preelaboraciones')">
@@ -1089,6 +1135,12 @@
                     option.textContent = data.label;
                     tipoSelect.appendChild(option);
                 });
+            }
+
+            // Mostrar/ocultar sección cocción/abatimiento para bases
+            const coccionSection = document.getElementById('prelab-coccion-section');
+            if (coccionSection) {
+                coccionSection.style.display = (categoria === 'bases') ? 'block' : 'none';
             }
         }
 
@@ -1328,6 +1380,15 @@
                 cantidades: quantities,
                 ingredientes: ingredientes
             };
+
+            // Añadir datos de cocción/abatimiento si es base
+            if (data.categoria === 'bases') {
+                data.coccionHora = document.getElementById('prelab-coccion-hora').value;
+                data.coccionTemp = document.getElementById('prelab-coccion-temp').value;
+                data.abatHoraInicio = document.getElementById('prelab-abat-hora-inicio').value;
+                data.abatHoraFin = document.getElementById('prelab-abat-hora-fin').value;
+                data.abatTemp = document.getElementById('prelab-abat-temp').value;
+            }
 
             let preelaboraciones = JSON.parse(localStorage.getItem('preelaboraciones') || '[]');
             preelaboraciones.push(data);

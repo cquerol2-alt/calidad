@@ -53,7 +53,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'pescado',
             aliases: ['pes', 'fish'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
         pollo: {
             nombre: 'Arroz de Pollo',
@@ -66,7 +66,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'pollo',
             aliases: ['pol', 'chicken'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
         negro: {
             nombre: 'Arroz Negro',
@@ -79,7 +79,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'pescado',  // negro usa caldo de pescado + tinta
             aliases: ['neg', 'black'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
         verduras: {
             nombre: 'Arroz de Verdura',
@@ -92,7 +92,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'verduras',
             aliases: ['ver', 'verd', 'vegetables'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
         risotto: {
             nombre: 'Risotto',
@@ -105,7 +105,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'risotto',
             aliases: ['ris'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
 
         // --- Cremosos (producto final) ---
@@ -120,7 +120,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'risotto',
             aliases: ['ibe', 'iberico'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
         setas: {
             nombre: 'Cremoso Setas',
@@ -133,7 +133,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'risotto',
             aliases: ['set', 'mushroom'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
         tartufata: {
             nombre: 'Cremoso Tartufata',
@@ -146,7 +146,7 @@ const RIA_DATA = {
             tieneCaldo: true,
             caldoTipo: 'risotto',
             aliases: ['tar', 'truffle'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
 
         // --- Maestro (producto final) ---
@@ -161,7 +161,7 @@ const RIA_DATA = {
             tieneCaldo: false,
             caldoTipo: null,
             aliases: ['mae', 'master'],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
         maestroMarisma: {
             nombre: 'Maestro Marisma',
@@ -174,7 +174,7 @@ const RIA_DATA = {
             tieneCaldo: false,
             caldoTipo: null,
             aliases: [],
-            lotePrefijo: 'L'
+            lotePrefijo: ''
         },
 
         // --- Salsas en Sobres (producto final) ---
@@ -217,19 +217,20 @@ const RIA_DATA = {
     // LOTES — PREFIJOS Y FORMATOS
     // ========================================================================
     // PRODUCTO FINAL: código numérico de etiqueta (748-1, 810-B2, etc.)
-    //   Formato completo: [código variante]-L-DDMMYY  (ej: 748-1-L-040326)
+    //   Formato completo: [código variante]-YYMMDD  (ej: 748-1-260304)
     // PRODUCTO INTERMEDIO (caldos, salsas, preelaboraciones): prefijo RIA-
     //   Los lotes RIA- son internos de fábrica, NO van en etiqueta de venta
     // ========================================================================
     lotes: {
         produccion: {
-            formato: '[código]-L-DDMMYY',
-            ejemplo: '748-1-L-040326',
-            descripcion: 'Lote de producto final (código etiqueta + fecha)'
+            formato: '[código]-YYMMDD',
+            ejemplo: '748-1-260304',
+            descripcion: 'Lote de producto final (código etiqueta + fecha YYMMDD)'
         },
         caldos: {
             pescado:  { prefijo: 'RIA-PESCADO',  formato: 'RIA-PESCADO-DDMMYY' },
             negro:    { prefijo: 'RIA-NEGRO',     formato: 'RIA-NEGRO-DDMMYY' },
+            pollo:    { prefijo: 'RIA-POLLO',     formato: 'RIA-POLLO-DDMMYY' },
             verduras: { prefijo: 'RIA-VERDURAS',  formato: 'RIA-VERDURAS-DDMMYY' },
             risotto:  { prefijo: 'RIA-RISOTTO',   formato: 'RIA-RISOTTO-DDMMYY' }
         },
@@ -718,6 +719,6 @@ const RIA_DATA = {
         const dd = String(d.getDate()).padStart(2, '0');
         const mm = String(d.getMonth() + 1).padStart(2, '0');
         const yy = String(d.getFullYear()).slice(-2);
-        return `L-${dd}${mm}${yy}`;
+        return `${yy}${mm}${dd}`;
     }
 };
