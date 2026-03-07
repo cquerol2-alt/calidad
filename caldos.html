@@ -1385,6 +1385,9 @@
             caldos.push(data);
             localStorage.setItem('caldos', JSON.stringify(caldos));
 
+            // Enviar a Google Sheets
+            enviarASheets(Object.assign({ formType: 'caldos' }, data));
+
             showToast('Caldo guardado exitosamente');
             document.getElementById('formCaldos').reset();
             initializeDateFields();
@@ -1421,6 +1424,9 @@
             let salsas = JSON.parse(localStorage.getItem('salsas') || '[]');
             salsas.push(data);
             localStorage.setItem('salsas', JSON.stringify(salsas));
+
+            // Enviar a Google Sheets
+            enviarASheets(Object.assign({ formType: 'salsas' }, data));
 
             showToast('Salsa guardada exitosamente');
             document.getElementById('formSalsas').reset();
@@ -1469,6 +1475,13 @@
             let preelaboraciones = JSON.parse(localStorage.getItem('preelaboraciones') || '[]');
             preelaboraciones.push(data);
             localStorage.setItem('preelaboraciones', JSON.stringify(preelaboraciones));
+
+            // Enviar a Google Sheets
+            enviarASheets(Object.assign({
+                formType: 'preelaboraciones',
+                coccion: data.categoria === 'bases' ? { hora: data.coccionHora, temp: data.coccionTemp } : null,
+                abatimiento: data.categoria === 'bases' ? { horaInicio: data.abatHoraInicio, horaFin: data.abatHoraFin, temp: data.abatTemp } : null
+            }, data));
 
             showToast('Preelaboración guardada exitosamente');
             document.getElementById('formPreelaboraciones').reset();
@@ -1600,6 +1613,22 @@
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
+        }
+
+        // === ENVÍO A GOOGLE SHEETS ===
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-PZ4TljiVxX3z0K-3pl2tKfZMo2H_Bw-yolprSd77bSYSQqNzJVzdwy4YNsblCCQM/exec';
+
+        function enviarASheets(datos) {
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            }).then(() => {
+                console.log('Datos enviados a Google Sheets');
+            }).catch(err => {
+                console.error('Error enviando a Sheets:', err);
+            });
         }
     </script>
 </body>
