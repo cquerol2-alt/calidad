@@ -1045,7 +1045,7 @@
                         <div class="orden-item" id="orden-${idx}">
                             <div class="orden-item-header" onclick="toggleOrdenItem(${idx})">
                                 <div>
-                                    <strong>${idx + 1}. ${productDisplay}</strong> — ${formatDisplay} (${line.quantity} uds.)
+                                    <strong>${idx + 1}. ${productDisplay}</strong> — ${formatDisplay} (${line.envases || line.quantity} envases)
                                 </div>
                                 <span class="orden-arrow">▶</span>
                             </div>
@@ -1068,9 +1068,13 @@
                                 </div>
                                 <div class="orden-detail">
                                     <span class="detail-label">Cantidad</span>
-                                    <span class="detail-value">${line.quantity} envases</span>
+                                    <span class="detail-value">${line.envases || line.quantity} envases</span>
                                 </div>
-                                <button type="button" class="btn-use-line" onclick="event.stopPropagation(); applyOrdenItem('${foundKey || ''}', '${formatDisplay}', ${line.quantity})">
+                                <div class="orden-detail">
+                                    <span class="detail-label">Redes</span>
+                                    <span class="detail-value">${redesDisplay}</span>
+                                </div>
+                                <button type="button" class="btn-use-line" onclick="event.stopPropagation(); applyOrdenItem('${foundKey || ''}', '${formatDisplay}', ${line.envases || line.quantity})">
                                     Usar esta línea
                                 </button>
                             </div>

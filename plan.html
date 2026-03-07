@@ -609,6 +609,7 @@
             </div>
             <div class="header-date">
                 <input type="date" id="planDate" onchange="onDateChange()">
+                <button onclick="showPlanHistory()" style="margin-top:4px; padding:4px 10px; font-size:12px; border:1px solid rgba(255,255,255,0.4); border-radius:6px; background:transparent; color:white; cursor:pointer;">Historial</button>
                 <div id="dateNotice" class="header-date-notice" style="display:none;"></div>
             </div>
         </div>
@@ -688,6 +689,17 @@
         </div>
     </div>
 
+    <!-- HISTORY MODAL -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">📅 Historial de Planes</div>
+            <div id="historyContent"></div>
+            <div class="order-buttons" style="margin-top:12px;">
+                <button class="btn-primary" onclick="document.getElementById('historyModal').classList.remove('show')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="data.js"></script>
     <script>
         // ============================================================================
@@ -695,6 +707,7 @@
         // ============================================================================
 
         let productionLines = [];
+        let caldoOverrides = {};  // { 'Caldo de Pescado': 10, ... } — overrides para litros de caldo
 
         // Build PRODUCTS from RIA_DATA.productos for dictation parsing
         const PRODUCTS = {};
@@ -715,6 +728,7 @@
             renderCards();
             updateTimestamp();
             updateFormatOptions();
+            cleanOldPlans();
         });
 
         function initializePlanDate() {
@@ -726,6 +740,15 @@
 
         function onDateChange() {
             checkIfPastDate();
+            const dateStr = document.getElementById('planDate').value;
+            // Try to load existing plan for this date
+            const loaded = loadPlanByDate(dateStr);
+            if (!loaded) {
+                // No saved plan for this date — start fresh
+                productionLines = [];
+                caldoOverrides = {};
+                renderCards();
+            }
             saveToLocalStorage();
         }
 
@@ -801,11 +824,8 @@
                     return { redes: 1, jarras: 1, caldoType: null, caldoLiters: 0, needsSalsa: false, salsaNote: '', redesType: 'maestro' };
                 }
             } else if (isCremoso) {
-                if (format.includes('bulk')) {
-                    redes = 3;
-                } else {
-                    redes = 3;
-                }
+                // 3 redes = 2 cajas → 1.5 redes por caja
+                redes = 1.5;
             } else {
                 if (format === 'bulk') {
                     redes = 3;
@@ -1026,7 +1046,11 @@
                         // Normal format: try to extract product and size
                         productInput = words[0];
                         if (words[1]) {
-                            if (words[1].includes('260')) {
+                            if (words[1].includes('300')) {
+                                format = '300g';
+                            } else if (words[1].includes('220')) {
+                                format = '220g';
+                            } else if (words[1].includes('260')) {
                                 format = '260g';
                             } else if (words[1].includes('380')) {
                                 format = '380g';
@@ -1046,6 +1070,11 @@
                             // Default format for maestro
                             if (product.name === 'Maestro' && format === '260g') {
                                 format = '380g';
+                            }
+                            // Default format for cremosos (no 260g exists)
+                            const isCremProduct = ['ibérico', 'setas', 'tartufata'].includes(product.name.toLowerCase().replace('cremoso ', ''));
+                            if (isCremProduct && format === '260g') {
+                                format = '300g';
                             }
                             lines.push({
                                 product: product.name,
@@ -1193,9 +1222,9 @@
                 const conv = getConversions(line.product, line.format);
 
                 const isMaestroLine = line.product.toLowerCase() === 'maestro';
-                let redesValue = line.isDirectRedes ? line.quantity : conv.redes * line.quantity;
-                let jarrasValue = line.isDirectRedes ? line.quantity : conv.jarras * line.quantity;
-                let caldoValue = line.isDirectRedes ? (conv.caldoType ? line.quantity : 0) : conv.caldoLiters * line.quantity;
+                let redesValue = line.isDirectRedes ? line.quantity : Math.ceil(conv.redes * line.quantity);
+                let jarrasValue = line.isDirectRedes ? line.quantity : Math.ceil(conv.jarras * line.quantity);
+                let caldoValue = line.isDirectRedes ? (conv.caldoType ? line.quantity : 0) : Math.ceil(conv.caldoLiters * line.quantity);
 
                 const formatDisplay = line.format === 'redes' ? 'Redes directas' :
                     line.format === 'all-included' ? 'All-Included (300g)' :
@@ -1310,13 +1339,21 @@
             if (summary.jarrasRisotto > 0) html += `<div class="summary-item"><div class="summary-item-label">Jarras Risotto</div><div class="summary-item-value">${summary.jarrasRisotto}</div></div>`;
             if (summary.jarrasMaestro > 0) html += `<div class="summary-item"><div class="summary-item-label">Jarras Maestro</div><div class="summary-item-value">${summary.jarrasMaestro}</div></div>`;
 
-            // Caldos
+            // Caldos — editable inputs
             for (const [type, liters] of Object.entries(summary.caldos)) {
                 if (liters > 0) {
+                    const overrideVal = caldoOverrides[type] !== undefined ? caldoOverrides[type] : liters;
+                    const isOverridden = caldoOverrides[type] !== undefined && caldoOverrides[type] !== liters;
                     html += `
                         <div class="summary-item">
                             <div class="summary-item-label">${type}</div>
-                            <div class="summary-item-value">${liters}L</div>
+                            <div class="summary-item-value" style="display:flex; align-items:center; gap:4px;">
+                                <input type="number" value="${overrideVal}" min="0" step="1"
+                                    style="width:50px; padding:4px 6px; border:1.5px solid ${isOverridden ? '#FF9800' : 'var(--border-light)'}; border-radius:6px; font-size:14px; font-weight:600; text-align:center; background:${isOverridden ? '#FFF3E0' : 'white'};"
+                                    onchange="setCaldoOverride('${type}', this.value, ${liters})"
+                                    title="Calculado: ${liters}L. Edita para cambiar.">L
+                                ${isOverridden ? `<span style="font-size:11px; color:#FF9800;" title="Original: ${liters}L">(calc: ${liters})</span>` : ''}
+                            </div>
                         </div>
                     `;
                 }
@@ -1345,6 +1382,17 @@
             grid.innerHTML = html;
         }
 
+        function setCaldoOverride(type, value, calculatedValue) {
+            const numVal = parseInt(value) || 0;
+            if (numVal === calculatedValue) {
+                delete caldoOverrides[type];
+            } else {
+                caldoOverrides[type] = numVal;
+            }
+            saveToLocalStorage();
+            renderSummary();
+        }
+
         function calculateSummary() {
             const summary = {
                 redesMaratelli: 0,
@@ -1364,8 +1412,8 @@
                 const qty = line.quantity;
                 const p = line.product.toLowerCase();
 
-                let redesVal = line.isDirectRedes ? qty : conv.redes * qty;
-                let jarrasVal = line.isDirectRedes ? qty : conv.jarras * qty;
+                let redesVal = line.isDirectRedes ? qty : Math.ceil(conv.redes * qty);
+                let jarrasVal = line.isDirectRedes ? qty : Math.ceil(conv.jarras * qty);
 
                 // Categorize redes by type
                 if (p === 'maestro') {
@@ -1399,7 +1447,7 @@
                     if (line.isDirectRedes) {
                         summary.caldos[conv.caldoType] += qty;
                     } else {
-                        summary.caldos[conv.caldoType] += conv.caldoLiters * qty;
+                        summary.caldos[conv.caldoType] += Math.ceil(conv.caldoLiters * qty);
                     }
                 }
 
@@ -1473,17 +1521,25 @@
             for (const key in grouped) {
                 const item = grouped[key];
                 const conv = getConversions(item.product, item.format);
-                const redesVal = item.quantity * (item.format === 'redes' ? 1 : conv.redes);
-                const jarrasVal = item.quantity * conv.jarras;
+                const redesVal = Math.ceil(item.quantity * (item.format === 'redes' ? 1 : conv.redes));
+                const jarrasVal = Math.ceil(item.quantity * conv.jarras);
 
                 const formatDisplay = item.format === 'redes' ? 'Redes directas' :
                     item.format === 'all-included' ? 'All-Included (300g)' :
                     item.format === 'separado' ? 'Separado' : item.format;
 
                 const varietyInfo = item.variety ? (item.variety === 'bahia' ? ' [Bahía - Illa de Riu]' : ' [Marisma - Doña Ana]') : '';
+                // Convertir cajas a envases
+                let envases = item.quantity;
+                let unitLabel = '';
+                const fmtInfo = RIA_DATA.formatos[item.format];
+                if (fmtInfo && fmtInfo.unidadesCaja && item.format !== 'redes') {
+                    envases = item.quantity * fmtInfo.unidadesCaja;
+                    unitLabel = ' envases';
+                }
                 html += `
                     <div class="order-item">
-                        <strong>${item.product}</strong> - ${formatDisplay} x${item.quantity}${varietyInfo}<br>
+                        <strong>${item.product}</strong> - ${formatDisplay} x${envases}${unitLabel}${varietyInfo}<br>
                         Redes: ${redesVal} | Jarras: ${jarrasVal}
                     </div>
                 `;
@@ -1513,8 +1569,8 @@
 
             for (const line of productionLines) {
                 const conv = getConversions(line.product, line.format);
-                const redesVal = line.isDirectRedes ? line.quantity : conv.redes * line.quantity;
-                const jarrasVal = line.isDirectRedes ? line.quantity : conv.jarras * line.quantity;
+                const redesVal = line.isDirectRedes ? line.quantity : Math.ceil(conv.redes * line.quantity);
+                const jarrasVal = line.isDirectRedes ? line.quantity : Math.ceil(conv.jarras * line.quantity);
 
                 let varietyTxt = '';
                 if (line.variety === 'bahia') varietyTxt = ' [Bahía]';
@@ -1522,7 +1578,17 @@
 
                 const salsaTxt = line.salsaMode === 'nueva' ? ' ⚡SALSA NUEVA' : '';
                 const formatTxt = line.isDirectRedes ? 'redes directas' : line.format;
-                text += `• ${line.product} (${formatTxt}): ${line.quantity}${varietyTxt}${salsaTxt}\n`;
+                // Convertir cajas a envases para Diego
+                let qtyDisplay = line.quantity;
+                let unitDisplay = '';
+                if (!line.isDirectRedes && line.format !== 'redes') {
+                    const formatInfo = RIA_DATA.formatos[line.format];
+                    if (formatInfo && formatInfo.unidadesCaja) {
+                        qtyDisplay = line.quantity * formatInfo.unidadesCaja;
+                        unitDisplay = ' envases';
+                    }
+                }
+                text += `• ${line.product} (${formatTxt}): ${qtyDisplay}${unitDisplay}${varietyTxt}${salsaTxt}\n`;
                 text += `  └─ Redes: ${redesVal} | Jarras: ${jarrasVal}\n`;
             }
 
@@ -1535,7 +1601,7 @@
 
         function shareDiegoWhatsApp() {
             const text = generateDiegoText();
-            const url = `https://web.whatsapp.com/send?phone=${RIA_DATA.empleados.diego.whatsapp}&text=${encodeURIComponent(text)}`;
+            const url = `https://api.whatsapp.com/send?phone=${RIA_DATA.empleados.diego.whatsapp}&text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
 
@@ -1563,7 +1629,9 @@
             if (Object.keys(summary.caldos).length > 0) {
                 for (const [type, liters] of Object.entries(summary.caldos)) {
                     if (liters > 0) {
-                        html += `<div class="order-item"><strong>${type}</strong><br>${liters} litros</div>`;
+                        const finalLiters = caldoOverrides[type] !== undefined ? caldoOverrides[type] : liters;
+                        const overrideNote = caldoOverrides[type] !== undefined ? ` <span style="color:#FF9800;">(calculado: ${liters}L)</span>` : '';
+                        html += `<div class="order-item"><strong>${type}</strong><br>${finalLiters} litros${overrideNote}</div>`;
                     }
                 }
             } else {
@@ -1610,7 +1678,8 @@
             if (Object.keys(summary.caldos).length > 0) {
                 for (const [type, liters] of Object.entries(summary.caldos)) {
                     if (liters > 0) {
-                        text += `• ${type}: ${liters}L\n`;
+                        const finalLiters = caldoOverrides[type] !== undefined ? caldoOverrides[type] : liters;
+                        text += `• ${type}: ${finalLiters}L\n`;
                     }
                 }
             } else {
@@ -1632,7 +1701,7 @@
 
         function shareIsabelWhatsApp() {
             const text = generateIsabelText();
-            const url = `https://web.whatsapp.com/send?phone=${RIA_DATA.empleados.isabel.whatsapp}&text=${encodeURIComponent(text)}`;
+            const url = `https://api.whatsapp.com/send?phone=${RIA_DATA.empleados.isabel.whatsapp}&text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
 
@@ -1646,6 +1715,10 @@
             if (event.target === isabelModal) {
                 closeIsabelOrder();
             }
+            const historyModal = document.getElementById('historyModal');
+            if (event.target === historyModal) {
+                historyModal.classList.remove('show');
+            }
         });
 
         // ============================================================================
@@ -1654,11 +1727,31 @@
 
         function saveToLocalStorage() {
             const planDate = document.getElementById('planDate').value;
+            // Enrich lines with envases count for produccion.html
+            const enrichedLines = productionLines.map(line => {
+                const enriched = {...line};
+                if (!line.isDirectRedes && line.format !== 'redes') {
+                    const formatInfo = RIA_DATA.formatos[line.format];
+                    if (formatInfo && formatInfo.unidadesCaja) {
+                        enriched.envases = line.quantity * formatInfo.unidadesCaja;
+                    }
+                }
+                // Add redes/jarras for produccion.html
+                const conv = getConversions(line.product, line.format);
+                enriched.redes = line.isDirectRedes ? line.quantity : Math.ceil(conv.redes * line.quantity);
+                enriched.jarras = line.isDirectRedes ? line.quantity : Math.ceil(conv.jarras * line.quantity);
+                return enriched;
+            });
             const data = {
                 ria_plan_dia: planDate,
-                production_lines: productionLines
+                production_lines: enrichedLines,
+                caldo_overrides: caldoOverrides
             };
+            // Save by date and also as current
             localStorage.setItem('riaFormData', JSON.stringify(data));
+            if (planDate) {
+                localStorage.setItem('riaFormData_' + planDate, JSON.stringify(data));
+            }
         }
 
         function loadFromLocalStorage() {
@@ -1667,6 +1760,7 @@
                 try {
                     const parsed = JSON.parse(data);
                     productionLines = parsed.production_lines || [];
+                    caldoOverrides = parsed.caldo_overrides || {};
                     if (parsed.ria_plan_dia) {
                         document.getElementById('planDate').value = parsed.ria_plan_dia;
                     }
@@ -1674,6 +1768,93 @@
                     console.error('Error loading from localStorage:', e);
                 }
             }
+        }
+
+        function loadPlanByDate(dateStr) {
+            const data = localStorage.getItem('riaFormData_' + dateStr);
+            if (data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    productionLines = parsed.production_lines || [];
+                    caldoOverrides = parsed.caldo_overrides || {};
+                    renderCards();
+                    return true;
+                } catch (e) {
+                    console.error('Error loading plan for date:', e);
+                }
+            }
+            return false;
+        }
+
+        function getSavedPlanDates() {
+            const dates = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('riaFormData_')) {
+                    dates.push(key.replace('riaFormData_', ''));
+                }
+            }
+            return dates.sort().reverse();  // Most recent first
+        }
+
+        function cleanOldPlans() {
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - 30);
+            const cutoffStr = cutoff.toISOString().split('T')[0];
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if (key.startsWith('riaFormData_')) {
+                    const date = key.replace('riaFormData_', '');
+                    if (date < cutoffStr) {
+                        localStorage.removeItem(key);
+                    }
+                }
+            }
+        }
+
+        function showPlanHistory() {
+            const dates = getSavedPlanDates();
+            const currentDate = document.getElementById('planDate').value;
+            let html = '';
+
+            if (dates.length === 0) {
+                html = '<div style="padding:16px; color:var(--text-light); text-align:center;">No hay planes guardados.</div>';
+            } else {
+                html = '<div style="max-height:400px; overflow-y:auto;">';
+                for (const date of dates) {
+                    const isCurrent = date === currentDate;
+                    const data = JSON.parse(localStorage.getItem('riaFormData_' + date) || '{}');
+                    const lineCount = (data.production_lines || []).length;
+                    // Format date nicely
+                    const d = new Date(date + 'T00:00:00');
+                    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                    const dayName = dayNames[d.getDay()];
+                    const dateDisplay = `${dayName} ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+
+                    html += `
+                        <div style="padding:12px 16px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; ${isCurrent ? 'background:#E8F5E9;' : ''}" >
+                            <div>
+                                <strong>${dateDisplay}</strong>
+                                <span style="color:var(--text-light); font-size:13px; margin-left:8px;">${lineCount} línea(s)</span>
+                                ${isCurrent ? '<span style="color:var(--primary-green); font-size:12px; margin-left:8px;">● actual</span>' : ''}
+                            </div>
+                            ${!isCurrent ? `<button onclick="loadHistoryDate('${date}')" style="padding:6px 12px; border:1px solid var(--primary-green); border-radius:6px; background:white; color:var(--primary-green); cursor:pointer; font-size:13px;">Cargar</button>` : ''}
+                        </div>
+                    `;
+                }
+                html += '</div>';
+            }
+
+            document.getElementById('historyContent').innerHTML = html;
+            document.getElementById('historyModal').classList.add('show');
+        }
+
+        function loadHistoryDate(dateStr) {
+            document.getElementById('planDate').value = dateStr;
+            loadPlanByDate(dateStr);
+            checkIfPastDate();
+            saveToLocalStorage();
+            document.getElementById('historyModal').classList.remove('show');
         }
     </script>
 </body>
