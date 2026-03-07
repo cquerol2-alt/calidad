@@ -572,6 +572,15 @@ const RIA_DATA = {
     ],
 
     // ========================================================================
+    // INGREDIENTES EXTRA PARA CREMOSOS (producción)
+    // ========================================================================
+    ingredientesExtraCremosos: [
+        { nombre: 'Jamón Ibérico',  mpRef: 'MP20' },
+        { nombre: 'Setas',          mpRef: 'MP22' },
+        { nombre: 'Tartufata',      mpRef: 'MP23' }
+    ],
+
+    // ========================================================================
     // MATERIA PRIMA MAESTRO (MP01-MP58)
     // ========================================================================
     materiaPrima: {

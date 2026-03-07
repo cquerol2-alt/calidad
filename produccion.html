@@ -570,14 +570,7 @@
             </div>
             <div class="section-content">
                 <div class="card">
-                    <div class="form-group">
-                        <label>Opción Caldo</label>
-                        <div class="toggle-group">
-                            <button type="button" class="button-toggle active" data-caldo-option="con-caldo" onclick="toggleCaldoOption(this)">Con Caldo</button>
-                            <button type="button" class="button-toggle" data-caldo-option="sin-caldo" onclick="toggleCaldoOption(this)">Sin Caldo</button>
-                        </div>
-                    </div>
-
+                    <!-- Toggle Con/Sin Caldo eliminado: todos los arroces (excepto Maestro) siempre llevan caldo -->
                     <div id="caldoFields">
                         <div class="form-group">
                             <label for="caldoLot">Lote Caldo</label>
@@ -687,9 +680,7 @@
                         <label for="ingredienteExtraType">Tipo</label>
                         <select id="ingredienteExtraType">
                             <option value="">— Seleccionar —</option>
-                            <option value="Jamón Ibérico">Jamón Ibérico</option>
-                            <option value="Setas">Setas</option>
-                            <option value="Tartufata">Tartufata</option>
+                            <!-- Se rellena dinámicamente desde RIA_DATA.ingredientesExtraCremosos -->
                         </select>
                     </div>
 
@@ -927,12 +918,25 @@
         // Initialize form on load
         document.addEventListener('DOMContentLoaded', function() {
             populateProductSelect();
+            populateIngredientesExtraSelect();
             generarIngredientesJarra();
             setTodayDate();
             loadOrdenDelDia();
             initSavedRecords();
             initSalsaLotHistory();
         });
+
+        // Populate ingredientes extra select from RIA_DATA
+        function populateIngredientesExtraSelect() {
+            const select = document.getElementById('ingredienteExtraType');
+            if (!select || !RIA_DATA || !RIA_DATA.ingredientesExtraCremosos) return;
+            RIA_DATA.ingredientesExtraCremosos.forEach(function(ing) {
+                const opt = document.createElement('option');
+                opt.value = ing.nombre;
+                opt.textContent = ing.nombre;
+                select.appendChild(opt);
+            });
+        }
 
         // Populate product select from RIA_DATA
         function populateProductSelect() {
@@ -1067,13 +1071,13 @@
                     // Determine redes (from line data if available)
                     const redesDisplay = line.redes || line.quantity || '—';
 
-                    // Determine caldo
+                    // Determine caldo (Maestros no llevan caldo, el resto sí)
                     let caldoDisplay = '—';
                     if (producto) {
                         if (producto.tieneCaldo && producto.caldoTipo) {
                             caldoDisplay = producto.caldoTipo.charAt(0).toUpperCase() + producto.caldoTipo.slice(1);
-                        } else {
-                            caldoDisplay = 'Sin caldo';
+                        } else if (!producto.tieneCaldo) {
+                            caldoDisplay = 'No aplica';
                         }
                     }
 
@@ -1192,7 +1196,9 @@
             // Show/hide sections based on product type
             document.getElementById('arrozSection').classList.toggle('visible', !isSalsa);
             document.getElementById('jarraSection').classList.toggle('visible', !isSalsa);
-            document.getElementById('caldoSection').classList.toggle('visible', !isSalsa);
+            // Caldo: solo visible para arroces que NO son maestro (maestros no llevan caldo)
+            const showCaldo = !isSalsa && !isMaestro;
+            document.getElementById('caldoSection').classList.toggle('visible', showCaldo);
             document.getElementById('salsaSection').classList.toggle('visible', !isSalsa);
             document.getElementById('ingredienteExtraSection').classList.toggle('visible', isCremoso);
             // Show salsa sobre lot section only for "Salsas en Sobres"
@@ -1211,23 +1217,10 @@
                 document.getElementById('arrozType').value = producto.arroz;
             }
 
-            // Handle caldo visibility and options
-            const caldoSection = document.getElementById('caldoSection');
-            if (!isSalsa) {
-                caldoSection.classList.add('visible');
-                if (producto.tieneCaldo) {
-                    // Pre-select "Con caldo" for La Santa y Risottos/Cremosos
-                    const conCaldoBtn = caldoSection.querySelector('[data-caldo-option="con-caldo"]');
-                    if (conCaldoBtn) {
-                        toggleCaldoOption(conCaldoBtn);
-                    }
-                } else {
-                    // Pre-select "Sin caldo" for Maestro
-                    const sinCaldoBtn = caldoSection.querySelector('[data-caldo-option="sin-caldo"]');
-                    if (sinCaldoBtn) {
-                        toggleCaldoOption(sinCaldoBtn);
-                    }
-                }
+            // Handle caldo: siempre visible cuando se muestra (Maestros y Salsas no ven esta sección)
+            if (showCaldo) {
+                const caldoFields = document.getElementById('caldoFields');
+                if (caldoFields) caldoFields.style.display = 'block';
             }
 
             // Handle salsa: pre-select "Sin salsa" for Maestro
@@ -1309,19 +1302,6 @@
             const caldoLotInput = document.getElementById('caldoLot');
             if (caldoLotInput) {
                 caldoLotInput.placeholder = prefix || 'RIA-PRODUCTO-DDMMYY';
-            }
-        }
-
-        // Toggle caldo option (Con/Sin)
-        function toggleCaldoOption(btn) {
-            const buttons = btn.parentElement.querySelectorAll('.button-toggle');
-            buttons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const isSinCaldo = btn.dataset.caldoOption === 'sin-caldo';
-            const caldoFields = document.getElementById('caldoFields');
-            if (caldoFields) {
-                caldoFields.style.display = isSinCaldo ? 'none' : 'block';
             }
         }
 
@@ -1730,7 +1710,7 @@
                 formato: formData.envaseFormat,
                 loteProduccion: formData.produccionLot,
                 loteEtiqueta: formData.produccionLot,
-                tieneCaldo: document.getElementById('caldoToggle')?.checked || false,
+                tieneCaldo: (() => { const p = RIA_DATA.productos[formData.produccionProduct.split('|')[0]]; return p ? p.tieneCaldo : false; })(),
                 caldoTipo: formData.salsaType,
                 caldoLote: formData.caldoLot,
                 ingredientes: (() => {
@@ -2013,7 +1993,7 @@
         });
 
         // === ENVÍO A GOOGLE SHEETS ===
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-PZ4TljiVxX3z0K-3pl2tKfZMo2H_Bw-yolprSd77bSYSQqNzJVzdwy4YNsbICCQM/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPb6XSmJdSZ_Kkv9LDPCtV4CoSTOx5SeUodE2vYW-wESdBXzabr8gkZ07XdWiudmjX/exec';
 
         function enviarASheets(datos) {
             fetch(APPS_SCRIPT_URL, {
