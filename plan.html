@@ -629,15 +629,36 @@
                 <div class="form-row">
                     <label class="form-label">Producto</label>
                     <select id="productSelect" onchange="updateFormatOptions()">
-                        <option value="Pescado">Pescado</option>
-                        <option value="Pollo">Pollo</option>
-                        <option value="Negro">Negro</option>
-                        <option value="Verduras">Verduras</option>
-                        <option value="Risotto">Risotto</option>
-                        <option value="Maestro">Maestro</option>
-                        <option value="Ibérico">Ibérico Cremoso</option>
-                        <option value="Setas">Setas Cremoso</option>
-                        <option value="Tartufata">Tartufata Cremoso</option>
+                        <optgroup label="Arroces La Santa">
+                            <option value="Pescado">Pescado</option>
+                            <option value="Pollo">Pollo</option>
+                            <option value="Negro">Negro</option>
+                            <option value="Verduras">Verduras</option>
+                        </optgroup>
+                        <optgroup label="Risotto / Cremosos">
+                            <option value="Risotto">Risotto</option>
+                            <option value="Ibérico">Ibérico Cremoso</option>
+                            <option value="Setas">Setas Cremoso</option>
+                            <option value="Tartufata">Tartufata Cremoso</option>
+                        </optgroup>
+                        <optgroup label="Maestro">
+                            <option value="Maestro">Maestro</option>
+                        </optgroup>
+                        <optgroup label="Salsas en Sobres">
+                            <option value="Salsa Pescado">Salsa Pescado (sobres)</option>
+                            <option value="Salsa Negra">Salsa Negra (sobres)</option>
+                            <option value="Salsa Verduras">Salsa Verduras (sobres)</option>
+                            <option value="Salsa Pollo">Salsa Pollo (sobres)</option>
+                            <option value="Salsa Boletus">Salsa Boletus (sobres)</option>
+                            <option value="Salsa Setas">Salsa Setas (sobres)</option>
+                            <option value="Salsa Tartufata">Salsa Tartufata (sobres)</option>
+                            <option value="Salsa Queso">Salsa Queso (sobres)</option>
+                        </optgroup>
+                        <optgroup label="Caldos">
+                            <option value="Caldo Pescado">Hacer Caldo Pescado</option>
+                            <option value="Caldo Verduras">Hacer Caldo Verduras</option>
+                            <option value="Caldo Risotto">Hacer Caldo Risotto</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="form-row">
@@ -807,6 +828,18 @@
             const p = product.toLowerCase();
             const isCremoso = ['ibérico', 'setas', 'tartufata'].includes(p);
             const isMaestro = p === 'maestro';
+            const isSalsaSobre = p.startsWith('salsa ');
+            const isCaldo = p.startsWith('caldo ');
+
+            // Salsas en Sobres: no necesitan redes/jarras/caldo
+            if (isSalsaSobre) {
+                return { redes: 0, jarras: 0, caldoType: null, caldoLiters: 0, needsSalsa: false, salsaNote: '', isSalsaSobre: true };
+            }
+
+            // Caldos: línea para hacer caldo, cantidad = litros
+            if (isCaldo) {
+                return { redes: 0, jarras: 0, caldoType: product, caldoLiters: 1, needsSalsa: false, salsaNote: '', isCaldo: true };
+            }
 
             let redes = 0;
             let jarras = 0;
@@ -1166,9 +1199,11 @@
         function updateFormatOptions() {
             const product = document.getElementById('productSelect').value;
             const select = document.getElementById('formatSelect');
+            const quantityLabel = document.getElementById('quantityInput').previousElementSibling || document.querySelector('label[for="quantityInput"]');
             const isMaestro = product === 'Maestro';
             const isCremoso = ['Ibérico', 'Setas', 'Tartufata'].includes(product);
-            const isNonMaestroNonCremoso = !isMaestro && !isCremoso;
+            const isSalsaSobre = product.startsWith('Salsa ');
+            const isCaldo = product.startsWith('Caldo ');
 
             // Reset options
             select.innerHTML = '';
@@ -1187,6 +1222,15 @@
                     <option value="all-included">All-Included (300g)</option>
                     <option value="separado">Separado (220g+sobre)</option>
                     <option value="bulk">Bulk</option>
+                `;
+            } else if (isSalsaSobre) {
+                select.innerHTML = `
+                    <option value="sobre">Sobre</option>
+                    <option value="375g">375g</option>
+                `;
+            } else if (isCaldo) {
+                select.innerHTML = `
+                    <option value="litros">Litros</option>
                 `;
             } else {
                 // Non-maestro, non-cremoso: only 260g and bulk
@@ -1230,17 +1274,34 @@
                     line.format === 'all-included' ? 'All-Included (300g)' :
                     line.format === 'separado' ? 'Separado (220g+sobre)' :
                     line.format === 'bulk' ? 'Bulk' :
+                    line.format === 'litros' ? 'Litros' :
+                    line.format === 'sobre' ? 'Sobres' :
                     line.format;
 
+                const isSalsaSobreLine = conv.isSalsaSobre;
+                const isCaldoLine = conv.isCaldo;
+                const unitLabel = isCaldoLine ? 'litros' : isSalsaSobreLine ? 'uds' : '';
+
                 html += `
-                    <div class="production-card">
+                    <div class="production-card" ${isCaldoLine ? 'style="border-left:4px solid #FF9800;"' : isSalsaSobreLine ? 'style="border-left:4px solid #9C27B0;"' : ''}>
                         <div class="card-header">
                             <div class="card-product">${line.product}</div>
                             <div class="card-format">${formatDisplay}</div>
-                            <div class="card-quantity">x${line.quantity}</div>
+                            <div class="card-quantity">x${line.quantity}${unitLabel ? ' ' + unitLabel : ''}</div>
                             <button class="btn-danger card-delete" onclick="deleteCard(${i})">✕</button>
                         </div>
                         <div class="card-body">
+                            ${isSalsaSobreLine ? `
+                            <div class="card-row">
+                                <span class="card-label">Cantidad:</span>
+                                <span class="card-value">${line.quantity} ${line.format === 'sobre' ? 'sobres' : line.format}</span>
+                            </div>
+                            ` : isCaldoLine ? `
+                            <div class="card-row">
+                                <span class="card-label">Cantidad:</span>
+                                <span class="card-value">${line.quantity} litros</span>
+                            </div>
+                            ` : `
                             ${isMaestroLine ? `
                             <div class="card-row" style="margin-bottom:8px;">
                                 <span class="card-label">Variedad arroz:</span>
@@ -1266,7 +1327,7 @@
                                 <span class="card-label">Litros caldo:</span>
                                 <span class="card-value">${caldoValue}L ${conv.caldoType}</span>
                             </div>
-                            ` : ''}
+                            ` : ''}`}
                             ${conv.needsSalsa ? `
                             <div class="card-row" style="align-items:center;">
                                 <span class="card-label">Salsa:</span>
@@ -1276,7 +1337,15 @@
                                         <option value="stock" ${(line.salsaMode || 'stock') === 'stock' ? 'selected' : ''}>En stock</option>
                                         <option value="nueva" ${line.salsaMode === 'nueva' ? 'selected' : ''}>Hacer nueva</option>
                                         <option value="pendiente" ${line.salsaMode === 'pendiente' ? 'selected' : ''}>No lo sé</option>
-                                    </select>`
+                                    </select>
+                                    ${line.salsaMode === 'nueva' ? `
+                                    <div style="margin-top:6px; display:flex; align-items:center; gap:6px;">
+                                        <input type="number" min="0" step="0.5" value="${line.salsaLitros || ''}" placeholder="Litros"
+                                            onchange="setSalsaLitros(${i}, this.value)"
+                                            style="width:80px; padding:4px 8px; border:1.5px solid var(--border-light); border-radius:6px; font-size:13px;">
+                                        <span style="font-size:12px; color:var(--text-light);">litros</span>
+                                    </div>
+                                    ` : ''}`
                                 }
                             </div>
                             ` : ''}
@@ -1296,8 +1365,16 @@
 
         function setSalsaMode(index, mode) {
             productionLines[index].salsaMode = mode;
+            if (mode !== 'nueva') {
+                delete productionLines[index].salsaLitros;
+            }
             saveToLocalStorage();
             renderCards();
+        }
+
+        function setSalsaLitros(index, value) {
+            productionLines[index].salsaLitros = parseFloat(value) || 0;
+            saveToLocalStorage();
         }
 
         function setVariety(index, variety) {
@@ -1412,6 +1489,17 @@
                 const qty = line.quantity;
                 const p = line.product.toLowerCase();
 
+                // Salsas en Sobres y Caldos manuales: no afectan redes/jarras
+                if (conv.isSalsaSobre) continue;
+                if (conv.isCaldo) {
+                    // Caldo manual: sumar litros directamente
+                    if (!summary.caldos[line.product]) {
+                        summary.caldos[line.product] = 0;
+                    }
+                    summary.caldos[line.product] += qty;
+                    continue;
+                }
+
                 let redesVal = line.isDirectRedes ? qty : Math.ceil(conv.redes * qty);
                 let jarrasVal = line.isDirectRedes ? qty : Math.ceil(conv.jarras * qty);
 
@@ -1459,7 +1547,8 @@
 
                     if (!conv.salsaNote.includes('SIEMPRE')) {
                         if (salsaMode === 'nueva') {
-                            note = '⚡ HACER NUEVA';
+                            const litros = line.salsaLitros ? ` (${line.salsaLitros}L)` : '';
+                            note = `⚡ HACER NUEVA${litros}`;
                         } else if (salsaMode === 'pendiente') {
                             note = '⏳ Pendiente';
                         } else {
@@ -1563,12 +1652,15 @@
             });
         }
 
+        const SITE_BASE_URL = 'https://cquerol2-alt.github.io/calidad/';
+
         function generateDiegoText() {
             let text = '📦 ORDEN PARA DIEGO\n\n';
             const summary = calculateSummary();
 
             for (const line of productionLines) {
                 const conv = getConversions(line.product, line.format);
+                if (conv.isSalsaSobre || conv.isCaldo) continue; // Skip non-Diego lines
                 const redesVal = line.isDirectRedes ? line.quantity : Math.ceil(conv.redes * line.quantity);
                 const jarrasVal = line.isDirectRedes ? line.quantity : Math.ceil(conv.jarras * line.quantity);
 
@@ -1595,6 +1687,8 @@
             text += `\n📊 TOTALES\n`;
             text += `Redes Maratelli: ${summary.redesMaratelli} | Bahía: ${summary.redesBahia} | Marisma: ${summary.redesMarisma}\n`;
             text += `Jarras: ${summary.jarrasPescado + summary.jarrasVerdura + summary.jarrasRisotto + summary.jarrasMaestro}`;
+
+            text += `\n\n📝 Registro de producción:\n${SITE_BASE_URL}produccion.html`;
 
             return text;
         }
@@ -1695,6 +1789,8 @@
             } else {
                 text += '• Sin salsas requeridas\n';
             }
+
+            text += `\n📝 Registro de caldos y salsas:\n${SITE_BASE_URL}caldos.html`;
 
             return text.trim();
         }

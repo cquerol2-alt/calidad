@@ -905,7 +905,6 @@
     <!-- BOTTOM STATUS BAR -->
     <div class="status-bar">
         <button onclick="newLineHandler()">📝 Nueva línea</button>
-        <button onclick="exportToCSV()">📊 Exportar CSV</button>
         <button onclick="saveForm()">💾 Guardar</button>
     </div>
 
@@ -1119,7 +1118,7 @@
                                     <span class="detail-label">Redes</span>
                                     <span class="detail-value">${redesDisplay}</span>
                                 </div>
-                                <button type="button" class="btn-use-line" onclick="event.stopPropagation(); applyOrdenItem('${foundKey || ''}', '${formatDisplay}', ${line.envases || line.quantity})">
+                                <button type="button" class="btn-use-line" onclick="event.stopPropagation(); applyOrdenItem('${foundKey || ''}', '${line.format || formatDisplay}', ${line.envases || line.quantity}, ${redesDisplay !== '—' ? redesDisplay : 0})">
                                     Usar esta línea
                                 </button>
                             </div>
@@ -1148,12 +1147,32 @@
         }
 
         // Apply orden item selection (click "Usar esta línea")
-        function applyOrdenItem(productKey, format, quantity) {
+        function applyOrdenItem(productKey, format, quantity, redes) {
             if (productKey) {
                 const optionValue = `${productKey}|${format}`;
                 document.getElementById('produccionProduct').value = optionValue;
                 document.getElementById('produccionQuantity').value = quantity;
                 updateProductDependents();
+
+                // Pre-rellenar tipo de envase basado en formato
+                const envaseSelect = document.getElementById('envaseType');
+                if (format === 'sobre') {
+                    envaseSelect.value = 'Sobre';
+                } else if (['190g', '260g', '300g', '220g'].includes(format) || format === 'all-included' || format === 'separado') {
+                    envaseSelect.value = 'Barqueta 260';
+                } else if (['380g', '450g'].includes(format)) {
+                    envaseSelect.value = 'Barqueta 450';
+                } else if (format === '1330g') {
+                    envaseSelect.value = 'Barqueta 1330';
+                }
+
+                // Pre-rellenar formato/presentación
+                document.getElementById('envaseFormat').value = format;
+
+                // Pre-rellenar redes
+                if (redes && redes > 0) {
+                    document.getElementById('arrozRedes').value = redes;
+                }
 
                 // Scroll down to the form
                 document.getElementById('produccionProduct').closest('.section').scrollIntoView({ behavior: 'smooth' });
@@ -1199,7 +1218,22 @@
             // Caldo: solo visible para arroces que NO son maestro (maestros no llevan caldo)
             const showCaldo = !isSalsa && !isMaestro;
             document.getElementById('caldoSection').classList.toggle('visible', showCaldo);
-            document.getElementById('salsaSection').classList.toggle('visible', !isSalsa);
+            // Salsa: visible para arroces que NO son maestro (maestros no llevan salsa)
+            const showSalsa = !isSalsa && !isMaestro;
+            document.getElementById('salsaSection').classList.toggle('visible', showSalsa);
+            // Modo All-Included solo para cremosos
+            const salsaModeToggle = document.querySelector('#salsaFields .toggle-group');
+            if (salsaModeToggle) {
+                const allIncludedBtn = salsaModeToggle.querySelector('[data-salsa-mode="included"]');
+                if (allIncludedBtn) {
+                    allIncludedBtn.style.display = isCremoso ? '' : 'none';
+                    // Si no es cremoso y estaba seleccionado All-Included, cambiar a stock
+                    if (!isCremoso && allIncludedBtn.classList.contains('active')) {
+                        const stockBtn = salsaModeToggle.querySelector('[data-salsa-mode="stock"]');
+                        if (stockBtn) toggleSalsaMode(stockBtn);
+                    }
+                }
+            }
             document.getElementById('ingredienteExtraSection').classList.toggle('visible', isCremoso);
             // Show salsa sobre lot section only for "Salsas en Sobres"
             const salsaSobreSection = document.getElementById('salsaSobreSection');
@@ -1212,6 +1246,27 @@
                 salsaSobreSection.classList.add('hidden-section');
             }
 
+            // Filtrar opciones de envase según tipo de producto
+            const envaseSelect = document.getElementById('envaseType');
+            const allEnvaseOptions = [
+                { value: '', text: '-- Seleccionar --' },
+                { value: 'Sobre', text: 'Sobre' },
+                { value: 'Barqueta 260', text: 'Barqueta 260' },
+                { value: 'Barqueta 450', text: 'Barqueta 450' },
+                { value: 'Barqueta 1330', text: 'Barqueta 1330' }
+            ];
+            envaseSelect.innerHTML = '';
+            const filteredOptions = isSalsa
+                ? allEnvaseOptions.filter(o => o.value === '' || o.value === 'Sobre')
+                : allEnvaseOptions;
+            filteredOptions.forEach(o => {
+                const opt = document.createElement('option');
+                opt.value = o.value;
+                opt.textContent = o.text;
+                envaseSelect.appendChild(opt);
+            });
+            if (isSalsa) envaseSelect.value = 'Sobre';
+
             // Auto-select rice type
             if (!isSalsa && producto.arroz) {
                 document.getElementById('arrozType').value = producto.arroz;
@@ -1223,13 +1278,10 @@
                 if (caldoFields) caldoFields.style.display = 'block';
             }
 
-            // Handle salsa: pre-select "Sin salsa" for Maestro
-            if (!isSalsa) {
-                const salsaSelect = document.getElementById('salsaType');
-                if (isMaestro) {
-                    salsaSelect.value = 'sin-salsa';
-                    updateSalsaFieldsVisibility();
-                }
+            // Reset salsa for products that don't need it
+            if (isMaestro || isSalsa) {
+                document.getElementById('salsaType').value = 'sin-salsa';
+                updateSalsaFieldsVisibility();
             }
 
             // Generate lot number
@@ -1491,6 +1543,16 @@
             const tbody = document.getElementById('metalDetectorTable');
             tbody.innerHTML = '';
             addMetalDetectorRow();
+
+            // Limpiar fotos de etiqueta e incidencias
+            const fotoEtiqueta = document.getElementById('fotoEtiqueta');
+            if (fotoEtiqueta) fotoEtiqueta.value = '';
+            const fotoEtiquetaPreview = document.getElementById('fotoEtiquetaPreview');
+            if (fotoEtiquetaPreview) fotoEtiquetaPreview.innerHTML = '';
+            const fotosIncidencias = document.getElementById('fotosIncidencias');
+            if (fotosIncidencias) fotosIncidencias.value = '';
+            const fotosPreview = document.getElementById('fotosPreview');
+            if (fotosPreview) fotosPreview.innerHTML = '';
 
             // Update dependents
             updateProductDependents();
@@ -1839,100 +1901,6 @@
 
             // Trigger product dependent updates
             updateProductDependents();
-        }
-
-        // Export to CSV
-        function exportToCSV() {
-            const product = document.getElementById('produccionProduct').value || 'SIN_PRODUCTO';
-            const date = document.getElementById('produccionDate').value || '0000-00-00';
-            const fileName = `RIA-PROD-${date}-${product.replace(/[\s|]/g, '_')}.csv`;
-
-            let csvContent = 'REGISTRO DE PRODUCCIÓN RIA — Diego\n\n';
-            csvContent += `Fecha,${document.getElementById('produccionDate').value}\n`;
-            csvContent += `Producto,${document.getElementById('produccionProduct').value}\n`;
-            csvContent += `Lote,${document.getElementById('produccionLot').value}\n`;
-            csvContent += `Cantidad,${document.getElementById('produccionQuantity').value}\n`;
-            csvContent += `Hora Inicio,${document.getElementById('produccionHora').value}\n\n`;
-
-            csvContent += 'ENVASES\n';
-            csvContent += `Tipo,${document.getElementById('envaseType').value}\n`;
-            csvContent += `Formato,${document.getElementById('envaseFormat').value}\n`;
-            csvContent += `Lote del Envase,${document.getElementById('loteEnvase').value}\n\n`;
-
-            const productValue = document.getElementById('produccionProduct').value;
-            const isSalsa = productValue && productValue.split('|')[0].startsWith('salsa');
-
-            if (!isSalsa) {
-                csvContent += 'ARROZ\n';
-                csvContent += `Tipo,${document.getElementById('arrozType').value}\n`;
-                csvContent += `Lote,${document.getElementById('arrozLot').value}\n`;
-                csvContent += `Número de Redes,${document.getElementById('arrozRedes').value}\n\n`;
-
-                csvContent += 'INGREDIENTES\n';
-                if (RIA_DATA && RIA_DATA.ingredientesJarraProduccion) {
-                    RIA_DATA.ingredientesJarraProduccion.forEach((ingrediente) => {
-                        const ingredienteId = ingrediente.nombre
-                            .toLowerCase()
-                            .replace(/\s+/g, '')
-                            .replace(/[^a-z0-9]/g, '');
-                        const inputId = ingredienteId + 'Lot';
-                        const inputElement = document.getElementById(inputId);
-                        const value = inputElement ? inputElement.value : '';
-                        csvContent += `${ingrediente.nombre},${value}\n`;
-                    });
-                }
-                csvContent += '\n';
-
-                csvContent += 'CALDO\n';
-                csvContent += `Lote,${document.getElementById('caldoLot').value}\n`;
-                csvContent += `Temperatura,${document.getElementById('caldoTemp').value}\n\n`;
-
-                csvContent += 'SALSA\n';
-                csvContent += `Tipo,${document.getElementById('salsaType').value}\n`;
-                csvContent += `Lote,${document.getElementById('salsaLot').value}\n`;
-                csvContent += `Peso/Volumen,${document.getElementById('salsaWeight').value}\n\n`;
-            }
-
-            csvContent += 'TRATAMIENTOS TÉRMICOS\n';
-            csvContent += `Hora Inicio Pasteurización,${document.getElementById('pastHoraInicio').value}\n`;
-            csvContent += `Hora Fin Pasteurización,${document.getElementById('pastHoraFin').value}\n`;
-            csvContent += `Temperatura Final,${document.getElementById('pastTempFinal').value}\n\n`;
-
-            csvContent += 'ABATIMIENTO\n';
-            csvContent += `Hora Inicio,${document.getElementById('abatHoraInicio').value}\n`;
-            csvContent += `Hora Fin,${document.getElementById('abatHoraFin').value}\n`;
-            csvContent += `Temperatura Final,${document.getElementById('abatTemp').value}\n\n`;
-
-            csvContent += 'DETECTOR DE METALES\n';
-            csvContent += 'Hora,Ferroso,No Ferroso,Ac. Inox.,Envases\n';
-            document.querySelectorAll('#metalDetectorTable tr').forEach(row => {
-                const hora = row.querySelector('.metal-hora').value;
-                const ferroso = row.querySelector('.metal-ferroso').value;
-                const noferroso = row.querySelector('.metal-noferroso').value;
-                const inox = row.querySelector('.metal-inox').value;
-                const envases = row.querySelector('.metal-envases').value;
-                if (hora || envases) {
-                    csvContent += `${hora},${ferroso},${noferroso},${inox},${envases}\n`;
-                }
-            });
-
-            csvContent += '\nCONTROL DE CIERRE\n';
-            csvContent += `Sellado OK,${document.getElementById('selladoOK').value}\n`;
-            csvContent += `Sellado NOK,${document.getElementById('selladoNOK').value}\n\n`;
-
-            csvContent += 'ETIQUETADO\n';
-            csvContent += `Lote en Etiqueta,${document.getElementById('produccionLot').value}\n`;
-            csvContent += `Fecha en Etiqueta,${document.getElementById('etiquetaDate').value}\n`;
-            csvContent += `Verificación,${document.getElementById('etiquetaCheck').value}\n`;
-            csvContent += `Notas,${document.getElementById('etiquetaNotes').value}\n\n`;
-
-            csvContent += 'INCIDENCIAS\n';
-            csvContent += `Descripción,${document.getElementById('incidencias').value}\n`;
-
-            const link = document.createElement('a');
-            link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
-            link.download = fileName;
-            link.click();
         }
 
         // Attach event listeners
