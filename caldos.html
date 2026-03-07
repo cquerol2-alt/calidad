@@ -1611,7 +1611,7 @@
             }
 
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
         }
 
