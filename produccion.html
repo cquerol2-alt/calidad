@@ -1399,6 +1399,41 @@
             formData.metalDetector = metalRows;
 
             localStorage.setItem('riaFormProduccion', JSON.stringify(formData));
+
+            // Enviar a Google Sheets
+            enviarASheets({
+                formType: 'produccion',
+                fecha: formData.produccionDate,
+                operador: 'Diego',
+                producto: document.getElementById('produccionProduct').selectedOptions[0]?.text || formData.produccionProduct,
+                variante: formData.envaseType,
+                formato: formData.envaseFormat,
+                loteProduccion: formData.produccionLot,
+                loteEtiqueta: formData.produccionLot,
+                tieneCaldo: document.getElementById('caldoToggle')?.checked || false,
+                caldoTipo: formData.salsaType,
+                caldoLote: formData.caldoLot,
+                ingredientes: (() => {
+                    const ings = [];
+                    ings.push({ ingrediente: 'Arroz ' + (formData.arrozType || ''), lote: formData.arrozLot, proveedor: '' });
+                    ings.push({ ingrediente: 'Salsa/Caldo', lote: formData.salsaLot, proveedor: '' });
+                    if (formData.ingredienteExtraType) {
+                        ings.push({ ingrediente: formData.ingredienteExtraType, lote: formData.ingredienteExtraLot, proveedor: '' });
+                    }
+                    if (RIA_DATA && RIA_DATA.ingredientesJarraProduccion) {
+                        RIA_DATA.ingredientesJarraProduccion.forEach(ing => {
+                            const ingId = ing.nombre.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + 'Lot';
+                            const el = document.getElementById(ingId);
+                            if (el && el.value) ings.push({ ingrediente: ing.nombre, lote: el.value, proveedor: '' });
+                        });
+                    }
+                    return ings;
+                })(),
+                metalDetector: metalRows,
+                envasado: { formato: formData.envaseFormat, cantidad: formData.produccionQuantity },
+                observaciones: formData.incidencias || ''
+            });
+
             alert('Datos guardados correctamente');
         }
 
@@ -1594,6 +1629,22 @@
         document.getElementById('produccionDate').addEventListener('change', generateLotNumber);
         document.getElementById('produccionProduct').addEventListener('change', updateProductDependents);
         document.getElementById('salsaType').addEventListener('change', updateSalsaFieldsVisibility);
+
+        // === ENVÍO A GOOGLE SHEETS ===
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-PZ4TljiVxX3z0K-3pl2tKfZMo2H_Bw-yolprSd77bSYSQqNzJVzdwy4YNsblCCQM/exec';
+
+        function enviarASheets(datos) {
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            }).then(() => {
+                console.log('Datos enviados a Google Sheets');
+            }).catch(err => {
+                console.error('Error enviando a Sheets:', err);
+            });
+        }
     </script>
 </body>
 </html>
