@@ -422,6 +422,18 @@
         </div>
 
         <!-- ORDEN DEL DÍA SECTION -->
+        <!-- SAVED RECORDS LIST -->
+        <div class="section" id="savedRecordsSection" style="display:none;">
+            <div class="section-title" onclick="toggleSection(this)">
+                <span class="toggle-icon">▼</span>
+                Líneas Guardadas Hoy
+            </div>
+            <div class="section-content">
+                <div id="savedRecordsList"></div>
+                <button type="button" onclick="newLineHandler()" style="margin-top:10px; padding:10px 20px; background:var(--primary-green); color:white; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; width:100%;">📝 Nueva línea</button>
+            </div>
+        </div>
+
         <div class="section">
             <div class="section-title" onclick="toggleSection(this)">
                 <span class="toggle-icon">▼</span>
@@ -637,6 +649,32 @@
             </div>
         </div>
 
+        <!-- SALSA SOBRE LOT SECTION (Only for Salsas en Sobres) -->
+        <div class="section hidden-section" id="salsaSobreSection">
+            <div class="section-title" onclick="toggleSection(this)">
+                <span class="toggle-icon">▼</span>
+                Lote de la Salsa Base
+            </div>
+            <div class="section-content">
+                <div class="card">
+                    <div class="form-group">
+                        <label for="salsaSobreLot">Lote de salsa</label>
+                        <select id="salsaSobreLot" onchange="handleSalsaSobreSelection()">
+                            <option value="">— Seleccionar lote —</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="salsaSobreLotNewGroup" style="display:none;">
+                        <label for="salsaSobreLotNew">Nuevo lote (manual)</label>
+                        <input type="text" id="salsaSobreLotNew" placeholder="Ej: SALSA-PESCADO-260326">
+                    </div>
+                    <div class="form-group">
+                        <label for="salsaSobreQuantity">Cantidad producida (g)</label>
+                        <input type="number" id="salsaSobreQuantity" min="0" step="1" placeholder="Peso total en gramos">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- INGREDIENTE EXTRA SECTION (Hidden for salsas and non-cremosos) -->
         <div class="section hidden-section" id="ingredienteExtraSection">
             <div class="section-title" onclick="toggleSection(this)">
@@ -647,7 +685,12 @@
                 <div class="card">
                     <div class="form-group">
                         <label for="ingredienteExtraType">Tipo</label>
-                        <input type="text" id="ingredienteExtraType" placeholder="Ej: Jamón Ibérico, Setas, etc.">
+                        <select id="ingredienteExtraType">
+                            <option value="">— Seleccionar —</option>
+                            <option value="Jamón Ibérico">Jamón Ibérico</option>
+                            <option value="Setas">Setas</option>
+                            <option value="Tartufata">Tartufata</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -784,20 +827,6 @@
             <div class="section-content">
                 <div class="card">
                     <div class="form-group">
-                        <label>Vacío</label>
-                        <div class="toggle-group">
-                            <button type="button" class="button-toggle" data-control-type="vacio" data-control-status="ok" onclick="toggleControl(this)">OK</button>
-                            <button type="button" class="button-toggle" data-control-type="vacio" data-control-status="nok" onclick="toggleControl(this)">NOK</button>
-                        </div>
-                        <div class="inline-inputs">
-                            <span>OK:</span>
-                            <input type="number" id="vacioOK" min="0" placeholder="Envases" style="flex: 0.5;">
-                            <span style="margin-left: 12px;">NOK:</span>
-                            <input type="number" id="vacioNOK" min="0" placeholder="Envases" style="flex: 0.5;">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <label>Sellado</label>
                         <div class="toggle-group">
                             <button type="button" class="button-toggle" data-control-type="sellado" data-control-status="ok" onclick="toggleControl(this)">OK</button>
@@ -846,6 +875,12 @@
                         <label for="etiquetaNotes">Notas/Detalles</label>
                         <textarea id="etiquetaNotes" placeholder="Si hay revisión o parada, describe aquí..."></textarea>
                     </div>
+
+                    <div class="form-group">
+                        <label for="fotoEtiqueta">Foto de la Etiqueta</label>
+                        <input type="file" id="fotoEtiqueta" accept="image/*" capture="environment">
+                        <div id="fotoEtiquetaPreview" style="margin-top:8px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -878,19 +913,25 @@
 
     <!-- BOTTOM STATUS BAR -->
     <div class="status-bar">
+        <button onclick="newLineHandler()">📝 Nueva línea</button>
         <button onclick="exportToCSV()">📊 Exportar CSV</button>
         <button onclick="saveForm()">💾 Guardar</button>
     </div>
 
     <script src="data.js"></script>
     <script>
+        // Multi-line record state
+        let savedRecords = [];
+        let currentEditIndex = null;
+
         // Initialize form on load
         document.addEventListener('DOMContentLoaded', function() {
             populateProductSelect();
             generarIngredientesJarra();
             setTodayDate();
             loadOrdenDelDia();
-            loadFormDataFromStorage();
+            initSavedRecords();
+            initSalsaLotHistory();
         });
 
         // Populate product select from RIA_DATA
@@ -1154,6 +1195,16 @@
             document.getElementById('caldoSection').classList.toggle('visible', !isSalsa);
             document.getElementById('salsaSection').classList.toggle('visible', !isSalsa);
             document.getElementById('ingredienteExtraSection').classList.toggle('visible', isCremoso);
+            // Show salsa sobre lot section only for "Salsas en Sobres"
+            const salsaSobreSection = document.getElementById('salsaSobreSection');
+            if (isSalsa) {
+                salsaSobreSection.classList.add('visible');
+                salsaSobreSection.classList.remove('hidden-section');
+                renderSalsaSobreLotDropdown();
+            } else {
+                salsaSobreSection.classList.remove('visible');
+                salsaSobreSection.classList.add('hidden-section');
+            }
 
             // Auto-select rice type
             if (!isSalsa && producto.arroz) {
@@ -1335,8 +1386,258 @@
             tbody.appendChild(tr);
         }
 
+        // ============================================================================
+        // MULTI-LINE RECORD MANAGEMENT
+        // ============================================================================
+
+        function initSavedRecords() {
+            const today = new Date().toISOString().split('T')[0];
+            const stored = localStorage.getItem('riaFormProduccionRecords_' + today);
+            if (stored) {
+                try {
+                    savedRecords = JSON.parse(stored);
+                } catch (e) {
+                    savedRecords = [];
+                }
+            }
+            renderSavedRecordsList();
+        }
+
+        function saveSavedRecords() {
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem('riaFormProduccionRecords_' + today, JSON.stringify(savedRecords));
+        }
+
+        function renderSavedRecordsList() {
+            const section = document.getElementById('savedRecordsSection');
+            const list = document.getElementById('savedRecordsList');
+
+            if (savedRecords.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            let html = '';
+            savedRecords.forEach((record, idx) => {
+                const [productKey, format] = (record.produccionProduct || '').split('|');
+                const producto = RIA_DATA.productos[productKey];
+                const productName = producto ? producto.nombre : (record.produccionProduct || 'Sin producto');
+                const qty = record.produccionQuantity || '?';
+                const isEditing = currentEditIndex === idx;
+
+                html += `
+                    <div style="background:${isEditing ? '#FFF3E0' : 'white'}; border:1.5px solid ${isEditing ? '#FF9800' : '#E0E0E0'}; border-radius:8px; padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="flex:1; font-size:14px;">
+                            <strong>${idx + 1}. ${productName}</strong>
+                            <span style="color:#666; margin-left:6px;">${format || ''} — ${qty} uds.</span>
+                            ${isEditing ? '<span style="color:#FF9800; font-size:12px; margin-left:8px;">● editando</span>' : ''}
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button type="button" onclick="loadSavedRecord(${idx})" style="padding:6px 12px; font-size:12px; border:1px solid var(--primary-green); border-radius:6px; background:white; color:var(--primary-green); cursor:pointer;">${isEditing ? 'Editando' : 'Ver/Editar'}</button>
+                            <button type="button" onclick="deleteSavedRecord(${idx})" style="padding:6px 10px; font-size:12px; border:none; border-radius:6px; background:#EF5350; color:white; cursor:pointer;">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function loadSavedRecord(index) {
+            if (index < 0 || index >= savedRecords.length) return;
+            currentEditIndex = index;
+            loadFormDataFromRecord(savedRecords[index]);
+            renderSavedRecordsList();
+            document.getElementById('produccionProduct').closest('.section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteSavedRecord(index) {
+            if (!confirm('¿Eliminar esta línea guardada?')) return;
+            savedRecords.splice(index, 1);
+            if (currentEditIndex === index) currentEditIndex = null;
+            else if (currentEditIndex !== null && currentEditIndex > index) currentEditIndex--;
+            saveSavedRecords();
+            renderSavedRecordsList();
+        }
+
+        function newLineHandler() {
+            currentEditIndex = null;
+            clearAllFormFields();
+            setTodayDate();
+            renderSavedRecordsList();
+            document.getElementById('produccionProduct').closest('.section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearAllFormFields() {
+            document.getElementById('produccionProduct').selectedIndex = 0;
+            document.getElementById('produccionQuantity').value = '';
+            document.getElementById('produccionHora').value = '';
+            document.getElementById('envaseType').selectedIndex = 0;
+            document.getElementById('envaseFormat').value = '';
+            document.getElementById('loteEnvase').value = '';
+            document.getElementById('arrozType').selectedIndex = 0;
+            document.getElementById('arrozLot').value = '';
+            document.getElementById('arrozRedes').value = '';
+            document.getElementById('caldoLot').value = '';
+            document.getElementById('caldoTemp').value = '';
+            document.getElementById('salsaType').selectedIndex = 0;
+            document.getElementById('salsaLot').value = '';
+            document.getElementById('salsaWeight').value = '';
+            document.getElementById('ingredienteExtraType').selectedIndex = 0;
+            document.getElementById('ingredienteExtraLot').value = '';
+            document.getElementById('ingredienteExtraWeight').value = '';
+            document.getElementById('pastHoraInicio').value = '';
+            document.getElementById('pastHoraFin').value = '';
+            document.getElementById('pastTempFinal').value = '';
+            document.getElementById('abatHoraInicio').value = '';
+            document.getElementById('abatHoraFin').value = '';
+            document.getElementById('abatTemp').value = '';
+            document.getElementById('etiquetaCheck').selectedIndex = 0;
+            document.getElementById('etiquetaNotes').value = '';
+            document.getElementById('incidencias').value = '';
+            document.getElementById('selladoOK').value = '';
+            document.getElementById('selladoNOK').value = '';
+
+            // Clear dynamic ingredient lots
+            if (RIA_DATA && RIA_DATA.ingredientesJarraProduccion) {
+                RIA_DATA.ingredientesJarraProduccion.forEach((ingrediente) => {
+                    const ingId = ingrediente.nombre.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + 'Lot';
+                    const el = document.getElementById(ingId);
+                    if (el) el.value = '';
+                });
+            }
+
+            // Clear metal detector rows to just one empty row
+            const tbody = document.getElementById('metalDetectorTable');
+            tbody.innerHTML = '';
+            addMetalDetectorRow();
+
+            // Update dependents
+            updateProductDependents();
+        }
+
+        function loadFormDataFromRecord(data) {
+            // Reuse existing loadFormDataFromStorage logic but with provided data
+            document.getElementById('produccionDate').value = data.produccionDate || '';
+            document.getElementById('produccionProduct').value = data.produccionProduct || '';
+            document.getElementById('produccionQuantity').value = data.produccionQuantity || '';
+            document.getElementById('produccionHora').value = data.produccionHora || '';
+            document.getElementById('envaseType').value = data.envaseType || '';
+            document.getElementById('envaseFormat').value = data.envaseFormat || '';
+            document.getElementById('loteEnvase').value = data.loteEnvase || '';
+            document.getElementById('arrozType').value = data.arrozType || '';
+            document.getElementById('arrozLot').value = data.arrozLot || '';
+            document.getElementById('arrozRedes').value = data.arrozRedes || '';
+
+            if (RIA_DATA && RIA_DATA.ingredientesJarraProduccion) {
+                RIA_DATA.ingredientesJarraProduccion.forEach((ingrediente) => {
+                    const ingId = ingrediente.nombre.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + 'Lot';
+                    const el = document.getElementById(ingId);
+                    if (el) el.value = data[ingId] || '';
+                });
+            }
+
+            document.getElementById('caldoLot').value = data.caldoLot || '';
+            document.getElementById('caldoTemp').value = data.caldoTemp || '';
+            document.getElementById('salsaType').value = data.salsaType || '';
+            document.getElementById('salsaLot').value = data.salsaLot || '';
+            document.getElementById('salsaWeight').value = data.salsaWeight || '';
+            if (data.salsaSobreLot) {
+                renderSalsaSobreLotDropdown();
+                const sel = document.getElementById('salsaSobreLot');
+                if ([...sel.options].some(o => o.value === data.salsaSobreLot)) {
+                    sel.value = data.salsaSobreLot;
+                } else {
+                    sel.value = '_NEW_';
+                    document.getElementById('salsaSobreLotNew').value = data.salsaSobreLot;
+                    document.getElementById('salsaSobreLotNewGroup').style.display = 'block';
+                }
+            }
+            document.getElementById('salsaSobreQuantity').value = data.salsaSobreQuantity || '';
+            document.getElementById('ingredienteExtraType').value = data.ingredienteExtraType || '';
+            document.getElementById('ingredienteExtraLot').value = data.ingredienteExtraLot || '';
+            document.getElementById('ingredienteExtraWeight').value = data.ingredienteExtraWeight || '';
+            document.getElementById('pastHoraInicio').value = data.pastHoraInicio || '';
+            document.getElementById('pastHoraFin').value = data.pastHoraFin || '';
+            document.getElementById('pastTempFinal').value = data.pastTempFinal || '';
+            document.getElementById('abatHoraInicio').value = data.abatHoraInicio || '';
+            document.getElementById('abatHoraFin').value = data.abatHoraFin || '';
+            document.getElementById('abatTemp').value = data.abatTemp || '';
+            document.getElementById('etiquetaDate').value = data.etiquetaDate || '';
+            document.getElementById('etiquetaCheck').value = data.etiquetaCheck || '';
+            document.getElementById('etiquetaNotes').value = data.etiquetaNotes || '';
+            document.getElementById('incidencias').value = data.incidencias || '';
+            document.getElementById('selladoOK').value = data.selladoOK || '';
+            document.getElementById('selladoNOK').value = data.selladoNOK || '';
+
+            // Restore metal detector data
+            if (data.metalDetector && data.metalDetector.length > 0) {
+                const tbody = document.getElementById('metalDetectorTable');
+                tbody.innerHTML = '';
+                data.metalDetector.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><input type="time" class="metal-hora" value="${row.hora || ''}"></td>
+                        <td><select class="metal-ferroso"><option value="OK" ${(row.ferroso || 'OK') === 'OK' ? 'selected' : ''}>OK</option><option value="NOK" ${row.ferroso === 'NOK' ? 'selected' : ''}>NOK</option></select></td>
+                        <td><select class="metal-noferroso"><option value="OK" ${(row.noferroso || 'OK') === 'OK' ? 'selected' : ''}>OK</option><option value="NOK" ${row.noferroso === 'NOK' ? 'selected' : ''}>NOK</option></select></td>
+                        <td><select class="metal-inox"><option value="OK" ${(row.inox || 'OK') === 'OK' ? 'selected' : ''}>OK</option><option value="NOK" ${row.inox === 'NOK' ? 'selected' : ''}>NOK</option></select></td>
+                        <td><input type="number" class="metal-envases" min="0" placeholder="Nº" value="${row.envases || ''}"></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            updateProductDependents();
+        }
+
+        // ============================================================================
+        // SALSA SOBRE LOT HISTORY
+        // ============================================================================
+
+        let salsaLotHistory = [];
+
+        function initSalsaLotHistory() {
+            const stored = localStorage.getItem('salsaLotHistory');
+            if (stored) {
+                try { salsaLotHistory = JSON.parse(stored); } catch(e) { salsaLotHistory = []; }
+            }
+        }
+
+        function renderSalsaSobreLotDropdown() {
+            const select = document.getElementById('salsaSobreLot');
+            select.innerHTML = '<option value="">— Seleccionar lote —</option>';
+            salsaLotHistory.forEach(lot => {
+                const opt = document.createElement('option');
+                opt.value = lot;
+                opt.textContent = lot;
+                select.appendChild(opt);
+            });
+            const newOpt = document.createElement('option');
+            newOpt.value = '_NEW_';
+            newOpt.textContent = '+ Escribir nuevo lote';
+            select.appendChild(newOpt);
+        }
+
+        function handleSalsaSobreSelection() {
+            const select = document.getElementById('salsaSobreLot');
+            const newGroup = document.getElementById('salsaSobreLotNewGroup');
+            if (select.value === '_NEW_') {
+                newGroup.style.display = 'block';
+                document.getElementById('salsaSobreLotNew').focus();
+            } else {
+                newGroup.style.display = 'none';
+            }
+        }
+
+        function addSalsaLotToHistory(lot) {
+            if (!lot || salsaLotHistory.includes(lot)) return;
+            salsaLotHistory.unshift(lot);
+            if (salsaLotHistory.length > 20) salsaLotHistory = salsaLotHistory.slice(0, 20);
+            localStorage.setItem('salsaLotHistory', JSON.stringify(salsaLotHistory));
+        }
+
         // Save form to localStorage
-        function saveForm() {
+        async function saveForm() {
             const formData = {
                 produccionDate: document.getElementById('produccionDate').value,
                 produccionProduct: document.getElementById('produccionProduct').value,
@@ -1354,6 +1655,12 @@
                 salsaType: document.getElementById('salsaType').value,
                 salsaLot: document.getElementById('salsaLot').value,
                 salsaWeight: document.getElementById('salsaWeight').value,
+                salsaSobreLot: (() => {
+                    const sel = document.getElementById('salsaSobreLot');
+                    if (sel.value === '_NEW_') return document.getElementById('salsaSobreLotNew').value;
+                    return sel.value;
+                })(),
+                salsaSobreQuantity: document.getElementById('salsaSobreQuantity').value,
                 ingredienteExtraType: document.getElementById('ingredienteExtraType').value,
                 ingredienteExtraLot: document.getElementById('ingredienteExtraLot').value,
                 ingredienteExtraWeight: document.getElementById('ingredienteExtraWeight').value,
@@ -1367,8 +1674,6 @@
                 etiquetaCheck: document.getElementById('etiquetaCheck').value,
                 etiquetaNotes: document.getElementById('etiquetaNotes').value,
                 incidencias: document.getElementById('incidencias').value,
-                vacioOK: document.getElementById('vacioOK').value,
-                vacioNOK: document.getElementById('vacioNOK').value,
                 selladoOK: document.getElementById('selladoOK').value,
                 selladoNOK: document.getElementById('selladoNOK').value,
             };
@@ -1402,7 +1707,18 @@
             });
             formData.metalDetector = metalRows;
 
-            localStorage.setItem('riaFormProduccion', JSON.stringify(formData));
+            // Save salsa lot to history if applicable
+            if (formData.salsaSobreLot) {
+                addSalsaLotToHistory(formData.salsaSobreLot);
+            }
+
+            // Add/update in saved records
+            if (currentEditIndex !== null) {
+                savedRecords[currentEditIndex] = formData;
+            } else {
+                savedRecords.push(formData);
+            }
+            saveSavedRecords();
 
             // Enviar a Google Sheets
             enviarASheets({
@@ -1435,10 +1751,12 @@
                 })(),
                 metalDetector: metalRows,
                 envasado: { formato: formData.envaseFormat, cantidad: formData.produccionQuantity },
-                observaciones: formData.incidencias || ''
+                observaciones: formData.incidencias || '',
+                ...(await collectPhotos())
             });
 
-            alert('Datos guardados correctamente');
+            alert('Línea guardada correctamente');
+            newLineHandler();
         }
 
         // Load form data from localStorage
@@ -1479,6 +1797,18 @@
             document.getElementById('salsaType').value = data.salsaType || '';
             document.getElementById('salsaLot').value = data.salsaLot || '';
             document.getElementById('salsaWeight').value = data.salsaWeight || '';
+            if (data.salsaSobreLot) {
+                renderSalsaSobreLotDropdown();
+                const sel = document.getElementById('salsaSobreLot');
+                if ([...sel.options].some(o => o.value === data.salsaSobreLot)) {
+                    sel.value = data.salsaSobreLot;
+                } else {
+                    sel.value = '_NEW_';
+                    document.getElementById('salsaSobreLotNew').value = data.salsaSobreLot;
+                    document.getElementById('salsaSobreLotNewGroup').style.display = 'block';
+                }
+            }
+            document.getElementById('salsaSobreQuantity').value = data.salsaSobreQuantity || '';
             document.getElementById('ingredienteExtraType').value = data.ingredienteExtraType || '';
             document.getElementById('ingredienteExtraLot').value = data.ingredienteExtraLot || '';
             document.getElementById('ingredienteExtraWeight').value = data.ingredienteExtraWeight || '';
@@ -1492,8 +1822,6 @@
             document.getElementById('etiquetaCheck').value = data.etiquetaCheck || '';
             document.getElementById('etiquetaNotes').value = data.etiquetaNotes || '';
             document.getElementById('incidencias').value = data.incidencias || '';
-            document.getElementById('vacioOK').value = data.vacioOK || '';
-            document.getElementById('vacioNOK').value = data.vacioNOK || '';
             document.getElementById('selladoOK').value = data.selladoOK || '';
             document.getElementById('selladoNOK').value = data.selladoNOK || '';
 
@@ -1609,8 +1937,6 @@
             });
 
             csvContent += '\nCONTROL DE CIERRE\n';
-            csvContent += `Vacío OK,${document.getElementById('vacioOK').value}\n`;
-            csvContent += `Vacío NOK,${document.getElementById('vacioNOK').value}\n`;
             csvContent += `Sellado OK,${document.getElementById('selladoOK').value}\n`;
             csvContent += `Sellado NOK,${document.getElementById('selladoNOK').value}\n\n`;
 
@@ -1633,6 +1959,58 @@
         document.getElementById('produccionDate').addEventListener('change', generateLotNumber);
         document.getElementById('produccionProduct').addEventListener('change', updateProductDependents);
         document.getElementById('salsaType').addEventListener('change', updateSalsaFieldsVisibility);
+
+        // ============================================================================
+        // PHOTO HANDLING
+        // ============================================================================
+
+        function setupPhotoPreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            input.addEventListener('change', function() {
+                preview.innerHTML = '';
+                if (!this.files || this.files.length === 0) return;
+                Array.from(this.files).forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.cssText = 'width:80px; height:80px; object-fit:cover; border-radius:6px; border:2px solid #E0E0E0; margin-right:6px;';
+                        preview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function collectPhotos() {
+            const result = { fotoEtiqueta: null, fotosIncidencias: [] };
+            const etiquetaInput = document.getElementById('fotoEtiqueta');
+            if (etiquetaInput.files.length > 0) {
+                result.fotoEtiqueta = await fileToBase64(etiquetaInput.files[0]);
+            }
+            const incidenciasInput = document.getElementById('fotosIncidencias');
+            for (let i = 0; i < incidenciasInput.files.length; i++) {
+                result.fotosIncidencias.push(await fileToBase64(incidenciasInput.files[i]));
+            }
+            return result;
+        }
+
+        // Setup photo previews on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPhotoPreview('fotoEtiqueta', 'fotoEtiquetaPreview');
+            setupPhotoPreview('fotosIncidencias', 'fotosPreview');
+        });
 
         // === ENVÍO A GOOGLE SHEETS ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-PZ4TljiVxX3z0K-3pl2tKfZMo2H_Bw-yolprSd77bSYSQqNzJVzdwy4YNsbICCQM/exec';
