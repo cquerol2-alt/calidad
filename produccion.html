@@ -1763,38 +1763,68 @@
             saveSavedRecords();
 
             // Enviar a Google Sheets
+            // Recoger ingredientes de jarra
+            const ingredientesJarra = [];
+            if (RIA_DATA && RIA_DATA.ingredientesJarraProduccion) {
+                RIA_DATA.ingredientesJarraProduccion.forEach(ing => {
+                    const ingId = ing.nombre.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + 'Lot';
+                    const el = document.getElementById(ingId);
+                    if (el && el.value) ingredientesJarra.push({ ingrediente: ing.nombre, lote: el.value });
+                });
+            }
+
+            // Disponibilidad caldo (stock/del día)
+            const caldoSourceBtn = document.querySelector('[data-caldo-source].active');
+            const caldoSource = caldoSourceBtn ? caldoSourceBtn.dataset.caldoSource : '';
+
+            // Modo salsa (all-included/separate/stock)
+            const salsaModeBtn = document.querySelector('[data-salsa-mode].active');
+            const salsaMode = salsaModeBtn ? salsaModeBtn.dataset.salsaMode : '';
+
+            const fotos = await collectPhotos();
+
             enviarASheets({
                 formType: 'produccion',
                 fecha: formData.produccionDate,
+                horaInicio: formData.produccionHora,
                 operador: 'Diego',
                 producto: document.getElementById('produccionProduct').selectedOptions[0]?.text || formData.produccionProduct,
-                variante: formData.envaseType,
                 formato: formData.envaseFormat,
                 loteProduccion: formData.produccionLot,
-                loteEtiqueta: formData.produccionLot,
-                tieneCaldo: (() => { const p = RIA_DATA.productos[formData.produccionProduct.split('|')[0]]; return p ? p.tieneCaldo : false; })(),
-                caldoTipo: formData.salsaType,
-                caldoLote: formData.caldoLot,
-                ingredientes: (() => {
-                    const ings = [];
-                    ings.push({ ingrediente: 'Arroz ' + (formData.arrozType || ''), lote: formData.arrozLot, proveedor: '' });
-                    ings.push({ ingrediente: 'Salsa/Caldo', lote: formData.salsaLot, proveedor: '' });
-                    if (formData.ingredienteExtraType) {
-                        ings.push({ ingrediente: formData.ingredienteExtraType, lote: formData.ingredienteExtraLot, proveedor: '' });
-                    }
-                    if (RIA_DATA && RIA_DATA.ingredientesJarraProduccion) {
-                        RIA_DATA.ingredientesJarraProduccion.forEach(ing => {
-                            const ingId = ing.nombre.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + 'Lot';
-                            const el = document.getElementById(ingId);
-                            if (el && el.value) ings.push({ ingrediente: ing.nombre, lote: el.value, proveedor: '' });
-                        });
-                    }
-                    return ings;
-                })(),
+                tipoEnvase: formData.envaseType,
+                formatoEnvase: formData.envaseFormat,
+                loteEnvase: formData.loteEnvase,
+                cantidadEnvases: formData.produccionQuantity,
+                tipoArroz: formData.arrozType,
+                loteArroz: formData.arrozLot,
+                numRedes: formData.arrozRedes,
+                loteCaldo: formData.caldoLot,
+                tempCaldo: formData.caldoTemp,
+                disponibilidadCaldo: caldoSource === 'stock' ? 'En Stock' : caldoSource === 'day' ? 'Del Día' : '',
+                tipoSalsa: formData.salsaType,
+                loteSalsa: formData.salsaLot,
+                pesoSalsa: formData.salsaWeight,
+                modoSalsa: salsaMode === 'included' ? 'All-Included' : salsaMode === 'separate' ? 'Separado' : salsaMode === 'stock' ? 'En Stock' : '',
+                loteSalsaSobre: formData.salsaSobreLot,
+                cantSalsaSobre: formData.salsaSobreQuantity,
+                ingredienteExtra: formData.ingredienteExtraType,
+                loteIngrExtra: formData.ingredienteExtraLot,
+                pesoIngrExtra: formData.ingredienteExtraWeight,
+                ingredientesJarra: ingredientesJarra,
+                pastHoraInicio: formData.pastHoraInicio,
+                pastHoraFin: formData.pastHoraFin,
+                pastTempFinal: formData.pastTempFinal,
+                abatHoraInicio: formData.abatHoraInicio,
+                abatHoraFin: formData.abatHoraFin,
+                abatTemp: formData.abatTemp,
                 metalDetector: metalRows,
-                envasado: { formato: formData.envaseFormat, cantidad: formData.produccionQuantity },
-                observaciones: formData.incidencias || '',
-                ...(await collectPhotos())
+                selladoOK: formData.selladoOK,
+                selladoNOK: formData.selladoNOK,
+                fechaEtiqueta: formData.etiquetaDate,
+                verifEtiqueta: formData.etiquetaCheck,
+                notasEtiqueta: formData.etiquetaNotes,
+                incidencias: formData.incidencias,
+                ...fotos
             });
 
             alert('Línea guardada correctamente');

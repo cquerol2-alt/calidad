@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIA — Registros de Producción PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1B5E20;
+            --primary-light: #4CAF50;
+            --pale: #E8F5E9;
+            --red: #D32F2F;
+            --gray: #F5F5F5;
+            --border: #E0E0E0;
+            --text: #212121;
+            --text2: #757575;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F5F5F5; color: var(--text);
+        }
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #0D3817 100%);
+            color: white; padding: 20px 16px; text-align: center;
+        }
+        .header h1 { font-size: 20px; font-weight: 700; }
+        .header p { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+        .container { max-width: 700px; margin: 0 auto; padding: 16px; }
+
+        /* Filtros */
+        .filters {
+            background: white; border-radius: 12px; padding: 16px;
+            margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .filters label { font-size: 13px; font-weight: 600; color: var(--primary); display: block; margin-bottom: 4px; }
+        .filters input[type="date"] {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 15px; margin-bottom: 12px;
+        }
+        .btn {
+            display: inline-block; padding: 10px 20px; border: none; border-radius: 8px;
+            font-size: 14px; font-weight: 600; cursor: pointer; text-align: center;
+        }
+        .btn-primary { background: var(--primary); color: white; width: 100%; }
+        .btn-primary:active { background: #0D3817; }
+        .btn-pdf { background: #E65100; color: white; font-size: 13px; padding: 8px 14px; }
+        .btn-pdf:active { background: #BF360C; }
+        .btn-all { background: var(--primary-light); color: white; width: 100%; margin-top: 12px; }
+
+        /* Lista de registros */
+        .records-list { margin-top: 16px; }
+        .record-card {
+            background: white; border-radius: 10px; padding: 14px 16px;
+            margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .record-info { flex: 1; }
+        .record-product { font-size: 15px; font-weight: 700; color: var(--primary); }
+        .record-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+        .record-lote { font-size: 12px; color: var(--text2); }
+        .record-actions { flex-shrink: 0; margin-left: 12px; }
+
+        .loading { text-align: center; padding: 40px; color: var(--text2); font-size: 14px; }
+        .loading .spinner {
+            display: inline-block; width: 24px; height: 24px;
+            border: 3px solid var(--border); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error { background: #FFEBEE; color: var(--red); padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 12px; }
+        .empty { text-align: center; padding: 40px; color: var(--text2); font-size: 14px; }
+        .count { font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+        .back-link { display: inline-block; margin-top: 16px; color: var(--primary); font-size: 13px; text-decoration: none; font-weight: 600; }
+        .generating-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+        .generating-overlay .box {
+            background: white; border-radius: 12px; padding: 30px; text-align: center;
+        }
+        .generating-overlay .spinner {
+            display: inline-block; width: 32px; height: 32px;
+            border: 3px solid var(--border); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>REGISTROS DE PRODUCCIÓN</h1>
+        <p>Generación de PDFs para auditorías — APPCC / IFS</p>
+    </div>
+    <div class="container">
+        <a href="index.html" class="back-link">← Volver al menú</a>
+
+        <div class="filters">
+            <label for="fechaFiltro">Fecha de producción</label>
+            <input type="date" id="fechaFiltro">
+            <button class="btn btn-primary" onclick="fetchRecords()">Buscar registros</button>
+        </div>
+
+        <div id="recordsContainer"></div>
+    </div>
+
+    <div id="generatingOverlay" style="display:none" class="generating-overlay">
+        <div class="box">
+            <div class="spinner"></div>
+            <div id="genText">Generando PDF...</div>
+        </div>
+    </div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPb6XSmJdSZ_Kkv9LDPCtV4CoSTOx5SeUodE2vYW-wESdBXzabr8gkZ07XdWiudmjX/exec';
+
+let allRecords = [];
+
+// Default: today
+document.getElementById('fechaFiltro').value = new Date().toISOString().split('T')[0];
+
+function fetchRecords() {
+    const fecha = document.getElementById('fechaFiltro').value;
+    const container = document.getElementById('recordsContainer');
+    container.innerHTML = '<div class="loading"><div class="spinner"></div><br>Cargando registros...</div>';
+
+    let url = APPS_SCRIPT_URL + '?action=getRecords&sheet=produccion';
+    if (fecha) url += '&fecha=' + fecha;
+
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            if (!data.exitoso) {
+                container.innerHTML = '<div class="error">Error: ' + (data.mensaje || 'desconocido') + '</div>';
+                return;
+            }
+            allRecords = data.registros || [];
+            renderRecords(allRecords, fecha);
+        })
+        .catch(err => {
+            container.innerHTML = '<div class="error">Error de conexión: ' + err.message + '</div>';
+        });
+}
+
+function renderRecords(records, fecha) {
+    const container = document.getElementById('recordsContainer');
+    if (records.length === 0) {
+        container.innerHTML = '<div class="empty">No hay registros' + (fecha ? ' para ' + fecha : '') + '</div>';
+        return;
+    }
+
+    let html = '<div class="count">' + records.length + ' registro(s) encontrado(s)</div>';
+    if (records.length > 1) {
+        html += '<button class="btn btn-all" onclick="generateAllPDFs()">📄 Descargar TODOS los PDFs (' + records.length + ')</button>';
+    }
+    html += '<div class="records-list">';
+
+    records.forEach(function(rec, idx) {
+        const producto = rec['Producto'] || 'Sin producto';
+        const fecha = rec['Fecha'] || '';
+        const lote = rec['Lote Producción'] || '';
+        const formato = rec['Formato'] || '';
+        const operador = rec['Operador'] || '';
+        html += '<div class="record-card">';
+        html += '  <div class="record-info">';
+        html += '    <div class="record-product">' + producto + (formato ? ' — ' + formato : '') + '</div>';
+        html += '    <div class="record-meta">' + fecha + (operador ? ' · ' + operador : '') + '</div>';
+        html += '    <div class="record-lote">Lote: ' + (lote || '—') + '</div>';
+        html += '  </div>';
+        html += '  <div class="record-actions">';
+        html += '    <button class="btn btn-pdf" onclick="generatePDF(' + idx + ')">PDF</button>';
+        html += '  </div>';
+        html += '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+async function generateAllPDFs() {
+    const overlay = document.getElementById('generatingOverlay');
+    const genText = document.getElementById('genText');
+    overlay.style.display = 'flex';
+
+    for (let i = 0; i < allRecords.length; i++) {
+        genText.textContent = 'Generando PDF ' + (i + 1) + ' de ' + allRecords.length + '...';
+        await new Promise(r => setTimeout(r, 100));
+        buildAndDownloadPDF(allRecords[i]);
+        await new Promise(r => setTimeout(r, 300));
+    }
+    overlay.style.display = 'none';
+}
+
+function generatePDF(idx) {
+    const overlay = document.getElementById('generatingOverlay');
+    document.getElementById('genText').textContent = 'Generando PDF...';
+    overlay.style.display = 'flex';
+    setTimeout(function() {
+        buildAndDownloadPDF(allRecords[idx]);
+        overlay.style.display = 'none';
+    }, 100);
+}
+
+/* ===================== PDF BUILDER ===================== */
+// Normalize accented chars for jsPDF helvetica (basic latin only)
+function sanitize(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u')
+        .replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U')
+        .replace(/ñ/g, 'n').replace(/Ñ/g, 'N')
+        .replace(/ü/g, 'u').replace(/Ü/g, 'U')
+        .replace(/¿/g, '').replace(/¡/g, '')
+        .replace(/°/g, 'o')
+        .replace(/≥/g, '>=').replace(/≤/g, '<=')
+        .replace(/✓/g, 'OK: ').replace(/✗/g, 'NO: ')
+        .replace(/⚠/g, '! ');
+}
+
+function buildAndDownloadPDF(rec) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, H = 297;
+    const ML = 15, MR = 15, MT = 15;
+    const CW = W - ML - MR; // content width
+    let y = MT;
+
+    const GREEN = [27, 94, 32];       // #1B5E20
+    const LGRAY = [245, 245, 245];
+    const BORDER = [200, 200, 200];
+    const BLACK = [33, 33, 33];
+    const RED = [211, 47, 47];
+
+    function checkPage(needed) {
+        if (y + needed > H - 20) {
+            doc.addPage();
+            y = MT;
+            drawFooter();
+        }
+    }
+
+    function drawFooter() {
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Rice in Action S.L. -- Sistema APPCC / IFS Food -- Registro de Produccion', W / 2, H - 8, { align: 'center' });
+        doc.text('Pag. ' + doc.getNumberOfPages(), W - MR, H - 8, { align: 'right' });
+    }
+
+    // ── HEADER ──
+    doc.setFillColor(...GREEN);
+    doc.rect(0, 0, W, 32, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('REGISTRO DE PRODUCCION', W / 2, 14, { align: 'center' });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('RIA-FORM-PROD-002 -- APPCC / IFS Food', W / 2, 22, { align: 'center' });
+    doc.setFontSize(9);
+    doc.text(sanitize('Fecha: ' + (rec['Fecha'] || '--') + '    Lote: ' + (rec['Lote Producción'] || rec['Lote Produccion'] || '--')), W / 2, 29, { align: 'center' });
+    y = 40;
+
+    // ── SECTION HELPER ──
+    function sectionTitle(title) {
+        checkPage(14);
+        doc.setFillColor(...GREEN);
+        doc.rect(ML, y, CW, 7, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text(sanitize(title), ML + 3, y + 5);
+        y += 9;
+        doc.setTextColor(...BLACK);
+        doc.setFont('helvetica', 'normal');
+    }
+
+    function row2col(label1, val1, label2, val2) {
+        checkPage(8);
+        const halfW = CW / 2;
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text(sanitize(label1), ML + 2, y + 4.5);
+        doc.setFont('helvetica', 'normal');
+        doc.text(sanitize(String(val1 || '--')), ML + 42, y + 4.5);
+        if (label2) {
+            doc.setFont('helvetica', 'bold');
+            doc.text(sanitize(label2), ML + halfW + 2, y + 4.5);
+            doc.setFont('helvetica', 'normal');
+            doc.text(sanitize(String(val2 || '--')), ML + halfW + 42, y + 4.5);
+        }
+        doc.setDrawColor(...BORDER);
+        doc.line(ML, y + 6.5, ML + CW, y + 6.5);
+        y += 7;
+    }
+
+    function row1col(label, val) {
+        checkPage(8);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text(sanitize(label), ML + 2, y + 4.5);
+        doc.setFont('helvetica', 'normal');
+        const text = sanitize(String(val || '--'));
+        const lines = doc.splitTextToSize(text, CW - 44);
+        lines.forEach(function(line, i) {
+            if (i > 0) { checkPage(5); y += 5; }
+            doc.text(line, ML + 42, y + 4.5);
+        });
+        doc.setDrawColor(...BORDER);
+        doc.line(ML, y + 6.5, ML + CW, y + 6.5);
+        y += 7;
+    }
+
+    // ── 1. INFORMACIÓN GENERAL ──
+    sectionTitle('1. INFORMACION GENERAL');
+    row2col('Fecha:', rec['Fecha'], 'Hora Inicio:', rec['Hora Inicio']);
+    row2col('Operador:', rec['Operador'], 'Producto:', rec['Producto']);
+    row2col('Formato:', rec['Formato'], 'Lote Prod.:', rec['Lote Producción'] || rec['Lote Produccion']);
+
+    // ── 2. ENVASES ──
+    sectionTitle('2. ENVASES');
+    row2col('Tipo Envase:', rec['Tipo Envase'], 'Formato Envase:', rec['Formato Envase']);
+    row2col('Lote Envase:', rec['Lote Envase'], 'Cantidad:', rec['Cantidad Envases']);
+
+    // ── 3. ARROZ ──
+    sectionTitle('3. ARROZ');
+    row2col('Tipo Arroz:', rec['Tipo Arroz'], 'Lote Arroz:', rec['Lote Arroz']);
+    row1col('N. Redes:', rec['Nº Redes'] || rec['N Redes']);
+
+    // ── 4. CALDO ──
+    sectionTitle('4. CALDO');
+    row2col('Lote Caldo:', rec['Lote Caldo'], 'Temp. Caldo:', rec['Temp Caldo'] ? rec['Temp Caldo'] + ' oC' : '');
+    row1col('Disponibilidad:', rec['Disponibilidad Caldo']);
+
+    // ── 5. SALSA ──
+    sectionTitle('5. SALSA');
+    row2col('Tipo Salsa:', rec['Tipo Salsa'], 'Lote Salsa:', rec['Lote Salsa']);
+    row2col('Peso Salsa:', rec['Peso Salsa'] ? rec['Peso Salsa'] + 'g' : '', 'Modo:', rec['Modo Salsa']);
+    row2col('Lote Sobre:', rec['Lote Salsa Sobre'], 'Cant. Sobres:', rec['Cant Salsa Sobre']);
+
+    // ── 6. INGREDIENTES EXTRA ──
+    sectionTitle('6. INGREDIENTES EXTRA');
+    row2col('Ingrediente:', rec['Ingrediente Extra'], 'Lote:', rec['Lote Ingr Extra']);
+    row1col('Peso:', rec['Peso Ingr Extra'] ? rec['Peso Ingr Extra'] + ' g' : '');
+
+    // ── 7. INGREDIENTES JARRA ──
+    sectionTitle('7. INGREDIENTES JARRA');
+    const jarraText = rec['Ingredientes Jarra'] || '--';
+    row1col('Detalle:', jarraText);
+
+    // ── 8. PASTEURIZACIÓN (PCC) ──
+    sectionTitle('8. PASTEURIZACION -- PCC');
+    row2col('Hora Inicio:', rec['Past Hora Inicio'], 'Hora Fin:', rec['Past Hora Fin']);
+    row1col('Temp. Final:', rec['Past Temp Final'] ? rec['Past Temp Final'] + ' oC' : '');
+
+    // PCC validation
+    checkPage(10);
+    const pastTemp = parseFloat(rec['Past Temp Final'] || 0);
+    if (pastTemp >= 65) {
+        doc.setFillColor(200, 230, 201);
+        doc.rect(ML, y, CW, 7, 'F');
+        doc.setTextColor(27, 94, 32);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('OK - PCC CONFORME -- Temperatura >= 65 oC', ML + 3, y + 5);
+    } else if (rec['Past Temp Final']) {
+        doc.setFillColor(255, 205, 210);
+        doc.rect(ML, y, CW, 7, 'F');
+        doc.setTextColor(...RED);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('NO - PCC NO CONFORME -- Temperatura < 65 oC -- REVISAR', ML + 3, y + 5);
+    } else {
+        doc.setFillColor(...LGRAY);
+        doc.rect(ML, y, CW, 7, 'F');
+        doc.setTextColor(150, 150, 150);
+        doc.setFontSize(9);
+        doc.text('Sin datos de pasteurizacion', ML + 3, y + 5);
+    }
+    y += 9;
+    doc.setTextColor(...BLACK);
+    doc.setFont('helvetica', 'normal');
+
+    // ── 9. ABATIMIENTO ──
+    sectionTitle('9. ABATIMIENTO');
+    row2col('Hora Inicio:', rec['Abat Hora Inicio'], 'Hora Fin:', rec['Abat Hora Fin']);
+    row1col('Temp. Final:', rec['Abat Temp Final'] ? rec['Abat Temp Final'] + ' oC' : '');
+
+    // ── 10. DETECTOR DE METALES ──
+    sectionTitle('10. DETECTOR DE METALES');
+    const metalText = rec['Metal Detector'] || '';
+    if (metalText && metalText !== '--' && metalText !== '') {
+        const metalLines = metalText.split('\n');
+        metalLines.forEach(function(line) {
+            if (line.trim()) row1col('Control:', line.trim());
+        });
+    } else {
+        row1col('Control:', '—');
+    }
+
+    // ── 11. CONTROL DE CIERRE ──
+    sectionTitle('11. CONTROL DE CIERRE -- SELLADO');
+    row2col('Sellado OK:', rec['Sellado OK'], 'Sellado NOK:', rec['Sellado NOK']);
+
+    // Sellado validation
+    checkPage(10);
+    const selladoNOK = parseInt(rec['Sellado NOK'] || 0);
+    if (selladoNOK > 0) {
+        doc.setFillColor(255, 205, 210);
+        doc.rect(ML, y, CW, 7, 'F');
+        doc.setTextColor(...RED);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('! Sellado NOK detectado: ' + selladoNOK + ' unidad(es)', ML + 3, y + 5);
+        y += 9;
+    }
+    doc.setTextColor(...BLACK);
+    doc.setFont('helvetica', 'normal');
+
+    // ── 12. ETIQUETADO ──
+    sectionTitle('12. ETIQUETADO');
+    row2col('Fecha Etiq.:', rec['Fecha Etiqueta'], 'Verificado:', rec['Verif Etiqueta']);
+    row1col('Notas:', rec['Notas Etiqueta']);
+    if (rec['Foto Etiqueta'] && rec['Foto Etiqueta'].indexOf('http') === 0) {
+        row1col('Foto:', rec['Foto Etiqueta']);
+    }
+
+    // ── 13. INCIDENCIAS ──
+    sectionTitle('13. INCIDENCIAS');
+    const incText = rec['Incidencias'] || 'Ninguna';
+    row1col('Detalle:', incText);
+    if (rec['Fotos Incidencias'] && rec['Fotos Incidencias'].indexOf('http') === 0) {
+        row1col('Fotos:', rec['Fotos Incidencias']);
+    }
+
+    // ── FIRMA / PIE ──
+    checkPage(30);
+    y += 8;
+    doc.setDrawColor(...BORDER);
+    doc.line(ML, y, ML + CW, y);
+    y += 8;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...BLACK);
+    doc.text('Firma Operador: ____________________________', ML, y);
+    doc.text('Firma Responsable Calidad: ____________________________', ML + CW / 2, y);
+    y += 10;
+    doc.text('Fecha impresion: ' + new Date().toLocaleDateString('es-ES') + ' ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }), ML, y);
+
+    // Footer on all pages
+    const totalPages = doc.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+        doc.setPage(p);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Rice in Action S.L. -- Sistema APPCC / IFS Food -- Registro de Produccion', W / 2, H - 8, { align: 'center' });
+        doc.text('Pag. ' + p + '/' + totalPages, W - MR, H - 8, { align: 'right' });
+    }
+
+    // Filename
+    const fecha = (rec['Fecha'] || 'sin-fecha').replace(/\//g, '-');
+    const producto = (rec['Producto'] || 'producto').replace(/\s+/g, '_');
+    const lote = (rec['Lote Producción'] || rec['Lote Produccion'] || '').replace(/\s+/g, '_');
+    const filename = 'Produccion_' + fecha + '_' + producto + (lote ? '_' + lote : '') + '.pdf';
+
+    doc.save(filename);
+}
+</script>
+</body>
+</html>
