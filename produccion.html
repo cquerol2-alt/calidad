@@ -1149,8 +1149,30 @@
         // Apply orden item selection (click "Usar esta línea")
         function applyOrdenItem(productKey, format, quantity, redes) {
             if (productKey) {
-                const optionValue = `${productKey}|${format}`;
-                document.getElementById('produccionProduct').value = optionValue;
+                const select = document.getElementById('produccionProduct');
+                // Buscar la opción que mejor coincida con productKey y format
+                const exactValue = `${productKey}|${format}`;
+                let matched = false;
+                // Primero intentar coincidencia exacta
+                for (const opt of select.options) {
+                    if (opt.value === exactValue) {
+                        select.value = exactValue;
+                        matched = true;
+                        break;
+                    }
+                }
+                // Si no hay coincidencia exacta, buscar por productKey
+                if (!matched) {
+                    for (const opt of select.options) {
+                        if (opt.value.startsWith(productKey + '|')) {
+                            select.value = opt.value;
+                            matched = true;
+                            break;
+                        }
+                    }
+                }
+                if (!matched) return; // No se encontró el producto
+
                 document.getElementById('produccionQuantity').value = quantity;
                 updateProductDependents();
 
@@ -1267,25 +1289,27 @@
             });
             if (isSalsa) envaseSelect.value = 'Sobre';
 
-            // Auto-select rice type and suggest lot from MP data
+            // Auto-select rice type and pre-fill lot from MP data (editable)
             if (!isSalsa && producto.arroz) {
                 document.getElementById('arrozType').value = producto.arroz;
-                // Suggest rice lot from data.js
                 const arrozLotInput = document.getElementById('arrozLot');
-                if (producto.arroz === 'Maratelli' && RIA_DATA.materiaPrima.MP24 && RIA_DATA.materiaPrima.MP24.lote) {
-                    arrozLotInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP24.lote}`;
-                } else if (producto.arroz === 'Bahía' && RIA_DATA.materiaPrima.MP25 && RIA_DATA.materiaPrima.MP25.lote) {
-                    arrozLotInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP25.lote}`;
-                } else if (producto.arroz === 'Marisma' && RIA_DATA.materiaPrima.MP26 && RIA_DATA.materiaPrima.MP26.lote) {
-                    arrozLotInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP26.lote}`;
+                // Solo rellenar si el campo está vacío (no sobreescribir si el usuario ya puso algo)
+                if (!arrozLotInput.value) {
+                    if (producto.arroz === 'Maratelli' && RIA_DATA.materiaPrima.MP24 && RIA_DATA.materiaPrima.MP24.lote) {
+                        arrozLotInput.value = RIA_DATA.materiaPrima.MP24.lote;
+                    } else if (producto.arroz === 'Bahía' && RIA_DATA.materiaPrima.MP25 && RIA_DATA.materiaPrima.MP25.lote) {
+                        arrozLotInput.value = RIA_DATA.materiaPrima.MP25.lote;
+                    } else if (producto.arroz === 'Marisma' && RIA_DATA.materiaPrima.MP26 && RIA_DATA.materiaPrima.MP26.lote) {
+                        arrozLotInput.value = RIA_DATA.materiaPrima.MP26.lote;
+                    }
                 }
             }
 
-            // Suggest envase lot from packaging data
+            // Pre-fill envase lot from packaging data (editable)
             const loteEnvaseInput = document.getElementById('loteEnvase');
-            if (loteEnvaseInput) {
+            if (loteEnvaseInput && !loteEnvaseInput.value) {
                 if (RIA_DATA.materiaPrima.MP50 && RIA_DATA.materiaPrima.MP50.lote) {
-                    loteEnvaseInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP50.lote}`;
+                    loteEnvaseInput.value = RIA_DATA.materiaPrima.MP50.lote;
                 }
             }
 

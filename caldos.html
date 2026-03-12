@@ -1029,6 +1029,14 @@
 
     <script src="data.js"></script>
     <script>
+        // Función auxiliar: buscar lote real de una materia prima por su codigoMP
+        function getLoteFromMP(codigoMP) {
+            if (codigoMP && RIA_DATA.materiaPrima && RIA_DATA.materiaPrima[codigoMP]) {
+                return RIA_DATA.materiaPrima[codigoMP].lote || '';
+            }
+            return '';
+        }
+
         // Build recipes for caldos from RIA_DATA
         const caldosRecipes = {};
         for (const [key, receta] of Object.entries(RIA_DATA.recetasCaldos)) {
@@ -1036,7 +1044,7 @@
                 ingredient: ing.nombre,
                 qty: ing.cantidad,
                 unit: ing.unidad,
-                lot: ing.lotePrefijo
+                lot: getLoteFromMP(ing.codigoMP) || ing.lotePrefijo || ''
             }));
         }
 
@@ -1047,7 +1055,7 @@
                 ingredient: ing.nombre,
                 qty: ing.cantidad,
                 unit: ing.unidad,
-                lot: ing.lotePrefijo
+                lot: getLoteFromMP(ing.codigoMP) || ing.lotePrefijo || ''
             }));
         }
 
@@ -1059,17 +1067,22 @@
             salsas: {}
         };
 
+        // Función auxiliar para mapear ingredientes de preelaboraciones con lotes reales
+        function mapPrelabIngredients(ingredientes) {
+            return ingredientes.map(i => ({
+                ingredient: i.nombre,
+                qty: i.cantidad,
+                unit: i.unidad,
+                supplier: i.proveedor || '',
+                lot: getLoteFromMP(i.codigoMP) || i.lotePrefijo || ''
+            }));
+        }
+
         // Map jarras
         for (const [key, data] of Object.entries(RIA_DATA.recetasPreelaboraciones.jarras)) {
             prelabTypes.jarras[key] = {
                 label: data.nombre,
-                ingredients: data.ingredientes.map(i => ({
-                    ingredient: i.nombre,
-                    qty: i.cantidad,
-                    unit: i.unidad,
-                    supplier: '',
-                    lot: ''
-                }))
+                ingredients: mapPrelabIngredients(data.ingredientes)
             };
         }
 
@@ -1077,13 +1090,7 @@
         for (const [key, data] of Object.entries(RIA_DATA.recetasPreelaboraciones.bases)) {
             prelabTypes.bases[key] = {
                 label: data.nombre,
-                ingredients: data.ingredientes.map(i => ({
-                    ingredient: i.nombre,
-                    qty: i.cantidad,
-                    unit: i.unidad,
-                    supplier: '',
-                    lot: ''
-                }))
+                ingredients: mapPrelabIngredients(data.ingredientes)
             };
         }
 
@@ -1091,13 +1098,7 @@
         for (const [key, data] of Object.entries(RIA_DATA.recetasPreelaboraciones.preparadosCaldos)) {
             prelabTypes.caldos[key] = {
                 label: data.nombre,
-                ingredients: data.ingredientes.map(i => ({
-                    ingredient: i.nombre,
-                    qty: i.cantidad,
-                    unit: i.unidad,
-                    supplier: '',
-                    lot: ''
-                }))
+                ingredients: mapPrelabIngredients(data.ingredientes)
             };
         }
 
@@ -1105,13 +1106,7 @@
         for (const [key, data] of Object.entries(RIA_DATA.recetasPreelaboraciones.preparadosSalsas)) {
             prelabTypes.salsas[key] = {
                 label: data.nombre,
-                ingredients: data.ingredientes.map(i => ({
-                    ingredient: i.nombre,
-                    qty: i.cantidad,
-                    unit: i.unidad,
-                    supplier: '',
-                    lot: ''
-                }))
+                ingredients: mapPrelabIngredients(data.ingredientes)
             };
         }
 
