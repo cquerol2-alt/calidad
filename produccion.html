@@ -1267,9 +1267,26 @@
             });
             if (isSalsa) envaseSelect.value = 'Sobre';
 
-            // Auto-select rice type
+            // Auto-select rice type and suggest lot from MP data
             if (!isSalsa && producto.arroz) {
                 document.getElementById('arrozType').value = producto.arroz;
+                // Suggest rice lot from data.js
+                const arrozLotInput = document.getElementById('arrozLot');
+                if (producto.arroz === 'Maratelli' && RIA_DATA.materiaPrima.MP24 && RIA_DATA.materiaPrima.MP24.lote) {
+                    arrozLotInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP24.lote}`;
+                } else if (producto.arroz === 'Bahía' && RIA_DATA.materiaPrima.MP25 && RIA_DATA.materiaPrima.MP25.lote) {
+                    arrozLotInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP25.lote}`;
+                } else if (producto.arroz === 'Marisma' && RIA_DATA.materiaPrima.MP26 && RIA_DATA.materiaPrima.MP26.lote) {
+                    arrozLotInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP26.lote}`;
+                }
+            }
+
+            // Suggest envase lot from packaging data
+            const loteEnvaseInput = document.getElementById('loteEnvase');
+            if (loteEnvaseInput) {
+                if (RIA_DATA.materiaPrima.MP50 && RIA_DATA.materiaPrima.MP50.lote) {
+                    loteEnvaseInput.placeholder = `Último: ${RIA_DATA.materiaPrima.MP50.lote}`;
+                }
             }
 
             // Handle caldo: siempre visible cuando se muestra (Maestros y Salsas no ven esta sección)
@@ -1343,7 +1360,7 @@
                 if (productKey.includes('pescado') || productKey === 'negro') {
                     prefix = `${RIA_DATA.lotes.caldos.pescado.prefijo}-${dateStr}`;
                 } else if (productKey === 'pollo') {
-                    prefix = `${RIA_DATA.lotes.caldos.pescado.prefijo}-${dateStr}`;
+                    prefix = `${RIA_DATA.lotes.caldos.pollo.prefijo}-${dateStr}`;
                 } else if (productKey === 'verduras') {
                     prefix = `${RIA_DATA.lotes.caldos.verduras.prefijo}-${dateStr}`;
                 } else if (productKey.includes('risotto') || productKey.includes('iberico') || productKey.includes('setas') || productKey.includes('tartufata')) {
@@ -1497,7 +1514,13 @@
             clearAllFormFields();
             setTodayDate();
             renderSavedRecordsList();
-            document.getElementById('produccionProduct').closest('.section').scrollIntoView({ behavior: 'smooth' });
+            // Scroll to Orden del Día if it exists, so user can pick the next line easily
+            const ordenSection = document.getElementById('ordenDelDia');
+            if (ordenSection) {
+                ordenSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                document.getElementById('produccionProduct').closest('.section').scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function clearAllFormFields() {
@@ -1554,8 +1577,22 @@
             const fotosPreview = document.getElementById('fotosPreview');
             if (fotosPreview) fotosPreview.innerHTML = '';
 
-            // Update dependents
-            updateProductDependents();
+            // BUGFIX: Ocultar explícitamente TODAS las secciones condicionales al limpiar
+            // Antes, updateProductDependents() retornaba inmediatamente si no había producto,
+            // dejando las secciones visibles del producto anterior.
+            document.getElementById('arrozSection').classList.remove('visible');
+            document.getElementById('jarraSection').classList.remove('visible');
+            document.getElementById('caldoSection').classList.remove('visible');
+            document.getElementById('salsaSection').classList.remove('visible');
+            document.getElementById('ingredienteExtraSection').classList.remove('visible');
+            const salsaSobreSection = document.getElementById('salsaSobreSection');
+            salsaSobreSection.classList.remove('visible');
+            salsaSobreSection.classList.add('hidden-section');
+
+            // Reset lot display
+            document.getElementById('lotDisplay').textContent = '---YYMMDD';
+            document.getElementById('etiquetaLotDisplay').textContent = '---YYMMDD';
+            document.getElementById('produccionLot').value = '';
         }
 
         function loadFormDataFromRecord(data) {

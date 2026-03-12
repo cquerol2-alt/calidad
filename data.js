@@ -277,7 +277,7 @@ const RIA_DATA = {
                 { nombre: 'Aceite de ajo', cantidad: '800', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
                 { nombre: 'Umami (Givaudan)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
                 { nombre: 'Goma xantana', cantidad: '10', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP07' },
-                { nombre: 'Agua de azafrán', cantidad: '500', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' }
+                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' }
             ]
         },
         negro: {
@@ -336,7 +336,7 @@ const RIA_DATA = {
             preelaboracionPesado: 'pesado-risotto',
             ingredientes: [
                 { nombre: 'Agua', cantidad: '19000', unidad: 'ml', tipo: 'na' },
-                { nombre: 'Pesado Risotto (pollo + puerro + cebolla)', cantidad: '2355', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PESADO-RIS', codigoPrelab: 'pesado-risotto' },
+                { nombre: 'Pesado Risotto (pollo + puerro + cebolla)', cantidad: '2000', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PESADO-RIS', codigoPrelab: 'pesado-risotto' },
                 { nombre: 'Aceite de ajo', cantidad: '1447', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
                 { nombre: 'Mantequilla', cantidad: '800', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP13', proveedor: '(varios)' },
                 { nombre: 'Aceite de girasol alto oleico', cantidad: '2500', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP04', proveedor: 'Coreysa' },
@@ -351,8 +351,10 @@ const RIA_DATA = {
     // RECETAS DE SALSAS
     // ========================================================================
     recetasSalsas: {
+        // --- Salsas La Santa (receta base con salmorreta) ---
         pescado: {
             nombre: 'Salsa de Pescado',
+            tipo: 'la-santa',
             ingredientes: [
                 { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
                 { nombre: 'Caldo de pescado', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
@@ -361,6 +363,7 @@ const RIA_DATA = {
         },
         negra: {
             nombre: 'Salsa Negra',
+            tipo: 'la-santa',
             ingredientes: [
                 { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
                 { nombre: 'Caldo de pescado', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
@@ -370,6 +373,7 @@ const RIA_DATA = {
         },
         verduras: {
             nombre: 'Salsa de Verduras',
+            tipo: 'la-santa',
             ingredientes: [
                 { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
                 { nombre: 'Caldo de verduras', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
@@ -378,55 +382,142 @@ const RIA_DATA = {
         },
         pollo: {
             nombre: 'Salsa de Pollo',
+            tipo: 'la-santa',
             ingredientes: [
                 { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
                 { nombre: 'Caldo de pollo', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
                 { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
             ]
         },
-        boletus: {
-            nombre: 'Salsa de Boletus',
-            ingredientes: [
-                { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Boletus deshidratado', cantidad: '', unidad: 'según receta', lotePrefijo: '' },
-                { nombre: 'Caldo', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
-            ]
-        },
-        setas: {
-            nombre: 'Salsa de Setas',
-            ingredientes: [
-                { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Setas', cantidad: '', unidad: 'según receta', lotePrefijo: '' },
-                { nombre: 'Caldo', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
-            ]
-        },
+
+        // --- Salsas Cremosas (recetas con CMC nuevo, 1,2 g/L) ---
+        // Nota 11/12: CMC aumentado de 1 g/L a 1,2 g/L
+
         tartufata: {
             nombre: 'Salsa Tartufata',
+            tipo: 'cremosa',
+            codigo: 'REC-SALSA-TART',
+            notas: 'CMC nuevo: 1,2 g/L (actualizado 11/12)',
+            volumenes: [1.7, 5, 7, 10, 15, 20],
+            pesoTotal: { 1.7: 1675, 5: 5024, 7: 7034, 10: 10048, 15: 15072, 20: 20096 },
             ingredientes: [
-                { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Trufa', cantidad: '', unidad: 'según receta', lotePrefijo: '' },
-                { nombre: 'Caldo', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Agua limpia',           unidad: 'g', cantidades: { 1.7: 1000, 5: 3000, 7: 4200, 10: 6000, 15: 9000, 20: 12000 } },
+                { nombre: 'Xantana',               unidad: 'g', cantidades: { 1.7: 4.12, 5: 12.3, 7: 17.64, 10: 24.7, 15: 37.1, 20: 49.5 } },
+                { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.7: 13, 5: 39, 7: 54.6, 10: 78, 15: 117, 20: 156 } },
+                { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.7: 4.5, 5: 13.5, 7: 18.9, 10: 27, 15: 40.5, 20: 54 } },
+                // Flaxfiber ELIMINADO por Isabel (03/2026)
+                { nombre: 'Hazelnut (colorante)',   unidad: 'g', cantidades: { 1.7: 0.7, 5: 2.1, 7: 2.94, 10: 4.2, 15: 6.3, 20: 8.4 } },
+                { nombre: 'Cebolla deshidratada',   unidad: 'g', cantidades: { 1.7: 3, 5: 9, 7: 12.6, 10: 18, 15: 27, 20: 36 } },
+                { nombre: 'Boletus seco',           unidad: 'g', cantidades: { 1.7: 3, 5: 9, 7: 12.6, 10: 18, 15: 27, 20: 36 } },
+                { nombre: 'Manzanilla',             unidad: 'g', cantidades: { 1.7: 20, 5: 60, 7: 84, 10: 120, 15: 180, 20: 240 } },
+                { nombre: 'CMC',                    unidad: 'g', cantidades: { 1.7: 2.04, 5: 6, 7: 8.4, 10: 12, 15: 18, 20: 24 } },
+                { nombre: 'Nata',                   unidad: 'g', cantidades: { 1.7: 370, 5: 1110, 7: 1554, 10: 2220, 15: 3330, 20: 4440 } },
+                { nombre: 'Parmesano',              unidad: 'g', cantidades: { 1.7: 42, 5: 126, 7: 176.4, 10: 252, 15: 378, 20: 504 } },
+                { nombre: 'Mantequilla',            unidad: 'g', cantidades: { 1.7: 80, 5: 240, 7: 336, 10: 480, 15: 720, 20: 960 } },
+                { nombre: 'Girasol trufado',        unidad: 'g', cantidades: { 1.7: 70, 5: 210, 7: 294, 10: 420, 15: 630, 20: 840 },
+                  notas: '3,2 g trufa por 1000 g aceite' },
+                { nombre: 'Girasol sin nada',       unidad: 'g', cantidades: { 1.7: 47, 5: 141, 7: 197.4, 10: 282, 15: 423, 20: 564 } },
+                { nombre: 'Grasa de pollo',         unidad: 'g', cantidades: { 1.7: 15, 5: 45, 7: 63, 10: 90, 15: 135, 20: 180 } }
             ]
         },
+
+        boletus: {
+            nombre: 'Salsa de Boletus',
+            tipo: 'cremosa',
+            codigo: 'REC-SALSA-BOL',
+            notas: 'CMC nuevo: 1,2 g/L (actualizado 11/12)',
+            volumenes: [1.7, 3, 5, 10, 15, 20],
+            pesoTotal: { 1.7: 1704, 3: 3068, 5: 5062, 10: 10123, 15: 15185, 20: 20247 },
+            ingredientes: [
+                { nombre: 'Agua',                   unidad: 'g', cantidades: { 1.7: 1387, 3: 2497, 5: 4121, 10: 8241, 15: 12362, 20: 16483 } },
+                { nombre: 'Xantana',               unidad: 'g', cantidades: { 1.7: 5.54, 3: 9.5, 5: 15, 10: 30.7, 15: 45.7, 20: 60 } },
+                // Flax ELIMINADO por Isabel (03/2026)
+                { nombre: 'CMC',                    unidad: 'g', cantidades: { 1.7: 2.04, 3: 3.6, 5: 6, 10: 12, 15: 18, 20: 24 } },
+                { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.7: 16, 3: 29, 5: 47, 10: 94, 15: 142, 20: 189 } },
+                { nombre: 'Boletus seco',           unidad: 'g', cantidades: { 1.7: 14, 3: 26, 5: 43, 10: 86, 15: 129, 20: 172 } },
+                { nombre: 'Aroma setas',            unidad: 'g', cantidades: { 1.7: 10, 3: 18.6, 5: 31, 10: 61, 15: 92, 20: 123 } },
+                { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.7: 4, 3: 8, 5: 13, 10: 26, 15: 39, 20: 51 } },
+                { nombre: 'Hazelnut (colorante)',   unidad: 'g', cantidades: { 1.7: 0, 3: 0.7, 5: 1.1, 10: 2.2, 15: 3.3, 20: 4.4 } },
+                { nombre: 'Vino blanco',            unidad: 'g', cantidades: { 1.7: 14, 3: 26, 5: 43, 10: 86, 15: 129, 20: 172 } },
+                { nombre: 'Grasa de pollo',         unidad: 'g', cantidades: { 1.7: 22, 3: 39, 5: 64, 10: 129, 15: 193, 20: 257 } },
+                { nombre: 'Mantequilla',            unidad: 'g', cantidades: { 1.7: 51, 3: 91, 5: 150, 10: 300, 15: 450, 20: 600 } },
+                { nombre: 'Parmesano',              unidad: 'g', cantidades: { 1.7: 29, 3: 52, 5: 86, 10: 172, 15: 257, 20: 343 } },
+                { nombre: 'Aceite girasol',         unidad: 'g', cantidades: { 1.7: 149, 3: 267.3, 5: 441, 10: 882, 15: 1323, 20: 1764 } }
+            ]
+        },
+
+        setas: {
+            nombre: 'Salsa de Setas (Risotto)',
+            tipo: 'cremosa',
+            codigo: 'REC-SALSA-SET',
+            notas: 'Basada en picking list SRS. Gramos por ración: 70-80g. Porcentajes sobre peso total.',
+            volumenes: [1.7, 3, 5, 10, 15, 20],
+            pesoTotal: { 1.7: 1704, 3: 3068, 5: 5062, 10: 10123, 15: 15185, 20: 20247 },
+            ingredientes: [
+                { nombre: 'Agua',                   unidad: 'g', cantidades: { 1.7: 1387, 3: 2497, 5: 4121, 10: 8241, 15: 12362, 20: 16483 },
+                  notas: 'Contador de agua' },
+                { nombre: 'Mantequilla',            unidad: 'g', cantidades: { 1.7: 51, 3: 91, 5: 150, 10: 300, 15: 450, 20: 600 } },
+                { nombre: 'Parmesano',              unidad: 'g', cantidades: { 1.7: 29, 3: 52, 5: 86, 10: 172, 15: 257, 20: 343 } },
+                { nombre: 'Boletus seco',           unidad: 'g', cantidades: { 1.7: 14, 3: 26, 5: 43, 10: 86, 15: 129, 20: 172 } },
+                { nombre: 'Aceite girasol',         unidad: 'g', cantidades: { 1.7: 149, 3: 267, 5: 441, 10: 882, 15: 1323, 20: 1764 } },
+                { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.7: 16, 3: 29, 5: 47, 10: 94, 15: 142, 20: 189 } },
+                { nombre: 'Xantana',               unidad: 'g', cantidades: { 1.7: 4, 3: 7.3, 5: 12, 10: 24, 15: 36, 20: 48 } },
+                { nombre: 'Aroma setas',            unidad: 'g', cantidades: { 1.7: 10, 3: 18.6, 5: 31, 10: 61, 15: 92, 20: 123 } },
+                { nombre: 'Cebolla deshidratada',   unidad: 'g', cantidades: { 1.7: 3, 3: 5, 5: 9, 10: 18, 15: 27, 20: 36 } },
+                { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.7: 4, 3: 8, 5: 13, 10: 26, 15: 39, 20: 51 } },
+                { nombre: 'Hazelnut (colorante)',   unidad: 'g', cantidades: { 1.7: 0, 3: 0.7, 5: 1.1, 10: 2.2, 15: 3.3, 20: 4.4 } }
+                // Pimienta negra ELIMINADA por Isabel (03/2026) — NO
+                // Flax ELIMINADO por Isabel (03/2026) — NO
+                // CMC ELIMINADO por Isabel (03/2026) — NO
+                // Grasa de pollo ELIMINADA por Isabel (03/2026) — NO
+            ]
+        },
+
         queso: {
             nombre: 'Salsa de Queso',
+            tipo: 'cremosa',
+            codigo: 'REC-SALSA-QUE',
+            notas: 'CMC nuevo: 1,2 g/L (actualizado 11/12)',
+            volumenes: [1.7, 3, 5, 10, 15, 20],
+            pesoTotal: { 1.7: 1714, 3: 3085, 5: 5091, 10: 10181, 15: 15272, 20: 20363 },
             ingredientes: [
-                { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Queso', cantidad: '', unidad: 'según receta', lotePrefijo: '' },
-                { nombre: 'Caldo', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Agua sin nada',          unidad: 'g', cantidades: { 1.7: 1204, 3: 2166, 5: 3575, 10: 7149, 15: 10724, 20: 14299 } },
+                { nombre: 'Xantana',               unidad: 'g', cantidades: { 1.7: 0.60, 3: 10.7, 5: 17.7, 10: 35, 15: 53, 20: 70 } },
+                { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.7: 7.5, 3: 14, 5: 22, 10: 45, 15: 67, 20: 89 } },
+                { nombre: 'Pimienta',               unidad: 'g', cantidades: { 1.7: 1.8, 3: 3, 5: 5, 10: 11, 15: 16, 20: 21 } },
+                { nombre: 'Jerez',                  unidad: 'g', cantidades: { 1.7: 19, 3: 34, 5: 56, 10: 112, 15: 168, 20: 223 } },
+                // Flax ELIMINADO por Isabel (03/2026)
+                { nombre: 'CMC',                    unidad: 'g', cantidades: { 1.7: 2.04, 3: 3.6, 5: 6, 10: 12, 15: 18, 20: 24 } },
+                { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.7: 3, 3: 5.4, 5: 9, 10: 18, 15: 27, 20: 36 } },
+                { nombre: 'Aroma queso',            unidad: 'g', cantidades: { 1.7: 10, 3: 18, 5: 30, 10: 59, 15: 89, 20: 119 } },
+                { nombre: 'Grasa de pollo',         unidad: 'g', cantidades: { 1.7: 4.5, 3: 8, 5: 13, 10: 27, 15: 40, 20: 53 } },
+                { nombre: 'Aceite girasol',         unidad: 'g', cantidades: { 1.7: 135, 3: 244, 5: 402, 10: 804, 15: 1206, 20: 1609 } },
+                { nombre: 'Nata 20%',               unidad: 'g', cantidades: { 1.7: 193, 3: 348, 5: 574, 10: 1148, 15: 1722, 20: 2296 } },
+                { nombre: 'Mantequilla',            unidad: 'g', cantidades: { 1.7: 75, 3: 135, 5: 223, 10: 447, 15: 670, 20: 894 } },
+                { nombre: 'Queso azul',             unidad: 'g', cantidades: { 1.7: 52, 3: 94, 5: 155, 10: 310, 15: 465, 20: 621 } }
             ]
         },
+
         iberico: {
             nombre: 'Salsa Ibérico',
+            tipo: 'cremosa',
+            codigo: 'REC-SALSA-IBE',
+            notas: 'CMC nuevo: 1,2 g/L (actualizado 11/12). Nota: aumentar 20% de aroma de jamón (OSO)',
+            volumenes: [1.5, 3, 5, 10, 15, 20],
+            pesoTotal: { 1.5: 1504, 3: 3009, 5: 5339, 10: 10679, 15: 16019, 20: 20504 },
             ingredientes: [
-                { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Ibérico', cantidad: '', unidad: 'según receta', lotePrefijo: '' },
-                { nombre: 'Caldo', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Agua sola',              unidad: 'g', cantidades: { 1.5: 791, 3: 1583, 5: 2810, 10: 5619, 15: 8429, 20: 10789 } },
+                { nombre: 'Xantana',               unidad: 'g', cantidades: { 1.5: 3.41, 3: 6.7, 5: 12.5, 10: 24.2, 15: 36.7, 20: 46.7 } },
+                { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.5: 3, 3: 7, 5: 12, 10: 24, 15: 36, 20: 46 } },
+                // Flax fiber ELIMINADO por Isabel (03/2026)
+                { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.5: 12.5, 3: 25, 5: 44, 10: 89, 15: 133, 20: 170 } },
+                { nombre: 'Aroma jamón (OSO)',      unidad: 'g', cantidades: { 1.5: 58, 3: 117.6, 5: 21, 10: 42, 15: 63, 20: 170 },
+                  notas: 'Aumentado 20% (OSO) — valores actualizados 03/2026' },
+                { nombre: 'Manzanilla',             unidad: 'g', cantidades: { 1.5: 52, 3: 106, 5: 186, 10: 371, 15: 560, 20: 748 } },
+                { nombre: 'CMC',                    unidad: 'g', cantidades: { 1.5: 1.8, 3: 4.1, 5: 6.4, 10: 13, 15: 18, 20: 24 } },
+                { nombre: 'Nata',                   unidad: 'g', cantidades: { 1.5: 419, 3: 838, 5: 1488, 10: 2976, 15: 4463, 20: 5713 } },
+                { nombre: 'Aceite girasol',         unidad: 'g', cantidades: { 1.5: 183, 3: 366, 5: 650, 10: 1300, 15: 1950, 20: 2496 } },
+                { nombre: 'Grasa de pollo',         unidad: 'g', cantidades: { 1.5: 58, 3: 117, 5: 208, 10: 415, 15: 623, 20: 797 } }
             ]
         }
     },
@@ -585,52 +676,69 @@ const RIA_DATA = {
     // ========================================================================
     materiaPrima: {
         // --- Caldos base ---
-        MP01: { nombre: 'Caldo Natural Aneto Pescado Restauración', proveedor: 'Aneto', formato: 'Tetra Brik 1,5L (cajas 10 uds)', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaLocal: '0560_001 PROFESIONAL PESCADO (AL PUNTO DE SAL-SEP25).pdf', vidaUtil: '12 meses', alergenos: ['pescado', 'apio', 'crustáceos (posible)', 'moluscos (posible)'], codigoAneto: '101050113' },
+        MP01: { nombre: 'Caldo Natural Aneto Pescado Restauración', proveedor: 'Aneto', formato: 'Tetra Brik 1,5L (cajas 10 uds)', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaLocal: '0560_001 PROFESIONAL PESCADO (AL PUNTO DE SAL-SEP25).pdf', vidaUtil: '12 meses', alergenos: ['pescado', 'apio', 'crustáceos (posible)', 'moluscos (posible)'], codigoAneto: '101050113', lote: '25249', caducidad: '06/09/2026' },
         // (MP02 eliminado: Caldo Aneto de Pollo no se usa)
-        MP03: { nombre: 'Caldo Paeller Pollo', proveedor: 'Paeller', formato: 'Lata 3L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/14_x5-3o3-J60TGEDsdF06wc7s06x797K' },
+        MP03: { nombre: 'Caldo Paeller Pollo', proveedor: 'Paeller', formato: 'Lata 3L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/14_x5-3o3-J60TGEDsdF06wc7s06x797K', lote: 'C3AV25R003A', caducidad: '03/10/2027' },
         // --- Aceites ---
-        MP04: { nombre: 'Aceite girasol alto oleico', proveedor: 'Coreysa', formato: 'Garrafa 25L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/18gxWTtodrnT9g_ktuvZhvKq5eKukf9cf' },
-        MP05: { nombre: 'Aceite de oliva virgen extra', proveedor: 'Makro', formato: 'Garrafa 5L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1MAAqJjeW3rWXdIMt8tjzlpMORppLZbMO' },
+        MP04: { nombre: 'Aceite girasol alto oleico', proveedor: 'Coreysa', formato: 'Garrafa 25L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/18gxWTtodrnT9g_ktuvZhvKq5eKukf9cf', lote: '25M24C072', caducidad: '24/05/2027' },
+        MP05: { nombre: 'Aceite de oliva virgen extra', proveedor: 'Makro', formato: 'Garrafa 5L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1MAAqJjeW3rWXdIMt8tjzlpMORppLZbMO', lote: '0126H78241', caducidad: '10/2026' },
         // --- Aromas y aditivos ---
-        MP06: { nombre: 'Umami (Givaudan)', proveedor: 'Givaudan', formato: 'Bote 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq' },
-        MP07: { nombre: 'Goma xantana', proveedor: '(pendiente buscar)', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1s9knhOB4VdRdygbT7NmsiDlY7rSxS7Dp' },
-        MP08: { nombre: 'Tinta de calamar', proveedor: 'Nortindal', formato: 'Frasco 100g', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1xoggA9ZKcb-jHNwAdoXwDumm4bsiFUHX' },
-        MP09: { nombre: 'Hazelnut (colorante Sensient)', proveedor: 'Sensient', formato: 'Bote 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1gH58oWgfF30HguhBabwFPU3aYdPQS2KF' },
-        MP10: { nombre: 'Pimentón', proveedor: 'Coato', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/15fObM80xHzaYjncbQBq_TLkCAEgg80My' },
-        MP11: { nombre: 'Hierbas (mezcla)', proveedor: 'Expressions Aromatiques', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1IT3K-bek2mM8iRcgfphHc6-wWyH00ewh' },
-        MP12: { nombre: 'Almidón', proveedor: 'Ingredion', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1W4DRpTJzUE4WF7gKSv9ER1IsRpOpTNWG' },
+        MP06: { nombre: 'Umami (Givaudan)', proveedor: 'Givaudan', formato: 'Bote 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq', lote: 'HA0072S398', caducidad: '04/11/2026' },
+        MP07: { nombre: 'Goma xantana', proveedor: 'Corquimia', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1s9knhOB4VdRdygbT7NmsiDlY7rSxS7Dp', lote: '124112U133', caducidad: '23/11/2026' },
+        MP08: { nombre: 'Tinta de calamar', proveedor: 'Nortindal', formato: 'Frasco 100g', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1xoggA9ZKcb-jHNwAdoXwDumm4bsiFUHX', lote: '13.25', caducidad: '24/03/2029' },
+        MP09: { nombre: 'Hazelnut (colorante Sensient)', proveedor: 'Sensient', formato: 'Bote 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1gH58oWgfF30HguhBabwFPU3aYdPQS2KF', lote: 'b060238', caducidad: '30/11/2026' },
+        MP10: { nombre: 'Pimentón', proveedor: 'Coato', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/15fObM80xHzaYjncbQBq_TLkCAEgg80My', lote: '8751', caducidad: '08/2026' },
+        MP11: { nombre: 'Hierbas (mezcla)', proveedor: 'Expressions Aromatiques', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1IT3K-bek2mM8iRcgfphHc6-wWyH00ewh', lote: 'HA00616629', caducidad: '26/09/2028' },
+        MP12: { nombre: 'Almidón', proveedor: 'Ingredion', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1W4DRpTJzUE4WF7gKSv9ER1IsRpOpTNWG', lote: '3NG7023', caducidad: '01/04/2026' },
         // --- Mantequilla y lácteos ---
-        MP13: { nombre: 'Mantequilla', proveedor: ['Presidente', 'Otro'], proveedorMultiple: true, formato: 'Bloque 2,5kg', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true },
-        MP14: { nombre: 'Queso parmesano', proveedor: '', formato: 'Cuña', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1kAaJnflNAL66nUzOcxYCig6vM3PEloEc' },
+        MP13: { nombre: 'Mantequilla', proveedor: ['Presidente', 'Otro'], proveedorMultiple: true, formato: 'Bloque 2,5kg', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, lote: '252761', caducidad: '01/04/2026' },
+        MP14: { nombre: 'Queso parmesano', proveedor: '', formato: 'Cuña', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1kAaJnflNAL66nUzOcxYCig6vM3PEloEc', lote: 'L075344', caducidad: '10/04/2026' },
         // --- (MP15-MP18 eliminados: gamba, rape, sepia, galera no se usan como ingrediente) ---
         // --- Especias ---
-        MP19: { nombre: 'Azafrán', proveedor: 'Verdú Cantó', formato: 'Sobres 1g', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Fjkdysu9PyUo8el9pdcDWsJDhPaKrmFC' },
+        MP19: { nombre: 'Azafrán', proveedor: 'Verdú Cantó', formato: 'Sobres 1g', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Fjkdysu9PyUo8el9pdcDWsJDhPaKrmFC', lote: 'H116092514', caducidad: '11/2028' },
         // --- Embutido ---
         MP20: { nombre: 'Jamón ibérico', proveedor: 'Enrique Tomás', formato: 'Pieza envasada', conservacion: 'Congelación', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1VXZ5E4jgj4B6OyN6mHkMoZweataGnI-j' },
         // --- Setas y hongos ---
-        MP21: { nombre: 'Harina Fina de Boletus', proveedor: 'Honza', formato: 'Bolsa plástico (5 uds/caja)', conservacion: 'Tª Ambiente (lugar fresco y seco)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '020 - F - CA - HARINA FINA DE BOLETUS.pdf', vidaUtil: '3 años desde deshidratación', alergenos: [], certificaciones: ['IFS Food'] },
-        MP22: { nombre: 'Mezcla de Setas Básica con Boletus', proveedor: 'Honza', formato: 'Granel 10kg (bolsa polietileno)', conservacion: 'Congelación (-18°C)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '123-CA - MEZCLA DE SETAS BASICA.pdf', vidaUtil: '3 años desde congelación', alergenos: [], certificaciones: ['IFS Food'] },
-        MP23: { nombre: 'Tartufata (pasta de trufa)', proveedor: 'Solchem', formato: 'Tarro', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1ILIbFB6shtYxY02QKBR4Dsd69rASSBQ0' },
+        MP21: { nombre: 'Harina Fina de Boletus', proveedor: 'Honza', formato: 'Bolsa plástico (5 uds/caja)', conservacion: 'Tª Ambiente (lugar fresco y seco)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '020 - F - CA - HARINA FINA DE BOLETUS.pdf', vidaUtil: '3 años desde deshidratación', alergenos: [], certificaciones: ['IFS Food'], lote: 'H2621', caducidad: '30/04/2027' },
+        MP22: { nombre: 'Mezcla de Setas Básica con Boletus', proveedor: 'Honza', formato: 'Granel 10kg (bolsa polietileno)', conservacion: 'Congelación (-18°C)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '123-CA - MEZCLA DE SETAS BASICA.pdf', vidaUtil: '3 años desde congelación', alergenos: [], certificaciones: ['IFS Food'], lote: 'H4879', caducidad: '30/04/2027' },
+        MP23: { nombre: 'Tartufata (pasta de trufa)', proveedor: 'Solchem', formato: 'Tarro', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1ILIbFB6shtYxY02QKBR4Dsd69rASSBQ0', lote: 'L6172', caducidad: '20/06/2028' },
         // --- Arroces ---
-        MP24: { nombre: 'Arroz Elaborado Variedad Nuovo Maratelli', proveedor: 'Arrocera del Pirineo', formato: 'Saco 25kg (también 1kg, 5kg, 20kg)', conservacion: 'Tª Ambiente (lugar limpio, fresco, seco)', tipo: 'ingrediente', fichaDrive: '', fichaLocal: 'Ficha técnica arroz n.maratelli ene-25.pdf', vidaUtil: '18 meses', alergenos: [], categoría: 'Extra', clasificacion: 'Oryza sativa, Subespecie Japónica' },
-        MP25: { nombre: 'Arroz Bahía (Illa de Riu)', proveedor: 'Illa de Riu', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '' },
-        MP26: { nombre: 'Arroz Marisma (Doña Ana)', proveedor: 'Doña Ana', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '' },
+        MP24: { nombre: 'Arroz Elaborado Variedad Nuovo Maratelli', proveedor: 'Arrocera del Pirineo', formato: 'Saco 25kg (también 1kg, 5kg, 20kg)', conservacion: 'Tª Ambiente (lugar limpio, fresco, seco)', tipo: 'ingrediente', fichaDrive: '', fichaLocal: 'Ficha técnica arroz n.maratelli ene-25.pdf', vidaUtil: '18 meses', alergenos: [], categoría: 'Extra', clasificacion: 'Oryza sativa, Subespecie Japónica', lote: '26Y04', caducidad: '06/2027' },
+        MP25: { nombre: 'Arroz Bahía (Illa de Riu)', proveedor: 'Illa de Riu', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', lote: '62604', caducidad: '09/2026' },
+        MP26: { nombre: 'Arroz Marisma (Doña Ana)', proveedor: 'Doña Ana', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', lote: '3026D026', caducidad: '02/2027' },
         // (MP27 eliminado: Arroz Maestro = Arroz Marisma, duplicado)
         // --- Tomate ---
-        MP30: { nombre: 'Tomate deshidratado', proveedor: 'Mas Tomate', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1jzY5Y02cEe6SHLdAvi0S4xFicqxNGn9K' },
-        MP31: { nombre: 'Ñora', proveedor: 'Rajope', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/14Y5TrAfb7BcJCH82AS6mG4rKlL3Vay8s' },
+        MP30: { nombre: 'Tomate deshidratado', proveedor: 'Mas Tomate', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1jzY5Y02cEe6SHLdAvi0S4xFicqxNGn9K', lote: 'V0', caducidad: '12/03/2030' },
+        MP31: { nombre: 'Ñora', proveedor: 'Rajope', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/14Y5TrAfb7BcJCH82AS6mG4rKlL3Vay8s', lote: '0402256001', caducidad: '07/2027' },
         // --- (MP32 eliminado: salsa de pescado ya no se usa) ---
         // --- Verduras deshidratadas ---
-        MP33: { nombre: 'Espinaca deshidratada', proveedor: 'La Margarita', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1zUCFdwS4WkNvzhGsjBpjFnwdefTCyVeo' },
-        MP34: { nombre: 'Cebolla deshidratada', proveedor: 'Vegenat', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0' },
-        MP35: { nombre: 'Pollo deshidratado', proveedor: 'Ugeave', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1AxRLbDkx66WHYQnzU34ivpTsCI9NIXCP' },
-        MP36: { nombre: 'Puerro deshidratado', proveedor: 'La Margarita', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1zUCFdwS4WkNvzhGsjBpjFnwdefTCyVeo' },
+        MP33: { nombre: 'Espinaca deshidratada', proveedor: 'La Margarita', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1zUCFdwS4WkNvzhGsjBpjFnwdefTCyVeo', lote: '960040259', caducidad: '07/2025' },
+        MP34: { nombre: 'Cebolla deshidratada', proveedor: 'Vegenat', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0', lote: 'F19134', caducidad: '07/2028' },
+        MP35: { nombre: 'Pollo deshidratado', proveedor: 'Ugeave', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1AxRLbDkx66WHYQnzU34ivpTsCI9NIXCP', lote: '20U29-1S0Y26', caducidad: '15/07/2027' },
+        MP36: { nombre: 'Puerro deshidratado', proveedor: 'La Margarita', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1zUCFdwS4WkNvzhGsjBpjFnwdefTCyVeo', lote: '25AC199', caducidad: '02/2027' },
         // --- Otros ingredientes con ficha ---
-        MP37: { nombre: 'Sal', proveedor: ['Varios'], proveedorMultiple: true, formato: 'Saco', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '' },
-        MP38: { nombre: 'Ácido tartárico', proveedor: 'Dalmau', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/123tPERK4BqmmOFwmLbDyvgTBEa0K5M5v', fichaFalta: true },
-        MP39: { nombre: 'Azúcar', proveedor: '', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true },
+        MP37: { nombre: 'Sal', proveedor: ['Varios'], proveedorMultiple: true, formato: 'Saco', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', lote: 'Hdno-10N89', caducidad: '26/02/2030' },
+        MP38: { nombre: 'Ácido tartárico', proveedor: 'Dalmau', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/123tPERK4BqmmOFwmLbDyvgTBEa0K5M5v', fichaFalta: true, lote: '13506', caducidad: '10/2028' },
+        MP39: { nombre: 'Azúcar', proveedor: 'Azucarera', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, lote: '39C0502601' },
         // (MP41 eliminado: Aditivos Solchem no existe como producto)
         // (MP42 eliminado: Ruca no existe como producto)
+
+        // --- NUEVOS: Ingredientes de salsas cremosas (pendientes ficha técnica y proveedor) ---
+        // MP60: Flaxfiber ELIMINADO — Isabel confirma que ya NO se usa (03/2026)
+        MP61: { nombre: 'CMC (carboximetilcelulosa)', proveedor: 'Dalmau', formato: '', conservacion: 'Tª Ambiente', tipo: 'aditivo', fichaDrive: '', fichaFalta: true, pendiente: false, notas: 'Dosificación: 1,2 g/L (actualizado 11/12)', usadoEn: ['Tartufata', 'Boletus', 'Queso', 'Ibérico'], lote: '25024333', caducidad: '02/2027' },
+        // MP62: Nata — consolidado en MP63 (es lo mismo que Nata 20%)
+        MP63: { nombre: 'Nata (crema de leche)', proveedor: 'Metro', formato: '', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, alergenos: ['leche'], usadoEn: ['Tartufata', 'Ibérico', 'Queso'], lote: '78337U' },
+        // MP64: Manzanilla — consolidado en MP65 (Manzanilla/Jerez/Vino blanco son lo mismo)
+        MP65: { nombre: 'Vino (Manzanilla/Jerez)', proveedor: 'Barbadillo', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, usadoEn: ['Tartufata', 'Boletus', 'Queso', 'Ibérico'], lote: 'R32/CA' },
+        MP66: { nombre: 'Grasa de pollo', proveedor: 'Ugeave', formato: '', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, usadoEn: ['Tartufata', 'Boletus', 'Setas', 'Queso', 'Ibérico'], lote: '20410', caducidad: '12/04/2027' },
+        MP67: { nombre: 'Aceite de girasol trufado', proveedor: 'Coreysa', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, notas: '3,2 g trufa por 1000 g aceite', usadoEn: ['Tartufata'], lote: '251124C072', caducidad: '03/10/2027' },
+        MP68: { nombre: 'Aroma de setas', proveedor: 'Givaudan', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, usadoEn: ['Boletus', 'Setas'], lote: '24141225' },
+        MP69: { nombre: 'Aroma de queso', proveedor: 'Givaudan', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, usadoEn: ['Queso'], lote: '24141225', caducidad: '03/08/2026' },
+        MP70: { nombre: 'Aroma de jamón (OSO)', proveedor: 'Givaudan', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, notas: 'Aumentar 20% según nota', usadoEn: ['Ibérico'], lote: 'DU00967240', caducidad: '18/08/2026' },
+        // MP71: Pimienta negra — Isabel marca NO, ya no se usa en salsas cremosas (03/2026)
+        // MP72: Jerez — consolidado en MP65 (Manzanilla/Jerez/Vino blanco son lo mismo)
+        MP73: { nombre: 'Queso azul', proveedor: 'Givaudan', formato: '', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, pendiente: false, alergenos: ['leche'], usadoEn: ['Queso'], lote: 'MA00620406', caducidad: '18/10/2028' },
+
         // --- Elaboraciones intermedias (fabricación propia) ---
         MP43: { nombre: 'Salmorreta', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Refrigeración', tipo: 'preelaboracion', fichaDrive: '' },
         MP44: { nombre: 'Aceite de gamba', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
@@ -639,11 +747,11 @@ const RIA_DATA = {
         MP47: { nombre: 'Aceite de trufa', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
         MP48: { nombre: 'Agua de azafrán', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Refrigeración', tipo: 'preelaboracion', fichaDrive: '' },
         // --- Packaging: Bandejas ---
-        MP50: { nombre: 'Bandeja EOS-35 (190-300g)', proveedor: 'Sarabia', formato: 'PP/PPEVOHPP 1000µ', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Raciones individuales 190-300g', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'EOS-35 PP o PPEVOHPP 1000µ.pdf' },
-        MP55: { nombre: 'Bandeja EOS-50 (380-450g)', proveedor: 'Sarabia', formato: 'PP/PPEVOHPP', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Raciones grandes 380-450g', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: '230-1.pdf / 230-2.pdf' },
+        MP50: { nombre: 'Bandeja EOS-35 (190-300g)', proveedor: 'Sarabia', formato: 'PP/PPEVOHPP 1000µ', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Raciones individuales 190-300g', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'EOS-35 PP o PPEVOHPP 1000µ.pdf', lote: 'T629B36E012523' },
+        MP55: { nombre: 'Bandeja EOS-50 (380-450g)', proveedor: 'Sarabia', formato: 'PP/PPEVOHPP', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Raciones grandes 380-450g', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: '230-1.pdf / 230-2.pdf', lote: 'T005B829E01S2525' },
         MP56: { nombre: 'Bandeja Bulk (GN1225)', proveedor: 'Sarabia', formato: 'PPEVOHPP 800µ', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Formato Bulk (3 redes)', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'GN1225 PPEVOHPP 800µ.pdf' },
         // --- Packaging: Film (mismo para barquetas y salsas) ---
-        MP51: { nombre: 'Film top-seal (LFX501T062-K59)', proveedor: 'Adrados', formato: 'Bobina PE Fest/PP Peel/AF', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Sellado de todas las bandejas y salsas', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'FT-FILM LFX501T062---K59 - 2023.08.29.pdf' },
+        MP51: { nombre: 'Film top-seal (LFX501T062-K59)', proveedor: 'Adrados', formato: 'Bobina PE Fest/PP Peel/AF', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Sellado de todas las bandejas y salsas', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'FT-FILM LFX501T062---K59 - 2023.08.29.pdf', lote: '22403117/1', notas: 'Reel 7959194, Palette 1806720, 66µm, 240mm, 7.771kg, 500m' },
         // --- Packaging: Otros ---
         MP52: { nombre: 'Etiqueta producto', proveedor: '', formato: 'Bobina', conservacion: 'Tª Ambiente', tipo: 'packaging', fichaDrive: '' },
         MP53: { nombre: 'Caja cartón', proveedor: 'Femasa', formato: 'Palet', conservacion: 'Tª Ambiente', tipo: 'packaging', fichaDrive: '' },
@@ -656,9 +764,9 @@ const RIA_DATA = {
     proveedores: {
         aneto:              { nombre: 'Aneto', productos: ['MP01'] },
         paeller:            { nombre: 'Paeller', productos: ['MP03'], fichaDrive: 'https://drive.google.com/drive/folders/14_x5-3o3-J60TGEDsdF06wc7s06x797K' },
-        coreysa:            { nombre: 'Coreysa', productos: ['MP04'], fichaDrive: 'https://drive.google.com/drive/folders/18gxWTtodrnT9g_ktuvZhvKq5eKukf9cf' },
-        dalmau:             { nombre: 'Dalmau', productos: ['MP38'], fichaDrive: 'https://drive.google.com/drive/folders/123tPERK4BqmmOFwmLbDyvgTBEa0K5M5v' },
-        givaudan:           { nombre: 'Givaudan', productos: ['MP06'], fichaDrive: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq' },
+        coreysa:            { nombre: 'Coreysa', productos: ['MP04', 'MP67'], fichaDrive: 'https://drive.google.com/drive/folders/18gxWTtodrnT9g_ktuvZhvKq5eKukf9cf' },
+        dalmau:             { nombre: 'Dalmau', productos: ['MP38', 'MP61'], fichaDrive: 'https://drive.google.com/drive/folders/123tPERK4BqmmOFwmLbDyvgTBEa0K5M5v' },
+        givaudan:           { nombre: 'Givaudan', productos: ['MP06', 'MP68', 'MP69', 'MP70', 'MP73'], fichaDrive: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq' },
         solchem:            { nombre: 'Solchem', productos: ['MP23'], fichaDrive: 'https://drive.google.com/drive/folders/1ILIbFB6shtYxY02QKBR4Dsd69rASSBQ0' },
         nortindal:          { nombre: 'Nortindal', productos: ['MP08'], fichaDrive: 'https://drive.google.com/drive/folders/1xoggA9ZKcb-jHNwAdoXwDumm4bsiFUHX' },
         sensient:           { nombre: 'Sensient', productos: ['MP09'], fichaDrive: 'https://drive.google.com/drive/folders/1gH58oWgfF30HguhBabwFPU3aYdPQS2KF' },
@@ -675,13 +783,18 @@ const RIA_DATA = {
         masTomate:          { nombre: 'Mas Tomate', productos: ['MP30'], fichaDrive: 'https://drive.google.com/drive/folders/1jzY5Y02cEe6SHLdAvi0S4xFicqxNGn9K' },
         rajope:             { nombre: 'Rajope', productos: ['MP31'], fichaDrive: 'https://drive.google.com/drive/folders/14Y5TrAfb7BcJCH82AS6mG4rKlL3Vay8s' },
         vegenat:            { nombre: 'Vegenat', productos: ['MP34'], fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0' },
-        ugeave:             { nombre: 'Ugeave', productos: ['MP35'], fichaDrive: 'https://drive.google.com/drive/folders/1AxRLbDkx66WHYQnzU34ivpTsCI9NIXCP' },
+        ugeave:             { nombre: 'Ugeave', productos: ['MP35', 'MP66'], fichaDrive: 'https://drive.google.com/drive/folders/1AxRLbDkx66WHYQnzU34ivpTsCI9NIXCP' },
         laMargarita:        { nombre: 'La Margarita', productos: ['MP33', 'MP36'], fichaDrive: 'https://drive.google.com/drive/folders/1zUCFdwS4WkNvzhGsjBpjFnwdefTCyVeo' },
         makro:              { nombre: 'Makro', productos: ['MP05', 'MP14'], fichaDrive: 'https://drive.google.com/drive/folders/1MAAqJjeW3rWXdIMt8tjzlpMORppLZbMO' },
         presidente:         { nombre: 'Presidente', productos: ['MP13'] },
         sarabia:            { nombre: 'Sarabia', productos: ['MP50', 'MP55', 'MP56'], fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn' },
         adrados:            { nombre: 'Adrados', productos: ['MP51'], fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn' },
-        femasa:             { nombre: 'Femasa', productos: ['MP53'] }
+        femasa:             { nombre: 'Femasa', productos: ['MP53'] },
+        // --- Nuevos proveedores identificados por Isabel (03/2026) ---
+        corquimia:          { nombre: 'Corquimia', productos: ['MP07'] },
+        azucarera:          { nombre: 'Azucarera', productos: ['MP39'] },
+        barbadillo:         { nombre: 'Barbadillo', productos: ['MP65'] },
+        metro:              { nombre: 'Metro', productos: ['MP63'] }
     },
 
     // ========================================================================
