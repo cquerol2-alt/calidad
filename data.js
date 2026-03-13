@@ -545,6 +545,7 @@ const RIA_DATA = {
         jarras: {
             'jarra-pescado': {
                 nombre: 'Jarra de Pescado',
+                lotePrefijo: 'RIA-JARRA-PESC',
                 ingredientes: [
                     { nombre: 'Pollo deshidratado', cantidad: '1800', unidad: 'g', codigoMP: 'MP35', tipo: 'proveedor' },
                     { nombre: 'Espinaca deshidratada', cantidad: '490', unidad: 'g', codigoMP: 'MP33', tipo: 'proveedor' }
@@ -552,24 +553,25 @@ const RIA_DATA = {
             },
             'jarra-verduras': {
                 nombre: 'Jarra de Verduras',
+                lotePrefijo: 'RIA-JARRA-VERD',
                 ingredientes: [
-                    { nombre: 'Puerro', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Cebolla', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Zanahoria', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Apio', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Tomate', cantidad: '', unidad: 'kg' }
+                    { nombre: 'Espinaca deshidratada', cantidad: '420', unidad: 'g', codigoMP: 'MP33', tipo: 'proveedor' },
+                    { nombre: 'Cebolla deshidratada', cantidad: '90', unidad: 'g', codigoMP: 'MP34', tipo: 'proveedor' }
                 ]
             },
             'jarra-risotto': {
                 nombre: 'Jarra de Risotto',
+                lotePrefijo: 'RIA-JARRA-RIS',
                 ingredientes: [
-                    { nombre: 'Parmesano', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Mantequilla', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Cebolla', cantidad: '', unidad: 'kg' }
-                ]
+                    { nombre: 'Pollo deshidratado', cantidad: '550', unidad: 'g', codigoMP: 'MP35', tipo: 'proveedor' },
+                    { nombre: 'Puerro deshidratado', cantidad: '510', unidad: 'g', codigoMP: 'MP36', tipo: 'proveedor' },
+                    { nombre: 'Cebolla deshidratada', cantidad: '815', unidad: 'g', codigoMP: 'MP34', tipo: 'proveedor' }
+                ],
+                notas: 'Total: 1875g'
             },
             'jarra-maestro': {
                 nombre: 'Jarra de Maestro',
+                lotePrefijo: 'RIA-JARRA-MAESTRO',
                 ingredientes: [
                     { nombre: 'Preparado Maestro (polvos)', cantidad: '', unidad: 'según formato x1/x2', tipo: 'preelaboracion', lotePrefijo: 'RIA-PREP-MAESTRO',
                       notas: 'x1 (16 jarras): Umami 132g, tartárico 0.11g, azúcar 110g, sal 220g | x2 (32 jarras): duplicar' },
@@ -931,7 +933,12 @@ const RIA_DATA = {
         'prelab-almidon':  { id: 'PRELAB-ALMIDON',     nombre: 'Agua Almidonada',     vidaUtilDias: 3,   conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
         'prelab-svconc':   { id: 'PRELAB-SVCONC',      nombre: 'Salsa Verduras Concentrada', vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'Trazas de APIO' },
         'pesado-verduras': { id: 'PRELAB-PESADO-VERD', nombre: 'Pesado Verduras',     vidaUtilDias: 180, conservacion: 'Tª Ambiente', alergenos: '' },
-        'pesado-risotto':  { id: 'PRELAB-PESADO-RIS',  nombre: 'Pesado Risotto',      vidaUtilDias: 180, conservacion: 'Tª Ambiente', alergenos: '' }
+        'pesado-risotto':  { id: 'PRELAB-PESADO-RIS',  nombre: 'Pesado Risotto',      vidaUtilDias: 180, conservacion: 'Tª Ambiente', alergenos: '' },
+        // --- Preelaboraciones de Jarras ---
+        'jarra-pescado':   { id: 'JARRA-PESC',    nombre: 'Jarra de Pescado',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'jarra-verduras':  { id: 'JARRA-VERD',    nombre: 'Jarra de Verduras',  vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'jarra-risotto':   { id: 'JARRA-RIS',     nombre: 'Jarra de Risotto',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE' },
+        'jarra-maestro':   { id: 'JARRA-MAESTRO', nombre: 'Jarra de Maestro',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' }
     },
 
     // Empresa para etiquetas
