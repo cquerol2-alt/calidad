@@ -567,16 +567,27 @@ const RIA_DATA = {
 
         // --- Bases ---
         bases: {
-            'agua-azafran': {
-                nombre: 'Agua de Azafrán',
-                codigo: 'PRELAB-AZAFRAN',
-                lotePrefijo: 'RIA-PRELAB-AZAFRAN',
+            'agua-azafran-p': {
+                nombre: 'Agua de Azafrán (Pequeña)',
+                codigo: 'PRELAB-AZAFRAN-P',
+                lotePrefijo: 'RIA-PRELAB-AZAFRANP',
+                codigoMP: 'MP48',
+                ingredientes: [
+                    { nombre: 'Agua', cantidad: '300', unidad: 'g', tipo: 'na' },
+                    { nombre: 'Azafrán', cantidad: '7', unidad: 'g', codigoMP: 'MP19', tipo: 'proveedor' }
+                ],
+                notas: 'Infusión a 68°C durante 1,5 horas'
+            },
+            'agua-azafran-g': {
+                nombre: 'Agua de Azafrán (Grande)',
+                codigo: 'PRELAB-AZAFRAN-G',
+                lotePrefijo: 'RIA-PRELAB-AZAFRANG',
                 codigoMP: 'MP48',
                 ingredientes: [
                     { nombre: 'Agua', cantidad: '400', unidad: 'g', tipo: 'na' },
-                    { nombre: 'Azafrán', cantidad: '7', unidad: 'g', codigoMP: 'MP19', tipo: 'proveedor' }
+                    { nombre: 'Azafrán', cantidad: '10', unidad: 'g', codigoMP: 'MP19', tipo: 'proveedor' }
                 ],
-                notas: 'Infusión: calentar agua, añadir azafrán, dejar reposar'
+                notas: 'Infusión a 68°C durante 1,5 horas'
             },
             'aceite-ajo': {
                 nombre: 'Aceite de Ajo',
@@ -584,10 +595,10 @@ const RIA_DATA = {
                 lotePrefijo: 'RIA-PRELAB-AJO',
                 codigoMP: 'MP46',
                 ingredientes: [
-                    { nombre: 'Aceite de oliva', cantidad: '', unidad: 'L', tipo: 'proveedor' },
-                    { nombre: 'Ajo', cantidad: '', unidad: 'kg', tipo: 'proveedor' }
+                    { nombre: 'Aceite de girasol alto oleico', cantidad: '10', unidad: 'L', codigoMP: 'MP04', tipo: 'proveedor', proveedor: 'Coreysa' },
+                    { nombre: 'Ajo', cantidad: '5', unidad: 'kg', codigoMP: 'MP20', tipo: 'proveedor' }
                 ],
-                notas: 'Receta pendiente de completar'
+                notas: 'Pasteurizar a 100°C durante 1h 20min'
             },
             'aceite-nora': {
                 nombre: 'Aceite Rojo de Ñora',
@@ -595,10 +606,12 @@ const RIA_DATA = {
                 lotePrefijo: 'RIA-PRELAB-NORA',
                 codigoMP: 'MP45',
                 ingredientes: [
-                    { nombre: 'Aceite de oliva', cantidad: '', unidad: 'L', tipo: 'proveedor' },
-                    { nombre: 'Ñora', cantidad: '', unidad: 'kg', tipo: 'proveedor' }
+                    { nombre: 'Aceite de girasol alto oleico', cantidad: '16', unidad: 'L', codigoMP: 'MP04', tipo: 'proveedor', proveedor: 'Coreysa' },
+                    { nombre: 'Ñora', cantidad: '2', unidad: 'latas', codigoMP: 'MP21', tipo: 'proveedor' },
+                    { nombre: 'Pimentón', cantidad: '2', unidad: 'cucharas grandes', codigoMP: 'MP10', tipo: 'proveedor' },
+                    { nombre: 'Cúrcuma', cantidad: '2', unidad: 'c.c.', codigoMP: 'MP50', tipo: 'proveedor' }
                 ],
-                notas: 'Receta pendiente de completar'
+                notas: 'Pasteurizar a 75°C durante 1,5 horas'
             },
             'salmorreta': {
                 nombre: 'Salmorreta',
@@ -606,12 +619,25 @@ const RIA_DATA = {
                 lotePrefijo: 'RIA-PRELAB-SALMORRETA',
                 codigoMP: 'MP43',
                 ingredientes: [
-                    { nombre: 'Ajo', cantidad: '', unidad: 'kg', tipo: 'proveedor' },
-                    { nombre: 'Aceite', cantidad: '', unidad: 'L', tipo: 'proveedor' },
-                    { nombre: 'Carne de ñora', cantidad: '', unidad: 'kg', tipo: 'proveedor' },
-                    { nombre: 'Tomate deshidratado', cantidad: '', unidad: 'kg', tipo: 'proveedor' }
+                    { nombre: 'Ajo', cantidad: '10', unidad: 'kg', codigoMP: 'MP20', tipo: 'proveedor' },
+                    { nombre: 'Aceite de oliva', cantidad: '7.2', unidad: 'L', codigoMP: 'MP05', tipo: 'proveedor', proveedor: 'Makro' },
+                    { nombre: 'Ñora fresca', cantidad: '90', unidad: 'unidades', codigoMP: 'MP21', tipo: 'proveedor' },
+                    { nombre: 'Tomate deshidratado', cantidad: '4.6', unidad: 'kg (polvo)', codigoMP: 'MP22', tipo: 'proveedor' },
+                    { nombre: 'Ñora en lata', cantidad: '18', unidad: 'latas', codigoMP: 'MP21', tipo: 'proveedor' },
+                    { nombre: 'Agua', cantidad: '12', unidad: 'L', tipo: 'na' }
                 ],
-                notas: 'Receta pendiente de completar'
+                notas: 'Conservación: congelación'
+            },
+            'agua-almidonada': {
+                nombre: 'Agua Almidonada',
+                codigo: 'PRELAB-ALMIDON',
+                lotePrefijo: 'RIA-PRELAB-ALMIDON',
+                codigoMP: 'MP49',
+                ingredientes: [
+                    { nombre: 'Almidón', cantidad: '120', unidad: 'g', codigoMP: 'MP12', tipo: 'proveedor' },
+                    { nombre: 'Agua', cantidad: '2', unidad: 'L', tipo: 'na' }
+                ],
+                notas: 'Mezclar almidón con agua fría hasta disolver'
             }
         },
 
@@ -846,10 +872,14 @@ const RIA_DATA = {
         'salsa-setas':     { id: 'REC-SALSA-SET',  nombre: 'Salsa de Setas',    vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE' },
         'salsa-queso':     { id: 'REC-SALSA-QUE',  nombre: 'Salsa de Queso',    vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE, SULFITOS' },
         'salsa-iberico':   { id: 'REC-SALSA-IBE',  nombre: 'Salsa Ibérico',     vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE, SULFITOS' },
-        'prelab-azafran':  { id: 'PRELAB-AZAFRAN',     nombre: 'Agua de Azafrán',     vidaUtilDias: 3, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
-        'prelab-ajo':      { id: 'PRELAB-AJO',         nombre: 'Aceite de Ajo',       vidaUtilDias: 7, conservacion: 'Tª Ambiente', alergenos: '' },
-        'prelab-nora':     { id: 'PRELAB-NORA',        nombre: 'Aceite Rojo de Ñora', vidaUtilDias: 7, conservacion: 'Tª Ambiente', alergenos: '' },
-        'prelab-salmorreta':{ id: 'PRELAB-SALMORRETA', nombre: 'Salmorreta',          vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' }
+        'prelab-azafran-p':{ id: 'PRELAB-AZAFRAN-P',   nombre: 'Agua de Azafrán (Pequeña)', vidaUtilDias: 90,  conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'prelab-azafran-g':{ id: 'PRELAB-AZAFRAN-G',   nombre: 'Agua de Azafrán (Grande)',  vidaUtilDias: 90,  conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'prelab-ajo':      { id: 'PRELAB-AJO',         nombre: 'Aceite de Ajo',       vidaUtilDias: 120, conservacion: 'Tª Ambiente (proteger de la luz)', alergenos: '' },
+        'prelab-nora':     { id: 'PRELAB-NORA',        nombre: 'Aceite Rojo de Ñora', vidaUtilDias: 90,  conservacion: 'Tª Ambiente (proteger de la luz)', alergenos: '' },
+        'prelab-salmorreta':{ id: 'PRELAB-SALMORRETA', nombre: 'Salmorreta',          vidaUtilDias: 360, conservacion: 'Congelación', alergenos: '' },
+        'prelab-almidon':  { id: 'PRELAB-ALMIDON',     nombre: 'Agua Almidonada',     vidaUtilDias: 3,   conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'pesado-verduras': { id: 'PRELAB-PESADO-VERD', nombre: 'Pesado Verduras',     vidaUtilDias: 180, conservacion: 'Tª Ambiente', alergenos: '' },
+        'pesado-risotto':  { id: 'PRELAB-PESADO-RIS',  nombre: 'Pesado Risotto',      vidaUtilDias: 180, conservacion: 'Tª Ambiente', alergenos: '' }
     },
 
     // Empresa para etiquetas

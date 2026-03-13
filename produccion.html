@@ -2117,37 +2117,43 @@
         //   ELAB: 13/03/2026        CAD: 18/03/2026
         //   Refrigeracion (0-4C)
         function extractLotFromText(text) {
-            // Normalizar: limpiar caracteres OCR
-            const clean = text.replace(/[|]/g, 'l').replace(/[{}]/g, '');
+            // Limpiar caracteres basura OCR
+            const clean = text.replace(/[|]/g, 'l').replace(/[{}¡!¿?]/g, '').replace(/[–—]/g, '-');
+            const allText = clean.replace(/\n/g, ' ');
             const lines = clean.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             let lote = '';
 
+            // 1) Buscar patrón exacto RIA-XXXX-DDMMYY en todo el texto
+            const riaExact = allText.match(/RIA-[A-Z]+-\d{6}/i);
+            if (riaExact) {
+                lote = riaExact[0].toUpperCase();
+                return { lote };
+            }
+
+            // 2) Buscar LOTE: seguido de texto, luego limpiar
             for (const line of lines) {
-                // LOTE: RIA-PESCADO-130326
                 if (!lote) {
                     const loteMatch = line.match(/L\s*O\s*T\s*E\s*[:;.\s]\s*(.+)/i);
-                    if (loteMatch) lote = loteMatch[1].trim().replace(/\s+/g, '');
-                }
-                // Patrón RIA-XXX-DDMMYY suelto (sin etiqueta LOTE:)
-                if (!lote) {
-                    const riaMatch = line.match(/(RIA[-–][A-Z]+-\d{6})/i);
-                    if (riaMatch) lote = riaMatch[1].replace(/–/g, '-');
+                    if (loteMatch) {
+                        let raw = loteMatch[1].trim().replace(/\s+/g, '');
+                        // Cortar en el primer carácter que no sea parte del lote
+                        const lotClean = raw.match(/^[A-Z0-9][-A-Z0-9]*-\d{6}/i);
+                        lote = lotClean ? lotClean[0] : raw.replace(/[^A-Z0-9-]/gi, '');
+                    }
                 }
                 if (lote) break;
             }
 
-            // Fallback: código alfanumérico largo (lotes de proveedor)
+            // 3) Fallback: código alfanumérico largo (lotes de proveedor)
             if (!lote) {
                 for (const line of lines) {
                     const codeMatch = line.match(/([A-Z0-9][-A-Z0-9]{4,})/i);
                     if (codeMatch && !codeMatch[1].match(/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/)
-                        && !codeMatch[1].match(/^(LOTE|ELAB|CAD|Caldo|Salsa|Aceite|Refrigeracion)/i)) {
-                        lote = codeMatch[1];
-                        break;
+                        && !codeMatch[1].match(/^(LOTE|ELAB|CAD|Caldo|Salsa|Aceite|Refrigeracion|Ingredientes)/i)) {
+                        lote = codeMatch[1]; break;
                     }
                 }
             }
-
             return { lote };
         }
 
