@@ -582,6 +582,42 @@ const RIA_DATA = {
             }
         },
 
+        // --- Mezclas líquidas para jarras ---
+        mezclasJarras: {
+            'mezcla-jarra-normal': {
+                nombre: 'Mezcla Jarra Normal',
+                codigo: 'PRELAB-MJNORMAL',
+                lotePrefijo: 'RIA-MEZCLA-JNORMAL',
+                ingredientes: [
+                    { nombre: 'Hazelnut (colorante Sensient)', cantidad: '260', unidad: 'ml', codigoMP: 'MP09', tipo: 'proveedor', proveedor: 'Sensient' },
+                    { nombre: 'Agua', cantidad: '3600', unidad: 'ml', tipo: 'na' }
+                ],
+                notas: 'Para jarras de pescado y verduras. Si sobra se guarda.'
+            },
+            'mezcla-jarra-risotto': {
+                nombre: 'Mezcla Jarra Risotto',
+                codigo: 'PRELAB-MJRISOTTO',
+                lotePrefijo: 'RIA-MEZCLA-JRISOTTO',
+                ingredientes: [
+                    { nombre: 'Hazelnut (colorante Sensient)', cantidad: '60', unidad: 'ml', codigoMP: 'MP09', tipo: 'proveedor', proveedor: 'Sensient' },
+                    { nombre: 'Agua', cantidad: '3600', unidad: 'ml', tipo: 'na' }
+                ],
+                notas: 'Para jarras de risotto. Si sobra se guarda.'
+            },
+            'mezcla-jarra-maestro': {
+                nombre: 'Mezcla Jarra Maestro',
+                codigo: 'PRELAB-MJMAESTRO',
+                lotePrefijo: 'RIA-MEZCLA-JMAESTRO',
+                ingredientes: [
+                    { nombre: 'Preparado Maestro (pequeño x1)', cantidad: '', unidad: 'según formato', tipo: 'preelaboracion', lotePrefijo: 'RIA-PREP-MAESTRO' },
+                    { nombre: 'Hazelnut (colorante Sensient)', cantidad: '190', unidad: 'ml', codigoMP: 'MP09', tipo: 'proveedor', proveedor: 'Sensient' },
+                    { nombre: 'Agua de azafrán (Pequeña)', cantidad: '300', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRANP', codigoMP: 'MP48' },
+                    { nombre: 'Agua', cantidad: '2000', unidad: 'ml', tipo: 'na' }
+                ],
+                notas: 'Mezcla maestro pequeño + hazelnut + agua azafrán + agua. Si sobra se guarda.'
+            }
+        },
+
         // --- Bases ---
         bases: {
             'agua-azafran-p': {
@@ -754,7 +790,7 @@ const RIA_DATA = {
     // ========================================================================
     materiaPrima: {
         // --- Caldos base ---
-        MP01: { nombre: 'Caldo Natural Aneto Pescado Restauración', proveedor: 'Aneto', formato: 'Tetra Brik 1,5L (cajas 10 uds)', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaLocal: '0560_001 PROFESIONAL PESCADO (AL PUNTO DE SAL-SEP25).pdf', vidaUtil: '12 meses', alergenos: ['pescado', 'apio', 'crustáceos (posible)', 'moluscos (posible)'], codigoAneto: '101050113', lote: '25249', caducidad: '06/09/2026' },
+        MP01: { nombre: 'Caldo Natural Aneto Pescado Restauración', proveedor: 'Aneto', formato: 'Tetra Brik 1,5L (cajas 10 uds)', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaLocal: '0560_001 PROFESIONAL PESCADO (AL PUNTO DE SAL-SEP25).pdf', vidaUtil: '12 meses', alergenos: ['pescado', 'apio', 'crustáceos', 'moluscos'], codigoAneto: '101050113', lote: '25249', caducidad: '06/09/2026' },
         // (MP02 eliminado: Caldo Aneto de Pollo no se usa)
         MP03: { nombre: 'Caldo Paeller Pollo', proveedor: 'Paeller', formato: 'Lata 3L', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/14_x5-3o3-J60TGEDsdF06wc7s06x797K', lote: 'C3AV25R003A', caducidad: '03/10/2027' },
         // --- Aceites ---
@@ -938,7 +974,11 @@ const RIA_DATA = {
         'jarra-pescado':   { id: 'JARRA-PESC',    nombre: 'Jarra de Pescado',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
         'jarra-verduras':  { id: 'JARRA-VERD',    nombre: 'Jarra de Verduras',  vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
         'jarra-risotto':   { id: 'JARRA-RIS',     nombre: 'Jarra de Risotto',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE' },
-        'jarra-maestro':   { id: 'JARRA-MAESTRO', nombre: 'Jarra de Maestro',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' }
+        'jarra-maestro':   { id: 'JARRA-MAESTRO', nombre: 'Jarra de Maestro',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        // --- Mezclas líquidas para jarras ---
+        'mezcla-jarra-normal':  { id: 'MEZCLA-JNORMAL',  nombre: 'Mezcla Jarra Normal',  vidaUtilDias: 15, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'mezcla-jarra-risotto': { id: 'MEZCLA-JRISOTTO', nombre: 'Mezcla Jarra Risotto', vidaUtilDias: 15, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'mezcla-jarra-maestro': { id: 'MEZCLA-JMAESTRO', nombre: 'Mezcla Jarra Maestro', vidaUtilDias: 15, conservacion: 'Refrigeración (0-4°C)', alergenos: '' }
     },
 
     // Empresa para etiquetas
