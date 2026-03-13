@@ -1029,34 +1029,45 @@
 
     <script src="data.js"></script>
     <script>
-        // Función auxiliar: buscar lote real de una materia prima por su codigoMP
-        function getLoteFromMP(codigoMP) {
+        // Función auxiliar: buscar lote y caducidad de una materia prima por su codigoMP
+        function getMPData(codigoMP) {
             if (codigoMP && RIA_DATA.materiaPrima && RIA_DATA.materiaPrima[codigoMP]) {
-                return RIA_DATA.materiaPrima[codigoMP].lote || '';
+                const mp = RIA_DATA.materiaPrima[codigoMP];
+                return { lote: mp.lote || '', caducidad: mp.caducidad || '' };
             }
-            return '';
+            return { lote: '', caducidad: '' };
         }
 
         // Build recipes for caldos from RIA_DATA
         const caldosRecipes = {};
         for (const [key, receta] of Object.entries(RIA_DATA.recetasCaldos)) {
-            caldosRecipes[key] = receta.ingredientes.map(ing => ({
-                ingredient: ing.nombre,
-                qty: ing.cantidad,
-                unit: ing.unidad,
-                lot: getLoteFromMP(ing.codigoMP) || ing.lotePrefijo || ''
-            }));
+            caldosRecipes[key] = receta.ingredientes.map(ing => {
+                const mpData = getMPData(ing.codigoMP);
+                return {
+                    ingredient: ing.nombre,
+                    qty: ing.cantidad,
+                    unit: ing.unidad,
+                    codigoMP: ing.codigoMP || '',
+                    lot: mpData.lote || ing.lotePrefijo || '',
+                    caducidad: mpData.caducidad || ''
+                };
+            });
         }
 
         // Build recipes for salsas from RIA_DATA
         const salsasRecipes = {};
         for (const [key, receta] of Object.entries(RIA_DATA.recetasSalsas)) {
-            salsasRecipes[key] = receta.ingredientes.map(ing => ({
-                ingredient: ing.nombre,
-                qty: ing.cantidad,
-                unit: ing.unidad,
-                lot: getLoteFromMP(ing.codigoMP) || ing.lotePrefijo || ''
-            }));
+            salsasRecipes[key] = receta.ingredientes.map(ing => {
+                const mpData = getMPData(ing.codigoMP);
+                return {
+                    ingredient: ing.nombre,
+                    qty: ing.cantidad,
+                    unit: ing.unidad,
+                    codigoMP: ing.codigoMP || '',
+                    lot: mpData.lote || ing.lotePrefijo || '',
+                    caducidad: mpData.caducidad || ''
+                };
+            });
         }
 
         // Build preelaboraciones types from RIA_DATA
@@ -1069,13 +1080,18 @@
 
         // Función auxiliar para mapear ingredientes de preelaboraciones con lotes reales
         function mapPrelabIngredients(ingredientes) {
-            return ingredientes.map(i => ({
-                ingredient: i.nombre,
-                qty: i.cantidad,
-                unit: i.unidad,
-                supplier: i.proveedor || '',
-                lot: getLoteFromMP(i.codigoMP) || i.lotePrefijo || ''
-            }));
+            return ingredientes.map(i => {
+                const mpData = getMPData(i.codigoMP);
+                return {
+                    ingredient: i.nombre,
+                    qty: i.cantidad,
+                    unit: i.unidad,
+                    supplier: i.proveedor || '',
+                    codigoMP: i.codigoMP || '',
+                    lot: mpData.lote || i.lotePrefijo || '',
+                    caducidad: mpData.caducidad || ''
+                };
+            });
         }
 
         // Map jarras
@@ -1262,7 +1278,16 @@
                         <td>${ing.ingredient}</td>
                         <td>${ing.qty ? ing.qty + ' ' + ing.unit : ing.unit}</td>
                         <td class="proporcional" data-qty="${ing.qty || 0}" data-unit="${ing.unit}">—</td>
-                        <td><input type="text" placeholder="Lote" value="${ing.lot}"></td>
+                        <td>
+                            <input type="text" placeholder="Lote" value="${ing.lot}"
+                                data-original-lot="${ing.lot}" data-mp="${ing.codigoMP}"
+                                onchange="onLoteChange(this)">
+                            <div class="caducidad-row" style="display:none; margin-top:4px;">
+                                <input type="text" placeholder="Caducidad (dd/mm/aaaa)" class="caducidad-input"
+                                    value="${ing.caducidad}" style="font-size:12px; padding:6px; border:2px solid #F57C00; border-radius:4px; width:100%;">
+                                <small style="color:#F57C00;">⚠ Lote nuevo — confirma caducidad</small>
+                            </div>
+                        </td>
                     `;
                     tbody.appendChild(row);
                 });
@@ -1315,7 +1340,16 @@
                         <td>${ing.ingredient}</td>
                         <td>${ing.qty ? ing.qty + ' ' + ing.unit : ing.unit}</td>
                         <td class="proporcional-salsa" data-qty="${ing.qty || 0}" data-unit="${ing.unit}">—</td>
-                        <td><input type="text" placeholder="Lote" value="${ing.lot}"></td>
+                        <td>
+                            <input type="text" placeholder="Lote" value="${ing.lot}"
+                                data-original-lot="${ing.lot}" data-mp="${ing.codigoMP}"
+                                onchange="onLoteChange(this)">
+                            <div class="caducidad-row" style="display:none; margin-top:4px;">
+                                <input type="text" placeholder="Caducidad (dd/mm/aaaa)" class="caducidad-input"
+                                    value="${ing.caducidad}" style="font-size:12px; padding:6px; border:2px solid #F57C00; border-radius:4px; width:100%;">
+                                <small style="color:#F57C00;">⚠ Lote nuevo — confirma caducidad</small>
+                            </div>
+                        </td>
                     `;
                     tbody.appendChild(row);
                 });
@@ -1755,7 +1789,7 @@
         }
 
         // === ENVÍO A GOOGLE SHEETS ===
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlJ1xPQE10Ad6MM4bNdYN5xiej4ENJ1vDR0-5H61mvfFtyCiJA5G6V1q4-TiUC2Vc0/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiYEXd1pXMNx2j3PrL3R1mfNQFVykbk3QGKmrZpbW7Ug2kWIelInGWUDN7UtPe1vxa/exec';
 
         function enviarASheets(datos) {
             fetch(APPS_SCRIPT_URL, {

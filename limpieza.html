@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIA-FORM-LIMP-001 — Registro de Limpieza</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-green: #1B5E20;
+            --light-green: #4CAF50;
+            --pale-green: #E8F5E9;
+            --red-warning: #D32F2F;
+            --orange: #E65100;
+            --blue: #1565C0;
+            --purple: #6A1B9A;
+            --gray-light: #F5F5F5;
+            --gray-medium: #BDBDBD;
+            --text-dark: #212121;
+            --text-light: #757575;
+        }
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            color: var(--text-dark);
+        }
+        body { padding-bottom: 100px; }
+        .container { max-width: 100%; padding: 16px; }
+        .header {
+            background: var(--blue);
+            color: white;
+            padding: 20px 16px;
+            margin: -16px -16px 20px -16px;
+            text-align: center;
+        }
+        .header h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+        .header p { font-size: 12px; opacity: 0.9; }
+
+        /* Worker selector */
+        .worker-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .worker-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--gray-medium);
+            border-radius: 12px;
+            background: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+        .worker-btn.active {
+            border-color: var(--blue);
+            background: #E3F2FD;
+            color: var(--blue);
+        }
+
+        /* Zone tabs */
+        .zone-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+        }
+        .zone-tab {
+            padding: 8px 14px;
+            border: 2px solid var(--gray-medium);
+            border-radius: 20px;
+            background: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .zone-tab.active {
+            border-color: var(--primary-green);
+            background: var(--pale-green);
+            color: var(--primary-green);
+        }
+        .zone-tab .badge {
+            display: inline-block;
+            background: var(--light-green);
+            color: white;
+            border-radius: 10px;
+            padding: 1px 7px;
+            font-size: 11px;
+            margin-left: 4px;
+        }
+        .zone-tab .badge.pending {
+            background: var(--orange);
+        }
+
+        /* Zone content */
+        .zone-panel { display: none; }
+        .zone-panel.active { display: block; }
+
+        /* Task list */
+        .task-group-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin: 16px 0 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #eee;
+        }
+        .task-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 10px;
+        }
+        .task-check {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--gray-medium);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .task-check.checked {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            color: white;
+        }
+        .task-check.na {
+            background: #EEE;
+            border-color: #CCC;
+            color: #999;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .task-info { flex: 1; }
+        .task-name { font-size: 15px; font-weight: 600; }
+        .task-freq {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+        .task-freq span {
+            display: inline-block;
+            background: #E3F2FD;
+            color: var(--blue);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-weight: 600;
+        }
+
+        /* Date selector */
+        .date-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            background: var(--gray-light);
+            padding: 10px 14px;
+            border-radius: 12px;
+        }
+        .date-row label { font-weight: 600; font-size: 14px; }
+        .date-row input[type=date] {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        /* Submit bar */
+        .submit-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #eee;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        .btn-submit {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+        }
+        .btn-primary:disabled {
+            background: var(--gray-medium);
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--text-dark);
+            flex: 0 0 auto;
+            padding: 14px 20px;
+        }
+
+        /* Summary / progress */
+        .progress-bar {
+            height: 6px;
+            background: #E0E0E0;
+            border-radius: 3px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--light-green);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        .summary-text {
+            font-size: 13px;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        /* Alert banner */
+        .alert-banner {
+            background: #FFF3E0;
+            border: 1px solid #FFB74D;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--orange);
+            display: none;
+        }
+        .alert-banner.show { display: block; }
+
+        /* Comments */
+        .comment-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+            margin-top: 12px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--primary-green);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 200;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.error { background: var(--red-warning); }
+
+        /* History section */
+        .history-section { margin-top: 24px; }
+        .history-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+        .history-row .date { font-weight: 600; }
+        .history-row .status-ok { color: var(--light-green); font-weight: 700; }
+        .history-row .status-partial { color: var(--orange); font-weight: 700; }
+        .history-row .status-missing { color: var(--red-warning); font-weight: 700; }
+
+        /* Responsive */
+        @media (min-width: 600px) {
+            .container { max-width: 600px; margin: 0 auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Registro de Limpieza</h1>
+        <p>RIA-FORM-LIMP-001 &middot; Rice in Action S.L.</p>
+    </div>
+
+    <!-- Worker selection -->
+    <div style="font-size:13px;color:var(--text-light);margin-bottom:6px;font-weight:600;">Quien limpia hoy:</div>
+    <div class="worker-bar" id="workerBar">
+        <div class="worker-btn" data-worker="I" onclick="selectWorker(this)">Isabel</div>
+        <div class="worker-btn" data-worker="G" onclick="selectWorker(this)">Gonzalo</div>
+        <div class="worker-btn" data-worker="Z" onclick="selectWorker(this)">Zahira</div>
+        <div class="worker-btn" data-worker="D" onclick="selectWorker(this)">Diego</div>
+    </div>
+
+    <!-- Date -->
+    <div class="date-row">
+        <label>Fecha:</label>
+        <input type="date" id="fechaLimpieza">
+    </div>
+
+    <!-- Alert banner for missing days -->
+    <div class="alert-banner" id="alertBanner"></div>
+
+    <!-- Progress -->
+    <div class="summary-text" id="summaryText">Selecciona trabajador y zona</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+    <!-- Zone tabs -->
+    <div class="zone-tabs" id="zoneTabs">
+        <div class="zone-tab active" data-zone="cuarto_frio" onclick="switchZone(this)">Cuarto Frio <span class="badge pending" id="badge_cuarto_frio">0</span></div>
+        <div class="zone-tab" data-zone="office" onclick="switchZone(this)">Office <span class="badge pending" id="badge_office">0</span></div>
+        <div class="zone-tab" data-zone="bunker" onclick="switchZone(this)">Bunker / General <span class="badge pending" id="badge_bunker">0</span></div>
+        <div class="zone-tab" data-zone="envasado" onclick="switchZone(this)">Envasado <span class="badge pending" id="badge_envasado">0</span></div>
+    </div>
+
+    <!-- ==================== CUARTO FRIO ==================== -->
+    <div class="zone-panel active" id="panel_cuarto_frio"></div>
+
+    <!-- ==================== OFFICE ==================== -->
+    <div class="zone-panel" id="panel_office"></div>
+
+    <!-- ==================== BUNKER / GENERAL ==================== -->
+    <div class="zone-panel" id="panel_bunker"></div>
+
+    <!-- ==================== ENVASADO ==================== -->
+    <div class="zone-panel" id="panel_envasado"></div>
+
+    <!-- Comments -->
+    <textarea class="comment-box" id="comentarios" placeholder="Incidencias o comentarios..."></textarea>
+
+    <!-- History -->
+    <div class="history-section" id="historySection" style="display:none;">
+        <div style="font-size:14px;font-weight:700;color:var(--text-light);margin-bottom:8px;">Ultimos 7 dias</div>
+        <div id="historyList"></div>
+    </div>
+</div>
+
+<!-- Submit bar -->
+<div class="submit-bar">
+    <button class="btn-submit btn-secondary" onclick="loadHistory()">Historial</button>
+    <button class="btn-submit btn-primary" id="btnSubmit" onclick="submitLimpieza()" disabled>Guardar registro</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== CONFIG ====================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiYEXd1pXMNx2j3PrL3R1mfNQFVykbk3QGKmrZpbW7Ug2kWIelInGWUDN7UtPe1vxa/exec';
+
+// ==================== ZONE DATA ====================
+// Based on actual scanned records from December 2025
+const ZONES = {
+    cuarto_frio: {
+        name: 'Cuarto Frio',
+        tasks: [
+            { id: 'cf_suelos',       name: 'Suelos',                freq: 'D',  freqText: 'Diario' },
+            { id: 'cf_utensilios',   name: 'Utensilios',            freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'cf_envasadora',   name: 'Envasadora',            freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'cf_superficies',  name: 'Superficies de trabajo', freq: 'S', freqText: 'Semanal' },
+            { id: 'cf_bajomesas',    name: 'Bajomesas',             freq: 'S',  freqText: 'Semanal' },
+            { id: 'cf_desagues',     name: 'Desagues',              freq: 'S',  freqText: 'Semanal' },
+            { id: 'cf_lavadora',     name: 'Lavadora arroz',        freq: 'DU', freqText: 'Tras cada servicio' },
+            { id: 'cf_dispensador',  name: 'Dispensador sal',        freq: 'DU', freqText: 'Tras cada servicio' },
+            { id: 'cf_profunda',     name: 'Limpieza profunda',     freq: 'Q',  freqText: 'Quincenal' }
+        ]
+    },
+    office: {
+        name: 'Office',
+        tasks: [
+            { id: 'of_suelos',      name: 'Suelos',                freq: 'D',  freqText: 'Diario' },
+            { id: 'of_pilas',       name: 'Pilas',                  freq: 'D',  freqText: 'Diario' },
+            { id: 'of_superficies', name: 'Superficies de trabajo', freq: 'S',  freqText: 'Semanal' },
+            { id: 'of_cubos',      name: 'Cubos de basura',         freq: 'S',  freqText: 'Semanal' },
+            { id: 'of_profunda',   name: 'Limpieza profunda',       freq: 'Q',  freqText: 'Quincenal' }
+        ]
+    },
+    bunker: {
+        name: 'Bunker / Almacenamiento / Zonas Generales',
+        tasks: [
+            { id: 'bk_suelos',     name: 'Suelos bunker',          freq: 'D',  freqText: 'Diario' },
+            { id: 'bk_mesas',      name: 'Mesas y carros',         freq: 'D',  freqText: 'Diario' },
+            { id: 'bk_mixers',     name: 'Mixers',                 freq: 'D',  freqText: 'Diario' },
+            { id: 'bk_desagues',   name: 'Desagues',               freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'bk_profunda_b', name: 'Limpieza profunda bunker', freq: 'Q', freqText: 'Quincenal' },
+            { id: 'bk_almacen',    name: 'Suelo almacen',          freq: 'D',  freqText: 'Diario' },
+            { id: 'bk_banos',      name: 'Banos / Vestuarios',     freq: 'D',  freqText: 'Diario' },
+            { id: 'bk_cam123',     name: 'Camaras 1-2-3',          freq: 'Q',  freqText: 'Quincenal' },
+            { id: 'bk_cam5',       name: 'Camara 5',               freq: 'Q',  freqText: 'Quincenal' },
+            { id: 'bk_cam6',       name: 'Camara 6',               freq: 'Q',  freqText: 'Quincenal' },
+            { id: 'bk_cam78',      name: 'Camaras 7-8',            freq: 'Q',  freqText: 'Quincenal' },
+            { id: 'bk_abatidor',   name: 'Abatidor',               freq: 'Q',  freqText: 'Quincenal' },
+            { id: 'bk_pasillos',   name: 'Suelos pasillos',        freq: 'D',  freqText: 'Diario' },
+            { id: 'bk_basura',     name: 'Cuarto de basura',       freq: 'S',  freqText: 'Semanal' },
+            { id: 'bk_profunda_g', name: 'Limpieza profunda general', freq: 'Q', freqText: 'Quincenal' }
+        ]
+    },
+    envasado: {
+        name: 'Zona Envasado',
+        tasks: [
+            { id: 'ev_suelos',      name: 'Suelos',                freq: 'D',  freqText: 'Diario' },
+            { id: 'ev_dispensador', name: 'Dispensador arroz',      freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_tolva',       name: 'Tolva',                 freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_cilindro',    name: 'Cilindro tolva',        freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_maq_salsas',  name: 'Maquina salsas',        freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_karstein',    name: 'Karstein',              freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_bomba',       name: 'Bomba',                 freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_molde_termo', name: 'Molde termoselladora',  freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_termosell',   name: 'Termoselladora',        freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_cintas',      name: 'Cintas mesa',           freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_molino',      name: 'Molino',                freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_superficies', name: 'Superficies de trabajo', freq: 'D', freqText: 'Diario' },
+            { id: 'ev_lavamanos',   name: 'Lavamanos',             freq: 'D',  freqText: 'Diario' },
+            { id: 'ev_desagues',    name: 'Desagues',              freq: 'DU', freqText: 'Tras cada uso' },
+            { id: 'ev_estanterias', name: 'Estanterias envases',   freq: 'S',  freqText: 'Semanal' },
+            { id: 'ev_cubos',       name: 'Cubos de basura',       freq: 'M',  freqText: 'Mensual' },
+            { id: 'ev_paredes',     name: 'Limpieza paredes/techos', freq: 'Q', freqText: 'Quincenal' }
+        ]
+    }
+};
+
+// Frequency priority for grouping: daily first, then after use, weekly, etc.
+const FREQ_ORDER = { 'D': 0, 'DU': 1, 'S': 2, 'Q': 3, 'M': 4, 'T': 5, 'A': 6 };
+const FREQ_LABELS = {
+    'D': 'DIARIO', 'DU': 'TRAS CADA USO', 'S': 'SEMANAL',
+    'Q': 'QUINCENAL', 'M': 'MENSUAL', 'T': 'TRIMESTRAL', 'A': 'ANUAL'
+};
+
+// State
+let selectedWorker = null;
+let taskStates = {}; // { taskId: 'done' | 'na' | null }
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+    // Set today's date
+    const today = new Date();
+    document.getElementById('fechaLimpieza').value = today.toISOString().split('T')[0];
+
+    // Render all zone panels
+    Object.keys(ZONES).forEach(zoneKey => {
+        renderZonePanel(zoneKey);
+    });
+
+    updateProgress();
+    checkMissingDays();
+});
+
+// ==================== RENDER ====================
+function renderZonePanel(zoneKey) {
+    const zone = ZONES[zoneKey];
+    const panel = document.getElementById('panel_' + zoneKey);
+
+    // Group tasks by frequency
+    const groups = {};
+    zone.tasks.forEach(t => {
+        if (!groups[t.freq]) groups[t.freq] = [];
+        groups[t.freq].push(t);
+    });
+
+    // Sort frequency groups
+    const sortedFreqs = Object.keys(groups).sort((a, b) => (FREQ_ORDER[a] || 99) - (FREQ_ORDER[b] || 99));
+
+    let html = '';
+    sortedFreqs.forEach(freq => {
+        html += '<div class="task-group-title">' + (FREQ_LABELS[freq] || freq) + '</div>';
+        groups[freq].forEach(task => {
+            taskStates[task.id] = null; // init
+            html += `
+                <div class="task-row" id="row_${task.id}">
+                    <div class="task-check" id="check_${task.id}" onclick="toggleTask('${task.id}')" title="Marcar como hecho"></div>
+                    <div class="task-info">
+                        <div class="task-name">${task.name}</div>
+                        <div class="task-freq"><span>${task.freqText}</span></div>
+                    </div>
+                    <div class="task-check" id="na_${task.id}" onclick="toggleNA('${task.id}')" title="No aplica hoy" style="width:36px;height:36px;font-size:11px;color:#999;border-color:#ddd;">N/A</div>
+                </div>`;
+        });
+    });
+
+    panel.innerHTML = html;
+}
+
+// ==================== INTERACTIONS ====================
+function selectWorker(el) {
+    document.querySelectorAll('.worker-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedWorker = el.dataset.worker;
+    updateSubmitState();
+}
+
+function switchZone(tab) {
+    document.querySelectorAll('.zone-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.zone-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel_' + tab.dataset.zone).classList.add('active');
+}
+
+function toggleTask(taskId) {
+    const el = document.getElementById('check_' + taskId);
+    const naEl = document.getElementById('na_' + taskId);
+
+    if (taskStates[taskId] === 'done') {
+        taskStates[taskId] = null;
+        el.classList.remove('checked');
+        el.textContent = '';
+    } else {
+        taskStates[taskId] = 'done';
+        el.classList.add('checked');
+        el.textContent = '\u2713';
+        // Remove NA if set
+        naEl.classList.remove('na');
+        naEl.textContent = 'N/A';
+    }
+    updateProgress();
+    updateSubmitState();
+}
+
+function toggleNA(taskId) {
+    const el = document.getElementById('na_' + taskId);
+    const checkEl = document.getElementById('check_' + taskId);
+
+    if (taskStates[taskId] === 'na') {
+        taskStates[taskId] = null;
+        el.classList.remove('na');
+        el.textContent = 'N/A';
+    } else {
+        taskStates[taskId] = 'na';
+        el.classList.add('na');
+        el.textContent = 'N/A';
+        // Remove done if set
+        checkEl.classList.remove('checked');
+        checkEl.textContent = '';
+    }
+    updateProgress();
+    updateSubmitState();
+}
+
+// ==================== PROGRESS ====================
+function updateProgress() {
+    let total = 0, completed = 0;
+    const zoneCounts = {};
+
+    Object.keys(ZONES).forEach(zoneKey => {
+        let zDone = 0, zTotal = 0;
+        ZONES[zoneKey].tasks.forEach(t => {
+            // Only count tasks that should be done based on frequency
+            // For daily view, we count D and DU tasks always, others only if checked
+            total++;
+            zTotal++;
+            if (taskStates[t.id] === 'done' || taskStates[t.id] === 'na') {
+                completed++;
+                zDone++;
+            }
+        });
+        zoneCounts[zoneKey] = { done: zDone, total: zTotal };
+    });
+
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('summaryText').textContent = completed + ' de ' + total + ' tareas completadas (' + pct + '%)';
+
+    // Update badges
+    Object.keys(zoneCounts).forEach(zk => {
+        const badge = document.getElementById('badge_' + zk);
+        const remaining = zoneCounts[zk].total - zoneCounts[zk].done;
+        badge.textContent = remaining;
+        if (remaining === 0) {
+            badge.classList.remove('pending');
+            badge.style.background = 'var(--light-green)';
+        } else {
+            badge.classList.add('pending');
+            badge.style.background = '';
+        }
+    });
+}
+
+function updateSubmitState() {
+    const btn = document.getElementById('btnSubmit');
+    const anyDone = Object.values(taskStates).some(v => v === 'done' || v === 'na');
+    btn.disabled = !selectedWorker || !anyDone;
+}
+
+// ==================== CHECK MISSING DAYS ====================
+function checkMissingDays() {
+    // Check localStorage for last submission dates
+    const lastSubmit = localStorage.getItem('ria_limpieza_last');
+    if (!lastSubmit) return;
+
+    const last = new Date(lastSubmit);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    last.setHours(0,0,0,0);
+
+    const diffDays = Math.floor((today - last) / (1000 * 60 * 60 * 24));
+    if (diffDays > 1) {
+        const banner = document.getElementById('alertBanner');
+        banner.innerHTML = '<strong>\u26A0 Atencion:</strong> Han pasado <strong>' + diffDays + ' dias</strong> sin registrar limpieza. Ultimo registro: ' + last.toLocaleDateString('es-ES') + '. Revisar con Cristina.';
+        banner.classList.add('show');
+    }
+}
+
+// ==================== SUBMIT ====================
+function submitLimpieza() {
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+
+    const fecha = document.getElementById('fechaLimpieza').value;
+    const comentarios = document.getElementById('comentarios').value;
+
+    // Build data per zone
+    const data = {
+        action: 'addLimpieza',
+        fecha: fecha,
+        trabajador: selectedWorker,
+        comentarios: comentarios,
+        timestamp: new Date().toISOString()
+    };
+
+    // Add task states
+    Object.keys(ZONES).forEach(zoneKey => {
+        ZONES[zoneKey].tasks.forEach(task => {
+            data[task.id] = taskStates[task.id] || '';
+        });
+    });
+
+    fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        // Save last submission date
+        localStorage.setItem('ria_limpieza_last', fecha);
+
+        showToast('Registro guardado correctamente');
+        btn.textContent = 'Guardado!';
+        setTimeout(() => {
+            btn.textContent = 'Guardar registro';
+            btn.disabled = false;
+        }, 3000);
+    })
+    .catch(err => {
+        showToast('Error: ' + err.message, true);
+        btn.textContent = 'Guardar registro';
+        btn.disabled = false;
+    });
+}
+
+// ==================== HISTORY ====================
+function loadHistory() {
+    const section = document.getElementById('historySection');
+    const list = document.getElementById('historyList');
+
+    if (section.style.display === 'none') {
+        section.style.display = 'block';
+        list.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:20px;">Cargando...</div>';
+
+        fetch(APPS_SCRIPT_URL + '?action=getRecords&sheet=limpieza&dias=7')
+        .then(r => r.json())
+        .then(records => {
+            if (!records || records.length === 0) {
+                list.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:20px;">No hay registros recientes</div>';
+                return;
+            }
+            let html = '';
+            records.forEach(rec => {
+                const totalTasks = Object.keys(taskStates).length;
+                const doneTasks = Object.keys(taskStates).filter(k => rec[k] === 'done').length;
+                const pct = Math.round((doneTasks / totalTasks) * 100);
+                let statusClass = 'status-ok';
+                let statusText = 'Completo';
+                if (pct < 50) { statusClass = 'status-missing'; statusText = pct + '%'; }
+                else if (pct < 100) { statusClass = 'status-partial'; statusText = pct + '%'; }
+
+                html += `<div class="history-row">
+                    <span class="date">${rec.fecha || '?'}</span>
+                    <span>${rec.trabajador || '?'}</span>
+                    <span class="${statusClass}">${statusText}</span>
+                </div>`;
+            });
+            list.innerHTML = html;
+        })
+        .catch(() => {
+            list.innerHTML = '<div style="text-align:center;color:var(--red-warning);padding:20px;">Error al cargar historial</div>';
+        });
+    } else {
+        section.style.display = 'none';
+    }
+}
+
+// ==================== TOAST ====================
+function showToast(msg, isError) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(() => { t.className = 'toast'; }, 3000);
+}
+</script>
+</body>
+</html>
