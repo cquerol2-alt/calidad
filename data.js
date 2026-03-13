@@ -526,7 +526,7 @@ const RIA_DATA = {
                 { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.5: 3, 3: 7, 5: 12, 10: 24, 15: 36, 20: 46 } },
                 // Flax fiber ELIMINADO por Isabel (03/2026)
                 { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.5: 12.5, 3: 25, 5: 44, 10: 89, 15: 133, 20: 170 } },
-                { nombre: 'Aroma jamón (OSO)',      unidad: 'g', cantidades: { 1.5: 58, 3: 117.6, 5: 21, 10: 42, 15: 63, 20: 170 },
+                { nombre: 'Aroma jamón (OSO)',      unidad: 'g', cantidades: { 1.5: 8.2, 3: 11.76, 5: 21, 10: 42, 15: 63, 20: 79.8 },
                   notas: 'Aumentado 20% (OSO) — valores actualizados 03/2026' },
                 { nombre: 'Manzanilla',             unidad: 'g', cantidades: { 1.5: 52, 3: 106, 5: 186, 10: 371, 15: 560, 20: 748 } },
                 { nombre: 'CMC',                    unidad: 'g', cantidades: { 1.5: 1.8, 3: 4.1, 5: 6.4, 10: 13, 15: 18, 20: 24 } },
