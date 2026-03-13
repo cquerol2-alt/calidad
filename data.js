@@ -828,6 +828,39 @@ const RIA_DATA = {
     tratamientosTermicos: ['Pasteurización'],
 
     // ========================================================================
+    // ETIQUETAS PRODUCTOS INTERMEDIOS (SATO TH208 / Easy Food 2)
+    // Datos para impresión de etiquetas con QR de trazabilidad
+    // ========================================================================
+    etiquetasIntermedios: {
+        'caldo-pescado':   { id: 'REC-CALDO-001', nombre: 'Caldo de Pescado',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'PESCADO, APIO, CRUSTÁCEOS (posible), MOLUSCOS (posible)' },
+        'caldo-negro':     { id: 'REC-CALDO-002', nombre: 'Caldo Negro',        vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'PESCADO, APIO, CRUSTÁCEOS (posible), MOLUSCOS (calamar)' },
+        'caldo-pollo':     { id: 'REC-CALDO-003', nombre: 'Caldo de Pollo',     vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'Trazas de APIO' },
+        'caldo-verduras':  { id: 'REC-CALDO-004', nombre: 'Caldo de Verduras',  vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'Trazas de APIO' },
+        'caldo-risotto':   { id: 'REC-CALDO-005', nombre: 'Caldo de Risotto',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE' },
+        'salsa-pescado':   { id: 'REC-SALSA-PESC', nombre: 'Salsa de Pescado',  vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'PESCADO, APIO, CRUSTÁCEOS (posible), MOLUSCOS (posible)' },
+        'salsa-negra':     { id: 'REC-SALSA-NEG',  nombre: 'Salsa Negra',       vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'PESCADO, APIO, MOLUSCOS (calamar)' },
+        'salsa-verduras':  { id: 'REC-SALSA-VERD', nombre: 'Salsa de Verduras', vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'Trazas de APIO' },
+        'salsa-pollo':     { id: 'REC-SALSA-POL',  nombre: 'Salsa de Pollo',    vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'Trazas de APIO' },
+        'salsa-tartufata': { id: 'REC-SALSA-TART', nombre: 'Salsa Tartufata',   vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE, SULFITOS' },
+        'salsa-boletus':   { id: 'REC-SALSA-BOL',  nombre: 'Salsa de Boletus',  vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE, SULFITOS' },
+        'salsa-setas':     { id: 'REC-SALSA-SET',  nombre: 'Salsa de Setas',    vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE' },
+        'salsa-queso':     { id: 'REC-SALSA-QUE',  nombre: 'Salsa de Queso',    vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE, SULFITOS' },
+        'salsa-iberico':   { id: 'REC-SALSA-IBE',  nombre: 'Salsa Ibérico',     vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'LECHE, SULFITOS' },
+        'prelab-azafran':  { id: 'PRELAB-AZAFRAN',     nombre: 'Agua de Azafrán',     vidaUtilDias: 3, conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'prelab-ajo':      { id: 'PRELAB-AJO',         nombre: 'Aceite de Ajo',       vidaUtilDias: 7, conservacion: 'Tª Ambiente', alergenos: '' },
+        'prelab-nora':     { id: 'PRELAB-NORA',        nombre: 'Aceite Rojo de Ñora', vidaUtilDias: 7, conservacion: 'Tª Ambiente', alergenos: '' },
+        'prelab-salmorreta':{ id: 'PRELAB-SALMORRETA', nombre: 'Salmorreta',          vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: '' }
+    },
+
+    // Empresa para etiquetas
+    empresa: {
+        nombre: 'Rice in Action S.L.',
+        rgseaa: '', // Pendiente
+        direccion: '', // Pendiente
+        telefono: '+34 629 606 995'
+    },
+
+    // ========================================================================
     // HELPER: Generar lote con fecha
     // ========================================================================
     generarLote(prefijo, fecha) {
