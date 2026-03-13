@@ -1224,7 +1224,16 @@
                         <td><input type="text" value="${ing.ingredient}" placeholder="Ingrediente"></td>
                         <td><input type="number" value="${ing.qty}" placeholder="Cantidad" step="0.1"></td>
                         <td><input type="text" value="${ing.supplier}" placeholder="Proveedor"></td>
-                        <td><input type="text" value="${ing.lot}" placeholder="Lote"></td>
+                        <td>
+                            <input type="text" value="${ing.lot}" placeholder="Lote"
+                                data-original-lot="${ing.lot}" data-mp="${ing.codigoMP}"
+                                onchange="onLoteChange(this)">
+                            <div class="caducidad-row" style="display:none; margin-top:4px;">
+                                <input type="text" placeholder="Caducidad (dd/mm/aaaa)" class="caducidad-input"
+                                    value="${ing.caducidad}" style="font-size:12px; padding:6px; border:2px solid #F57C00; border-radius:4px; width:100%;">
+                                <small style="color:#F57C00;">⚠ Lote nuevo — confirma caducidad</small>
+                            </div>
+                        </td>
                     `;
                     tbody.appendChild(row);
                 });
@@ -1437,6 +1446,10 @@
             // Enviar a Google Sheets
             enviarASheets(Object.assign({ formType: 'caldos' }, data));
 
+            // Enviar lotes actualizados si hay cambios
+            const lotesActualizados = recogerLotesActualizados();
+            enviarLotesActualizados(lotesActualizados);
+
             showToast('Caldo guardado exitosamente');
             document.getElementById('formCaldos').reset();
             initializeDateFields();
@@ -1476,6 +1489,10 @@
 
             // Enviar a Google Sheets
             enviarASheets(Object.assign({ formType: 'salsas' }, data));
+
+            // Enviar lotes actualizados si hay cambios
+            const lotesActualizadosSalsas = recogerLotesActualizados();
+            enviarLotesActualizados(lotesActualizadosSalsas);
 
             showToast('Salsa guardada exitosamente');
             document.getElementById('formSalsas').reset();
@@ -1531,6 +1548,10 @@
                 coccion: data.categoria === 'bases' ? { hora: data.coccionHora, temp: data.coccionTemp } : null,
                 abatimiento: data.categoria === 'bases' ? { horaInicio: data.abatHoraInicio, horaFin: data.abatHoraFin, temp: data.abatTemp } : null
             }, data));
+
+            // Enviar lotes actualizados si hay cambios
+            const lotesActualizadosPrelab = recogerLotesActualizados();
+            enviarLotesActualizados(lotesActualizadosPrelab);
 
             showToast('Preelaboración guardada exitosamente');
             document.getElementById('formPreelaboraciones').reset();
@@ -1695,6 +1716,44 @@
             }, 2500);
         }
 
+        // === DETECCIÓN DE CAMBIO DE LOTE ===
+        function onLoteChange(input) {
+            const originalLot = input.dataset.originalLot || '';
+            const currentLot = input.value.trim();
+            const caducidadRow = input.parentElement.querySelector('.caducidad-row');
+
+            if (currentLot !== originalLot && currentLot !== '') {
+                // Lote ha cambiado: mostrar campo de caducidad
+                caducidadRow.style.display = 'block';
+                input.style.borderColor = '#F57C00';
+            } else {
+                caducidadRow.style.display = 'none';
+                input.style.borderColor = '';
+            }
+        }
+
+        // Recoger todos los lotes que han cambiado en la página
+        function recogerLotesActualizados() {
+            const lotesActualizados = [];
+            document.querySelectorAll('input[data-mp][data-original-lot]').forEach(input => {
+                const mp = input.dataset.mp;
+                const originalLot = input.dataset.originalLot || '';
+                const currentLot = input.value.trim();
+
+                if (mp && currentLot && currentLot !== originalLot) {
+                    const caducidadInput = input.parentElement.querySelector('.caducidad-input');
+                    const caducidad = caducidadInput ? caducidadInput.value.trim() : '';
+                    lotesActualizados.push({
+                        codigoMP: mp,
+                        loteAnterior: originalLot,
+                        loteNuevo: currentLot,
+                        caducidad: caducidad
+                    });
+                }
+            });
+            return lotesActualizados;
+        }
+
         // === ENVÍO A GOOGLE SHEETS ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlJ1xPQE10Ad6MM4bNdYN5xiej4ENJ1vDR0-5H61mvfFtyCiJA5G6V1q4-TiUC2Vc0/exec';
 
@@ -1710,6 +1769,26 @@
                 }
             }).catch(err => {
                 console.error('Error enviando a Sheets:', err);
+            });
+        }
+
+        function enviarLotesActualizados(lotesActualizados) {
+            if (lotesActualizados.length === 0) return;
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    formType: 'updateMP',
+                    lotes: lotesActualizados
+                })
+            }).then(r => r.json()).then(res => {
+                if (res.exitoso) {
+                    console.log('Lotes actualizados en Sheets:', res.mensaje);
+                    showToast('Lotes actualizados en datos maestros');
+                } else {
+                    console.error('Error actualizando lotes:', res.mensaje);
+                }
+            }).catch(err => {
+                console.error('Error enviando lotes:', err);
             });
         }
     </script>

@@ -512,7 +512,11 @@
 
                     <div class="form-group">
                         <label for="loteEnvase">Lote del Envase</label>
-                        <input type="text" id="loteEnvase" placeholder="Lote del envase">
+                        <input type="text" id="loteEnvase" placeholder="Lote del envase" data-original-lot="" data-mp="MP50" onchange="onLoteChangeProd(this)">
+                        <div class="caducidad-row" id="loteEnvaseCaducidad" style="display:none; margin-top:4px;">
+                            <input type="text" placeholder="Caducidad (dd/mm/aaaa)" class="caducidad-input" style="font-size:13px; padding:8px; border:2px solid #F57C00; border-radius:6px; width:100%;">
+                            <small style="color:#F57C00; font-size:12px;">⚠ Lote nuevo — confirma caducidad</small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -538,7 +542,11 @@
 
                     <div class="form-group">
                         <label for="arrozLot">Lote de Arroz</label>
-                        <input type="text" id="arrozLot" placeholder="Lote del arroz">
+                        <input type="text" id="arrozLot" placeholder="Lote del arroz" data-original-lot="" data-mp="" onchange="onLoteChangeProd(this)">
+                        <div class="caducidad-row" id="arrozLotCaducidad" style="display:none; margin-top:4px;">
+                            <input type="text" placeholder="Caducidad (dd/mm/aaaa)" class="caducidad-input" style="font-size:13px; padding:8px; border:2px solid #F57C00; border-radius:6px; width:100%;">
+                            <small style="color:#F57C00; font-size:12px;">⚠ Lote nuevo — confirma caducidad</small>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -1293,15 +1301,19 @@
             if (!isSalsa && producto.arroz) {
                 document.getElementById('arrozType').value = producto.arroz;
                 const arrozLotInput = document.getElementById('arrozLot');
-                // Solo rellenar si el campo está vacío (no sobreescribir si el usuario ya puso algo)
+                let arrozMP = '';
+                let arrozLote = '';
+                if (producto.arroz === 'Maratelli' && RIA_DATA.materiaPrima.MP24) {
+                    arrozMP = 'MP24'; arrozLote = RIA_DATA.materiaPrima.MP24.lote || '';
+                } else if (producto.arroz === 'Bahía' && RIA_DATA.materiaPrima.MP25) {
+                    arrozMP = 'MP25'; arrozLote = RIA_DATA.materiaPrima.MP25.lote || '';
+                } else if (producto.arroz === 'Marisma' && RIA_DATA.materiaPrima.MP26) {
+                    arrozMP = 'MP26'; arrozLote = RIA_DATA.materiaPrima.MP26.lote || '';
+                }
+                arrozLotInput.dataset.mp = arrozMP;
+                arrozLotInput.dataset.originalLot = arrozLote;
                 if (!arrozLotInput.value) {
-                    if (producto.arroz === 'Maratelli' && RIA_DATA.materiaPrima.MP24 && RIA_DATA.materiaPrima.MP24.lote) {
-                        arrozLotInput.value = RIA_DATA.materiaPrima.MP24.lote;
-                    } else if (producto.arroz === 'Bahía' && RIA_DATA.materiaPrima.MP25 && RIA_DATA.materiaPrima.MP25.lote) {
-                        arrozLotInput.value = RIA_DATA.materiaPrima.MP25.lote;
-                    } else if (producto.arroz === 'Marisma' && RIA_DATA.materiaPrima.MP26 && RIA_DATA.materiaPrima.MP26.lote) {
-                        arrozLotInput.value = RIA_DATA.materiaPrima.MP26.lote;
-                    }
+                    arrozLotInput.value = arrozLote;
                 }
             }
 
@@ -1310,6 +1322,7 @@
             if (loteEnvaseInput && !loteEnvaseInput.value) {
                 if (RIA_DATA.materiaPrima.MP50 && RIA_DATA.materiaPrima.MP50.lote) {
                     loteEnvaseInput.value = RIA_DATA.materiaPrima.MP50.lote;
+                    loteEnvaseInput.dataset.originalLot = RIA_DATA.materiaPrima.MP50.lote;
                 }
             }
 
@@ -1888,6 +1901,10 @@
                 ...fotos
             });
 
+            // Enviar lotes actualizados si han cambiado
+            const lotesActualizados = recogerLotesActualizadosProd();
+            enviarLotesActualizados(lotesActualizados);
+
             alert('Línea guardada correctamente');
             newLineHandler();
         }
@@ -2052,6 +2069,68 @@
         });
 
         // === ENVÍO A GOOGLE SHEETS ===
+        // === DETECCIÓN DE CAMBIO DE LOTE ===
+        function onLoteChangeProd(input) {
+            const originalLot = input.dataset.originalLot || '';
+            const currentLot = input.value.trim();
+            const caducidadRow = input.parentElement.querySelector('.caducidad-row');
+            if (!caducidadRow) return;
+
+            if (currentLot !== originalLot && currentLot !== '') {
+                caducidadRow.style.display = 'block';
+                input.style.borderColor = '#F57C00';
+            } else {
+                caducidadRow.style.display = 'none';
+                input.style.borderColor = '';
+            }
+        }
+
+        function recogerLotesActualizadosProd() {
+            const lotesActualizados = [];
+            // Arroz
+            const arrozInput = document.getElementById('arrozLot');
+            if (arrozInput.dataset.mp && arrozInput.value.trim() && arrozInput.value.trim() !== arrozInput.dataset.originalLot) {
+                const cadInput = document.getElementById('arrozLotCaducidad').querySelector('.caducidad-input');
+                lotesActualizados.push({
+                    codigoMP: arrozInput.dataset.mp,
+                    loteAnterior: arrozInput.dataset.originalLot || '',
+                    loteNuevo: arrozInput.value.trim(),
+                    caducidad: cadInput ? cadInput.value.trim() : ''
+                });
+            }
+            // Envase
+            const envaseInput = document.getElementById('loteEnvase');
+            if (envaseInput.dataset.mp && envaseInput.value.trim() && envaseInput.value.trim() !== envaseInput.dataset.originalLot) {
+                const cadInput = document.getElementById('loteEnvaseCaducidad').querySelector('.caducidad-input');
+                lotesActualizados.push({
+                    codigoMP: envaseInput.dataset.mp,
+                    loteAnterior: envaseInput.dataset.originalLot || '',
+                    loteNuevo: envaseInput.value.trim(),
+                    caducidad: cadInput ? cadInput.value.trim() : ''
+                });
+            }
+            return lotesActualizados;
+        }
+
+        function enviarLotesActualizados(lotesActualizados) {
+            if (!lotesActualizados || lotesActualizados.length === 0) return;
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    formType: 'updateMP',
+                    lotes: lotesActualizados
+                })
+            }).then(r => r.json()).then(res => {
+                if (res.exitoso) {
+                    console.log('Lotes actualizados en Sheets:', res.mensaje);
+                } else {
+                    console.error('Error actualizando lotes:', res.mensaje);
+                }
+            }).catch(err => {
+                console.error('Error enviando lotes:', err);
+            });
+        }
+
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlJ1xPQE10Ad6MM4bNdYN5xiej4ENJ1vDR0-5H61mvfFtyCiJA5G6V1q4-TiUC2Vc0/exec';
 
         function enviarASheets(datos) {
