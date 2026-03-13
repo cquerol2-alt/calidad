@@ -277,7 +277,7 @@ const RIA_DATA = {
                 { nombre: 'Aceite de ajo', cantidad: '800', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
                 { nombre: 'Umami (Givaudan)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
                 { nombre: 'Goma xantana', cantidad: '10', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP07' },
-                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' }
+                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRANG', codigoMP: 'MP48' }
             ]
         },
         negro: {
@@ -305,7 +305,7 @@ const RIA_DATA = {
                 { nombre: 'Aceite de girasol', cantidad: '2000', unidad: 'ml', tipo: 'proveedor', codigoMP: 'MP04', proveedor: 'Coreysa' },
                 { nombre: 'Umami (Givaudan)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
                 { nombre: 'Goma xantana', cantidad: '10', unidad: 'g', tipo: 'proveedor', proveedor: '', codigoMP: 'MP07' },
-                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' },
+                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRANG', codigoMP: 'MP48' },
                 { nombre: 'Salmorreta', cantidad: '120', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-SALMORRETA', codigoMP: 'MP43' },
                 { nombre: 'Hazelnut (colorante Sensient)', cantidad: '120', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP09', proveedor: 'Sensient' }
             ]
@@ -326,7 +326,7 @@ const RIA_DATA = {
                 { nombre: 'Salmorreta', cantidad: '350', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-SALMORRETA', codigoMP: 'MP43' },
                 { nombre: 'Pimentón', cantidad: '60', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP10' },
                 { nombre: 'Goma xantana', cantidad: '8.26', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP07' },
-                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRAN', codigoMP: 'MP48' }
+                { nombre: 'Agua de azafrán', cantidad: '400', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRANG', codigoMP: 'MP48' }
             ]
         },
         risotto: {
@@ -374,20 +374,35 @@ const RIA_DATA = {
         verduras: {
             nombre: 'Salsa de Verduras',
             tipo: 'la-santa',
+            codigo: 'REC-SALSA-VERD',
+            notas: 'Se usa Salsa Verduras Concentrada como base, luego se diluye con agua y agua almidonada',
             ingredientes: [
-                { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Caldo de verduras', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
+                { nombre: 'Salsa Verduras Concentrada', cantidad: '1800', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-SVCONC', codigoMP: 'MP54' },
+                { nombre: 'Agua', cantidad: '8000', unidad: 'ml', tipo: 'na' },
+                { nombre: 'Agua almidonada', cantidad: '230', unidad: 'ml', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-ALMIDON', codigoMP: 'MP49' }
             ]
         },
         pollo: {
             nombre: 'Salsa de Pollo',
             tipo: 'la-santa',
+            codigo: 'REC-SALSA-POL',
+            notas: 'Receta por 1L Paeller y para 6 latas (18L). Hazelnut = colorante Sensient.',
+            // Receta estándar: 6 latas Paeller de Pollo (6 x 3L = 18L)
             ingredientes: [
-                { nombre: 'Base salmorreta', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Caldo de pollo', cantidad: '', unidad: 'según receta', lotePrefijo: 'RIA-' },
-                { nombre: 'Sal', cantidad: '', unidad: 'al gusto', lotePrefijo: '' }
-            ]
+                { nombre: 'Paeller de Pollo (6 latas x 3L)', cantidad: '18000', unidad: 'ml', tipo: 'proveedor', codigoMP: 'MP03', proveedor: 'Paeller' },
+                { nombre: 'Agua', cantidad: '600', unidad: 'g', tipo: 'na' },
+                { nombre: 'Aceite de ajo', cantidad: '520', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AJO', codigoMP: 'MP46' },
+                { nombre: 'Aceite de oliva', cantidad: '288', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP05', proveedor: 'Makro' },
+                { nombre: 'Grasa de pollo', cantidad: '480', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP14' },
+                { nombre: 'Salmorreta', cantidad: '584', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-SALMORRETA', codigoMP: 'MP43' },
+                { nombre: 'Umami (Givaudan)', cantidad: '0.28', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP06', proveedor: 'Givaudan' },
+                { nombre: 'Hazelnut (colorante Sensient)', cantidad: '225', unidad: 'g', tipo: 'proveedor', codigoMP: 'MP09', proveedor: 'Sensient' }
+            ],
+            // Proporción por litro de Paeller (para escalar)
+            porLitro: {
+                agua: 0.75, aceiteAjo: 0.21, aceiteOliva: 0.12,
+                grasaPollo: 0.20, salmorreta: 0.24, umami: 0.116, hazelnut: 12.85
+            }
         },
 
         // --- Salsas Cremosas (recetas con CMC nuevo, 1,2 g/L) ---
@@ -531,10 +546,8 @@ const RIA_DATA = {
             'jarra-pescado': {
                 nombre: 'Jarra de Pescado',
                 ingredientes: [
-                    { nombre: 'Gamba', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Rape', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Sepia', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Galera', cantidad: '', unidad: 'kg' }
+                    { nombre: 'Pollo deshidratado', cantidad: '1800', unidad: 'g', codigoMP: 'MP35', tipo: 'proveedor' },
+                    { nombre: 'Espinaca deshidratada', cantidad: '490', unidad: 'g', codigoMP: 'MP33', tipo: 'proveedor' }
                 ]
             },
             'jarra-verduras': {
@@ -558,10 +571,12 @@ const RIA_DATA = {
             'jarra-maestro': {
                 nombre: 'Jarra de Maestro',
                 ingredientes: [
-                    { nombre: 'Preelaboración polvos', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Hazelnut', cantidad: '', unidad: 'kg' },
-                    { nombre: 'Sal', cantidad: '', unidad: 'kg' }
-                ]
+                    { nombre: 'Preparado Maestro (polvos)', cantidad: '', unidad: 'según formato x1/x2', tipo: 'preelaboracion', lotePrefijo: 'RIA-PREP-MAESTRO',
+                      notas: 'x1 (16 jarras): Umami 132g, tartárico 0.11g, azúcar 110g, sal 220g | x2 (32 jarras): duplicar' },
+                    { nombre: 'Hazelnut (colorante Sensient)', cantidad: '', unidad: 'g', codigoMP: 'MP09', tipo: 'proveedor', proveedor: 'Sensient' },
+                    { nombre: 'Agua de azafrán (Pequeña)', cantidad: '300', unidad: 'g', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-AZAFRANP', codigoMP: 'MP48' }
+                ],
+                notas: 'Agua azafrán: 1x300g para 16 jarras (x1), 2x300g para 32 jarras (x2). La sal va dentro del preparado maestro, no se añade aparte.'
             }
         },
 
@@ -628,6 +643,17 @@ const RIA_DATA = {
                 ],
                 notas: 'Conservación: congelación'
             },
+            'salsa-verduras-concentrada': {
+                nombre: 'Salsa Verduras Concentrada',
+                codigo: 'PRELAB-SVCONC',
+                lotePrefijo: 'RIA-PRELAB-SVCONC',
+                codigoMP: 'MP54',
+                ingredientes: [
+                    { nombre: 'Salmorreta', cantidad: '', unidad: 'según receta', tipo: 'preelaboracion', lotePrefijo: 'RIA-PRELAB-SALMORRETA', codigoMP: 'MP43' },
+                    { nombre: 'Caldo de verduras', cantidad: '', unidad: 'según receta', tipo: 'preelaboracion', lotePrefijo: 'RIA-VERDURAS' }
+                ],
+                notas: 'Concentrado base. Para la salsa final: 1800g concentrado + 8L agua + 230ml agua almidonada'
+            },
             'agua-almidonada': {
                 nombre: 'Agua Almidonada',
                 codigo: 'PRELAB-ALMIDON',
@@ -663,6 +689,30 @@ const RIA_DATA = {
                     { nombre: 'Cebolla deshidratada', cantidad: '300', unidad: 'g', codigoMP: 'MP34', tipo: 'proveedor' }
                 ],
                 notas: 'Se pesa pollo y verduras juntos, se registra lote antes de incorporar al caldo'
+            },
+            'prep-maestro-x1': {
+                nombre: 'Preparado Maestro x1 (16 jarras)',
+                codigo: 'PRELAB-MAESTRO-X1',
+                lotePrefijo: 'RIA-PREP-MAESTRO',
+                ingredientes: [
+                    { nombre: 'Umami (Givaudan)', cantidad: '132', unidad: 'g', codigoMP: 'MP06', tipo: 'proveedor', proveedor: 'Givaudan' },
+                    { nombre: 'Ácido tartárico', cantidad: '0.11', unidad: 'g', codigoMP: 'MP51', tipo: 'proveedor' },
+                    { nombre: 'Azúcar', cantidad: '110', unidad: 'g', codigoMP: 'MP52', tipo: 'proveedor' },
+                    { nombre: 'Sal', cantidad: '220', unidad: 'g', codigoMP: 'MP53', tipo: 'proveedor' }
+                ],
+                notas: 'Para 16 jarras. x2 (32 jarras): duplicar todas las cantidades'
+            },
+            'prep-maestro-x2': {
+                nombre: 'Preparado Maestro x2 (32 jarras)',
+                codigo: 'PRELAB-MAESTRO-X2',
+                lotePrefijo: 'RIA-PREP-MAESTRO',
+                ingredientes: [
+                    { nombre: 'Umami (Givaudan)', cantidad: '264', unidad: 'g', codigoMP: 'MP06', tipo: 'proveedor', proveedor: 'Givaudan' },
+                    { nombre: 'Ácido tartárico', cantidad: '0.22', unidad: 'g', codigoMP: 'MP51', tipo: 'proveedor' },
+                    { nombre: 'Azúcar', cantidad: '220', unidad: 'g', codigoMP: 'MP52', tipo: 'proveedor' },
+                    { nombre: 'Sal', cantidad: '440', unidad: 'g', codigoMP: 'MP53', tipo: 'proveedor' }
+                ],
+                notas: 'Para 32 jarras. Es el doble del x1'
             }
         },
 
@@ -718,12 +768,13 @@ const RIA_DATA = {
         MP12: { nombre: 'Almidón', proveedor: 'Ingredion', formato: 'Bolsa 1kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1W4DRpTJzUE4WF7gKSv9ER1IsRpOpTNWG', lote: '3NG7023', caducidad: '01/04/2026' },
         // --- Mantequilla y lácteos ---
         MP13: { nombre: 'Mantequilla', proveedor: ['Presidente', 'Otro'], proveedorMultiple: true, formato: 'Bloque 2,5kg', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, lote: '252761', caducidad: '01/04/2026' },
-        MP14: { nombre: 'Queso parmesano', proveedor: '', formato: 'Cuña', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1kAaJnflNAL66nUzOcxYCig6vM3PEloEc', lote: 'L075344', caducidad: '10/04/2026' },
+        MP14: { nombre: 'Parmigiano Reggiano', proveedor: '', formato: 'Cuña', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1kAaJnflNAL66nUzOcxYCig6vM3PEloEc', lote: 'L086029P', caducidad: '29/08/2026' },
+        MP14b: { nombre: 'Gran Padano', proveedor: '', formato: 'Cuña', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', lote: 'L046036', caducidad: '06/06/2026' },
         // --- (MP15-MP18 eliminados: gamba, rape, sepia, galera no se usan como ingrediente) ---
         // --- Especias ---
         MP19: { nombre: 'Azafrán', proveedor: 'Verdú Cantó', formato: 'Sobres 1g', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Fjkdysu9PyUo8el9pdcDWsJDhPaKrmFC', lote: 'H116092514', caducidad: '11/2028' },
         // --- Embutido ---
-        MP20: { nombre: 'Jamón ibérico', proveedor: 'Enrique Tomás', formato: 'Pieza envasada', conservacion: 'Congelación', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1VXZ5E4jgj4B6OyN6mHkMoZweataGnI-j' },
+        MP20: { nombre: 'Jamón ibérico (en trozos)', proveedor: 'Enrique Tomás', formato: 'Pieza envasada', conservacion: 'Congelación', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1VXZ5E4jgj4B6OyN6mHkMoZweataGnI-j', lote: '25009100408', caducidad: '09/03/2026' },
         // --- Setas y hongos ---
         MP21: { nombre: 'Harina Fina de Boletus', proveedor: 'Honza', formato: 'Bolsa plástico (5 uds/caja)', conservacion: 'Tª Ambiente (lugar fresco y seco)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '020 - F - CA - HARINA FINA DE BOLETUS.pdf', vidaUtil: '3 años desde deshidratación', alergenos: [], certificaciones: ['IFS Food'], lote: 'H2621', caducidad: '30/04/2027' },
         MP22: { nombre: 'Mezcla de Setas Básica con Boletus', proveedor: 'Honza', formato: 'Granel 10kg (bolsa polietileno)', conservacion: 'Congelación (-18°C)', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI', fichaLocal: '123-CA - MEZCLA DE SETAS BASICA.pdf', vidaUtil: '3 años desde congelación', alergenos: [], certificaciones: ['IFS Food'], lote: 'H4879', caducidad: '30/04/2027' },
@@ -878,6 +929,7 @@ const RIA_DATA = {
         'prelab-nora':     { id: 'PRELAB-NORA',        nombre: 'Aceite Rojo de Ñora', vidaUtilDias: 90,  conservacion: 'Tª Ambiente (proteger de la luz)', alergenos: '' },
         'prelab-salmorreta':{ id: 'PRELAB-SALMORRETA', nombre: 'Salmorreta',          vidaUtilDias: 360, conservacion: 'Congelación', alergenos: '' },
         'prelab-almidon':  { id: 'PRELAB-ALMIDON',     nombre: 'Agua Almidonada',     vidaUtilDias: 3,   conservacion: 'Refrigeración (0-4°C)', alergenos: '' },
+        'prelab-svconc':   { id: 'PRELAB-SVCONC',      nombre: 'Salsa Verduras Concentrada', vidaUtilDias: 5, conservacion: 'Refrigeración (0-4°C)', alergenos: 'Trazas de APIO' },
         'pesado-verduras': { id: 'PRELAB-PESADO-VERD', nombre: 'Pesado Verduras',     vidaUtilDias: 180, conservacion: 'Tª Ambiente', alergenos: '' },
         'pesado-risotto':  { id: 'PRELAB-PESADO-RIS',  nombre: 'Pesado Risotto',      vidaUtilDias: 180, conservacion: 'Tª Ambiente', alergenos: '' }
     },
