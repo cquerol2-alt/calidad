@@ -391,6 +391,72 @@
             background: #45A049;
         }
 
+        /* Foto lote: botón cámara + preview junto al input */
+        .lot-with-photo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lot-with-photo input[type="text"] {
+            flex: 1;
+        }
+        .btn-camera-lot {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-camera-lot:active {
+            background: #145216;
+        }
+        .lot-photo-input {
+            display: none;
+        }
+        .lot-photo-preview {
+            margin-top: 4px;
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .lot-photo-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 2px solid #C8E6C9;
+        }
+        .ocr-status {
+            font-size: 12px;
+            margin-top: 2px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .ocr-status.scanning {
+            color: #F57C00;
+            background: #FFF3E0;
+        }
+        .ocr-status.success {
+            color: #388E3C;
+            background: #E8F5E9;
+        }
+        .ocr-status.error {
+            color: #D32F2F;
+            background: #FFEBEE;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .scanning { animation: pulse 1.2s infinite; }
+
         .hidden-section {
             display: none;
         }
@@ -512,7 +578,12 @@
 
                     <div class="form-group">
                         <label for="loteEnvase">Lote del Envase</label>
-                        <input type="text" id="loteEnvase" placeholder="Lote del envase" data-original-lot="" data-mp="MP50" onchange="onLoteChangeProd(this)">
+                        <div class="lot-with-photo">
+                            <input type="text" id="loteEnvase" placeholder="Lote del envase" data-original-lot="" data-mp="MP50" onchange="onLoteChangeProd(this)">
+                            <button type="button" class="btn-camera-lot" onclick="triggerLotPhoto('envLotPhoto')">📷</button>
+                            <input type="file" id="envLotPhoto" class="lot-photo-input" accept="image/*" capture="environment" onchange="previewLotPhoto(this, 'envLotPreview')">
+                        </div>
+                        <div class="lot-photo-preview" id="envLotPreview"></div>
                         <div class="caducidad-row" id="loteEnvaseCaducidad" style="display:none; margin-top:4px;">
                             <input type="text" placeholder="Caducidad (dd/mm/aaaa)" class="caducidad-input" style="font-size:13px; padding:8px; border:2px solid #F57C00; border-radius:6px; width:100%;">
                             <small style="color:#F57C00; font-size:12px;">⚠ Lote nuevo — confirma caducidad</small>
@@ -542,7 +613,12 @@
 
                     <div class="form-group">
                         <label for="arrozLot">Lote de Arroz</label>
-                        <input type="text" id="arrozLot" placeholder="Lote del arroz" data-original-lot="" data-mp="" onchange="onLoteChangeProd(this)">
+                        <div class="lot-with-photo">
+                            <input type="text" id="arrozLot" placeholder="Lote del arroz" data-original-lot="" data-mp="" onchange="onLoteChangeProd(this)">
+                            <button type="button" class="btn-camera-lot" onclick="triggerLotPhoto('arrozLotPhoto')">📷</button>
+                            <input type="file" id="arrozLotPhoto" class="lot-photo-input" accept="image/*" capture="environment" onchange="previewLotPhoto(this, 'arrozLotPreview')">
+                        </div>
+                        <div class="lot-photo-preview" id="arrozLotPreview"></div>
                         <div class="caducidad-row" id="arrozLotCaducidad" style="display:none; margin-top:4px;">
                             <input type="text" placeholder="Caducidad (dd/mm/aaaa)" class="caducidad-input" style="font-size:13px; padding:8px; border:2px solid #F57C00; border-radius:6px; width:100%;">
                             <small style="color:#F57C00; font-size:12px;">⚠ Lote nuevo — confirma caducidad</small>
@@ -582,7 +658,12 @@
                     <div id="caldoFields">
                         <div class="form-group">
                             <label for="caldoLot">Lote Caldo</label>
-                            <input type="text" id="caldoLot" placeholder="Auto-generado basado en producto">
+                            <div class="lot-with-photo">
+                                <input type="text" id="caldoLot" placeholder="Auto-generado basado en producto">
+                                <button type="button" class="btn-camera-lot" onclick="triggerLotPhoto('caldoLotPhoto')">📷</button>
+                                <input type="file" id="caldoLotPhoto" class="lot-photo-input" accept="image/*" capture="environment" onchange="previewLotPhoto(this, 'caldoLotPreview')">
+                            </div>
+                            <div class="lot-photo-preview" id="caldoLotPreview"></div>
                         </div>
 
                         <div class="form-group">
@@ -629,7 +710,12 @@
                     <div id="salsaFields">
                         <div class="form-group">
                             <label for="salsaLot">Lote Salsa</label>
-                            <input type="text" id="salsaLot" placeholder="Ej: SALSA-2026-001">
+                            <div class="lot-with-photo">
+                                <input type="text" id="salsaLot" placeholder="Ej: SALSA-2026-001">
+                                <button type="button" class="btn-camera-lot" onclick="triggerLotPhoto('salsaLotPhoto')">📷</button>
+                                <input type="file" id="salsaLotPhoto" class="lot-photo-input" accept="image/*" capture="environment" onchange="previewLotPhoto(this, 'salsaLotPreview')">
+                            </div>
+                            <div class="lot-photo-preview" id="salsaLotPreview"></div>
                         </div>
 
                         <div class="form-group">
@@ -916,6 +1002,7 @@
         <button onclick="saveForm()">💾 Guardar</button>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="data.js"></script>
     <script>
         // Multi-line record state
@@ -2020,6 +2107,118 @@
         // PHOTO HANDLING
         // ============================================================================
 
+        // === OCR DE LOTES (cámara + reconocimiento automático) ===
+        function triggerLotPhoto(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        // Patrones de lote SATO TH208 — formato etiqueta:
+        //   LOTE: RIA-PESCADO-130326
+        //   ELAB: 13/03/2026        CAD: 18/03/2026
+        //   Refrigeracion (0-4C)
+        function extractLotFromText(text) {
+            // Normalizar: limpiar caracteres OCR
+            const clean = text.replace(/[|]/g, 'l').replace(/[{}]/g, '');
+            const lines = clean.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            let lote = '';
+
+            for (const line of lines) {
+                // LOTE: RIA-PESCADO-130326
+                if (!lote) {
+                    const loteMatch = line.match(/L\s*O\s*T\s*E\s*[:;.\s]\s*(.+)/i);
+                    if (loteMatch) lote = loteMatch[1].trim().replace(/\s+/g, '');
+                }
+                // Patrón RIA-XXX-DDMMYY suelto (sin etiqueta LOTE:)
+                if (!lote) {
+                    const riaMatch = line.match(/(RIA[-–][A-Z]+-\d{6})/i);
+                    if (riaMatch) lote = riaMatch[1].replace(/–/g, '-');
+                }
+                if (lote) break;
+            }
+
+            // Fallback: código alfanumérico largo (lotes de proveedor)
+            if (!lote) {
+                for (const line of lines) {
+                    const codeMatch = line.match(/([A-Z0-9][-A-Z0-9]{4,})/i);
+                    if (codeMatch && !codeMatch[1].match(/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/)
+                        && !codeMatch[1].match(/^(LOTE|ELAB|CAD|Caldo|Salsa|Aceite|Refrigeracion)/i)) {
+                        lote = codeMatch[1];
+                        break;
+                    }
+                }
+            }
+
+            return { lote };
+        }
+
+        async function ocrFromPhoto(imageFile) {
+            const worker = await Tesseract.createWorker('spa');
+            const { data } = await worker.recognize(imageFile);
+            await worker.terminate();
+            return data.text;
+        }
+
+        async function previewLotPhoto(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (!input.files || input.files.length === 0) return;
+            const file = input.files[0];
+            if (!file.type.startsWith('image/')) return;
+
+            // Mostrar preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                preview.appendChild(img);
+                const status = document.createElement('div');
+                status.className = 'ocr-status scanning';
+                status.textContent = 'Leyendo etiqueta...';
+                preview.appendChild(status);
+            };
+            reader.readAsDataURL(file);
+
+            // Buscar el input de lote asociado (hermano en .lot-with-photo)
+            const lotInput = input.parentElement.querySelector('input[type="text"]');
+            const td = input.closest('td') || input.closest('.form-group');
+
+            try {
+                const text = await ocrFromPhoto(file);
+                console.log('OCR texto:', text);
+                const result = extractLotFromText(text);
+                const statusEl = preview.querySelector('.ocr-status');
+
+                if (result.lote) {
+                    lotInput.value = result.lote;
+                    lotInput.dispatchEvent(new Event('change'));
+                    statusEl.className = 'ocr-status success';
+                    statusEl.textContent = '✓ Lote: ' + result.lote;
+                } else {
+                    statusEl.className = 'ocr-status error';
+                    statusEl.textContent = 'No se detectó lote — escríbelo manualmente';
+                }
+            } catch (err) {
+                console.error('OCR error:', err);
+                const statusEl = preview.querySelector('.ocr-status');
+                if (statusEl) {
+                    statusEl.className = 'ocr-status error';
+                    statusEl.textContent = 'Error OCR — escribe el lote manualmente';
+                }
+            }
+        }
+
+        async function collectLotPhotos() {
+            const lotPhotoIds = ['arrozLotPhoto', 'caldoLotPhoto', 'salsaLotPhoto', 'envLotPhoto'];
+            const result = {};
+            for (const id of lotPhotoIds) {
+                const input = document.getElementById(id);
+                if (input && input.files && input.files.length > 0) {
+                    result[id.replace('Photo', '')] = await fileToBase64(input.files[0]);
+                }
+            }
+            return result;
+        }
+
         function setupPhotoPreview(inputId, previewId) {
             const input = document.getElementById(inputId);
             const preview = document.getElementById(previewId);
@@ -2050,7 +2249,7 @@
         }
 
         async function collectPhotos() {
-            const result = { fotoEtiqueta: null, fotosIncidencias: [] };
+            const result = { fotoEtiqueta: null, fotosIncidencias: [], fotosLotes: {} };
             const etiquetaInput = document.getElementById('fotoEtiqueta');
             if (etiquetaInput.files.length > 0) {
                 result.fotoEtiqueta = await fileToBase64(etiquetaInput.files[0]);
@@ -2059,6 +2258,7 @@
             for (let i = 0; i < incidenciasInput.files.length; i++) {
                 result.fotosIncidencias.push(await fileToBase64(incidenciasInput.files[i]));
             }
+            result.fotosLotes = await collectLotPhotos();
             return result;
         }
 
