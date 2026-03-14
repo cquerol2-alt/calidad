@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flujo de Producción - Salsas en Sobres</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .back {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #3b82f6;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .back:hover {
+            background: #1e3a5f;
+            color: #dbeafe;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+
+        .sub {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 300;
+        }
+
+        .diagram-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .legend {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.op {
+            background: #1e3a5f;
+            border: 1px solid #3b82f6;
+        }
+
+        .legend-dot.pcc {
+            background: #4c1d1d;
+            border: 1px solid #ef4444;
+        }
+
+        .legend-dot.start {
+            background: #14532d;
+            border: 1px solid #22c55e;
+        }
+
+        .legend-dot.end {
+            background: #78350f;
+            border: 1px solid #f59e0b;
+        }
+
+        .flow-diagram {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            display: flex;
+            justify-content: center;
+        }
+
+        svg {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .nodes-container {
+            position: relative;
+            width: 280px;
+            height: 100%;
+            margin: 0 auto;
+            z-index: 2;
+        }
+
+        .node {
+            position: absolute;
+            width: 240px;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .node:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .node-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .node-desc {
+            font-size: 12px;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+
+        .n-start {
+            background: #14532d;
+            border-color: #22c55e;
+            color: #86efac;
+            top: 0;
+        }
+
+        .n-op {
+            background: #1e3a5f;
+            border-color: #3b82f6;
+            color: #93c5fd;
+            top: 100px;
+        }
+
+        .n-op:nth-of-type(2) {
+            top: 190px;
+        }
+
+        .n-pcc {
+            background: #4c1d1d;
+            border-color: #ef4444;
+            color: #fca5a5;
+            font-weight: 600;
+            top: 280px;
+        }
+
+        .n-pcc:nth-of-type(2) {
+            top: 460px;
+        }
+
+        .n-end {
+            background: #78350f;
+            border-color: #f59e0b;
+            color: #fde68a;
+            top: 550px;
+        }
+
+        /* Position overrides for exact spacing */
+        .node:nth-child(1) { top: 20px; }
+        .node:nth-child(2) { top: 130px; }
+        .node:nth-child(3) { top: 240px; }
+        .node:nth-child(4) { top: 350px; }
+        .node:nth-child(5) { top: 460px; }
+        .node:nth-child(6) { top: 570px; }
+
+        .panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: #1e293b;
+            border-left: 2px solid #334155;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .panel.active {
+            right: 0;
+        }
+
+        .panel-header {
+            padding: 24px;
+            border-bottom: 1px solid #334155;
+            position: relative;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #f1f5f9;
+        }
+
+        .panel-step {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #f1f5f9;
+        }
+
+        .panel-content {
+            padding: 24px;
+        }
+
+        .panel-section {
+            margin-bottom: 28px;
+        }
+
+        .panel-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .pcc-highlight {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            padding: 12px;
+            border-radius: 3px;
+            margin: 12px 0;
+            font-size: 12px;
+        }
+
+        .pcc-limit {
+            color: #fca5a5;
+            font-weight: 600;
+        }
+
+        .pcc-monitoring {
+            color: #f87171;
+        }
+
+        .pcc-action {
+            color: #fca5a5;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .node {
+                width: 200px;
+                padding: 16px;
+                font-size: 11px;
+            }
+
+            .node-title {
+                font-size: 12px;
+            }
+
+            .node-desc {
+                font-size: 11px;
+            }
+
+            .legend {
+                gap: 20px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a class="back" href="diagramas.html">&larr; Menú</a>
+            <h1>Flujo de Producción — Familia Salsas</h1>
+            <div class="sub">Diagrama de proceso APPCC · Rice in Action S.L. · Salsas en Sobres</div>
+        </div>
+
+        <div class="diagram-wrapper">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot start"></div>
+                    <span>Inicio</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot op"></div>
+                    <span>Operación</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot pcc"></div>
+                    <span>PCC (Punto Crítico de Control)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot end"></div>
+                    <span>Final</span>
+                </div>
+            </div>
+
+            <div class="flow-diagram">
+                <svg id="flowSvg" width="100%" height="100%" viewBox="0 0 1000 700">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#64748b" />
+                        </marker>
+                    </defs>
+                </svg>
+
+                <div class="nodes-container">
+                    <div class="node n-start" data-node="1">
+                        <div class="node-title">Cocción de la Salsa</div>
+                        <div class="node-desc">Inicio</div>
+                    </div>
+
+                    <div class="node n-op" data-node="2">
+                        <div class="node-title">Envasado</div>
+                        <div class="node-desc">Máquina Sala</div>
+                    </div>
+
+                    <div class="node n-pcc" data-node="3">
+                        <div class="node-title">Pasteurización</div>
+                        <div class="node-desc">PCC1</div>
+                    </div>
+
+                    <div class="node n-op" data-node="4">
+                        <div class="node-title">Abatimiento</div>
+                        <div class="node-desc">Enfriamiento</div>
+                    </div>
+
+                    <div class="node n-pcc" data-node="5">
+                        <div class="node-title">Detector de Metales</div>
+                        <div class="node-desc">PCC2</div>
+                    </div>
+
+                    <div class="node n-end" data-node="6">
+                        <div class="node-title">Embalaje Final</div>
+                        <div class="node-desc">Bolsas de 24 u.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="panel" id="panel">
+        <div class="panel-header">
+            <button class="close-btn" id="closeBtn">&times;</button>
+            <div class="panel-title" id="panelTitle"></div>
+            <div class="panel-step" id="panelStep"></div>
+        </div>
+        <div class="panel-content" id="panelContent"></div>
+    </div>
+
+    <script>
+        const nodeData = {
+            1: {
+                title: 'Cocción de la Salsa',
+                step: 'Paso 1 - Inicio',
+                sections: [
+                    {
+                        title: 'Descripción',
+                        content: 'Preparación y cocción de la salsa según receta'
+                    },
+                    {
+                        title: 'Tipos de Salsas',
+                        content: '• Boletus\n• Ibérico\n• Negra\n• Pescado\n• Pollo\n• Queso\n• Tartufata\n• Verduras\n• Setas'
+                    },
+                    {
+                        title: 'Ingredientes',
+                        content: 'Ingredientes específicos por tipo de salsa según formulación autorizada'
+                    }
+                ]
+            },
+            2: {
+                title: 'Envasado en Máquina de Sala',
+                step: 'Paso 2 - Operación',
+                sections: [
+                    {
+                        title: 'Proceso',
+                        content: 'Dosificación y envasado automático con loteo integrado'
+                    },
+                    {
+                        title: 'Especificaciones',
+                        content: 'Sobres de 40g, 75g u 80g según tipo\nSellado automático\nMáquina loteada automáticamente'
+                    },
+                    {
+                        title: 'Control',
+                        content: 'Verificación de peso y sellado de sobres'
+                    }
+                ]
+            },
+            3: {
+                title: 'Pasteurización',
+                step: 'Paso 3 - PCC1 (CRÍTICO)',
+                sections: [
+                    {
+                        title: 'Descripción',
+                        content: 'Tratamiento térmico para eliminación de microorganismos patógenos'
+                    },
+                    {
+                        html: true,
+                        content: '<div class="pcc-highlight"><div class="pcc-limit">Límite Crítico:</div><div>Tª ≥ 85°C, tiempo ≥ 45 minutos</div></div>'
+                    },
+                    {
+                        html: true,
+                        content: '<div class="pcc-highlight"><div class="pcc-monitoring">Monitorización:</div><div>Registro continuo de temperatura</div><div>Equipos calibrados cada 6 meses</div></div>'
+                    },
+                    {
+                        html: true,
+                        content: '<div class="pcc-highlight"><div class="pcc-action">Acción Correctiva:</div><div>• Si Tª < 85°C: reproceso inmediato\n• Si tiempo < 45 min: destrucción del lote</div></div>'
+                    }
+                ]
+            },
+            4: {
+                title: 'Abatimiento',
+                step: 'Paso 4 - Operación',
+                sections: [
+                    {
+                        title: 'Descripción',
+                        content: 'Reducción rápida de temperatura mediante cámara de abatimiento'
+                    },
+                    {
+                        title: 'Objetivos',
+                        content: 'Alcanzar temperatura < 10°C en menos de 2 horas\nPrevenir condensación en envases'
+                    },
+                    {
+                        title: 'Control',
+                        content: 'Registro de temperatura de entrada y salida\nVerificación del funcionamiento del equipo'
+                    }
+                ]
+            },
+            5: {
+                title: 'Detector de Metales',
+                step: 'Paso 5 - PCC2 (CRÍTICO)',
+                sections: [
+                    {
+                        title: 'Descripción',
+                        content: 'Inspección de cada sobre para detección de cuerpos extraños metálicos'
+                    },
+                    {
+                        html: true,
+                        content: '<div class="pcc-highlight"><div class="pcc-limit">Límite Crítico:</div><div>Fe ≤ 1,5 mm\nNo-Fe ≤ 2,0 mm\nAcero Inox ≤ 2,5 mm</div></div>'
+                    },
+                    {
+                        html: true,
+                        content: '<div class="pcc-highlight"><div class="pcc-monitoring">Monitorización:</div><div>Inspección continua de cada sobre\nCalibraciones diarias con patrones de referencia</div></div>'
+                    },
+                    {
+                        html: true,
+                        content: '<div class="pcc-highlight"><div class="pcc-action">Acción Correctiva:</div><div>• Rechazo automático del sobre\n• Revisión completa del lote afectado\n• Investigación de causa raíz</div></div>'
+                    }
+                ]
+            },
+            6: {
+                title: 'Embalaje en Bolsas de 24',
+                step: 'Paso 6 - Final',
+                sections: [
+                    {
+                        title: 'Proceso',
+                        content: 'Agrupación de sobres individuales en bolsas de 24 unidades'
+                    },
+                    {
+                        title: 'Almacenamiento',
+                        content: 'Cámara refrigerada a Tª ≤ 4°C\nHumedad controlada < 70%\nCódigo de lote identificable'
+                    },
+                    {
+                        title: 'Etiquetado',
+                        content: 'Identificación de lote\nFecha de caducidad\nCondiciones de conservación\nLote de producción'
+                    }
+                ]
+            }
+        };
+
+        const nodes = document.querySelectorAll('.node');
+        const panel = document.getElementById('panel');
+        const overlay = document.getElementById('overlay');
+        const closeBtn = document.getElementById('closeBtn');
+        const panelTitle = document.getElementById('panelTitle');
+        const panelStep = document.getElementById('panelStep');
+        const panelContent = document.getElementById('panelContent');
+
+        function openPanel(nodeNum) {
+            const data = nodeData[nodeNum];
+            panelTitle.textContent = data.title;
+            panelStep.textContent = data.step;
+
+            panelContent.innerHTML = '';
+            data.sections.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'panel-section';
+
+                if (section.title) {
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'panel-section-title';
+                    titleEl.textContent = section.title;
+                    sectionDiv.appendChild(titleEl);
+                }
+
+                if (section.html) {
+                    sectionDiv.innerHTML += section.content;
+                } else {
+                    const textEl = document.createElement('div');
+                    textEl.className = 'panel-text';
+                    textEl.textContent = section.content;
+                    sectionDiv.appendChild(textEl);
+                }
+
+                panelContent.appendChild(sectionDiv);
+            });
+
+            panel.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function closePanel() {
+            panel.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        nodes.forEach(node => {
+            node.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const nodeNum = node.dataset.node;
+                openPanel(nodeNum);
+            });
+        });
+
+        closeBtn.addEventListener('click', closePanel);
+        overlay.addEventListener('click', closePanel);
+
+        // Draw SVG connecting lines
+        function drawArrows() {
+            const svg = document.getElementById('flowSvg');
+            const nodes = document.querySelectorAll('.node');
+
+            for (let i = 0; i < nodes.length - 1; i++) {
+                const fromNode = nodes[i];
+                const toNode = nodes[i + 1];
+
+                const fromRect = fromNode.getBoundingClientRect();
+                const toRect = toNode.getBoundingClientRect();
+                const svgRect = svg.getBoundingClientRect();
+
+                const x1 = fromRect.left - svgRect.left + fromRect.width / 2;
+                const y1 = fromRect.top - svgRect.top + fromRect.height;
+                const x2 = toRect.left - svgRect.left + toRect.width / 2;
+                const y2 = toRect.top - svgRect.top;
+
+                // Create line path
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                line.setAttribute('stroke', '#475569');
+                line.setAttribute('stroke-width', '2');
+                line.setAttribute('marker-end', 'url(#arrowhead)');
+
+                svg.appendChild(line);
+            }
+        }
+
+        // Draw arrows on load and resize
+        window.addEventListener('load', drawArrows);
+        window.addEventListener('resize', () => {
+            document.getElementById('flowSvg').innerHTML = '<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#64748b" /></marker></defs>';
+            drawArrows();
+        });
+    </script>
+</body>
+</html>
