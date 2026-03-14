@@ -450,7 +450,7 @@ const RIA_DATA = {
                 { nombre: 'CMC',                    unidad: 'g', cantidades: { 1.7: 2.04, 3: 3.6, 5: 6, 10: 12, 15: 18, 20: 24 } },
                 { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.7: 16, 3: 29, 5: 47, 10: 94, 15: 142, 20: 189 } },
                 { nombre: 'Boletus seco',           unidad: 'g', cantidades: { 1.7: 14, 3: 26, 5: 43, 10: 86, 15: 129, 20: 172 } },
-                { nombre: 'Aroma setas',            unidad: 'g', cantidades: { 1.7: 10, 3: 18.6, 5: 31, 10: 61, 15: 92, 20: 123 } },
+                // Aroma setas ELIMINADO (03/2026)
                 { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.7: 4, 3: 8, 5: 13, 10: 26, 15: 39, 20: 51 } },
                 { nombre: 'Hazelnut (colorante)',   unidad: 'g', cantidades: { 1.7: 0, 3: 0.7, 5: 1.1, 10: 2.2, 15: 3.3, 20: 4.4 } },
                 { nombre: 'Vino blanco',            unidad: 'g', cantidades: { 1.7: 14, 3: 26, 5: 43, 10: 86, 15: 129, 20: 172 } },
@@ -477,7 +477,7 @@ const RIA_DATA = {
                 { nombre: 'Aceite girasol',         unidad: 'g', cantidades: { 1.7: 149, 3: 267, 5: 441, 10: 882, 15: 1323, 20: 1764 } },
                 { nombre: 'Umami',                  unidad: 'g', cantidades: { 1.7: 16, 3: 29, 5: 47, 10: 94, 15: 142, 20: 189 } },
                 { nombre: 'Xantana',               unidad: 'g', cantidades: { 1.7: 4, 3: 7.3, 5: 12, 10: 24, 15: 36, 20: 48 } },
-                { nombre: 'Aroma setas',            unidad: 'g', cantidades: { 1.7: 10, 3: 18.6, 5: 31, 10: 61, 15: 92, 20: 123 } },
+                // Aroma setas ELIMINADO (03/2026)
                 { nombre: 'Cebolla deshidratada',   unidad: 'g', cantidades: { 1.7: 3, 3: 5, 5: 9, 10: 18, 15: 27, 20: 36 } },
                 { nombre: 'Sal',                    unidad: 'g', cantidades: { 1.7: 4, 3: 8, 5: 13, 10: 26, 15: 39, 20: 51 } },
                 { nombre: 'Hazelnut (colorante)',   unidad: 'g', cantidades: { 1.7: 0, 3: 0.7, 5: 1.1, 10: 2.2, 15: 3.3, 20: 4.4 } }
