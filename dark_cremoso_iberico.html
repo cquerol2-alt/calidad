@@ -11,7 +11,9 @@ h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
 .inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
 .inst span{color:#fbbf24}
-.graph{max-width:1100px;margin:0 auto;position:relative;height:650px}
+.graph{max-width:1100px;margin:0 auto;position:relative;height:720px}
+.n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
+.n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
 .node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
 .node.hl{z-index:20}.node.dim{opacity:.15!important}
 .node .glow{position:absolute;inset:-3px;border-radius:12px;opacity:0;transition:opacity .3s}
@@ -49,7 +51,6 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <a class="back" href="diagramas.html">&larr; Menú</a>
 <h1>Arroz Cremoso Ibérico</h1>
 <p class="sub">Rice in Action S.L. — Flujo completo de producción</p>
-<div class="inst"><span>Click</span> en un nodo para resaltar sus conexiones</div>
 
 <div class="graph" id="G">
 <svg class="L">
@@ -82,6 +83,9 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <!-- Directo a producción -->
 <path class="ln lo ld" data-f="mpArr" data-t="prod" d="M200,545 C500,530 760,390 830,355"/>
 <path class="ln lo ld" data-f="mpJamon" data-t="prod" d="M200,595 C500,570 760,400 830,360"/>
+<!-- Envases → Producción -->
+<path class="ln lo ld" data-f="mpBand" data-t="prod" d="M200,645 C500,620 760,410 830,365"/>
+<path class="ln lo ld" data-f="mpFilm" data-t="prod" d="M200,695 C500,670 760,420 830,370"/>
 </svg>
 
 <!-- ═══ MATERIAS PRIMAS ═══ -->
@@ -101,6 +105,8 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <!-- Arroz y Jamón visibles -->
 <div class="node n-mp" id="mpArr" style="left:10px;top:527px;width:182px" data-n="Arroz Nuovo Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Saco 25kg|Variedad Japónica|Lote: 26Y04 · Cad: 06/2027|Directo a producción" data-v="18 meses" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Arroz Maratelli (MP24)</div>
 <div class="node n-mp" id="mpJamon" style="left:10px;top:577px;width:182px" data-n="Jamón Ibérico" data-c="MP20 — Enrique Tomás" data-i="Pieza envasada|Lote: 25009100408|Conservación: Congelación|Cortado, directo a producción" data-v="" data-a="" data-s="Congelación"><div class="glow"></div>Jamón Ibérico (MP20)</div>
+<div class="node n-pkg" id="mpBand" style="left:10px;top:627px;width:182px" data-n="Bandeja EOS-35" data-c="MP50 — Sarabia" data-i="PP/PPEVOHPP 1000µ|Para formatos 190-300g|Lote: T629B36E012523" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Bandeja EOS-35 (MP50)</div>
+<div class="node n-pkg" id="mpFilm" style="left:10px;top:677px;width:182px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm|Lote: 22403117/1" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Film top-seal (MP51)</div>
 
 <!-- ═══ PREELABORACIONES ═══ -->
 <div class="node n-pre" id="preAjo" style="left:290px;top:35px;width:200px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="Lote: RIA-PRELAB-AJO-DDMMYY|10L girasol + 5kg ajo|Pasteurizar 100°C, 1h 20min|→ Caldo Risotto" data-v="120 días" data-a="" data-s="Tª Ambiente (proteger luz)"><div class="glow"></div>Aceite de Ajo</div>
@@ -126,6 +132,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:1px solid #ef4444"></div>Mezcla jarra (15d)</div>
 <div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Caldo (21d)</div>
 <div class="legend-i"><div class="legend-d" style="background:#581c87;border:1px solid #a855f7"></div>Salsa</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
 <div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
 <div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ LÁCTEOS · SULFITOS</div>
 </div>

@@ -11,7 +11,9 @@ h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
 .inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
 .inst span{color:#fbbf24}
-.graph{max-width:1000px;margin:0 auto;position:relative;height:520px}
+.graph{max-width:1000px;margin:0 auto;position:relative;height:620px}
+.n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
+.n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
 .node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
 .node.hl{z-index:20}.node.dim{opacity:.15!important}
 .node .glow{position:absolute;inset:-3px;border-radius:12px;opacity:0;transition:opacity .3s}
@@ -47,13 +49,12 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <a class="back" href="diagramas.html">&larr; Menú</a>
 <h1>Arroz Maestro</h1>
 <p class="sub">Rice in Action S.L. — Familia Maestro · Flujo completo de producción · Sin caldo</p>
-<div class="inst"><span>Click</span> en un nodo para resaltar sus conexiones</div>
 
 <div class="graph" id="G">
 <svg class="L">
 <!-- MP → Preparado Maestro -->
 <path class="ln lb" data-f="mp06" data-t="prepM" d="M200,55 C260,55 290,105 320,115"/>
-<path class="ln lb" data-f="mp51" data-t="prepM" d="M200,105 C260,105 290,112 320,120"/>
+<path class="ln lb" data-f="mp38" data-t="prepM" d="M200,105 C260,105 290,112 320,120"/>
 <path class="ln lb" data-f="mp52" data-t="prepM" d="M200,155 C260,145 290,128 320,128"/>
 <path class="ln lb" data-f="mp53" data-t="prepM" d="M200,205 C260,185 290,140 320,135"/>
 <!-- MP → Agua Azafrán -->
@@ -68,17 +69,22 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <path class="ln lo" data-f="mezJM" data-t="prod" d="M850,270 C870,270 880,268 900,265"/>
 <!-- Directo a producción -->
 <path class="ln lo ld" data-f="mpArr" data-t="prod" d="M200,425 C500,410 750,340 900,280"/>
+<!-- Envases → Producción -->
+<path class="ln lo ld" data-f="mpBand" data-t="prod" d="M200,475 C500,460 750,350 900,285"/>
+<path class="ln lo ld" data-f="mpFilm" data-t="prod" d="M200,525 C500,510 750,360 900,290"/>
 </svg>
 
 <!-- Materias Primas -->
 <div class="node n-mp" id="mp06" style="left:12px;top:37px;width:180px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="Potenciador de sabor|132g (x1, 16 jarras)|264g (x2, 32 jarras)|→ Preparado Maestro" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
-<div class="node n-mp" id="mp51" style="left:12px;top:87px;width:180px" data-n="Ácido tartárico" data-c="MP51" data-i="0.11g (x1) / 0.22g (x2)|→ Preparado Maestro" data-v="" data-a="" data-s=""><div class="glow"></div>Ác. tartárico (MP51)</div>
+<div class="node n-mp" id="mp38" style="left:12px;top:87px;width:180px" data-n="Ácido tartárico" data-c="MP38 — Dalmau" data-i="0.11g (x1) / 0.22g (x2)|Lote: 13506 · Cad: 10/2028|→ Preparado Maestro" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Ác. tartárico (MP38)</div>
 <div class="node n-mp" id="mp52" style="left:12px;top:137px;width:180px" data-n="Azúcar" data-c="MP52" data-i="110g (x1) / 220g (x2)|→ Preparado Maestro" data-v="" data-a="" data-s=""><div class="glow"></div>Azúcar (MP52)</div>
 <div class="node n-mp" id="mp53" style="left:12px;top:187px;width:180px" data-n="Sal" data-c="MP37" data-i="220g (x1) / 440g (x2)|→ Preparado Maestro" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP37)</div>
 <div class="node n-mp" id="mp19" style="left:12px;top:247px;width:180px" data-n="Azafrán" data-c="MP19" data-i="7g + 300g agua (tamaño Pequeño)|Infusión 68°C, 1,5h|→ Agua de Azafrán (P)" data-v="" data-a="" data-s=""><div class="glow"></div>Azafrán (MP19)</div>
 <div class="node n-mp" id="mpAg" style="left:12px;top:297px;width:180px" data-n="Agua" data-c="Agua potable" data-i="300g → Agua Azafrán (P)|2000ml → Mezcla Jarra Maestro" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
 <div class="node n-mp" id="mp09" style="left:12px;top:347px;width:180px" data-n="Hazelnut (colorante)" data-c="MP09 — Sensient" data-i="Bote 1kg|Lote: b060238 · Cad: 30/11/2026|190ml → Mezcla Jarra Maestro" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Hazelnut (MP09)</div>
 <div class="node n-mp" id="mpArr" style="left:12px;top:407px;width:180px" data-n="Arroz Bahía (Illa de Riu)" data-c="MP25 — Illa de Riu" data-i="Saco 25kg|Lote: 62604 · Cad: 09/2026|Directo a producción" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Arroz Bahía (MP25)</div>
+<div class="node n-pkg" id="mpBand" style="left:12px;top:457px;width:180px" data-n="Bandeja EOS-50" data-c="MP55 — Sarabia" data-i="PP/PPEVOHPP|Para formatos 380-450g|Lote: T005B829E01S2525" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Bandeja EOS-50 (MP55)</div>
+<div class="node n-pkg" id="mpFilm" style="left:12px;top:507px;width:180px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm|Lote: 22403117/1" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Film top-seal (MP51)</div>
 
 <!-- Preelaboraciones -->
 <div class="node n-pre" id="prepM" style="left:320px;top:95px;width:200px" data-n="Preparado Maestro" data-c="PRELAB-MAESTRO" data-i="Lote: RIA-PREP-MAESTRO-DDMMYY|Mezcla de polvos:|· Umami (Givaudan): 132g|· Ácido tartárico: 0.11g|· Azúcar: 110g|· Sal: 220g|x2 (32 jarras): duplicar todo" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Preparado Maestro<br><span style="font-size:10px">polvos: umami+ác.tart+azúcar+sal</span></div>
@@ -97,6 +103,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
 <div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1px solid #8b5cf6"></div>Preelaboración</div>
 <div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:1px solid #ef4444"></div>Mezcla jarra (15d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
 <div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
 <div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ SULFITOS</div>
 </div>

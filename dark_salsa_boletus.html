@@ -11,7 +11,9 @@ h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
 .inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
 .inst span{color:#fbbf24}
-.graph{max-width:1200px;margin:0 auto;position:relative;height:620px}
+.graph{max-width:1200px;margin:0 auto;position:relative;height:650px}
+.n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
+.n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
 .node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
 .node.hl{z-index:20}.node.dim{opacity:.15!important}
 .node .glow{position:absolute;inset:-3px;border-radius:12px;opacity:0;transition:opacity .3s}
@@ -49,7 +51,6 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <a class="back" href="diagramas.html">&larr; Menú</a>
 <h1>Salsa de Setas (Boletus)</h1>
 <p class="sub">Rice in Action S.L. — De ingredientes a embolsado y cajas finales · REC-SALSA-SET</p>
-<div class="inst"><span>Click</span> en un nodo para resaltar sus conexiones</div>
 
 <div class="graph" id="G">
 <!-- Dividers -->
@@ -75,6 +76,8 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 
 <!-- Salsa → Embolsado -->
 <path class="ln lg" data-f="salsa" data-t="bolsa" d="M525,200 C540,200 550,200 570,200"/>
+<!-- Film → Embolsado -->
+<path class="ln lb" data-f="mpFilm" data-t="bolsa" d="M205,590 C380,580 500,400 570,220"/>
 
 <!-- Embolsado → Caja Pescado 260g -->
 <path class="ln lk" data-f="bolsa" data-t="caja260" d="M740,200 C755,200 760,185 795,180"/>
@@ -110,6 +113,8 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 
 <div class="node n-mp" id="mp66" style="left:8px;top:487px;width:0;height:0;opacity:0" data-n="Grasa de pollo" data-c="MP66 — Ugeave" data-i="22g (1,7L)|Lote: 20410" data-v="" data-a="" data-s="Refrigeración"><div class="glow"></div></div>
 
+<div class="node n-pkg" id="mpFilm" style="left:8px;top:572px;width:188px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm|Lote: 22403117/1|→ Embolsado" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Film top-seal (MP51)</div>
+
 <!-- ═══════ SALSA ═══════ -->
 <div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa de Setas" data-c="REC-SALSA-SET · Lote: L-742S-DDMMYY" data-i="Receta Salsa de Setas (Risotto)|Sin CMC · Sin aroma setas|Ingredientes (1,7L = 1.704g):|· Agua: 1387g|· Mantequilla (MP13): 51g (LECHE)|· Parmesano (MP14): 29g (LECHE)|· Boletus seco (MP21): 14g|· Aceite girasol (MP04): 149g|· Umami (MP06): 16g|· Xantana (MP07): 4g|· Cebolla deshid. (MP34): 3g|· Sal (MP37): 4g|· Hazelnut (MP09): desde 3L|· Vino blanco (MP65) (SULFITOS)|Volúmenes: 1.7, 3, 5, 10, 15, 20L" data-v="5 días" data-a="LECHE SULFITOS" data-s="Refrigeración (0-4°C)"><div class="glow"></div>Salsa de<br>Setas<br><span style="font-size:10px">cocción completa</span></div>
 
@@ -137,6 +142,7 @@ La salsa de setas se embosa y se incluye<br>dentro de las cajas de Arroz Pescado
 <div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Salsa (cocción)</div>
 <div class="legend-i"><div class="legend-d" style="background:#4a1942;border:1px solid #ec4899"></div>Embolsado</div>
 <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #06b6d4"></div>Encajado</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
 <div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
 <div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ Alérgenos: LECHE, SULFITOS</div>
 </div>
