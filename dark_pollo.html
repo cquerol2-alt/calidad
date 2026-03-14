@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Arroz de Pollo — Flujo de Producción</title>
+    <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
+h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
+.sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
+.graph{max-width:1100px;margin:0 auto;position:relative;height:880px}
+.n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
+.n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
+.node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
+.node.hl{z-index:20}.node.dim{opacity:.15!important}
+.node .glow{position:absolute;inset:-3px;border-radius:12px;opacity:0;transition:opacity .3s}
+.node.hl .glow{opacity:1}
+.n-mp{background:#1e3a5f;border:1.5px solid #3b82f6;color:#93c5fd}
+.n-mp .glow{box-shadow:0 0 15px rgba(59,130,246,.5)}
+.n-pre{background:#2d1b69;border:1.5px solid #8b5cf6;color:#c4b5fd}
+.n-pre .glow{box-shadow:0 0 15px rgba(139,92,246,.5)}
+.n-mix{background:#4c1d1d;border:2px solid #ef4444;color:#fca5a5}
+.n-mix .glow{box-shadow:0 0 15px rgba(239,68,68,.5)}
+.n-cal{background:#14532d;border:2px solid #22c55e;color:#86efac}
+.n-cal .glow{box-shadow:0 0 15px rgba(34,197,94,.5)}
+.n-prod{background:#78350f;border:2.5px solid #f59e0b;color:#fde68a;font-weight:700;font-size:18px}
+.n-prod .glow{box-shadow:0 0 20px rgba(245,158,11,.6)}
+.panel{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:280px;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.5);transition:all .3s;opacity:0;pointer-events:none;z-index:50}
+.panel.vis{opacity:1;pointer-events:auto}
+.panel h3{font-size:15px;color:#f1f5f9;margin-bottom:4px}
+.panel .code{font-size:11px;color:#fbbf24;margin-bottom:10px}
+.panel .info{font-size:12px;line-height:1.7;color:#94a3b8}
+.panel .tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:2px 2px 0 0}
+.t-v{background:#14532d;color:#86efac}.t-a{background:#4c1d1d;color:#fca5a5}.t-c{background:#1e3a5f;color:#93c5fd}
+.panel .x{position:absolute;top:8px;right:12px;cursor:pointer;color:#64748b;font-size:18px}.panel .x:hover{color:#f1f5f9}
+svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.ln{fill:none;stroke-width:1.5;transition:opacity .3s}.ln.dim{opacity:.03!important}.ln.hl{opacity:1!important;stroke-width:2.5}
+.lb{stroke:#3b82f6;opacity:.25}.lp{stroke:#8b5cf6;opacity:.25}.lr{stroke:#ef4444;opacity:.3}.lg{stroke:#22c55e;opacity:.35}.lo{stroke:#f59e0b;opacity:.4}.ld{stroke-dasharray:6 4}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:.8}}.ln.hl{animation:pulse 1.5s ease-in-out infinite}
+.legend{max-width:1100px;margin:20px auto 0;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#64748b}
+.legend-i{display:flex;align-items:center;gap:5px}.legend-d{width:12px;height:12px;border-radius:3px}
+.back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
+    </style>
+</head>
+<body>
+    <a href="diagramas.html" class="back">← Volver</a>
+    <h1>Arroz de Pollo</h1>
+    <p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios</p>
+
+    <div class="graph">
+        <svg class="L" id="L"></svg>
+
+        <!-- MP COLUMN (left) -->
+        <div class="node n-mp" id="mp04" style="left:20px;top:20px" data-n="Aceite girasol" data-c="MP04 — Coreysa" data-i="500ml botellas|Aceite de girasol refinado" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP04
+        </div>
+        <div class="node n-mp" id="mp40" style="left:20px;top:90px" data-n="Ajo" data-c="MP40 — Ajopel" data-i="5kg saco|Ajo pelado congelado" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP40
+        </div>
+        <div class="node n-mp" id="mp19" style="left:20px;top:160px" data-n="Azafrán" data-c="MP19 — Verdú Cantó" data-i="10g bolsa|Azafrán en hebras" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP19
+        </div>
+        <div class="node n-mp" id="mp_agua" style="left:20px;top:230px" data-n="Agua potable" data-c="Abastecimiento" data-i="Agua destilada|Para preparaciones" data-v="" data-a="" data-s="">
+            <div class="glow"></div>H₂O
+        </div>
+        <div class="node n-mp" id="mp09" style="left:20px;top:300px" data-n="Hazelnut" data-c="MP09 — Sensient" data-i="260ml botellas|Extracto de avellana" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP09
+        </div>
+        <div class="node n-mp" id="mp35" style="left:20px;top:370px" data-n="Pollo deshidratado" data-c="MP35 — Ugeave" data-i="1800g bolsa|Pollo en polvo" data-v="" data-a="Pollo" data-s="">
+            <div class="glow"></div>MP35
+        </div>
+        <div class="node n-mp" id="mp33" style="left:20px;top:440px" data-n="Espinaca deshidratada" data-c="MP33 — La Margarita" data-i="490g bolsa|Espinaca en polvo" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP33
+        </div>
+        <div class="node n-mp" id="mp03" style="left:20px;top:510px" data-n="Paeller de Pollo" data-c="MP03 — Paeller" data-i="6 latas x 3L|Concentrado de pollo" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP03
+        </div>
+        <div class="node n-mp" id="mp05" style="left:20px;top:580px" data-n="Aceite de oliva" data-c="MP05 — Makro" data-i="1385g botella|Aceite virgen extra" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP05
+        </div>
+        <div class="node n-mp" id="mp06" style="left:20px;top:650px" data-n="Umami" data-c="MP06 — Givaudan" data-i="120g bote|Potenciador de sabor" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP06
+        </div>
+        <div class="node n-mp" id="mp07" style="left:20px;top:720px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="10g bolsa|Agente espesante" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP07
+        </div>
+        <div class="node n-mp" id="mp37" style="left:150px;top:20px" data-n="Sal" data-c="MP37 — Salinas" data-i="Cristal fino|Para ajuste de sabor" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP37
+        </div>
+        <div class="node n-mp" id="mp24" style="left:150px;top:90px" data-n="Arroz Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Grano largo|Cereal base producto" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP24
+        </div>
+        <div class="node n-pkg" id="mp50" style="left:150px;top:160px" data-n="Bandeja EOS-35" data-c="MP50 — Sarabia" data-i="Envase termoformado|Formato 260g / 1330g" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP50
+        </div>
+        <div class="node n-pkg" id="mp51" style="left:150px;top:230px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="Rollo de film|Cierre hermético" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MP51
+        </div>
+
+        <!-- PRELAB COLUMN (middle) -->
+        <div class="node n-pre" id="prelab_ajo" style="left:320px;top:50px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="10L girasol (MP04)|5kg ajo (MP40)|Preelaboración cruda" data-v="" data-a="Ajo" data-s="">
+            <div class="glow"></div>PRELAB<br>AJO
+        </div>
+        <div class="node n-pre" id="prelab_azafran" style="left:320px;top:150px" data-n="Agua de Azafrán Grande" data-c="PRELAB-AZAFRANG" data-i="400g agua (potable)|10g azafrán (MP19)|Infusión" data-v="" data-a="" data-s="">
+            <div class="glow"></div>PRELAB<br>AZAFR.
+        </div>
+        <div class="node n-pre" id="prelab_salmorreta" style="left:320px;top:250px" data-n="Salmorreta" data-c="PRELAB-SALMORRETA" data-i="Prelab congelado|Mezcla especial|→ Caldo directo" data-v="" data-a="" data-s="">
+            <div class="glow"></div>PRELAB<br>SALM.
+        </div>
+        <div class="node n-mix" id="mezcla_jnormal" style="left:320px;top:350px" data-n="Mezcla Jarra Normal" data-c="MEZCLA-JNORMAL" data-i="MP09 Hazelnut 260ml|Agua potable 3600ml|Mezcla líquida" data-v="" data-a="" data-s="">
+            <div class="glow"></div>MEZCLA<br>J.NORM.
+        </div>
+        <div class="node n-pre" id="jarra_pesc" style="left:320px;top:450px" data-n="Jarra Pescado" data-c="JARRA-PESC" data-i="MP35 pollo deshid 1800g|MP33 espinaca 490g|Mezcla seca en polvo" data-v="" data-a="Pollo,Celery" data-s="">
+            <div class="glow"></div>JARRA<br>PESC.
+        </div>
+        <div class="node n-cal" id="caldo_pollo" style="left:320px;top:570px" data-n="Caldo de Pollo" data-c="REC-CALDO-003 · RIA-POLLO" data-i="Rendimiento: 25L|Concentrado de pollo base|Para arroz cocción y sabor" data-v="" data-a="" data-s="">
+            <div class="glow"></div>CALDO<br>POLLO
+        </div>
+
+        <!-- PRODUCT NODE (right) -->
+        <div class="node n-prod" id="producto" style="left:550px;top:350px;width:180px;padding:12px" data-n="Arroz de Pollo 749" data-c="La Santa" data-i="Lote: L-749-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24)|· Agua (en mezcla jarra)|· Caldo de Pollo|· Mezcla Jarra Normal (líquido)|· Jarra Pescado (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="" data-s="">
+            <div class="glow"></div>ARROZ<br>POLLO<br>749
+        </div>
+    </div>
+
+    <div class="panel" id="P">
+        <span class="x" onclick="document.getElementById('P').classList.remove('vis')">×</span>
+        <h3 id="pN">—</h3>
+        <div class="code" id="pC">—</div>
+        <div class="info" id="pI">—</div>
+        <div id="pT"></div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>MP / Materias Primas</div>
+        <div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1px solid #8b5cf6"></div>Preelaboración</div>
+        <div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:2px solid #ef4444"></div>Mezcla Jarra</div>
+        <div class="legend-i"><div class="legend-d" style="background:#14532d;border:2px solid #22c55e"></div>Caldo / Base</div>
+        <div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1.5px solid #14b8a6"></div>Packaging</div>
+        <div class="legend-i"><div class="legend-d" style="background:#78350f;border:2.5px solid #f59e0b"></div>Producto Final</div>
+    </div>
+
+    <script>
+const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
+let sel=null;
+ns.forEach(n=>{n.addEventListener('click',e=>{e.stopPropagation();const id=n.id;if(sel===id){clr();return}sel=id;
+const c=new Set([id]);ls.forEach(l=>{if(l.dataset.f===id||l.dataset.t===id){c.add(l.dataset.f);c.add(l.dataset.t)}});
+ns.forEach(x=>{x.classList.toggle('hl',c.has(x.id));x.classList.toggle('dim',!c.has(x.id))});
+ls.forEach(l=>{const ok=l.dataset.f===id||l.dataset.t===id;l.classList.toggle('hl',ok);l.classList.toggle('dim',!ok)});
+document.getElementById('pN').textContent=n.dataset.n;document.getElementById('pC').textContent=n.dataset.c;
+document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
+let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
+if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
+if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
+document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
+document.addEventListener('click',clr);
+function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
+
+// SVG connections
+const svg=document.getElementById('L');
+const h=880,w=1100;
+svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+const g=d=>{const ln=document.createElementNS('http://www.w3.org/2000/svg','line');ln.setAttribute('x1',d.x1);ln.setAttribute('y1',d.y1);ln.setAttribute('x2',d.x2);ln.setAttribute('y2',d.y2);ln.setAttribute('data-f',d.f);ln.setAttribute('data-t',d.t);ln.setAttribute('class',`ln ${d.c}`);svg.appendChild(ln)};
+
+// MP04 → PRELAB-AJO + Caldo directo
+g({x1:85,y1:55,x2:320,y2:85,f:'mp04',t:'prelab_ajo',c:'lb'});
+g({x1:85,y1:55,x2:320,y2:605,f:'mp04',t:'caldo_pollo',c:'lg'});
+
+// MP40 → PRELAB-AJO
+g({x1:85,y1:125,x2:320,y2:85,f:'mp40',t:'prelab_ajo',c:'lb'});
+
+// MP19 → PRELAB-AZAFRANG
+g({x1:85,y1:195,x2:320,y2:185,f:'mp19',t:'prelab_azafran',c:'lb'});
+
+// MP_AGUA → PRELAB-AZAFRANG + MEZCLA-JNORMAL
+g({x1:85,y1:265,x2:320,y2:185,f:'mp_agua',t:'prelab_azafran',c:'lb'});
+g({x1:85,y1:265,x2:320,y2:385,f:'mp_agua',t:'mezcla_jnormal',c:'lb'});
+
+// MP09 → MEZCLA-JNORMAL + Caldo directo
+g({x1:85,y1:335,x2:320,y2:385,f:'mp09',t:'mezcla_jnormal',c:'lr'});
+g({x1:85,y1:335,x2:320,y2:605,f:'mp09',t:'caldo_pollo',c:'lg'});
+
+// MP35 → JARRA-PESC
+g({x1:85,y1:405,x2:320,y2:485,f:'mp35',t:'jarra_pesc',c:'lb'});
+
+// MP33 → JARRA-PESC
+g({x1:85,y1:475,x2:320,y2:485,f:'mp33',t:'jarra_pesc',c:'lb'});
+
+// MP03 → Caldo directo
+g({x1:85,y1:545,x2:320,y2:605,f:'mp03',t:'caldo_pollo',c:'lg'});
+
+// MP05 → Caldo directo
+g({x1:85,y1:615,x2:320,y2:605,f:'mp05',t:'caldo_pollo',c:'lg'});
+
+// MP06 → Caldo directo
+g({x1:85,y1:685,x2:320,y2:605,f:'mp06',t:'caldo_pollo',c:'lg'});
+
+// MP07 → Caldo directo
+g({x1:85,y1:755,x2:320,y2:605,f:'mp07',t:'caldo_pollo',c:'lg'});
+
+// PRELAB-SALMORRETA → Caldo directo
+g({x1:385,y1:285,x2:385,y2:605,f:'prelab_salmorreta',t:'caldo_pollo',c:'lp'});
+
+// PRELAB-AJO → Caldo directo
+g({x1:385,y1:85,x2:385,y2:605,f:'prelab_ajo',t:'caldo_pollo',c:'lp'});
+
+// PRELAB-AZAFRANG → Caldo directo
+g({x1:385,y1:185,x2:385,y2:605,f:'prelab_azafran',t:'caldo_pollo',c:'lp'});
+
+// MP24 (Arroz) → Producto directo
+g({x1:215,y1:125,x2:550,y2:400,f:'mp24',t:'producto',c:'lo ld'});
+
+// MP37 (Sal) → Producto directo
+g({x1:215,y1:55,x2:550,y2:380,f:'mp37',t:'producto',c:'lo ld'});
+
+// MP50 (Bandeja) → Producto
+g({x1:215,y1:195,x2:550,y2:420,f:'mp50',t:'producto',c:'lo ld'});
+
+// MP51 (Film) → Producto
+g({x1:215,y1:265,x2:550,y2:440,f:'mp51',t:'producto',c:'lo ld'});
+
+// MEZCLA-JNORMAL → Producto
+g({x1:385,y1:385,x2:550,y2:400,f:'mezcla_jnormal',t:'producto',c:'lr'});
+
+// JARRA-PESC → Producto
+g({x1:385,y1:485,x2:550,y2:420,f:'jarra_pesc',t:'producto',c:'lp'});
+
+// CALDO-POLLO → Producto
+g({x1:385,y1:605,x2:550,y2:420,f:'caldo_pollo',t:'producto',c:'lg'});
+    </script>
+</body>
+</html>
