@@ -163,9 +163,8 @@ Cada salsa va dentro de la caja de su arroz correspondiente.
 | Mezcla | Mezcla Jarra Normal | RIA-MEZCLA-JNORMAL-DDMMAA | 15 días | Refrigeración |
 | Mezcla | Mezcla Jarra Risotto | RIA-MEZCLA-JRISOTTO-DDMMAA | 15 días | Refrigeración |
 | Mezcla | Mezcla Jarra Maestro | RIA-MEZCLA-JMAESTRO-DDMMAA | 15 días | Refrigeración |
-| Preparado | Preparado Maestro (polvos) | RIA-PREP-MAESTRO-DDMMAA | 180 días | Tª Ambiente |
 
-Nota: Los Pesados son pesajes de ingredientes secos que se etiquetan. El Preparado Maestro (polvos) está en data.js pero NO tiene etiqueta SATO.
+Nota: Los Pesados son pesajes de ingredientes secos que se etiquetan. En data.js el "Preparado Maestro (polvos)" (RIA-PREP-MAESTRO) es un paso intermedio del pesaje, pero en SATO se etiqueta como "Mezcla Jarra Maestro" (RIA-MEZCLA-JMAESTRO). Son el mismo producto.
 
 ---
 
