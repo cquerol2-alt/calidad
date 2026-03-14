@@ -857,10 +857,10 @@ const RIA_DATA = {
 
         // --- Elaboraciones intermedias (fabricación propia) ---
         MP43: { nombre: 'Salmorreta', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Refrigeración', tipo: 'preelaboracion', fichaDrive: '' },
-        MP44: { nombre: 'Aceite de gamba', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
+        // MP44: Aceite de gamba — ELIMINADO (no se elabora)
         MP45: { nombre: 'Aceite rojo de ñora', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
         MP46: { nombre: 'Aceite de ajo', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
-        MP47: { nombre: 'Aceite de trufa', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Tª Ambiente', tipo: 'preelaboracion', fichaDrive: '' },
+        // MP47: Aceite de trufa — ELIMINADO (no se elabora)
         MP48: { nombre: 'Agua de azafrán', proveedor: 'RIA (elab. propia)', formato: 'Elab. intermedia', conservacion: 'Refrigeración', tipo: 'preelaboracion', fichaDrive: '' },
         // --- Packaging: Bandejas ---
         MP50: { nombre: 'Bandeja EOS-35 (190-300g)', proveedor: 'Sarabia', formato: 'PP/PPEVOHPP 1000µ', conservacion: 'Tª Ambiente', tipo: 'packaging', uso: 'Raciones individuales 190-300g', fichaDrive: 'https://drive.google.com/drive/folders/1ICxb5wMgudggpabmzRPBT701Ak9LvHnn', fichaArchivo: 'EOS-35 PP o PPEVOHPP 1000µ.pdf', lote: 'T629B36E012523' },
