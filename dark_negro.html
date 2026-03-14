@@ -11,7 +11,7 @@ h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
 .inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
 .inst span{color:#fbbf24}
-.graph{max-width:1100px;margin:0 auto;position:relative;height:780px}
+.graph{max-width:1100px;margin:0 auto;position:relative;height:740px}
 .n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
 .n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
 .node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
@@ -46,59 +46,83 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 </style>
 </head>
 <body>
-<a href="diagramas.html" class="back">← Atrás</a>
+<a class="back" href="diagramas.html">&larr; Menú</a>
 <h1>Arroz Negro</h1>
-<p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios</p>
-<p class="inst">Click en cualquier nodo para ver detalles • <span>Leyenda de colores abajo</span></p>
+<p class="sub">La Santa — Flujo completo de materias primas y productos intermedios</p>
 
-<div class="graph">
-<svg class="L"></svg>
+<div class="graph" id="G">
+<svg class="L">
+<!-- MP → Aceite Ajo -->
+<path class="ln lb" data-f="mp04" data-t="preAjo" d="M200,55 C240,55 260,50 290,50"/>
+<path class="ln lb" data-f="mpAjo" data-t="preAjo" d="M200,105 C240,85 260,62 290,57"/>
+<!-- MP → Mezcla Jarra Normal -->
+<path class="ln lr" data-f="mp09" data-t="mezJ" d="M200,155 C240,150 260,185 290,190"/>
+<path class="ln lr" data-f="mpAg" data-t="mezJ" d="M200,205 C230,215 260,208 290,198"/>
+<!-- MP → Jarra Pescado -->
+<path class="ln lb" data-f="mp35" data-t="jarP" d="M200,255 C240,280 260,300 290,310"/>
+<path class="ln lb" data-f="mp33" data-t="jarP" d="M200,305 C240,310 260,315 290,318"/>
+<!-- Preelabs → Caldo -->
+<path class="ln lp" data-f="preAjo" data-t="calN" d="M500,52 C540,75 560,110 590,130"/>
+<!-- MP directos → Caldo -->
+<path class="ln lg" data-f="mp01" data-t="calN" d="M200,355 C400,300 520,200 590,150"/>
+<path class="ln lg" data-f="mp04" data-t="calN" d="M200,55 C300,100 450,130 590,145"/>
+<path class="ln lg" data-f="mp06" data-t="calN" d="M200,405 C400,320 520,210 590,160"/>
+<path class="ln lg" data-f="mp07" data-t="calN" d="M200,455 C400,340 520,220 590,168"/>
+<path class="ln lg" data-f="mp08" data-t="calN" d="M200,505 C400,360 520,230 590,175"/>
+<path class="ln lg" data-f="mpAg" data-t="calN" d="M200,205 C300,180 450,160 590,180"/>
+<!-- Caldo → Producción -->
+<path class="ln lo" data-f="calN" data-t="prod" d="M800,150 C830,155 850,160 870,165"/>
+<!-- Mezcla Jarra → Producción -->
+<path class="ln lo ld" data-f="mezJ" data-t="prod" d="M500,190 C680,200 800,180 870,170"/>
+<!-- Jarra Pescado → Producción -->
+<path class="ln lo ld" data-f="jarP" data-t="prod" d="M500,313 C680,280 800,210 870,175"/>
+<!-- Sal → Producción -->
+<path class="ln lo ld" data-f="mpSal" data-t="prod" d="M200,555 C500,420 800,250 870,180"/>
+<!-- Arroz → Producción -->
+<path class="ln lo ld" data-f="mpArr" data-t="prod" d="M200,605 C500,470 800,270 870,185"/>
+<!-- Envases → Producción -->
+<path class="ln lo ld" data-f="mpBand" data-t="prod" d="M200,655 C500,520 800,290 870,190"/>
+<path class="ln lo ld" data-f="mpFilm" data-t="prod" d="M200,705 C500,570 800,310 870,195"/>
+</svg>
 
-<!-- MP Nodes (left column) -->
-<div class="node n-mp" id="MP04" style="left:20px;top:20px" data-n="Aceite girasol" data-c="MP04 — Coreysa" data-i="Para aceite de ajo" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP40" style="left:20px;top:80px" data-n="Ajo" data-c="MP40 — Ajopel" data-i="Para aceite de ajo" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP" style="left:20px;top:140px" data-n="Agua" data-c="MP — Grifo" data-i="Mezcla Jarra + Caldo" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP09" style="left:20px;top:200px" data-n="Hazelnut" data-c="MP09 — Sensient" data-i="Para mezcla jarra" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP35" style="left:20px;top:260px" data-n="Pollo deshidratado" data-c="MP35 — Ugeave" data-i="1800g para jarra" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP33" style="left:20px;top:320px" data-n="Espinaca deshidratada" data-c="MP33 — La Margarita" data-i="490g para jarra" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP01" style="left:20px;top:380px" data-n="Caldo Aneto" data-c="MP01 — Aneto" data-i="13.5L para caldo" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP08" style="left:20px;top:440px" data-n="Tinta de calamar" data-c="MP08 — Nortindal" data-i="1400g para caldo" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP06" style="left:20px;top:500px" data-n="Umami" data-c="MP06 — Givaudan" data-i="120g para caldo" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP07" style="left:20px;top:560px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="10g para caldo" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP37" style="left:20px;top:620px" data-n="Sal" data-c="MP37 — Salrera" data-i="Para producto final" data-v="" data-a="" data-s=""></div>
-<div class="node n-mp" id="MP24" style="left:20px;top:680px" data-n="Arroz Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Para producto final" data-v="" data-a="" data-s=""></div>
+<!-- ═══ MATERIAS PRIMAS ═══ -->
+<div class="node n-mp" id="mp04" style="left:10px;top:37px;width:182px" data-n="Aceite girasol" data-c="MP04 — Coreysa" data-i="Garrafa 25L|5000ml → Caldo Negro" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite girasol (MP04)</div>
+<div class="node n-mp" id="mpAjo" style="left:10px;top:87px;width:182px" data-n="Ajo" data-c="MP40 — Ajopel" data-i="5kg → Aceite de Ajo" data-v="" data-a="" data-s=""><div class="glow"></div>Ajo (MP40)</div>
+<div class="node n-mp" id="mp08" style="left:10px;top:137px;width:182px" data-n="Tinta de calamar" data-c="MP08" data-i="Bote 1400g|→ Caldo Negro" data-v="" data-a="" data-s=""><div class="glow"></div>Tinta calamar (MP08)</div>
+<div class="node n-mp" id="mpAg" style="left:10px;top:187px;width:182px" data-n="Agua" data-c="Agua potable" data-i="5500ml → Caldo Negro|3600ml → Mezcla Jarra Normal" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
+<div class="node n-mp" id="mp09" style="left:10px;top:237px;width:182px" data-n="Hazelnut (colorante)" data-c="MP09 — Sensient" data-i="Bote 1kg|260ml → Mezcla Jarra Normal" data-v="" data-a="" data-s=""><div class="glow"></div>Hazelnut (MP09)</div>
+<div class="node n-mp" id="mp35" style="left:10px;top:287px;width:182px" data-n="Pollo deshidratado" data-c="MP35 — Ugeave" data-i="1800g → Jarra Pescado" data-v="" data-a="" data-s=""><div class="glow"></div>Pollo deshid. (MP35)</div>
+<div class="node n-mp" id="mp33" style="left:10px;top:337px;width:182px" data-n="Espinaca deshidratada" data-c="MP33 — La Margarita" data-i="490g → Jarra Pescado" data-v="" data-a="" data-s=""><div class="glow"></div>Espinaca deshid. (MP33)</div>
+<div class="node n-mp" id="mp01" style="left:10px;top:387px;width:182px" data-n="Caldo Aneto Pescado" data-c="MP01 — Aneto" data-i="9 bricks × 1,5L = 13,5L|Ingr: agua, PESCADO, AOVE, sal|APIO, CRUSTÁCEOS, MOLUSCOS" data-v="" data-a="PESCADO APIO CRUSTÁCEOS MOLUSCOS" data-s=""><div class="glow"></div>Caldo Aneto (MP01)</div>
+<div class="node n-mp" id="mp06" style="left:10px;top:437px;width:182px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="120g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
+<div class="node n-mp" id="mp07" style="left:10px;top:487px;width:182px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="10g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Xantana (MP07)</div>
+<div class="node n-mp" id="mpSal" style="left:10px;top:537px;width:182px" data-n="Sal" data-c="MP37" data-i="Directo a producción" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP37)</div>
+<div class="node n-mp" id="mpArr" style="left:10px;top:587px;width:182px" data-n="Arroz Nuovo Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Saco 25kg|Variedad Japónica|Directo a producción" data-v="" data-a="" data-s=""><div class="glow"></div>Arroz Maratelli (MP24)</div>
+<div class="node n-pkg" id="mpBand" style="left:10px;top:637px;width:182px" data-n="Bandeja EOS-35" data-c="MP50 — Sarabia" data-i="PP/PPEVOHPP 1000µ|Para formatos 190-300g" data-v="" data-a="" data-s=""><div class="glow"></div>Bandeja EOS-35 (MP50)</div>
+<div class="node n-pkg" id="mpFilm" style="left:10px;top:687px;width:182px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm" data-v="" data-a="" data-s=""><div class="glow"></div>Film top-seal (MP51)</div>
 
-<!-- Preelaborations (middle column) -->
-<div class="node n-pre" id="PRELAB-AJO" style="left:220px;top:40px" data-n="Aceite de Ajo" data-c="PRELAB-AJO · RIA-PRELAB-AJO-DDMMAA" data-i="Aceite girasol + Ajo | Rend. control" data-v="" data-a="" data-s=""></div>
-<div class="node n-pre" id="MEZCLA-JNORMAL" style="left:220px;top:200px" data-n="Mezcla Jarra Normal" data-c="MEZCLA-JNORMAL · RIA-MEZCLA-JNORMAL-DDMMAA" data-i="Hazelnut 260ml + Agua 3600ml" data-v="" data-a="" data-s=""></div>
-<div class="node n-pre" id="JARRA-PESC" style="left:220px;top:280px" data-n="Jarra Pescado" data-c="JARRA-PESC · RIA-JARRA-PESC-DDMMAA" data-i="Pollo deshid 1800g|Espinaca deshid 490g" data-v="" data-a="" data-s=""></div>
+<!-- ═══ PREELABORACIONES ═══ -->
+<div class="node n-pre" id="preAjo" style="left:290px;top:30px;width:200px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="Lote: RIA-PRELAB-AJO-DDMMAA|10L girasol + 5kg ajo|Pasteurizar 100°C, 1h 20min|→ 800ml al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite de Ajo</div>
+<div class="node n-mix" id="mezJ" style="left:290px;top:200px;width:200px" data-n="Mezcla Jarra Normal" data-c="MEZCLA-JNORMAL" data-i="Lote: RIA-MEZCLA-JNORMAL-DDMMAA|260ml Hazelnut + 3600ml agua|Para jarras pescado|Si sobra se guarda" data-v="" data-a="" data-s=""><div class="glow"></div>Mezcla Jarra Normal<br><span style="font-size:10px">260ml Hz + 3,6L agua</span></div>
+<div class="node n-pre" id="jarP" style="left:290px;top:310px;width:200px" data-n="Jarra de Pescado" data-c="JARRA-PESC" data-i="Lote: RIA-JARRA-PESC-DDMMAA|Pollo deshidratado: 1800g|Espinaca deshidratada: 490g" data-v="" data-a="" data-s=""><div class="glow"></div>Jarra Pescado<br><span style="font-size:10px">1800g pollo + 490g espinaca</span></div>
 
-<!-- Caldo (right-center) -->
-<div class="node n-cal" id="REC-CALDO-002" style="left:480px;top:280px" data-n="Caldo Negro" data-c="REC-CALDO-002 · RIA-NEGRO" data-i="Caldo Aneto 13.5L|Agua 5.5L|Aceite girasol 5L|Aceite de Ajo 800ml|Umami 120g|Xantana 10g|Tinta calamar 1400g|Rendimiento: 25L" data-v="" data-a="" data-s=""></div>
+<!-- ═══ CALDO ═══ -->
+<div class="node n-cal" id="calN" style="left:590px;top:110px;width:200px;font-size:15px" data-n="Caldo Negro" data-c="REC-CALDO-002 · RIA-NEGRO" data-i="Rendimiento: 25L|· Caldo Aneto 13,5L|· Aceite girasol 5000ml|· Aceite de Ajo 800ml|· Umami 120g|· Xantana 10g|· Tinta calamar 1400g|· Agua 5,5L" data-v="" data-a="PESCADO APIO CRUSTÁCEOS MOLUSCOS" data-s=""><div class="glow"></div>Caldo Negro</div>
 
-<!-- Product (far right) -->
-<div class="node n-prod" id="PROD-740" style="left:740px;top:320px;width:120px;height:80px" data-n="ARROZ NEGRO" data-c="La Santa · Código 740" data-i="Arroz|Agua|Caldo Negro|Mezcla Jarra Normal|Jarra Pescado|Sal|Formatos" data-v="" data-a="" data-s=""></div>
-
+<!-- ═══ PRODUCTO FINAL ═══ -->
+<div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:100px;display:flex;align-items:center;justify-content:center" data-n="ARROZ NEGRO" data-c="La Santa · Código 740" data-i="Lote: L-740-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo Negro|· Mezcla Jarra Normal (líquido)|· Jarra Pescado (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="PESCADO MOLUSCOS CRUSTÁCEOS APIO" data-s=""><div class="glow"></div>ARROZ<br>NEGRO</div>
 </div>
 
-<!-- Links SVG -->
-<svg class="L" id="svg"></svg>
+<div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div></div>
 
-<!-- Panel -->
-<div id="P" class="panel">
-<div class="x">✕</div>
-<h3 id="pN"></h3>
-<div class="code" id="pC"></div>
-<div class="info" id="pI"></div>
-<div id="pT"></div>
-</div>
-
-<!-- Legend -->
 <div class="legend">
-<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1.5px solid #3b82f6"></div> <span>MP (Materia Prima)</span></div>
-<div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1.5px solid #8b5cf6"></div> <span>Preelaboración</span></div>
-<div class="legend-i"><div class="legend-d" style="background:#14532d;border:2px solid #22c55e"></div> <span>Caldo</span></div>
-<div class="legend-i"><div class="legend-d" style="background:#78350f;border:2.5px solid #f59e0b"></div> <span>Producto Final</span></div>
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
+<div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1px solid #8b5cf6"></div>Preelaboración</div>
+<div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:1px solid #ef4444"></div>Mezcla jarra (15d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Caldo (21d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
+<div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
+<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ PESCADO · MOLUSCOS · CRUSTÁCEOS · APIO</div>
 </div>
 
 <script>
@@ -117,6 +141,5 @@ document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
 </script>
-
 </body>
 </html>

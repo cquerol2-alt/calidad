@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Salsa de Queso - Flujo de Producción</title>
-	<style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salsa de Queso — Flujo Producción</title>
+<style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
 h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
+.inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
+.inst span{color:#fbbf24}
 .graph{max-width:1200px;margin:0 auto;position:relative;height:650px}
 .n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
 .n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
@@ -43,109 +45,105 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 .divider{position:absolute;border-left:1px dashed #334155;height:100%;top:0}
 .divider-label{position:absolute;top:-18px;font-size:10px;color:#475569;white-space:nowrap}
 .back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
-	</style>
+</style>
 </head>
 <body>
-	<a class="back" href="diagramas.html">&larr; Menú</a>
-	<h1>Salsa de Queso</h1>
-	<p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios · REC-SALSA-QUE</p>
+<a class="back" href="diagramas.html">&larr; Menú</a>
+<h1>Salsa de Queso</h1>
+<p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios · REC-SALSA-QUE</p>
 
-	<div class="graph">
-		<svg class="L" id="S"></svg>
+<div class="graph" id="G">
+<!-- Dividers -->
+<div class="divider" style="left:220px"><div class="divider-label">Cocción Salsa</div></div>
+<div class="divider" style="left:530px"><div class="divider-label">Embolsado</div></div>
+<div class="divider" style="left:760px"><div class="divider-label">Encajado</div></div>
 
-		<!-- INGREDIENTES / MATERIAS PRIMAS (Left column, y: 50-600) -->
-		<div id="mpA" class="node n-mp" style="left:20px;top:80px;width:80px" data-n="Agua" data-c="MP00" data-i="Agua potable filtrada · 1204g por lote">
-			<div class="glow"></div>Agua
-		</div>
-		<div id="mpX" class="node n-mp" style="left:20px;top:150px;width:80px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="Goma Xantana · 0.60g por lote">
-			<div class="glow"></div>Xantana<br>MP07
-		</div>
-		<div id="mpU" class="node n-mp" style="left:20px;top:220px;width:80px" data-n="Umami" data-c="MP06 — Givaudan" data-i="Potenciador de sabor · 7.5g por lote">
-			<div class="glow"></div>Umami<br>MP06
-		</div>
-		<div id="mpP" class="node n-mp" style="left:20px;top:290px;width:80px" data-n="Pimienta" data-c="MP37 o similar" data-i="Especia molida · 1.8g por lote">
-			<div class="glow"></div>Pimienta<br>MP37
-		</div>
-		<div id="mpJZ" class="node n-mp" style="left:20px;top:360px;width:80px" data-n="Jerez" data-c="MP65 — Barbadillo" data-a="SULFITOS" data-i="Vino Jerez · 19g por lote">
-			<div class="glow"></div>Jerez<br>MP65
-		</div>
-		<div id="mpCMC" class="node n-mp" style="left:20px;top:430px;width:80px" data-n="CMC" data-c="MP61 — Dalmau" data-i="Carboximetilcelulosa · 2.04g por lote">
-			<div class="glow"></div>CMC<br>MP61
-		</div>
-		<div id="mpS" class="node n-mp" style="left:20px;top:500px;width:80px" data-n="Sal" data-c="MP37" data-i="Cloruro de sodio · 3g por lote">
-			<div class="glow"></div>Sal<br>MP37
-		</div>
-		<div id="mpAQ" class="node n-mp" style="left:20px;top:570px;width:80px" data-n="Aroma Queso" data-c="MP69 — Givaudan" data-i="Aroma naturales · 10g por lote">
-			<div class="glow"></div>Aroma<br>Queso<br>MP69
-		</div>
+<svg class="L">
+<!-- MP → Salsa Queso -->
+<path class="ln lb" data-f="mpAgua" data-t="salsa" d="M205,55 C280,80 320,120 370,140"/>
+<path class="ln lb" data-f="mpXantana" data-t="salsa" d="M205,105 C280,110 320,125 370,145"/>
+<path class="ln lb" data-f="mpUmami" data-t="salsa" d="M205,155 C280,155 320,150 370,150"/>
+<path class="ln lb" data-f="mpPimienta" data-t="salsa" d="M205,205 C280,195 320,170 370,160"/>
+<path class="ln lb" data-f="mpJerez" data-t="salsa" d="M205,255 C280,220 320,180 370,165"/>
+<path class="ln lb" data-f="mpCMC" data-t="salsa" d="M205,305 C280,245 320,210 370,175"/>
+<path class="ln lb" data-f="mpSal" data-t="salsa" d="M205,355 C280,270 320,230 370,185"/>
+<path class="ln lb" data-f="mpAromaQueso" data-t="salsa" d="M205,405 C280,290 320,245 370,195"/>
+<path class="ln lb" data-f="mpGrasaPollo" data-t="salsa" d="M205,455 C280,310 320,260 370,205"/>
+<path class="ln lb" data-f="mpAceite" data-t="salsa" d="M205,505 C280,330 320,270 370,215"/>
+<path class="ln lb" data-f="mpNata" data-t="salsa" d="M205,555 C280,350 320,280 370,225"/>
+<path class="ln lb" data-f="mpMant" data-t="salsa" d="M205,590 C280,370 320,290 370,235"/>
+<!-- Salsa → Embolsado -->
+<path class="ln lg" data-f="salsa" data-t="bolsa" d="M525,200 C540,200 550,200 570,200"/>
+<!-- Film → Embolsado -->
+<path class="ln lb" data-f="mpFilm" data-t="bolsa" d="M205,155 C380,550 500,380 570,220"/>
+<!-- Embolsado → Caja Cremoso Queso -->
+<path class="ln lk" data-f="bolsa" data-t="cajaRis" d="M740,200 C755,200 760,185 795,180"/>
+<!-- Caja → Producto final -->
+<path class="ln lo" data-f="cajaRis" data-t="prodRis" d="M990,180 C1010,175 1020,172 1040,170"/>
+</svg>
 
-		<!-- INGREDIENTES 2nd row (left-center, y: 80-220) -->
-		<div id="mpGP" class="node n-mp" style="left:130px;top:80px;width:80px" data-n="Grasa Pollo" data-c="MP66 — Ugeave" data-i="Grasa animal purificada · 4.5g por lote">
-			<div class="glow"></div>Grasa<br>Pollo<br>MP66
-		</div>
-		<div id="mpAG" class="node n-mp" style="left:130px;top:150px;width:80px" data-n="Aceite Girasol" data-c="MP04 — Coreysa" data-i="Aceite refinado · 135g por lote">
-			<div class="glow"></div>Aceite<br>Girasol<br>MP04
-		</div>
-		<div id="mpN" class="node n-mp" style="left:130px;top:220px;width:80px" data-n="Nata 20%" data-c="MP63 — Metro" data-a="LECHE" data-i="Nata fresca pasteurizada · 193g por lote">
-			<div class="glow"></div>Nata<br>20%<br>MP63
-		</div>
+<!-- ═══════ MATERIAS PRIMAS ═══════ -->
+<div class="node n-mp" id="mpAgua" style="left:8px;top:37px;width:188px" data-n="Agua" data-c="Agua potable" data-i="Base de la salsa|Volumen según batch" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
 
-		<!-- INGREDIENTES 3rd row (left-center-right, y: 80-220) -->
-		<div id="mpMB" class="node n-mp" style="left:240px;top:80px;width:80px" data-n="Mantequilla" data-c="MP13 — Presidente" data-a="LECHE" data-i="Mantequilla pura · 75g por lote">
-			<div class="glow"></div>Mantequilla<br>MP13
-		</div>
-		<div id="mpQZ" class="node n-mp" style="left:240px;top:150px;width:80px" data-n="Queso Azul" data-c="MP73 — Givaudan" data-a="LECHE" data-i="Queso azul natural · 52g por lote">
-			<div class="glow"></div>Queso<br>Azul<br>MP73
-		</div>
-		<div id="mpF" class="node n-mp" style="left:240px;top:220px;width:80px" data-n="Film" data-c="MP51" data-i="Envase film transparente">
-			<div class="glow"></div>Film<br>MP51
-		</div>
+<div class="node n-mp" id="mpXantana" style="left:8px;top:87px;width:188px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="Espesante|4g" data-v="" data-a="" data-s=""><div class="glow"></div>Xantana (MP07)</div>
 
-		<!-- SALSA (Center) -->
-		<div id="SAL" class="node n-sal" style="left:380px;top:140px;width:140px;height:140px" data-n="Salsa de Queso" data-c="Lote: L-759-DDMMAA" data-i="Receta Salsa de Queso (1.7L = 1714g):|· Agua: 1204g|· Xantana (MP07): 0.60g|· Umami (MP06): 7.5g|· Pimienta: 1.8g|· Jerez (MP65): 19g (SULFITOS)|· CMC (MP61): 2.04g|· Sal (MP37): 3g|· Aroma queso (MP69): 10g|· Grasa pollo (MP66): 4.5g|· Aceite girasol (MP04): 135g|· Nata 20% (MP63): 193g (LECHE)|· Mantequilla (MP13): 75g (LECHE)|· Queso azul (MP73): 52g (LECHE)|Volúmenes: 1.7, 3, 5, 10, 15, 20L">
-			<div class="glow"></div>SALSA<br>DE QUESO<br>Cocción<br>1.7L
-		</div>
+<div class="node n-mp" id="mpUmami" style="left:8px;top:137px;width:188px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="Realzador de sabor|16g" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
 
-		<!-- EMBOLSADO -->
-		<div id="EMB" class="node n-env" style="left:640px;top:140px;width:110px;height:140px" data-n="Embolsado" data-c="75g × 24 bolsas/caja" data-i="Envasado en bolsa individual · 75g por bolsa · Film MP51 · Sellado al vacío">
-			<div class="glow"></div>EMBOLSADO<br>75g<br>Film<br>24/caja
-		</div>
+<div class="node n-mp" id="mpPimienta" style="left:8px;top:187px;width:188px" data-n="Pimienta" data-c="Especia" data-i="Condimento|Cantidad según receta" data-v="" data-a="" data-s=""><div class="glow"></div>Pimienta</div>
 
-		<!-- ENCAJADO -->
-		<div id="ENC" class="node n-box" style="left:850px;top:120px;width:120px;height:180px" data-n="Encajado" data-c="Caja Cremoso Queso" data-i="Caja Secundaria:|24 unidades × Salsa de Queso (75g)|Destino: Caja Cremoso Queso (All-Included)">
-			<div class="glow"></div>ENCAJADO<br>Caja<br>Cremoso<br>Queso<br>24 × 75g
-		</div>
+<div class="node n-mp" id="mpJerez" style="left:8px;top:237px;width:188px" data-n="Jerez" data-c="MP65 — Barbadillo" data-i="Vino|⚠ SULFITOS" data-v="" data-a="SULFITOS" data-s=""><div class="glow"></div>Jerez (MP65)</div>
 
-		<!-- PRODUCTO FINAL -->
-		<div id="PROD" class="node n-prod" style="left:1070px;top:140px;width:110px;height:140px" data-n="Caja Queso + Salsa" data-c="All-Included · 24 uds" data-i="PRODUCTO FINAL:|Caja Cremoso Queso + 24x Salsa de Queso (75g)|Alérgenos: LECHE, SULFITOS|Destino: Distribución">
-			<div class="glow"></div>CAJA FINAL<br>CREMOSO<br>QUESO<br>24 × 75g
-		</div>
+<div class="node n-mp" id="mpCMC" style="left:8px;top:287px;width:188px" data-n="CMC" data-c="MP61" data-i="Estabilizante|Volumen batch" data-v="" data-a="" data-s=""><div class="glow"></div>CMC (MP61)</div>
 
-		<!-- DIVIDERS -->
-		<div class="divider" style="left:360px"><div class="divider-label">MATERIAS PRIMAS</div></div>
-		<div class="divider" style="left:550px"><div class="divider-label">COCCIÓN</div></div>
-		<div class="divider" style="left:800px"><div class="divider-label">EMBOLSADO</div></div>
-		<div class="divider" style="left:1020px"><div class="divider-label">ENCAJADO</div></div>
-	</div>
+<div class="node n-mp" id="mpSal" style="left:8px;top:337px;width:188px" data-n="Sal" data-c="MP37" data-i="4g" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP37)</div>
 
-	<div class="legend">
-		<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia Prima</div>
-		<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Salsa / Cocción</div>
-		<div class="legend-i"><div class="legend-d" style="background:#4a1942;border:1px solid #ec4899"></div>Embolsado</div>
-		<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #06b6d4"></div>Caja</div>
-		<div class="legend-i"><div class="legend-d" style="background:#78350f;border:2.5px solid #f59e0b"></div>Producto Final</div>
-		<div class="legend-i"><span style="color:#fca5a5">⚠ = Alérgeno</span></div>
-	</div>
+<div class="node n-mp" id="mpAromaQueso" style="left:8px;top:387px;width:188px" data-n="Aroma queso" data-c="MP69" data-i="Saborizante queso" data-v="" data-a="" data-s=""><div class="glow"></div>Aroma queso (MP69)</div>
 
-	<div id="P" class="panel">
-		<div class="x" onclick="document.getElementById('P').classList.remove('vis')">✕</div>
-		<h3 id="pN">Nodo</h3>
-		<div class="code" id="pC">Código</div>
-		<div class="info" id="pI">Información</div>
-		<div id="pT"></div>
-	</div>
+<div class="node n-mp" id="mpGrasaPollo" style="left:8px;top:437px;width:188px" data-n="Grasa de pollo" data-c="MP66 — Ugeave" data-i="22g" data-v="" data-a="" data-s=""><div class="glow"></div>Grasa pollo (MP66)</div>
 
-	<script>
+<div class="node n-mp" id="mpAceite" style="left:8px;top:487px;width:188px" data-n="Aceite girasol" data-c="MP04 — Coreysa" data-i="149g" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite girasol (MP04)</div>
+
+<div class="node n-mp" id="mpNata" style="left:8px;top:537px;width:188px" data-n="Nata" data-c="MP63" data-i="⚠ Contiene LECHE" data-v="" data-a="LECHE" data-s=""><div class="glow"></div>Nata (MP63)</div>
+
+<div class="node n-mp" id="mpMant" style="left:8px;top:587px;width:188px" data-n="Mantequilla" data-c="MP13 — Presidente" data-i="51g|⚠ Contiene LECHE" data-v="" data-a="LECHE" data-s=""><div class="glow"></div>Mantequilla (MP13)</div>
+
+<div class="node n-mp" id="mpQuesoAzul" style="left:8px;top:618px;width:0;height:0;opacity:0" data-n="Queso azul" data-c="MP73" data-i="⚠ LECHE" data-v="" data-a="LECHE" data-s=""><div class="glow"></div></div>
+
+<div class="node n-pkg" id="mpFilm" style="left:8px;top:137px;width:0;height:0;opacity:0" data-n="Film top-seal" data-c="MP51" data-i="Film" data-v="" data-a="" data-s=""><div class="glow"></div></div>
+
+<!-- ═══════ SALSA ═══════ -->
+<div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa de Queso" data-c="REC-SALSA-QUE · Lote: L-759-DDMMAA" data-i="Receta Salsa de Queso (75g):|· Agua|· Xantana (MP07): 4g|· Umami (MP06): 16g|· Pimienta|· Jerez (MP65) (SULFITOS)|· CMC (MP61)|· Sal (MP37): 4g|· Aroma queso (MP69)|· Grasa pollo (MP66): 22g|· Aceite girasol (MP04): 149g|· Nata (MP63) (LECHE)|· Mantequilla (MP13) (LECHE)|· Queso azul (MP73) (LECHE)|Alérgenos: LECHE SULFITOS" data-v="" data-a="LECHE SULFITOS" data-s=""><div class="glow"></div>Salsa de<br>Queso<br><span style="font-size:10px">cocción completa</span></div>
+
+<!-- ═══════ EMBOLSADO ═══════ -->
+<div class="node n-env" id="bolsa" style="left:570px;top:165px;width:165px;height:75px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Embolsado 75g" data-c="Proceso de envasado en bolsa" data-i="La salsa terminada se envasa|en bolsas individuales de 75g.|Sellado y etiquetado:|· Lote producto: L-759-DDMMAA|· 24 bolsas por caja|Control de temperatura" data-v="" data-a="" data-s=""><div class="glow"></div>Embolsado<br><span style="font-size:10px">bolsas de 75g ×24</span></div>
+
+<!-- ═══════ ENCAJADO ═══════ -->
+<div class="node n-box" id="cajaRis" style="left:795px;top:130px;width:190px;height:100px" data-n="Caja Cremoso Queso + Salsa 75g" data-c="24 unidades/caja" data-i="Cada caja contiene:|· 24× Cremoso|· 24× Bolsa salsa queso (75g)|Lote salsa: L-759-DDMMAA" data-v="" data-a="" data-s=""><div class="glow"></div>Caja Cremoso<br>Queso<br><b style="font-size:14px">+ Salsa 75g</b></div>
+
+<!-- ═══════ PRODUCTOS FINALES ═══════ -->
+<div class="node n-prod" id="prodRis" style="left:1040px;top:110px;width:145px;height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Caja Cremoso + Salsa Queso" data-c="Cremosos · 24 uds" data-i="Cremoso|+ 24 bolsas salsa queso 75g|Lote salsa: L-759-DDMMAA" data-v="" data-a="LECHE SULFITOS" data-s=""><div class="glow"></div>Cremoso<br>Queso<br><span style="font-size:11px">+ salsa 75g</span></div>
+
+<!-- Info extra packaging -->
+<div style="position:absolute;left:795px;top:260px;font-size:11px;color:#67e8f9;opacity:.6;line-height:1.5;max-width:340px">
+La salsa de queso se embosa y se incluye<br>dentro de las cajas de Cremosos.
+</div>
+</div>
+
+<!-- ═══════ PANEL ═══════ -->
+<div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div></div>
+
+<!-- ═══════ LEYENDA ═══════ -->
+<div class="legend">
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
+<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Salsa (cocción)</div>
+<div class="legend-i"><div class="legend-d" style="background:#4a1942;border:1px solid #ec4899"></div>Embolsado</div>
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #06b6d4"></div>Encajado</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
+<div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
+<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ Alérgenos: LECHE, SULFITOS</div>
+</div>
+
+<script>
 const ns=document.querySelectorAll('.node[id]'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
 let sel=null;
 ns.forEach(n=>{if(n.style.opacity==='0')return;n.addEventListener('click',e=>{e.stopPropagation();const id=n.id;if(sel===id){clr();return}sel=id;
@@ -160,6 +158,6 @@ if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
 document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
-	</script>
+</script>
 </body>
 </html>

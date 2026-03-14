@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arroz de Verduras — RIA Diagram</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arroz de Verduras — Flujo Producción</title>
+<style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
 h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
-.graph{max-width:1100px;margin:0 auto;position:relative;height:930px}
+.inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
+.inst span{color:#fbbf24}
+.graph{max-width:1100px;margin:0 auto;position:relative;height:900px}
 .n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
 .n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
 .node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
@@ -41,175 +43,109 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 .legend{max-width:1100px;margin:20px auto 0;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#64748b}
 .legend-i{display:flex;align-items:center;gap:5px}.legend-d{width:12px;height:12px;border-radius:3px}
 .back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
-    </style>
+</style>
 </head>
 <body>
 <a class="back" href="diagramas.html">&larr; Menú</a>
-
 <h1>Arroz de Verduras</h1>
-<p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios</p>
+<p class="sub">La Santa — Flujo completo de materias primas y productos intermedios</p>
 
-<div class="graph">
-    <svg class="L" id="E"></svg>
+<div class="graph" id="G">
+<svg class="L">
+<!-- MP → Aceite Ajo -->
+<path class="ln lb" data-f="mp04" data-t="preAjo" d="M200,55 C240,55 260,50 290,50"/>
+<path class="ln lb" data-f="mpAjo" data-t="preAjo" d="M200,105 C240,85 260,62 290,57"/>
+<!-- MP → Agua Azafrán -->
+<path class="ln lb" data-f="mp19" data-t="preAz" d="M200,155 C240,135 260,140 290,140"/>
+<path class="ln lb" data-f="mpAg" data-t="preAz" d="M200,205 C230,195 260,148 290,147"/>
+<!-- MP → Salmorreta -->
+<path class="ln lb" data-f="mp04" data-t="preSalm" d="M200,55 C240,165 260,220 290,260"/>
+<path class="ln lb" data-f="mp05" data-t="preSalm" d="M200,505 C240,415 260,310 290,268"/>
+<!-- MP → Pesado Verduras -->
+<path class="ln lb" data-f="mp33" data-t="prePV" d="M200,255 C240,310 260,330 290,340"/>
+<path class="ln lb" data-f="mp34" data-t="prePV" d="M200,305 C240,330 260,340 290,345"/>
+<path class="ln lb" data-f="mp36" data-t="prePV" d="M200,355 C240,350 260,345 290,350"/>
+<!-- MP → Mezcla Jarra Normal -->
+<path class="ln lr" data-f="mp09" data-t="mezJ" d="M200,455 C240,450 260,460 290,470"/>
+<path class="ln lr" data-f="mpAg" data-t="mezJ" d="M200,205 C230,350 260,468 290,475"/>
+<!-- MP → Jarra Verduras -->
+<path class="ln lb" data-f="mp33" data-t="jarV" d="M200,255 C240,480 260,540 290,560"/>
+<path class="ln lb" data-f="mp34" data-t="jarV" d="M200,305 C240,500 260,545 290,565"/>
+<!-- Preelabs → Caldo -->
+<path class="ln lp" data-f="preAjo" data-t="calV" d="M500,52 C540,85 560,125 590,150"/>
+<path class="ln lp" data-f="preAz" data-t="calV" d="M500,145 C540,150 560,150 590,160"/>
+<path class="ln lp" data-f="preSalm" data-t="calV" d="M500,262 C540,220 560,180 590,170"/>
+<path class="ln lp" data-f="prePV" data-t="calV" d="M500,343 C540,280 560,210 590,180"/>
+<!-- MP directos → Caldo -->
+<path class="ln lg" data-f="mpAg" data-t="calV" d="M200,205 C300,200 450,180 590,190"/>
+<path class="ln lg" data-f="mp04" data-t="calV" d="M200,55 C300,100 450,140 590,165"/>
+<path class="ln lg" data-f="mp05" data-t="calV" d="M200,505 C400,380 520,260 590,190"/>
+<path class="ln lg" data-f="mp11" data-t="calV" d="M200,605 C400,450 520,300 590,200"/>
+<path class="ln lg" data-f="mp06" data-t="calV" d="M200,655 C400,480 520,320 590,210"/>
+<path class="ln lg" data-f="mp10" data-t="calV" d="M200,705 C400,500 520,330 590,215"/>
+<path class="ln lg" data-f="mp07" data-t="calV" d="M200,755 C400,520 520,340 590,220"/>
+<!-- Caldo → Producción -->
+<path class="ln lo" data-f="calV" data-t="prod" d="M800,170 C830,175 850,180 870,185"/>
+<!-- Mezcla Jarra → Producción -->
+<path class="ln lo ld" data-f="mezJ" data-t="prod" d="M500,475 C680,400 800,280 870,200"/>
+<!-- Jarra Verduras → Producción -->
+<path class="ln lo ld" data-f="jarV" data-t="prod" d="M500,562 C680,480 800,320 870,210"/>
+<!-- Sal → Producción -->
+<path class="ln lo ld" data-f="mpSal" data-t="prod" d="M200,805 C500,620 800,360 870,215"/>
+<!-- Arroz → Producción -->
+<path class="ln lo ld" data-f="mpArr" data-t="prod" d="M200,855 C500,670 800,380 870,220"/>
+<!-- Envases → Producción -->
+<path class="ln lo ld" data-f="mpBand" data-t="prod" d="M200,805 C500,620 800,360 870,225"/>
+<path class="ln lo ld" data-f="mpFilm" data-t="prod" d="M200,855 C500,670 800,380 870,230"/>
+</svg>
 
-    <!-- Materias Primas (Columna 1) -->
-    <div class="node n-mp" id="MP04" style="top:20px;left:20px" data-n="Aceite girasol" data-c="MP04 — Coreysa" data-i="Provedor:|Coreysa|Origen:|Corey Food Ingredients" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP04
-    </div>
-    <div class="node n-mp" id="MP40" style="top:60px;left:20px" data-n="Ajo" data-c="MP40 — Ajopel" data-i="Provedor:|Ajopel|Origen:|Ajo deshidratado" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP40
-    </div>
-    <div class="node n-mp" id="MP19" style="top:100px;left:20px" data-n="Azafrán" data-c="MP19 — Verdú Cantó" data-i="Provedor:|Verdú Cantó|Origen:|Azafrán de calidad" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP19
-    </div>
-    <div class="node n-mp" id="MP05" style="top:140px;left:20px" data-n="Aceite oliva" data-c="MP05 — Makro" data-i="Provedor:|Makro|Origen:|Aceite de oliva virgen" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP05
-    </div>
-    <div class="node n-mp" id="MP11" style="top:180px;left:20px" data-n="Aroma hierbas" data-c="MP11 — Expressions Aromatiques" data-i="Provedor:|Expressions Aromatiques|Origen:|Aromas naturales" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP11
-    </div>
-    <div class="node n-mp" id="MP06" style="top:220px;left:20px" data-n="Umami" data-c="MP06 — Givaudan" data-i="Provedor:|Givaudan|Origen:|Aditivo umami" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP06
-    </div>
-    <div class="node n-mp" id="MP10" style="top:260px;left:20px" data-n="Pimentón" data-c="MP10 — Coato" data-i="Provedor:|Coato|Origen:|Pimentón rojo" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP10
-    </div>
-    <div class="node n-mp" id="MP07" style="top:300px;left:20px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="Provedor:|Corquimia|Origen:|Goma xantana" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP07
-    </div>
-    <div class="node n-mp" id="MP33" style="top:340px;left:20px" data-n="Espinaca deshid" data-c="MP33 — La Margarita" data-i="Provedor:|La Margarita|Origen:|Espinaca deshidratada" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP33
-    </div>
-    <div class="node n-mp" id="MP34" style="top:380px;left:20px" data-n="Cebolla deshid" data-c="MP34 — Vegenat" data-i="Provedor:|Vegenat|Origen:|Cebolla deshidratada" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP34
-    </div>
-    <div class="node n-mp" id="MP09" style="top:420px;left:20px" data-n="Hazelnut" data-c="MP09 — Sensient" data-i="Provedor:|Sensient|Origen:|Colorante alimentario" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP09
-    </div>
-    <div class="node n-mp" id="MP24" style="top:460px;left:20px" data-n="Arroz Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Provedor:|Arrocera del Pirineo|Origen:|Arroz blanco calidad" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP24
-    </div>
-    <div class="node n-mp" id="MP37" style="top:500px;left:20px" data-n="Sal" data-c="MP37" data-i="Provedor:|Sal de mesa|Origen:|Sal refinada" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP37
-    </div>
-    <div class="node n-mp" id="MP50" style="top:540px;left:20px" data-n="Bandeja EOS-35" data-c="MP50 — Sarabia" data-i="Provedor:|Sarabia|Origen:|Bandejas plástico" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP50
-    </div>
-    <div class="node n-mp" id="MP51" style="top:580px;left:20px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="Provedor:|Adrados|Origen:|Film de cierre" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MP51
-    </div>
-    <div class="node n-mp" id="AGUA" style="top:620px;left:20px" data-n="Agua (potable)" data-c="Agua" data-i="Provedor:|Suministro potable|Origen:|14.8L para caldo + mezcla" data-v="" data-a="" data-s="">
-        <div class="glow"></div>AGUA
-    </div>
+<!-- ═══ MATERIAS PRIMAS ═══ -->
+<div class="node n-mp" id="mp04" style="left:10px;top:37px;width:182px" data-n="Aceite girasol" data-c="MP04 — Coreysa" data-i="Garrafa 25L|3321g → Caldo de Verduras|+ Salmorreta" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite girasol (MP04)</div>
+<div class="node n-mp" id="mpAjo" style="left:10px;top:87px;width:182px" data-n="Ajo" data-c="MP40 — Ajopel" data-i="5kg → Aceite de Ajo" data-v="" data-a="" data-s=""><div class="glow"></div>Ajo (MP40)</div>
+<div class="node n-mp" id="mp19" style="left:10px;top:137px;width:182px" data-n="Azafrán" data-c="MP19 — Verdú Cantó" data-i="10g + 400g agua|Infusión 68°C, 1,5h|→ Agua de Azafrán (Grande)" data-v="" data-a="" data-s=""><div class="glow"></div>Azafrán (MP19)</div>
+<div class="node n-mp" id="mpAg" style="left:10px;top:187px;width:182px" data-n="Agua" data-c="Agua potable" data-i="400g → Agua Azafrán|3600ml → Mezcla Jarra Normal|14,8L → Caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
+<div class="node n-mp" id="mp33" style="left:10px;top:237px;width:182px" data-n="Espinaca deshidratada" data-c="MP33 — La Margarita" data-i="500g → Pesado Verduras|420g → Jarra Verduras" data-v="" data-a="" data-s=""><div class="glow"></div>Espinaca deshid. (MP33)</div>
+<div class="node n-mp" id="mp34" style="left:10px;top:287px;width:182px" data-n="Cebolla deshidratada" data-c="MP34" data-i="200g+300g → Pesado Verduras|90g → Jarra Verduras" data-v="" data-a="" data-s=""><div class="glow"></div>Cebolla deshid. (MP34)</div>
+<div class="node n-mp" id="mp36" style="left:10px;top:337px;width:182px" data-n="Puerro deshidratado" data-c="MP36" data-i="555g → Pesado Verduras" data-v="" data-a="" data-s=""><div class="glow"></div>Puerro deshid. (MP36)</div>
+<div class="node n-mp" id="mp09" style="left:10px;top:387px;width:182px" data-n="Hazelnut (colorante)" data-c="MP09 — Sensient" data-i="Bote 1kg|260ml → Mezcla Jarra Normal" data-v="" data-a="" data-s=""><div class="glow"></div>Hazelnut (MP09)</div>
+<div class="node n-mp" id="mp05" style="left:10px;top:437px;width:182px" data-n="Aceite oliva virgen" data-c="MP05 — AOVE" data-i="1000g → Caldo de Verduras|+ Salmorreta" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite oliva (MP05)</div>
+<div class="node n-mp" id="mp11" style="left:10px;top:487px;width:182px" data-n="Hierbas (mezcla)" data-c="MP11" data-i="20g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Hierbas (MP11)</div>
+<div class="node n-mp" id="mp10" style="left:10px;top:537px;width:182px" data-n="Pimentón" data-c="MP10 — Coato" data-i="60g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Pimentón (MP10)</div>
+<div class="node n-mp" id="mp06" style="left:10px;top:587px;width:182px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="150g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
+<div class="node n-mp" id="mp07" style="left:10px;top:637px;width:182px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="8,26g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Xantana (MP07)</div>
+<div class="node n-mp" id="mpSal" style="left:10px;top:687px;width:182px" data-n="Sal" data-c="MP37" data-i="Directo a producción" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP37)</div>
+<div class="node n-mp" id="mpArr" style="left:10px;top:737px;width:182px" data-n="Arroz Nuovo Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Saco 25kg|Variedad Japónica|Directo a producción" data-v="" data-a="" data-s=""><div class="glow"></div>Arroz Maratelli (MP24)</div>
+<div class="node n-pkg" id="mpBand" style="left:10px;top:787px;width:182px" data-n="Bandeja EOS-35" data-c="MP50 — Sarabia" data-i="PP/PPEVOHPP 1000µ|Para formatos 190-300g" data-v="" data-a="" data-s=""><div class="glow"></div>Bandeja EOS-35 (MP50)</div>
+<div class="node n-pkg" id="mpFilm" style="left:10px;top:837px;width:182px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm" data-v="" data-a="" data-s=""><div class="glow"></div>Film top-seal (MP51)</div>
 
-    <!-- Preelaboraciones (Columna 2) -->
-    <div class="node n-pre" id="PRELAB-AJO" style="top:20px;left:350px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="Rendimiento:|10L|Base:|Girasol 10L (MP04) + Ajo 5kg (MP40)|Estado:|Preelaborado" data-v="" data-a="" data-s="">
-        <div class="glow"></div>PRELAB-AJO
-    </div>
-    <div class="node n-pre" id="PRELAB-AZAFRANG" style="top:80px;left:350px" data-n="Agua Azafrán Grande" data-c="PRELAB-AZAFRANG" data-i="Rendimiento:|400ml|Base:|Agua 400ml + Azafrán 10g (MP19)|Estado:|Preelaborado" data-v="" data-a="" data-s="">
-        <div class="glow"></div>PRELAB-AZAFRANG
-    </div>
-    <div class="node n-pre" id="PRELAB-SALMORRETA" style="top:140px;left:350px" data-n="Salmorreta" data-c="PRELAB-SALMORRETA" data-i="Rendimiento:|350g|Estado:|Congelado|Destino:|Caldo" data-v="" data-a="" data-s="">
-        <div class="glow"></div>PRELAB-SALMORRETA
-    </div>
-    <div class="node n-pre" id="RIA-PESADO-VERD" style="top:200px;left:350px" data-n="Pesado Verduras" data-c="RIA-PESADO-VERD" data-i="Rendimiento:|700g total|Componentes:|Espinaca (MP33) 600g + Cebolla (MP34) 100g|Estado:|Pesado en seco" data-v="" data-a="" data-s="">
-        <div class="glow"></div>RIA-PESADO-VERD
-    </div>
-    <div class="node n-pre" id="MEZCLA-JNORMAL" style="top:270px;left:350px" data-n="Mezcla Jarra Normal" data-c="MEZCLA-JNORMAL" data-i="Rendimiento:|3860ml|Base:|Hazelnut (MP09) 260ml + Agua 3600ml|Clase:|n-mix|Estado:|Mezcla líquida" data-v="" data-a="" data-s="">
-        <div class="glow"></div>MEZCLA-JNORMAL
-    </div>
-    <div class="node n-pre" id="JARRA-VERD" style="top:350px;left:350px" data-n="Jarra Verduras" data-c="JARRA-VERD" data-i="Rendimiento:|510g|Base:|Espinaca (MP33) 420g + Cebolla (MP34) 90g|Estado:|Polvo rehidratado" data-v="" data-a="" data-s="">
-        <div class="glow"></div>JARRA-VERD
-    </div>
+<!-- ═══ PREELABORACIONES ═══ -->
+<div class="node n-pre" id="preAjo" style="left:290px;top:30px;width:200px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="Lote: RIA-PRELAB-AJO-DDMMAA|10L girasol + 5kg ajo|Pasteurizar 100°C, 1h 20min|→ 1310g al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite de Ajo</div>
+<div class="node n-pre" id="preAz" style="left:290px;top:108px;width:200px" data-n="Agua Azafrán (Grande)" data-c="PRELAB-AZAFRAN-G" data-i="Lote: RIA-PRELAB-AZAFRANG-DDMMAA|400g agua + 10g azafrán|Infusión 68°C, 1,5h|→ 400g al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Agua Azafrán (G)</div>
+<div class="node n-pre" id="preSalm" style="left:290px;top:186px;width:200px" data-n="Salmorreta" data-c="PRELAB-SALM" data-i="Lote: RIA-PRELAB-SALM-DDMMAA|Aceite oliva 1000g + Aceite girasol 3321g|350g → Caldo de Verduras" data-v="" data-a="" data-s=""><div class="glow"></div>Salmorreta</div>
+<div class="node n-pre" id="prePV" style="left:290px;top:264px;width:200px" data-n="Pesado Verduras" data-c="PRELAB-PESV" data-i="Lote: RIA-PRELAB-PESV-DDMMAA|Espinaca 500g|Cebolla 200g+300g|Puerro 555g|→ Caldo de Verduras" data-v="" data-a="" data-s=""><div class="glow"></div>Pesado Verduras<br><span style="font-size:10px">espinaca+cebolla+puerro</span></div>
+<div class="node n-mix" id="mezJ" style="left:290px;top:358px;width:200px" data-n="Mezcla Jarra Normal" data-c="MEZCLA-JNORMAL" data-i="Lote: RIA-MEZCLA-JNORMAL-DDMMAA|260ml Hazelnut + 3600ml agua|Para jarras verduras|Si sobra se guarda" data-v="" data-a="" data-s=""><div class="glow"></div>Mezcla Jarra Normal<br><span style="font-size:10px">260ml Hz + 3,6L agua</span></div>
+<div class="node n-pre" id="jarV" style="left:290px;top:440px;width:200px" data-n="Jarra de Verduras" data-c="JARRA-VERD" data-i="Lote: RIA-JARRA-VERD-DDMMAA|Espinaca deshidratada: 420g|Cebolla deshidratada: 90g" data-v="" data-a="" data-s=""><div class="glow"></div>Jarra Verduras<br><span style="font-size:10px">420g espinaca + 90g cebolla</span></div>
 
-    <!-- Caldo (Centro) -->
-    <div class="node n-cal" id="REC-CALDO-004" style="top:450px;left:350px" data-n="Caldo de Verduras" data-c="REC-CALDO-004 · RIA-VERDURAS" data-i="Rendimiento:|17L|Ingredientes:|Agua caliente 14.8L (AGUA)|Pesado Verduras 700g (RIA-PESADO-VERD)|Aceite de Ajo 1310g (PRELAB-AJO)|Aceite girasol 3321g (MP04)|Aceite oliva 1000g (MP05)|Aroma hierbas 20g (MP11)|Umami 150g (MP06)|Salmorreta 350g (PRELAB-SALMORRETA)|Pimentón 60g (MP10)|Xantana 8.26g (MP07)|Agua Azafrán 400g (PRELAB-AZAFRANG)|Procesos:|Cocción|Mezclado|Filtrado" data-v="" data-a="" data-s="">
-        <div class="glow"></div>REC-CALDO-004
-    </div>
+<!-- ═══ CALDO ═══ -->
+<div class="node n-cal" id="calV" style="left:590px;top:130px;width:200px;font-size:15px" data-n="Caldo de Verduras" data-c="REC-CALDO-004 · RIA-VERDURAS" data-i="Rendimiento: 25L|· Agua 14,8L|· Pesado Verduras (prelab)|· Aceite de Ajo 1310g|· Aceite girasol 3321g|· Aceite oliva 1000g|· Hierbas MP11 20g|· Umami 150g|· Salmorreta 350g|· Pimentón 60g|· Xantana 8,26g|· Agua Azafrán 400g" data-v="" data-a="APIO" data-s=""><div class="glow"></div>Caldo de Verduras</div>
 
-    <!-- Producto (Columna 3) -->
-    <div class="node n-prod" id="PROD-750" style="top:500px;left:680px" data-n="Arroz de Verduras" data-c="750 · La Santa" data-i="Lote: L-750-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24)|· Agua (en mezcla jarra)|· Caldo de Verduras|· Mezcla Jarra Normal (líquido)|· Jarra Verduras (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="" data-s="">
-        <div class="glow"></div>750
-    </div>
+<!-- ═══ PRODUCTO FINAL ═══ -->
+<div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:110px;display:flex;align-items:center;justify-content:center" data-n="ARROZ DE VERDURAS" data-c="La Santa · Código 750" data-i="Lote: L-750-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo de Verduras|· Mezcla Jarra Normal (líquido)|· Jarra Verduras (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="APIO" data-s=""><div class="glow"></div>ARROZ<br>DE<br>VERDURAS</div>
 </div>
 
-<!-- Panel lateral -->
-<div class="panel" id="P">
-    <span class="x" onclick="this.parentElement.classList.remove('vis');document.querySelectorAll('.node').forEach(n=>n.classList.remove('hl','dim'));document.querySelectorAll('.ln').forEach(l=>l.classList.remove('hl','dim'))">✕</span>
-    <h3 id="pN"></h3>
-    <div class="code" id="pC"></div>
-    <div class="info" id="pI"></div>
-    <div id="pT" style="margin-top:10px"></div>
-</div>
+<div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div></div>
 
-<!-- Leyenda -->
 <div class="legend">
-    <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div> Materia Prima (MP)</div>
-    <div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1px solid #8b5cf6"></div> Preelaboración</div>
-    <div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div> Caldo (REC)</div>
-    <div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:1px solid #ef4444"></div> Mezcla</div>
-    <div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div> Producto Final</div>
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
+<div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1px solid #8b5cf6"></div>Preelaboración</div>
+<div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:1px solid #ef4444"></div>Mezcla jarra (15d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Caldo (21d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
+<div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
+<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ APIO</div>
 </div>
 
 <script>
-// Dibujar líneas de conexión
-const svg = document.getElementById('E');
-
-function line(f, t, cls) {
-    const from = document.getElementById(f);
-    const to = document.getElementById(t);
-    if (!from || !to) return;
-
-    const x1 = from.offsetLeft + from.offsetWidth / 2;
-    const y1 = from.offsetTop + from.offsetHeight / 2;
-    const x2 = to.offsetLeft + to.offsetWidth / 2;
-    const y2 = to.offsetTop + to.offsetHeight / 2;
-
-    const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    ln.setAttribute('x1', x1);
-    ln.setAttribute('y1', y1);
-    ln.setAttribute('x2', x2);
-    ln.setAttribute('y2', y2);
-    ln.setAttribute('class', `ln ${cls}`);
-    ln.setAttribute('data-f', f);
-    ln.setAttribute('data-t', t);
-    svg.appendChild(ln);
-}
-
-// Materias primas -> Preelaboraciones
-line('MP04', 'PRELAB-AJO', 'lb');
-line('MP40', 'PRELAB-AJO', 'lb');
-line('MP19', 'PRELAB-AZAFRANG', 'lb');
-line('MP33', 'RIA-PESADO-VERD', 'lb');
-line('MP34', 'RIA-PESADO-VERD', 'lb');
-line('MP33', 'JARRA-VERD', 'lb');
-line('MP34', 'JARRA-VERD', 'lb');
-line('MP09', 'MEZCLA-JNORMAL', 'lr');
-line('AGUA', 'MEZCLA-JNORMAL', 'lb');
-
-// Preelaboraciones + MP -> Caldo
-line('AGUA', 'REC-CALDO-004', 'lg');
-line('RIA-PESADO-VERD', 'REC-CALDO-004', 'lg');
-line('PRELAB-AJO', 'REC-CALDO-004', 'lg');
-line('MP04', 'REC-CALDO-004', 'lg');
-line('MP05', 'REC-CALDO-004', 'lg');
-line('MP11', 'REC-CALDO-004', 'lg');
-line('MP06', 'REC-CALDO-004', 'lg');
-line('PRELAB-SALMORRETA', 'REC-CALDO-004', 'lg');
-line('MP10', 'REC-CALDO-004', 'lg');
-line('MP07', 'REC-CALDO-004', 'lg');
-line('PRELAB-AZAFRANG', 'REC-CALDO-004', 'lg');
-
-// Caldo + otros -> Producto
-line('MP24', 'PROD-750', 'lo');
-line('MEZCLA-JNORMAL', 'PROD-750', 'lo');
-line('REC-CALDO-004', 'PROD-750', 'lo');
-line('JARRA-VERD', 'PROD-750', 'lo');
-line('MP37', 'PROD-750', 'lo');
-line('MP50', 'PROD-750', 'lo');
-line('MP51', 'PROD-750', 'lo');
-
-// Interactividad
 const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
 let sel=null;
 ns.forEach(n=>{n.addEventListener('click',e=>{e.stopPropagation();const id=n.id;if(sel===id){clr();return}sel=id;
@@ -225,6 +161,5 @@ document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
 </script>
-
 </body>
 </html>
