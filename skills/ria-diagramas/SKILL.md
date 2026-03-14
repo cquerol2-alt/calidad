@@ -143,10 +143,8 @@ Cada salsa va dentro de la caja de su arroz correspondiente.
 | Código | Nombre | Lote | Vida útil | Conservación |
 |--------|--------|------|-----------|--------------|
 | MP43 | Salmorreta | RIA-PRELAB-SALMORRETA-DDMMAA | 360 días | Congelación |
-| MP44 | Aceite de gamba | RIA-PRELAB-GAMBA-DDMMAA | — | — |
 | MP45 | Aceite rojo de ñora | RIA-PRELAB-NORA-DDMMAA | 90 días | Tª Ambiente |
 | MP46 | Aceite de ajo | RIA-PRELAB-AJO-DDMMAA | 120 días | Tª Ambiente |
-| MP47 | Aceite de trufa | RIA-PRELAB-TRUFA-DDMMAA | — | — |
 | MP48 | Agua de azafrán 300g | RIA-PRELAB-AZAFRANP-DDMMAA | 90 días | Refrigeración |
 | MP48 | Agua de azafrán 400g | RIA-PRELAB-AZAFRANG-DDMMAA | 90 días | Refrigeración |
 | MP49 | Agua almidonada | RIA-PRELAB-ALMIDON-DDMMAA | 21 días | Refrigeración |
@@ -167,7 +165,7 @@ Cada salsa va dentro de la caja de su arroz correspondiente.
 | Mezcla | Mezcla Jarra Maestro | RIA-MEZCLA-JMAESTRO-DDMMAA | 15 días | Refrigeración |
 | Preparado | Preparado Maestro (polvos) | RIA-PREP-MAESTRO-DDMMAA | 180 días | Tª Ambiente |
 
-Nota: Los Pesados son pesajes de ingredientes secos que se etiquetan. NO tienen etiqueta SATO: Aceite de Gamba y Aceite de Trufa (están en data.js pero no en la impresora).
+Nota: Los Pesados son pesajes de ingredientes secos que se etiquetan. El Preparado Maestro (polvos) está en data.js pero NO tiene etiqueta SATO.
 
 ---
 
