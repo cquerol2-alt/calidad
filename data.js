@@ -96,7 +96,7 @@ const RIA_DATA = {
         },
         risotto: {
             nombre: 'Risotto',
-            familia: 'Risotto/Cremosos',
+            familia: 'La Santa',
             codigoLote: '741',
             variantes: { '260g': '741-1', 'bulk': '741-3' },
             arroz: 'Maratelli',
@@ -111,7 +111,7 @@ const RIA_DATA = {
         // --- Cremosos (producto final) ---
         iberico: {
             nombre: 'Cremoso Ibérico',
-            familia: 'Risotto/Cremosos',
+            familia: 'All-Included',
             codigoLote: '781',
             variantes: { '300g': '781-1', 'all-included': '781-2' },
             arroz: 'Maratelli',
@@ -124,7 +124,7 @@ const RIA_DATA = {
         },
         setas: {
             nombre: 'Cremoso Setas',
-            familia: 'Risotto/Cremosos',
+            familia: 'All-Included',
             codigoLote: '784',
             variantes: { '300g': '784-1', 'all-included': '784-2' },
             arroz: 'Maratelli',
@@ -137,7 +137,7 @@ const RIA_DATA = {
         },
         tartufata: {
             nombre: 'Cremoso Tartufata',
-            familia: 'Risotto/Cremosos',
+            familia: 'All-Included',
             codigoLote: '782',
             variantes: { '300g': '782-1', 'all-included': '782-2' },
             arroz: 'Maratelli',
@@ -649,7 +649,7 @@ const RIA_DATA = {
                 codigoMP: 'MP46',
                 ingredientes: [
                     { nombre: 'Aceite de girasol alto oleico', cantidad: '10', unidad: 'L', codigoMP: 'MP04', tipo: 'proveedor', proveedor: 'Coreysa' },
-                    { nombre: 'Ajo', cantidad: '5', unidad: 'kg', codigoMP: 'MP20', tipo: 'proveedor' }
+                    { nombre: 'Ajo', cantidad: '5', unidad: 'kg', codigoMP: 'MP40', tipo: 'proveedor' }
                 ],
                 notas: 'Pasteurizar a 100°C durante 1h 20min'
             },
@@ -660,7 +660,7 @@ const RIA_DATA = {
                 codigoMP: 'MP45',
                 ingredientes: [
                     { nombre: 'Aceite de girasol alto oleico', cantidad: '16', unidad: 'L', codigoMP: 'MP04', tipo: 'proveedor', proveedor: 'Coreysa' },
-                    { nombre: 'Ñora', cantidad: '2', unidad: 'latas', codigoMP: 'MP21', tipo: 'proveedor' },
+                    { nombre: 'Ñora', cantidad: '2', unidad: 'latas', codigoMP: 'MP31', tipo: 'proveedor' },  // MP31 = Ñora (Rajope), NO MP21 que es Boletus
                     { nombre: 'Pimentón', cantidad: '2', unidad: 'cucharas grandes', codigoMP: 'MP10', tipo: 'proveedor' },
                     { nombre: 'Cúrcuma', cantidad: '2', unidad: 'c.c.', codigoMP: 'MP50', tipo: 'proveedor' }
                 ],
@@ -672,11 +672,11 @@ const RIA_DATA = {
                 lotePrefijo: 'RIA-PRELAB-SALMORRETA',
                 codigoMP: 'MP43',
                 ingredientes: [
-                    { nombre: 'Ajo', cantidad: '10', unidad: 'kg', codigoMP: 'MP20', tipo: 'proveedor' },
+                    { nombre: 'Ajo', cantidad: '10', unidad: 'kg', codigoMP: 'MP40', tipo: 'proveedor' },
                     { nombre: 'Aceite de oliva', cantidad: '7.2', unidad: 'L', codigoMP: 'MP05', tipo: 'proveedor', proveedor: 'Makro' },
-                    { nombre: 'Ñora fresca', cantidad: '90', unidad: 'unidades', codigoMP: 'MP21', tipo: 'proveedor' },
+                    { nombre: 'Ñora fresca', cantidad: '90', unidad: 'unidades', codigoMP: 'MP31', tipo: 'proveedor' },
                     { nombre: 'Tomate deshidratado', cantidad: '4.6', unidad: 'kg (polvo)', codigoMP: 'MP22', tipo: 'proveedor' },
-                    { nombre: 'Ñora en lata', cantidad: '18', unidad: 'latas', codigoMP: 'MP21', tipo: 'proveedor' },
+                    { nombre: 'Ñora en lata', cantidad: '18', unidad: 'latas', codigoMP: 'MP31', tipo: 'proveedor' },
                     { nombre: 'Agua', cantidad: '12', unidad: 'L', tipo: 'na' }
                 ],
                 notas: 'Conservación: congelación'
@@ -735,7 +735,7 @@ const RIA_DATA = {
                 ingredientes: [
                     { nombre: 'Umami (Givaudan)', cantidad: '132', unidad: 'g', codigoMP: 'MP06', tipo: 'proveedor', proveedor: 'Givaudan' },
                     { nombre: 'Ácido tartárico', cantidad: '0.11', unidad: 'g', codigoMP: 'MP51', tipo: 'proveedor' },
-                    { nombre: 'Azúcar', cantidad: '110', unidad: 'g', codigoMP: 'MP52', tipo: 'proveedor' },
+                    { nombre: 'Azúcar', cantidad: '110', unidad: 'g', codigoMP: 'MP39', tipo: 'proveedor' },
                     { nombre: 'Sal', cantidad: '220', unidad: 'g', codigoMP: 'MP53', tipo: 'proveedor' }
                 ],
                 notas: 'Para 16 jarras. x2 (32 jarras): duplicar todas las cantidades'
@@ -747,7 +747,7 @@ const RIA_DATA = {
                 ingredientes: [
                     { nombre: 'Umami (Givaudan)', cantidad: '264', unidad: 'g', codigoMP: 'MP06', tipo: 'proveedor', proveedor: 'Givaudan' },
                     { nombre: 'Ácido tartárico', cantidad: '0.22', unidad: 'g', codigoMP: 'MP51', tipo: 'proveedor' },
-                    { nombre: 'Azúcar', cantidad: '220', unidad: 'g', codigoMP: 'MP52', tipo: 'proveedor' },
+                    { nombre: 'Azúcar', cantidad: '220', unidad: 'g', codigoMP: 'MP39', tipo: 'proveedor' },
                     { nombre: 'Sal', cantidad: '440', unidad: 'g', codigoMP: 'MP53', tipo: 'proveedor' }
                 ],
                 notas: 'Para 32 jarras. Es el doble del x1'
@@ -835,7 +835,8 @@ const RIA_DATA = {
         MP37: { nombre: 'Sal', proveedor: ['Varios'], proveedorMultiple: true, formato: 'Saco', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', lote: 'Hdno-10N89', caducidad: '26/02/2030' },
         MP38: { nombre: 'Ácido tartárico', proveedor: 'Dalmau', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/123tPERK4BqmmOFwmLbDyvgTBEa0K5M5v', fichaFalta: true, lote: '13506', caducidad: '10/2028' },
         MP39: { nombre: 'Azúcar', proveedor: 'Azucarera', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, lote: '39C0502601' },
-        // (MP41 eliminado: Aditivos Solchem no existe como producto)
+        MP40: { nombre: 'Ajo fresco', proveedor: 'Ajopel', formato: '', conservacion: 'Refrigeración', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, usadoEn: ['Preelaboración Aceite de Ajo', 'Preelaboración Salmorreta'] },
+        MP41: { nombre: 'Cúrcuma', proveedor: 'Ajopel', formato: '', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', fichaFalta: true, usadoEn: ['Caldo Pescado'] },
         // (MP42 eliminado: Ruca no existe como producto)
 
         // --- NUEVOS: Ingredientes de salsas cremosas (pendientes ficha técnica y proveedor) ---
