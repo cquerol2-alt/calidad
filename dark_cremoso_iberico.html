@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cremoso Ibérico — Flujo Producción</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
+h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
+.sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
+.inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
+.inst span{color:#fbbf24}
+.graph{max-width:1100px;margin:0 auto;position:relative;height:650px}
+.node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
+.node.hl{z-index:20}.node.dim{opacity:.15!important}
+.node .glow{position:absolute;inset:-3px;border-radius:12px;opacity:0;transition:opacity .3s}
+.node.hl .glow{opacity:1}
+.n-mp{background:#1e3a5f;border:1.5px solid #3b82f6;color:#93c5fd}
+.n-mp .glow{box-shadow:0 0 15px rgba(59,130,246,.5)}
+.n-pre{background:#2d1b69;border:1.5px solid #8b5cf6;color:#c4b5fd}
+.n-pre .glow{box-shadow:0 0 15px rgba(139,92,246,.5)}
+.n-mix{background:#4c1d1d;border:2px solid #ef4444;color:#fca5a5}
+.n-mix .glow{box-shadow:0 0 15px rgba(239,68,68,.5)}
+.n-cal{background:#14532d;border:2px solid #22c55e;color:#86efac}
+.n-cal .glow{box-shadow:0 0 15px rgba(34,197,94,.5)}
+.n-sal{background:#581c87;border:2px solid #a855f7;color:#d8b4fe}
+.n-sal .glow{box-shadow:0 0 15px rgba(168,85,247,.5)}
+.n-prod{background:#78350f;border:2.5px solid #f59e0b;color:#fde68a;font-weight:700;font-size:18px}
+.n-prod .glow{box-shadow:0 0 20px rgba(245,158,11,.6)}
+.panel{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:280px;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.5);transition:all .3s;opacity:0;pointer-events:none;z-index:50}
+.panel.vis{opacity:1;pointer-events:auto}
+.panel h3{font-size:15px;color:#f1f5f9;margin-bottom:4px}
+.panel .code{font-size:11px;color:#fbbf24;margin-bottom:10px}
+.panel .info{font-size:12px;line-height:1.7;color:#94a3b8}
+.panel .tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:2px 2px 0 0}
+.t-v{background:#14532d;color:#86efac}.t-a{background:#4c1d1d;color:#fca5a5}.t-c{background:#1e3a5f;color:#93c5fd}
+.panel .x{position:absolute;top:8px;right:12px;cursor:pointer;color:#64748b;font-size:18px}.panel .x:hover{color:#f1f5f9}
+svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.ln{fill:none;stroke-width:1.5;transition:opacity .3s}.ln.dim{opacity:.03!important}.ln.hl{opacity:1!important;stroke-width:2.5}
+.lb{stroke:#3b82f6;opacity:.25}.lp{stroke:#8b5cf6;opacity:.25}.lr{stroke:#ef4444;opacity:.3}.lg{stroke:#22c55e;opacity:.35}.ls{stroke:#a855f7;opacity:.3}.lo{stroke:#f59e0b;opacity:.4}.ld{stroke-dasharray:6 4}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:.8}}.ln.hl{animation:pulse 1.5s ease-in-out infinite}
+.legend{max-width:1100px;margin:20px auto 0;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#64748b}
+.legend-i{display:flex;align-items:center;gap:5px}.legend-d{width:12px;height:12px;border-radius:3px}
+.back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
+</style>
+</head>
+<body>
+<a class="back" href="diagramas.html">&larr; Menú</a>
+<h1>Arroz Cremoso Ibérico</h1>
+<p class="sub">Rice in Action S.L. — Flujo completo de producción</p>
+<div class="inst"><span>Click</span> en un nodo para resaltar sus conexiones</div>
+
+<div class="graph" id="G">
+<svg class="L">
+<!-- MP → Aceite Ajo -->
+<path class="ln lb" data-f="mp04" data-t="preAjo" d="M200,55 C240,55 260,55 290,55"/>
+<path class="ln lb" data-f="mp20" data-t="preAjo" d="M200,105 C240,90 260,70 290,62"/>
+<!-- MP → Agua Azafrán -->
+<path class="ln lb" data-f="mp19" data-t="preAz" d="M200,165 C240,165 260,155 290,148"/>
+<path class="ln lb" data-f="mpAg" data-t="preAz" d="M200,215 C240,195 260,165 290,155"/>
+<!-- MP → Mezcla Jarra Risotto -->
+<path class="ln lr" data-f="mp09" data-t="mezJR" d="M200,275 C300,280 350,290 390,298"/>
+<path class="ln lr" data-f="mpAg" data-t="mezJR" d="M200,225 C300,260 350,280 390,295"/>
+<!-- MP → Jarra Risotto -->
+<path class="ln lb" data-f="mp35" data-t="jarR" d="M200,335 C240,355 260,385 290,395"/>
+<path class="ln lb" data-f="mp33" data-t="jarR" d="M200,385 C240,390 260,395 290,398"/>
+<path class="ln lb" data-f="mp06" data-t="jarR" d="M200,435 C240,422 260,410 290,405"/>
+<!-- Mezcla Jarra + Jarra + Sal → combo jarra -->
+<path class="ln lo" data-f="mezJR" data-t="prod" d="M600,305 C700,315 780,325 830,330"/>
+<path class="ln lo" data-f="jarR" data-t="prod" d="M500,400 C650,385 760,355 830,340"/>
+<path class="ln lo ld" data-f="mpSal" data-t="prod" d="M200,485 C500,470 760,380 830,350"/>
+<!-- Preelabs → Caldo Risotto -->
+<path class="ln lp" data-f="preAjo" data-t="calR" d="M500,55 C540,75 560,110 590,130"/>
+<path class="ln lp" data-f="preAz" data-t="calR" d="M500,148 C540,145 560,140 590,140"/>
+<!-- MP directo al caldo -->
+<path class="ln lg" data-f="mp01p" data-t="calR" d="M200,535 C400,490 520,250 590,160"/>
+<path class="ln lg" data-f="mp07" data-t="calR" d="M200,585 C400,530 520,270 590,168"/>
+<!-- Caldo + Salsa → Producción -->
+<path class="ln lo" data-f="calR" data-t="prod" d="M800,150 C810,200 820,270 830,310"/>
+<path class="ln lo" data-f="salIb" data-t="prod" d="M800,280 C810,300 815,310 830,320"/>
+<!-- Directo a producción -->
+<path class="ln lo ld" data-f="mpArr" data-t="prod" d="M200,545 C500,530 760,390 830,355"/>
+<path class="ln lo ld" data-f="mpJamon" data-t="prod" d="M200,595 C500,570 760,400 830,360"/>
+</svg>
+
+<!-- ═══ MATERIAS PRIMAS ═══ -->
+<div class="node n-mp" id="mp04" style="left:10px;top:37px;width:182px" data-n="Aceite girasol alto oleico" data-c="MP04 — Coreysa" data-i="Garrafa 25L|→ Aceite de Ajo (10L)" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Aceite girasol (MP04)</div>
+<div class="node n-mp" id="mp20" style="left:10px;top:87px;width:182px" data-n="Ajo" data-c="MP20" data-i="5kg → Aceite de Ajo" data-v="" data-a="" data-s=""><div class="glow"></div>Ajo (MP20)</div>
+<div class="node n-mp" id="mp19" style="left:10px;top:147px;width:182px" data-n="Azafrán" data-c="MP19" data-i="7g + 300g agua (tamaño Pequeño)|Infusión 68°C, 1,5h|→ Agua de Azafrán (P)" data-v="" data-a="" data-s=""><div class="glow"></div>Azafrán (MP19)</div>
+<div class="node n-mp" id="mpAg" style="left:10px;top:197px;width:182px" data-n="Agua" data-c="Agua potable" data-i="300g → Agua Azafrán (P)|3600ml → Mezcla Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
+<div class="node n-mp" id="mp09" style="left:10px;top:257px;width:182px" data-n="Hazelnut (colorante)" data-c="MP09 — Sensient" data-i="Bote 1kg|60ml → Mezcla Jarra Risotto" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Hazelnut (MP09)</div>
+<div class="node n-mp" id="mp35" style="left:10px;top:317px;width:182px" data-n="Pollo deshidratado" data-c="MP35" data-i="→ Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Pollo deshid. (MP35)</div>
+<div class="node n-mp" id="mp33" style="left:10px;top:367px;width:182px" data-n="Espinaca deshidratada" data-c="MP33" data-i="→ Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Espinaca deshid. (MP33)</div>
+<div class="node n-mp" id="mp06" style="left:10px;top:417px;width:182px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="→ Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
+<div class="node n-mp" id="mpSal" style="left:10px;top:467px;width:182px" data-n="Sal" data-c="MP53" data-i="Va a producción con jarra" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP53)</div>
+<div class="node n-mp" id="mp01p" style="left:10px;top:517px;width:182px" data-n="Caldo Aneto Pollo" data-c="MP01P — Aneto" data-i="Caldo Natural Pollo Restauración|→ Caldo Risotto" data-v="" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Caldo Aneto Pollo</div>
+<div class="node n-mp" id="mpArr" style="left:10px;top:527px;width:182px;display:none" data-n="" data-c="" data-i="" data-v="" data-a="" data-s=""><div class="glow"></div></div>
+<div class="node n-mp" id="mp07" style="left:10px;top:567px;width:182px" data-n="Xantana" data-c="MP07" data-i="→ Caldo Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Xantana (MP07)</div>
+
+<!-- Arroz y Jamón visibles -->
+<div class="node n-mp" id="mpArr" style="left:10px;top:527px;width:182px" data-n="Arroz Nuovo Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Saco 25kg|Variedad Japónica|Lote: 26Y04 · Cad: 06/2027|Directo a producción" data-v="18 meses" data-a="" data-s="Tª Ambiente"><div class="glow"></div>Arroz Maratelli (MP24)</div>
+<div class="node n-mp" id="mpJamon" style="left:10px;top:577px;width:182px" data-n="Jamón Ibérico" data-c="MP — Enrique Tomás" data-i="Lote: 25009100408|Cortado, directo a producción" data-v="" data-a="" data-s="Refrigeración"><div class="glow"></div>Jamón Ibérico</div>
+
+<!-- ═══ PREELABORACIONES ═══ -->
+<div class="node n-pre" id="preAjo" style="left:290px;top:35px;width:200px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="Lote: RIA-PRELAB-AJO-DDMMYY|10L girasol + 5kg ajo|Pasteurizar 100°C, 1h 20min|→ Caldo Risotto" data-v="120 días" data-a="" data-s="Tª Ambiente (proteger luz)"><div class="glow"></div>Aceite de Ajo</div>
+<div class="node n-pre" id="preAz" style="left:290px;top:125px;width:200px" data-n="Agua de Azafrán (Pequeña)" data-c="PRELAB-AZAFRAN-P" data-i="Lote: RIA-PRELAB-AZAFRANP-DDMMYY|300g agua + 7g azafrán|Infusión 68°C, 1,5h" data-v="90 días" data-a="" data-s="Refrigeración (0-4°C)"><div class="glow"></div>Agua Azafrán (P)</div>
+<div class="node n-mix" id="mezJR" style="left:390px;top:275px;width:200px" data-n="Mezcla Jarra Risotto" data-c="MEZCLA-JRISOTTO" data-i="Lote: RIA-MEZCLA-JRISOTTO-DDMMYY|60ml Hazelnut + 3600ml agua|Para jarras de risotto|Si sobra se guarda" data-v="15 días" data-a="" data-s="Refrigeración (0-4°C)"><div class="glow"></div>Mezcla Jarra Risotto<br><span style="font-size:10px">60ml Hz + 3,6L agua</span></div>
+<div class="node n-pre" id="jarR" style="left:290px;top:375px;width:200px" data-n="Jarra Risotto" data-c="JARRA-RISOTTO" data-i="Lote: RIA-JARRA-RISOTTO-DDMMYY|Pollo deshidratado|Espinaca deshidratada|Umami (Givaudan)" data-v="5 días" data-a="" data-s="Refrigeración (0-4°C)"><div class="glow"></div>Jarra Risotto<br><span style="font-size:10px">pollo+espinaca+umami</span></div>
+
+<!-- ═══ CALDO ═══ -->
+<div class="node n-cal" id="calR" style="left:590px;top:110px;width:200px;font-size:14px" data-n="Caldo Risotto" data-c="REC-CALDO-RISOTTO · RIA-RISOTTO" data-i="· Caldo Aneto Pollo|· Aceite de Ajo|· Agua Azafrán (P)|· Xantana|Paeller (grasa pollo, AOVE,|sal, zanahoria, cebolla)" data-v="21 días" data-a="" data-s="Refrigeración (0-4°C)"><div class="glow"></div>Caldo Risotto</div>
+
+<!-- ═══ SALSA ═══ -->
+<div class="node n-sal" id="salIb" style="left:590px;top:250px;width:200px;font-size:14px" data-n="Salsa Ibérico" data-c="REC-SALSA-IBERICO" data-i="Salsa elaborada con:|· Grasa de pollo|· Aroma de jamón|· Umami (Givaudan)|· Otros ingredientes|⚠ LÁCTEOS, SULFITOS" data-v="21 días" data-a="LÁCTEOS SULFITOS" data-s="Refrigeración (0-4°C)"><div class="glow"></div>Salsa Ibérico</div>
+
+<!-- ═══ PRODUCTO FINAL ═══ -->
+<div class="node n-prod" id="prod" style="left:830px;top:280px;width:200px;height:100px;display:flex;align-items:center;justify-content:center" data-n="ARROZ CREMOSO IBÉRICO" data-c="Familia Cremosos" data-i="En producción se mezcla:|· Mezcla Jarra Risotto (líquido)|· Jarra Risotto (polvos)|· Sal|· Caldo Risotto|· Salsa Ibérico|· Jamón Ibérico (cortado)|· Arroz Maratelli (Lote: 26Y04)|Formatos: 260g (24 uds/caja)" data-v="" data-a="LÁCTEOS SULFITOS" data-s=""><div class="glow"></div>CREMOSO<br>IBÉRICO</div>
+</div>
+
+<div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div></div>
+
+<div class="legend">
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
+<div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1px solid #8b5cf6"></div>Preelaboración</div>
+<div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:1px solid #ef4444"></div>Mezcla jarra (15d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Caldo (21d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#581c87;border:1px solid #a855f7"></div>Salsa</div>
+<div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
+<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ LÁCTEOS · SULFITOS</div>
+</div>
+
+<script>
+const ns=document.querySelectorAll('.node[id]:not([style*="display:none"])'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
+let sel=null;
+ns.forEach(n=>{n.addEventListener('click',e=>{e.stopPropagation();const id=n.id;if(sel===id){clr();return}sel=id;
+const c=new Set([id]);ls.forEach(l=>{if(l.dataset.f===id||l.dataset.t===id){c.add(l.dataset.f);c.add(l.dataset.t)}});
+ns.forEach(x=>{x.classList.toggle('hl',c.has(x.id));x.classList.toggle('dim',!c.has(x.id))});
+ls.forEach(l=>{const ok=l.dataset.f===id||l.dataset.t===id;l.classList.toggle('hl',ok);l.classList.toggle('dim',!ok)});
+document.getElementById('pN').textContent=n.dataset.n;document.getElementById('pC').textContent=n.dataset.c;
+document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
+let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
+if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
+if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
+document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
+document.addEventListener('click',clr);
+function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
+</script>
+</body>
+</html>
