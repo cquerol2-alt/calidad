@@ -223,18 +223,34 @@ REGLA CRÍTICA — No confundir:
 1. **NO poner lote ni caducidad en materias primas.** Solo fabricante/proveedor y cantidad.
 2. **NO poner vida útil ni condiciones de almacenamiento en NINGÚN nodo.** Los campos data-v y data-s siempre vacíos.
 3. **NO confundir formato de fecha de lote.** Arroces = AAMMDD. Preelaborados/salsas = DDMMAA.
-4. **NO confundir MP20.** En data.js, MP20 aparece tanto para Ajo (en recetas) como para Jamón Ibérico (en la lista maestra). El código correcto es: **MP20 = Jamón Ibérico (Enrique Tomás)**, **MP40 = Ajo (Ajopel)**.
+4. **NO confundir MP20.** En data.js, MP20 aparece tanto para Ajo (en recetas de preelaboración, línea 652) como para Jamón Ibérico (en la lista maestra, línea 815). El código correcto es: **MP20 = Jamón Ibérico (Enrique Tomás)**, **MP40 = Ajo (Ajopel)**. Esto es un bug de data.js — siempre usar MP40 para Ajo.
 5. **NO confundir MP21 con Ñora.** MP21 = Boletus (Honza). La Ñora es **MP31 (Rajope)**.
-6. **NO confundir MP39/MP52.** En las recetas de Maestro, azúcar aparece como MP52, pero **MP39 = Azúcar (Azucarera)** en la lista maestra. Usar MP39.
+6. **NO confundir MP39/MP52.** En las recetas de Maestro, azúcar aparece como MP52, pero MP52 es Etiqueta en la lista maestra. **MP39 = Azúcar (Azucarera)**. Usar MP39.
 7. **Maestro NO lleva caldo ni salsa.** Verificar en produccion.html: `const showSalsa = !isSalsa && !isMaestro;`
 8. **Caldo Risotto NO lleva Caldo Aneto.** La receta REC-CALDO-005 usa: Agua, Aceite de Ajo, Mantequilla, Aceite girasol, Xantana, Umami, Almidón. No Aneto ni Paeller.
 9. **NO poner comentarios internos visibles al usuario.** Notas como "Maestro NO lleva caldo" son para el skill, no para el diagrama.
 10. **NO poner emojis** en los diagramas ni en el índice.
 11. **Cada salsa va con su arroz.** No mezclar destinos. Salsa Pescado → caja Pescado, Salsa Boletus → caja Risotto, Salsa Ibérica → caja Cremoso Ibérico.
 12. **Packaging según formato.** EOS-35 (MP50) para 190-300g, EOS-50 (MP55) para 380-450g. Verificar qué bandeja usa cada producto.
-13. **IDs de nodo únicos.** No duplicar ids (problema actual en cremoso ibérico con `id="mpArr"` duplicado).
+13. **IDs de nodo únicos.** No duplicar ids (problema actual en cremoso ibérico con `id="mpArr"` duplicado — hay que arreglar).
 14. **Verificar todo contra data.js ANTES de escribir.** Siempre leer data.js primero para confirmar códigos, proveedores, ingredientes y recetas.
 15. **El Aceite de Ajo va directo a producción en Maestro**, no a través de un caldo (porque Maestro no tiene caldo).
+16. **Risotto pertenece a La Santa**, no a All-Included, aunque use Caldo Risotto. La Santa = arroces con caldo y salsa en sobre aparte.
+17. **"Cremosos / Risotto" se renombró a "All-Included"** en diagramas.html y en toda la documentación.
+18. **Familia Maestro es independiente de La Santa** en el índice de diagramas (tiene su propia sección).
+
+---
+
+## CORRECCIONES PENDIENTES EN DIAGRAMAS EXISTENTES
+
+Estas correcciones ya están identificadas pero aún no aplicadas:
+
+1. **dark_pescado.html**: Nodo Ajo muestra `data-c="Ajo fresco"` sin código → cambiar a `data-c="MP40 — Ajopel"`
+2. **dark_pescado.html**: Nodo Cúrcuma muestra `data-c="Cúrcuma"` sin código → cambiar a `data-c="MP41 — Ajopel"`
+3. **dark_cremoso_iberico.html**: Nodo Ajo muestra `data-c="Ajo fresco"` sin código → cambiar a `data-c="MP40 — Ajopel"`
+4. **dark_cremoso_iberico.html**: Tiene dos nodos con `id="mpArr"` (uno oculto con display:none, otro visible) → eliminar el duplicado oculto
+5. **diagramas.html**: Sección de salsas todavía puede mostrar formato AAMMDD en descripción → verificar que ponga DDMMAA
+6. **diagramas.html**: Actualizar índice completo con TODAS las familias y productos (La Santa 5, Maestro 2, All-Included 4, Salsas 7)
 
 ---
 
