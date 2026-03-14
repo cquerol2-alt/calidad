@@ -271,6 +271,39 @@ Estas correcciones ya están identificadas pero aún no aplicadas:
 
 ---
 
+## FUENTES DE DATOS Y COHERENCIA
+
+Hay 5 sitios donde se almacenan datos de productos/intermedios/lotes. Cuando se añade, modifica o elimina un producto o preelaboración hay que actualizar TODOS:
+
+| # | Archivo | Ubicación | Qué contiene |
+|---|---------|-----------|--------------|
+| 1 | **data.js** | `/calidad/data.js` (repo GitHub Pages) | Fuente maestra para los formularios web. Productos, recetas caldos, jarras, mezclas, preelaboraciones, materias primas (con código MP y proveedor), lotes. |
+| 2 | **RIA_Datos_Maestros_v2.xlsx** | `/Downloads--Calidad/` y `/Documentos--Calidad/` | Excel maestra. Hojas: Productos, Ingredientes (con MP y proveedor), Proveedores, Lotes (todos los intermedios), Recetas Caldos, Recetas Salsas, Recetas Preelab., Formatos. |
+| 3 | **RIA_Referencia_Etiquetas_SATO.xlsx** | `/IMPRESORA PRODUCTOS INTERMEDIOS/` | Datos para impresión de etiquetas SATO. Hojas: Caldos, Salsas, Preelaboraciones (incluye pesados, jarras, mezclas). Contiene ingredientes, prefijo lote, vida útil, conservación. |
+| 4 | **Diagramas HTML** | `/calidad/dark_*.html` | Diagramas de flujo de producción. Cada nodo tiene data-c (código MP + proveedor), data-i (info), data-a (alérgenos). |
+| 5 | **diagramas.html** | `/calidad/diagramas.html` | Índice/menú de todos los diagramas. Lista familias, productos, descripciones y lotes. |
+
+### Checklist de coherencia (usar siempre que se haga un cambio)
+
+Al añadir/modificar/eliminar un producto, materia prima o preelaboración:
+
+1. **data.js**: ¿Está el producto/MP/preelaboración? ¿Código MP correcto? ¿Proveedor correcto? ¿Lote prefix correcto?
+2. **Excel maestra (Ingredientes)**: ¿Tiene el código MP, proveedor, formato, conservación?
+3. **Excel maestra (Lotes)**: ¿Está el lote con formato correcto (AAMMDD o DDMMAA)?
+4. **Excel maestra (Proveedores)**: ¿Está el proveedor con sus códigos MP?
+5. **SATO etiquetas**: ¿Tiene etiqueta? ¿Prefijo lote coincide? ¿Ingredientes y alérgenos correctos? ¿Vida útil correcta?
+6. **Diagrama HTML correspondiente**: ¿Nodo con data-c correcto (MPxx — Proveedor)? ¿Sin lote/cad en MP? ¿Sin vida útil?
+7. **diagramas.html (índice)**: ¿Aparece en la familia correcta con la descripción correcta?
+8. **SKILL.md (este archivo)**: ¿Tablas de referencia actualizadas?
+
+### Productos que NO tienen etiqueta SATO (pero sí están en data.js)
+
+- Aceite de Gamba (MP44) — ELIMINADO, no se elabora
+- Aceite de Trufa (MP47) — ELIMINADO, no se elabora
+- Preparado Maestro (RIA-PREP-MAESTRO) — En data.js es un paso intermedio; en SATO se etiqueta como Mezcla Jarra Maestro (RIA-MEZCLA-JMAESTRO)
+
+---
+
 ## FICHAS TÉCNICAS EN GOOGLE DRIVE
 
 Pendiente de implementar: cada nodo de materia prima tendrá un enlace a su ficha técnica en Google Drive. El campo `fichaDrive` en data.js contiene la URL. No implementar todavía — se hará en una fase posterior.
