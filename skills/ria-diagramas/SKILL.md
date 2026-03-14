@@ -140,14 +140,34 @@ Cada salsa va dentro de la caja de su arroz correspondiente.
 
 ### Preelaboraciones RIA (elaboración propia)
 
-| Código | Nombre | Lote |
-|--------|--------|------|
-| MP43 / PRELAB-SALMORRETA | Salmorreta | RIA-PRELAB-SALMORRETA-DDMMAA |
-| MP44 | Aceite de gamba | RIA-PRELAB-GAMBA-DDMMAA |
-| MP45 / PRELAB-NORA | Aceite rojo de ñora | RIA-PRELAB-NORA-DDMMAA |
-| MP46 / PRELAB-AJO | Aceite de ajo | RIA-PRELAB-AJO-DDMMAA |
-| MP47 | Aceite de trufa | RIA-PRELAB-TRUFA-DDMMAA |
-| MP48 / PRELAB-AZAFRAN | Agua de azafrán | RIA-PRELAB-AZAFRAN[G/P]-DDMMAA |
+| Código | Nombre | Lote | Vida útil | Conservación |
+|--------|--------|------|-----------|--------------|
+| MP43 | Salmorreta | RIA-PRELAB-SALMORRETA-DDMMAA | 360 días | Congelación |
+| MP44 | Aceite de gamba | RIA-PRELAB-GAMBA-DDMMAA | — | — |
+| MP45 | Aceite rojo de ñora | RIA-PRELAB-NORA-DDMMAA | 90 días | Tª Ambiente |
+| MP46 | Aceite de ajo | RIA-PRELAB-AJO-DDMMAA | 120 días | Tª Ambiente |
+| MP47 | Aceite de trufa | RIA-PRELAB-TRUFA-DDMMAA | — | — |
+| MP48 | Agua de azafrán 300g | RIA-PRELAB-AZAFRANP-DDMMAA | 90 días | Refrigeración |
+| MP48 | Agua de azafrán 400g | RIA-PRELAB-AZAFRANG-DDMMAA | 90 días | Refrigeración |
+| MP49 | Agua almidonada | RIA-PRELAB-ALMIDON-DDMMAA | 21 días | Refrigeración |
+| MP54 | Salsa Verduras Conc. | RIA-PRELAB-SVCONC-DDMMAA | 30 días | Refrigeración |
+
+### Pesados, Jarras y Mezclas (elaboración propia)
+
+| Tipo | Nombre | Lote | Vida útil | Conservación |
+|------|--------|------|-----------|--------------|
+| Pesado | Pesado Verduras | RIA-PESADO-VERD-DDMMAA | 180 días | Tª Ambiente |
+| Pesado | Pesado Risotto | RIA-PESADO-RIS-DDMMAA | 180 días | Tª Ambiente |
+| Jarra | Jarra Pescado | RIA-JARRA-PESC-DDMMAA | 180 días | Tª Ambiente |
+| Jarra | Jarra Verduras | RIA-JARRA-VERD-DDMMAA | 180 días | Tª Ambiente |
+| Jarra | Jarra Risotto | RIA-JARRA-RIS-DDMMAA | 180 días | Tª Ambiente |
+| Jarra | Jarra Maestro | RIA-JARRA-MAESTRO-DDMMAA | 180 días | Tª Ambiente |
+| Mezcla | Mezcla Jarra Normal | RIA-MEZCLA-JNORMAL-DDMMAA | 15 días | Refrigeración |
+| Mezcla | Mezcla Jarra Risotto | RIA-MEZCLA-JRISOTTO-DDMMAA | 15 días | Refrigeración |
+| Mezcla | Mezcla Jarra Maestro | RIA-MEZCLA-JMAESTRO-DDMMAA | 15 días | Refrigeración |
+| Preparado | Preparado Maestro (polvos) | RIA-PREP-MAESTRO-DDMMAA | 180 días | Tª Ambiente |
+
+Nota: Los Pesados son pesajes de ingredientes secos que se etiquetan. NO tienen etiqueta SATO: Aceite de Gamba y Aceite de Trufa (están en data.js pero no en la impresora).
 
 ---
 
