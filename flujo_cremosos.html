@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flujo de Producción — Cremosos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .back {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .back:hover {
+            color: #60a5fa;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+
+        .sub {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 1050px;
+        }
+
+        svg.flow-arrows {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .flow-arrows line {
+            stroke: #3b82f6;
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+        }
+
+        .node {
+            position: absolute;
+            width: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 500;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .node:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .n-start {
+            background: #14532d;
+            border-color: #22c55e;
+            color: #86efac;
+            top: 10px;
+        }
+
+        .n-op {
+            background: #1e3a5f;
+            border-color: #3b82f6;
+            color: #93c5fd;
+            top: 85px;
+        }
+
+        .n-extra {
+            background: #3b1f4e;
+            border-color: #a855f7;
+            color: #d8b4fe;
+            top: 235px;
+        }
+
+        .n-pcc {
+            background: #4c1d1d;
+            border-color: #ef4444;
+            color: #fca5a5;
+            font-weight: bold;
+            top: 720px;
+        }
+
+        .n-end {
+            background: #78350f;
+            border-color: #f59e0b;
+            color: #fde68a;
+            top: 930px;
+        }
+
+        .node.n-op:nth-of-type(3) { top: 85px; }
+        .node.n-op:nth-of-type(4) { top: 160px; }
+        .node.n-op:nth-of-type(5) { top: 235px; }
+        .node.n-op:nth-of-type(6) { top: 310px; }
+
+        /* Inline positioning for each step */
+        [data-step="1"] { top: 10px; }
+        [data-step="2"] { top: 85px; }
+        [data-step="3"] { top: 160px; }
+        [data-step="4"] { top: 235px; }
+        [data-step="5"] { top: 310px; }
+        [data-step="6"] { top: 385px; }
+        [data-step="7"] { top: 460px; }
+        [data-step="8"] { top: 535px; }
+        [data-step="9"] { top: 610px; }
+        [data-step="10"] { top: 685px; }
+        [data-step="11"] { top: 760px; }
+        [data-step="12"] { top: 835px; }
+        [data-step="13"] { top: 910px; }
+        [data-step="14"] { top: 985px; }
+        [data-step="15"] { top: 1060px; }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1100px;
+            padding-top: 30px;
+            border-top: 1px solid #1e293b;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 2px solid;
+        }
+
+        .legend-op .legend-color {
+            background: #1e3a5f;
+            border-color: #3b82f6;
+        }
+
+        .legend-pcc .legend-color {
+            background: #4c1d1d;
+            border-color: #ef4444;
+        }
+
+        .legend-extra .legend-color {
+            background: #3b1f4e;
+            border-color: #a855f7;
+        }
+
+        .legend-start .legend-color {
+            background: #14532d;
+            border-color: #22c55e;
+        }
+
+        .legend-end .legend-color {
+            background: #78350f;
+            border-color: #f59e0b;
+        }
+
+        /* Side Panel */
+        .side-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: #1a1f3a;
+            border-left: 1px solid #3b82f6;
+            padding: 30px 20px;
+            overflow-y: auto;
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        .side-panel.active {
+            right: 0;
+        }
+
+        .panel-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #93c5fd;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .panel-close:hover {
+            color: #60a5fa;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            color: #f1f5f9;
+        }
+
+        .panel-content {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .panel-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #3b82f6;
+        }
+
+        .panel-section:last-child {
+            border-bottom: none;
+        }
+
+        .panel-label {
+            font-weight: 600;
+            color: #93c5fd;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-text {
+            color: #cbd5e1;
+        }
+
+        .pcc-critical {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+
+        .pcc-critical .panel-label {
+            color: #fca5a5;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="back" href="diagramas.html">&larr; Menú</a>
+        <h1>Flujo de Producción — Familia Cremosos</h1>
+        <div class="sub">Diagrama de proceso APPCC · Rice in Action S.L. · All-Included</div>
+    </header>
+
+    <div class="container">
+        <svg class="flow-arrows" id="svgArrows">
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+                </marker>
+            </defs>
+        </svg>
+
+        <!-- Node 1: Lavado del arroz -->
+        <div class="node n-start" data-step="1" data-id="1">
+            Lavado del arroz
+        </div>
+
+        <!-- Node 2: Arroz en redes -->
+        <div class="node n-op" data-step="2" data-id="2">
+            Arroz en redes
+        </div>
+
+        <!-- Node 3: Preparar jarras -->
+        <div class="node n-op" data-step="3" data-id="3">
+            Preparar jarras
+        </div>
+
+        <!-- Node 4: Horno — cocción -->
+        <div class="node n-op" data-step="4" data-id="4">
+            Horno — cocción
+        </div>
+
+        <!-- Node 5: Mezclado con caldo -->
+        <div class="node n-op" data-step="5" data-id="5">
+            Mezclado con caldo
+        </div>
+
+        <!-- Node 6: Añadir salsa -->
+        <div class="node n-extra" data-step="6" data-id="6">
+            Añadir salsa
+        </div>
+
+        <!-- Node 7: Añadir ingrediente extra -->
+        <div class="node n-extra" data-step="7" data-id="7">
+            Añadir ingrediente extra
+        </div>
+
+        <!-- Node 8: Dispensar en barquetas -->
+        <div class="node n-op" data-step="8" data-id="8">
+            Dispensar en barquetas
+        </div>
+
+        <!-- Node 9: Termosellado -->
+        <div class="node n-op" data-step="9" data-id="9">
+            Termosellado
+        </div>
+
+        <!-- Node 10: Etiquetado -->
+        <div class="node n-op" data-step="10" data-id="10">
+            Etiquetado
+        </div>
+
+        <!-- Node 11: Detector de metales -->
+        <div class="node n-pcc" data-step="11" data-id="11">
+            Detector de metales — PCC2
+        </div>
+
+        <!-- Node 12: Pasteurización -->
+        <div class="node n-pcc" data-step="12" data-id="12">
+            Pasteurización — PCC1
+        </div>
+
+        <!-- Node 13: Abatimiento -->
+        <div class="node n-op" data-step="13" data-id="13">
+            Abatimiento
+        </div>
+
+        <!-- Node 14: Refrigeración -->
+        <div class="node n-op" data-step="14" data-id="14">
+            Refrigeración
+        </div>
+
+        <!-- Node 15: Embalaje en cajas -->
+        <div class="node n-end" data-step="15" data-id="15">
+            Embalaje en cajas
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item legend-start">
+            <div class="legend-color"></div>
+            <span>Inicio</span>
+        </div>
+        <div class="legend-item legend-op">
+            <div class="legend-color"></div>
+            <span>Operación</span>
+        </div>
+        <div class="legend-item legend-extra">
+            <div class="legend-color"></div>
+            <span>Ingrediente Extra</span>
+        </div>
+        <div class="legend-item legend-pcc">
+            <div class="legend-color"></div>
+            <span>PCC</span>
+        </div>
+        <div class="legend-item legend-end">
+            <div class="legend-color"></div>
+            <span>Final</span>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="side-panel" id="sidePanel">
+        <button class="panel-close" id="panelClose">&times;</button>
+        <div class="panel-content" id="panelContent"></div>
+    </div>
+
+    <script>
+        // Node details data
+        const nodeDetails = {
+            1: {
+                title: 'Lavado del arroz (INICIO)',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'El arroz Maratelli (MP24) se lava con agua para eliminar almidón superficial'
+                    },
+                    {
+                        label: 'Materia Prima',
+                        content: 'Arroz Maratelli (MP24)'
+                    },
+                    {
+                        label: 'Objetivo',
+                        content: 'Eliminación de almidón superficial para mejorar textura'
+                    }
+                ]
+            },
+            2: {
+                title: 'Arroz en redes',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'El arroz lavado se pesa e introduce en redes de cocción'
+                    },
+                    {
+                        label: 'Control',
+                        content: 'Cantidad según formato de producto'
+                    }
+                ]
+            },
+            3: {
+                title: 'Preparar jarras',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Preparación de la jarra Risotto con ingredientes deshidratados'
+                    },
+                    {
+                        label: 'Componentes',
+                        content: 'Pollo deshidratado + umami + Hazelnut + agua'
+                    },
+                    {
+                        label: 'Función',
+                        content: 'Base aromatizada para cocción del arroz'
+                    }
+                ]
+            },
+            4: {
+                title: 'Horno — cocción',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Cocción a alta temperatura del arroz'
+                    },
+                    {
+                        label: 'Componentes en horno',
+                        content: 'Arroz en red + jarra (base) + agua'
+                    },
+                    {
+                        label: 'Control',
+                        content: 'Monitorizar tiempo y temperatura de cocción'
+                    }
+                ]
+            },
+            5: {
+                title: 'Mezclado con caldo',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'El arroz cocido se mezcla con Caldo Risotto en mezcladores industriales'
+                    },
+                    {
+                        label: 'Aditivos',
+                        content: 'Caldo Risotto + Mantequilla + Xantana + Aceite ajo'
+                    },
+                    {
+                        label: 'Equipamiento',
+                        content: 'Mezcladores industriales'
+                    }
+                ]
+            },
+            6: {
+                title: 'Añadir salsa (DIFERENCIADOR)',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Se añade la salsa específica del cremoso según variante'
+                    },
+                    {
+                        label: 'Tipos de salsa',
+                        content: 'Salsa Ibérico / Salsa Queso / Salsa Setas / Salsa Tartufata'
+                    },
+                    {
+                        label: 'Control',
+                        content: 'Dosificación precisa según receta'
+                    }
+                ]
+            },
+            7: {
+                title: 'Añadir ingrediente extra (DIFERENCIADOR)',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Se añade el ingrediente diferenciador del cremoso'
+                    },
+                    {
+                        label: 'Cremoso Ibérico',
+                        content: 'Jamón ibérico (MP20)'
+                    },
+                    {
+                        label: 'Cremoso Setas',
+                        content: 'Mezcla setas (MP22)'
+                    },
+                    {
+                        label: 'Cremoso Tartufato',
+                        content: 'Tartufata (MP23)'
+                    },
+                    {
+                        label: 'Cremoso Queso',
+                        content: 'Queso azul (MP73)'
+                    }
+                ]
+            },
+            8: {
+                title: 'Dispensar en barquetas',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Dosificación del producto en bandejas de tray-seal'
+                    },
+                    {
+                        label: 'Envase',
+                        content: 'Bandejas EOS-35'
+                    },
+                    {
+                        label: 'Control',
+                        content: 'Control de peso por unidad'
+                    }
+                ]
+            },
+            9: {
+                title: 'Termosellado',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Sellado hermético de la bandeja con film top-seal'
+                    },
+                    {
+                        label: 'Objetivo',
+                        content: 'Garantizar hermeticidad y conservación'
+                    }
+                ]
+            },
+            10: {
+                title: 'Etiquetado',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Impresión y colocación de etiqueta'
+                    },
+                    {
+                        label: 'Información',
+                        content: 'Lote, fecha caducidad, código producto'
+                    },
+                    {
+                        label: 'Trazabilidad',
+                        content: 'Vinculación con registro de producción'
+                    }
+                ]
+            },
+            11: {
+                title: 'Detector de metales — PCC2',
+                sections: [
+                    {
+                        label: 'Tipo',
+                        content: 'Punto Crítico de Control (PCC)'
+                    },
+                    {
+                        label: 'Límite crítico',
+                        content: 'Fe ≤ 1.5mm | No-Fe ≤ 2.0mm | SS ≤ 2.5mm'
+                    },
+                    {
+                        label: 'Monitorización',
+                        content: 'Cada bandeja'
+                    },
+                    {
+                        label: 'Acción correctiva',
+                        content: 'Rechazo automático + revisión lote'
+                    }
+                ]
+            },
+            12: {
+                title: 'Pasteurización — PCC1',
+                sections: [
+                    {
+                        label: 'Tipo',
+                        content: 'Punto Crítico de Control (PCC)'
+                    },
+                    {
+                        label: 'Límite crítico',
+                        content: 'Temperatura ≥ 85°C durante ≥ 45 minutos'
+                    },
+                    {
+                        label: 'Monitorización',
+                        content: 'Registro continuo de temperatura'
+                    },
+                    {
+                        label: 'Acción correctiva',
+                        content: 'Reproceso o destrucción del lote'
+                    }
+                ]
+            },
+            13: {
+                title: 'Abatimiento',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Reducción rápida de temperatura post-pasteurización'
+                    },
+                    {
+                        label: 'Objetivo',
+                        content: 'Detener proceso microbiológico'
+                    },
+                    {
+                        label: 'Parámetro',
+                        content: 'Temperatura < 10°C en < 2 horas'
+                    }
+                ]
+            },
+            14: {
+                title: 'Refrigeración',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Almacenamiento en ambiente refrigerado'
+                    },
+                    {
+                        label: 'Temperatura',
+                        content: 'Tª ≤ 4°C'
+                    },
+                    {
+                        label: 'Objetivo',
+                        content: 'Mantener estabilidad microbiológica hasta distribución'
+                    }
+                ]
+            },
+            15: {
+                title: 'Embalaje en cajas (FINAL)',
+                sections: [
+                    {
+                        label: 'Descripción',
+                        content: 'Empaquetamiento en cajas de distribución'
+                    },
+                    {
+                        label: 'Almacenamiento',
+                        content: 'En cámara refrigerada (Tª ≤ 4°C)'
+                    },
+                    {
+                        label: 'Trazabilidad',
+                        content: 'Código de caja vinculado a lote de producción'
+                    }
+                ]
+            }
+        };
+
+        // Function to render panel content
+        function renderPanel(nodeId) {
+            const data = nodeDetails[nodeId];
+            if (!data) return;
+
+            let html = `<div class="panel-title">${data.title}</div>`;
+
+            data.sections.forEach(section => {
+                html += `
+                    <div class="panel-section">
+                        <div class="panel-label">${section.label}</div>
+                        <div class="panel-text">${section.content}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('panelContent').innerHTML = html;
+        }
+
+        // Node click handler
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('click', () => {
+                const nodeId = node.getAttribute('data-id');
+                renderPanel(nodeId);
+                document.getElementById('sidePanel').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            });
+        });
+
+        // Close panel handlers
+        document.getElementById('panelClose').addEventListener('click', () => {
+            document.getElementById('sidePanel').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('sidePanel').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+
+        // Draw SVG arrows connecting nodes
+        function drawArrows() {
+            const svg = document.getElementById('svgArrows');
+            const nodes = document.querySelectorAll('.node');
+
+            for (let i = 0; i < nodes.length - 1; i++) {
+                const current = nodes[i];
+                const next = nodes[i + 1];
+
+                const currentRect = current.getBoundingClientRect();
+                const nextRect = next.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+
+                const x1 = currentRect.left - containerRect.left + currentRect.width / 2;
+                const y1 = currentRect.top - containerRect.top + currentRect.height;
+                const x2 = nextRect.left - containerRect.left + nextRect.width / 2;
+                const y2 = nextRect.top - containerRect.top;
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+
+                svg.appendChild(line);
+            }
+        }
+
+        // Initial draw and redraw on resize
+        window.addEventListener('load', drawArrows);
+        window.addEventListener('resize', () => {
+            document.getElementById('svgArrows').innerHTML = '<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#3b82f6" /></marker></defs>';
+            drawArrows();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flujo APPCC — La Santa | Rice in Action</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .back {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .back:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+
+        .sub {
+            font-size: 14px;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .legend-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        .legend-dot.op {
+            background: #1e3a5f;
+            border-color: #3b82f6;
+        }
+
+        .legend-dot.pcc {
+            background: #4c1d1d;
+            border-color: #ef4444;
+        }
+
+        .legend-dot.start {
+            background: #14532d;
+            border-color: #22c55e;
+        }
+
+        .legend-dot.end {
+            background: #78350f;
+            border-color: #f59e0b;
+        }
+
+        .flow-container {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .flow-chart {
+            position: relative;
+            width: 280px;
+            height: 900px;
+        }
+
+        svg.arrows {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .node {
+            position: absolute;
+            width: 220px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
+            left: 30px;
+        }
+
+        .node:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .n-op {
+            background: #1e3a5f;
+            border-color: #3b82f6;
+            color: #93c5fd;
+        }
+
+        .n-pcc {
+            background: #4c1d1d;
+            border-color: #ef4444;
+            color: #fca5a5;
+            font-weight: bold;
+        }
+
+        .n-start {
+            background: #14532d;
+            border-color: #22c55e;
+            color: #86efac;
+            font-weight: bold;
+        }
+
+        .n-end {
+            background: #78350f;
+            border-color: #f59e0b;
+            color: #fde68a;
+            font-weight: bold;
+        }
+
+        .panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: #1a2332;
+            border-left: 1px solid rgba(226, 232, 240, 0.1);
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            z-index: 100;
+        }
+
+        .panel.active {
+            right: 0;
+        }
+
+        .panel-header {
+            background: #0f172a;
+            padding: 20px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .panel-type {
+            display: inline-block;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-type.op {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .panel-type.pcc {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .panel-type.start {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        .panel-type.end {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fde68a;
+        }
+
+        .panel-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .panel-close:hover {
+            color: #e2e8f0;
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .panel-section {
+            margin-bottom: 24px;
+        }
+
+        .panel-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .panel-description {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+        }
+
+        .panel-description strong {
+            color: #e2e8f0;
+        }
+
+        .panel-list {
+            list-style: none;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .panel-list li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .panel-list li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #3b82f6;
+        }
+
+        .panel-list li.critical {
+            color: #fca5a5;
+        }
+
+        .panel-list li.critical:before {
+            color: #ef4444;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 99;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .flow-chart {
+                width: 260px;
+            }
+
+            .node {
+                width: 200px;
+                left: 30px;
+                font-size: 12px;
+                padding: 14px;
+            }
+
+            .legend {
+                gap: 15px;
+                font-size: 12px;
+            }
+
+            .back {
+                position: static;
+                margin-bottom: 20px;
+                display: inline-block;
+            }
+
+            header {
+                margin-bottom: 30px;
+                text-align: center;
+            }
+        }
+
+        /* SVG Arrow styling */
+        .arrow-line {
+            stroke: #475569;
+            stroke-width: 2;
+        }
+
+        .arrow-head {
+            fill: #475569;
+        }
+
+        /* Node position classes for vertical spacing */
+        .n1 { top: 0px; }
+        .n2 { top: 80px; }
+        .n3 { top: 160px; }
+        .n4 { top: 240px; }
+        .n5 { top: 320px; }
+        .n6 { top: 400px; }
+        .n7 { top: 480px; }
+        .n8 { top: 560px; }
+        .n9 { top: 640px; }
+        .n10 { top: 720px; }
+        .n11 { top: 800px; }
+
+        .hidden-info {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="back" href="diagramas.html">&larr; Menú</a>
+            <h1>Flujo de Producción — Familia La Santa</h1>
+            <div class="sub">Diagrama de proceso APPCC · Rice in Action S.L.</div>
+        </header>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot start"></div>
+                <span>Inicio</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot op"></div>
+                <span>Operación</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot pcc"></div>
+                <span>PCC</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot end"></div>
+                <span>Final</span>
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <div class="flow-chart">
+                <svg class="arrows" id="arrows"></svg>
+
+                <!-- Node 1: Lavado del arroz -->
+                <div class="node n-start n1" data-n="Lavado del arroz" data-c="start">
+                    <div>1. Lavado del arroz</div>
+                </div>
+                <div class="hidden-info" data-i="El arroz Maratelli (MP24) se lava con agua|Eliminación de almidón superficial|Escurrido antes de enredar"></div>
+
+                <!-- Node 2: Arroz en redes -->
+                <div class="node n-op n2" data-n="Arroz en redes" data-c="op">
+                    <div>2. Arroz en redes</div>
+                </div>
+                <div class="hidden-info" data-i="El arroz lavado se pesa y se introduce en redes|Cantidad según formato (260g arroz/bandeja)"></div>
+
+                <!-- Node 3: Preparar jarras -->
+                <div class="node n-op n3" data-n="Preparar jarras" data-c="op">
+                    <div>3. Preparar jarras</div>
+                </div>
+                <div class="hidden-info" data-i="Preparación de la jarra con ingredientes secos|Pollo deshidratado + espinaca + umami|Mezcla con Hazelnut + agua"></div>
+
+                <!-- Node 4: Horno — cocción -->
+                <div class="node n-op n4" data-n="Horno — cocción" data-c="op">
+                    <div>4. Horno — cocción</div>
+                </div>
+                <div class="hidden-info" data-i="Cocción a alta temperatura|Arroz en red + jarra + agua|Programa según producto"></div>
+
+                <!-- Node 5: Mezclado con caldo -->
+                <div class="node n-op n5" data-n="Mezclado con caldo" data-c="op">
+                    <div>5. Mezclado con caldo</div>
+                </div>
+                <div class="hidden-info" data-i="El arroz cocido se mezcla con el caldo correspondiente|Caldo de Pescado / Pollo / Verduras / Negro / Risotto|En mezcladores industriales"></div>
+
+                <!-- Node 6: Dispensar en barquetas -->
+                <div class="node n-op n6" data-n="Dispensar en barquetas" data-c="op">
+                    <div>6. Dispensar en barquetas</div>
+                </div>
+                <div class="hidden-info" data-i="Dosificación en bandejas EOS-35|Control de peso por unidad"></div>
+
+                <!-- Node 7: Termosellado -->
+                <div class="node n-op n7" data-n="Termosellado" data-c="op">
+                    <div>7. Termosellado</div>
+                </div>
+                <div class="hidden-info" data-i="Sellado hermético con film top-seal|Control de integridad del sellado"></div>
+
+                <!-- Node 8: Etiquetado -->
+                <div class="node n-op n8" data-n="Etiquetado" data-c="op">
+                    <div>8. Etiquetado</div>
+                </div>
+                <div class="hidden-info" data-i="Impresión y colocación de etiqueta|Lote, fecha caducidad, código producto"></div>
+
+                <!-- Node 9: Detector de metales — PCC2 -->
+                <div class="node n-pcc n9" data-n="Detector de metales — PCC2" data-c="pcc">
+                    <div>9. Detector de metales</div>
+                    <div style="font-size: 11px; margin-top: 4px;">PCC2</div>
+                </div>
+                <div class="hidden-info" data-i="Detector de metales para contaminación física|Fe ≤ 1.5mm, No-Fe ≤ 2.0mm, SS ≤ 2.5mm|Monitorización: cada bandeja|Acción correctiva: rechazo automático + revisión lote"></div>
+
+                <!-- Node 10: Pasteurización — PCC1 -->
+                <div class="node n-pcc n10" data-n="Pasteurización — PCC1" data-c="pcc">
+                    <div>10. Pasteurización</div>
+                    <div style="font-size: 11px; margin-top: 4px;">PCC1</div>
+                </div>
+                <div class="hidden-info" data-i="Tratamiento térmico para seguridad microbiológica|Tª ≥ 85°C, t ≥ 45 min|Monitorización: registro continuo Tª|Acción correctiva: reproceso o destrucción"></div>
+
+                <!-- Node 11: Abatimiento -->
+                <div class="node n-op n11" data-n="Abatimiento" data-c="op">
+                    <div>11. Abatimiento</div>
+                </div>
+                <div class="hidden-info" data-i="Reducción rápida de temperatura|Objetivo: < 10°C en < 2 horas"></div>
+
+                <!-- Node 12: Refrigeración -->
+                <div class="node n-op n12" data-n="Refrigeración" data-c="op">
+                    <div>12. Refrigeración</div>
+                </div>
+                <div class="hidden-info" data-i="Almacenamiento refrigerado|Tª ≤ 4°C"></div>
+
+                <!-- Node 13: Embalaje en cajas -->
+                <div class="node n-end n13" data-n="Embalaje en cajas" data-c="end">
+                    <div>13. Embalaje en cajas</div>
+                </div>
+                <div class="hidden-info" data-i="Embalaje en cajas|Almacenamiento en cámara refrigerada"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="overlay" id="overlay"></div>
+    <div class="panel" id="panel">
+        <div class="panel-header">
+            <div>
+                <div class="panel-title" id="panelTitle"></div>
+                <div class="panel-type" id="panelType"></div>
+            </div>
+            <button class="panel-close" id="panelClose">&times;</button>
+        </div>
+        <div class="panel-content" id="panelContent"></div>
+    </div>
+
+    <script>
+        // Panel data structure
+        const nodeData = {
+            'Lavado del arroz': {
+                type: 'start',
+                description: 'El arroz Maratelli (MP24) se lava con agua destilada.',
+                details: [
+                    'Eliminación de almidón superficial',
+                    'Escurrido antes de enredar',
+                    'Control visual de calidad'
+                ]
+            },
+            'Arroz en redes': {
+                type: 'op',
+                description: 'El arroz lavado se pesa y se introduce en redes.',
+                details: [
+                    'Cantidad según formato: 260g arroz por bandeja',
+                    'Código de trazabilidad',
+                    'Verificación de cierre de redes'
+                ]
+            },
+            'Preparar jarras': {
+                type: 'op',
+                description: 'Preparación de la jarra con ingredientes deshidratados.',
+                details: [
+                    'Pollo deshidratado + espinaca + umami',
+                    'Mezcla con Hazelnut + agua',
+                    'Control de pesos de componentes'
+                ]
+            },
+            'Horno — cocción': {
+                type: 'op',
+                description: 'Cocción en horno a alta temperatura.',
+                details: [
+                    'Combinación: arroz en red + jarra + agua',
+                    'Programa según producto específico',
+                    'Tiempo y temperatura controlados',
+                    'Verificación visual de cocción'
+                ]
+            },
+            'Mezclado con caldo': {
+                type: 'op',
+                description: 'El arroz cocido se mezcla con el caldo correspondiente (DIFERENCIA CLAVE con Maestro).',
+                details: [
+                    'Caldo de Pescado / Pollo / Verduras / Negro / Risotto',
+                    'En mezcladores industriales',
+                    'Homogeneización completa',
+                    'Control de temperatura'
+                ]
+            },
+            'Dispensar en barquetas': {
+                type: 'op',
+                description: 'Dosificación automática del producto en bandejas.',
+                details: [
+                    'Bandejas EOS-35',
+                    'Control de peso por unidad',
+                    'Tolerancia ±5g',
+                    'Inspección visual'
+                ]
+            },
+            'Termosellado': {
+                type: 'op',
+                description: 'Sellado hermético con película top-seal.',
+                details: [
+                    'Film de sellado a temperatura controlada',
+                    'Verificación de integridad del sellado',
+                    'Ausencia de fugas',
+                    'Control de espesor de sellado'
+                ]
+            },
+            'Etiquetado': {
+                type: 'op',
+                description: 'Impresión y colocación automática de etiqueta.',
+                details: [
+                    'Información de lote',
+                    'Fecha de caducidad',
+                    'Código de producto',
+                    'Código de barras trazabilidad'
+                ]
+            },
+            'Detector de metales — PCC2': {
+                type: 'pcc',
+                description: 'Control de contaminación metálica del producto final.',
+                critical: true,
+                limits: {
+                    'Hierro (Fe)': '≤ 1.5 mm',
+                    'No ferrosos (No-Fe)': '≤ 2.0 mm',
+                    'Acero inoxidable (SS)': '≤ 2.5 mm'
+                },
+                monitoring: 'Cada bandeja',
+                corrective: 'Rechazo automático + revisión del lote',
+                frequency: 'Continuo'
+            },
+            'Pasteurización — PCC1': {
+                type: 'pcc',
+                description: 'Tratamiento térmico para seguridad microbiológica.',
+                critical: true,
+                limits: {
+                    'Temperatura': '≥ 85°C',
+                    'Tiempo': '≥ 45 minutos'
+                },
+                monitoring: 'Registro continuo de temperatura',
+                corrective: 'Reproceso o destrucción del lote',
+                frequency: 'Continuo (sondas termométricas)'
+            },
+            'Abatimiento': {
+                type: 'op',
+                description: 'Reducción rápida de temperatura post-pasteurización.',
+                details: [
+                    'Objetivo: < 10°C en < 2 horas',
+                    'Túnel de abatimiento industrial',
+                    'Control de temperatura de salida',
+                    'Ciclo de producción'
+                ]
+            },
+            'Refrigeración': {
+                type: 'op',
+                description: 'Almacenamiento en cámara refrigerada.',
+                details: [
+                    'Temperatura mantenida ≤ 4°C',
+                    'Control de humedad relativa',
+                    'Hasta distribución',
+                    'Registros de temperatura diarios'
+                ]
+            },
+            'Embalaje en cajas': {
+                type: 'end',
+                description: 'Embalaje final en cajas y almacenamiento.',
+                details: [
+                    'Embalaje en cajas de cartón',
+                    'Etiquetado de caja',
+                    'Almacenamiento en cámara refrigerada',
+                    'Expedición en frío'
+                ]
+            }
+        };
+
+        // Draw arrows between nodes
+        function drawArrows() {
+            const svg = document.getElementById('arrows');
+            const nodes = document.querySelectorAll('.node');
+
+            for (let i = 0; i < nodes.length - 1; i++) {
+                const current = nodes[i];
+                const next = nodes[i + 1];
+
+                const y1 = current.offsetTop + current.offsetHeight;
+                const y2 = next.offsetTop;
+                const x = 140; // Center of 280px width
+
+                // Line
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x);
+                line.setAttribute('y2', y2 - 8);
+                line.setAttribute('class', 'arrow-line');
+                svg.appendChild(line);
+
+                // Arrowhead (triangle)
+                const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                polygon.setAttribute('points', `${x},${y2} ${x - 6},${y2 - 8} ${x + 6},${y2 - 8}`);
+                polygon.setAttribute('class', 'arrow-head');
+                svg.appendChild(polygon);
+            }
+        }
+
+        // Panel management
+        const panel = document.getElementById('panel');
+        const overlay = document.getElementById('overlay');
+        const panelTitle = document.getElementById('panelTitle');
+        const panelType = document.getElementById('panelType');
+        const panelContent = document.getElementById('panelContent');
+        const panelClose = document.getElementById('panelClose');
+
+        function closePanel() {
+            panel.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        function openPanel(node) {
+            const nodeName = node.getAttribute('data-n');
+            const nodeClass = node.getAttribute('data-c');
+            const data = nodeData[nodeName];
+
+            panelTitle.textContent = nodeName;
+            panelType.textContent = nodeClass === 'op' ? 'Operación' :
+                                    nodeClass === 'pcc' ? 'Punto Crítico de Control' :
+                                    nodeClass === 'start' ? 'Inicio' : 'Final';
+            panelType.className = `panel-type ${nodeClass}`;
+
+            let html = '';
+
+            // Description
+            html += `<div class="panel-section">
+                <div class="panel-description">${data.description}</div>
+            </div>`;
+
+            // If PCC
+            if (data.critical) {
+                html += `<div class="panel-section">
+                    <div class="panel-section-title">Límites Críticos</div>
+                    <ul class="panel-list">`;
+                for (const [key, value] of Object.entries(data.limits)) {
+                    html += `<li class="critical"><strong>${key}:</strong> ${value}</li>`;
+                }
+                html += `</ul></div>`;
+
+                html += `<div class="panel-section">
+                    <div class="panel-section-title">Monitorización</div>
+                    <div class="panel-description">${data.monitoring}</div>
+                </div>`;
+
+                html += `<div class="panel-section">
+                    <div class="panel-section-title">Acción Correctiva</div>
+                    <div class="panel-description">${data.corrective}</div>
+                </div>`;
+
+                html += `<div class="panel-section">
+                    <div class="panel-section-title">Frecuencia</div>
+                    <div class="panel-description">${data.frequency}</div>
+                </div>`;
+            } else if (data.details) {
+                html += `<div class="panel-section">
+                    <div class="panel-section-title">Detalles de Operación</div>
+                    <ul class="panel-list">`;
+                data.details.forEach(detail => {
+                    html += `<li>${detail}</li>`;
+                });
+                html += `</ul></div>`;
+            }
+
+            panelContent.innerHTML = html;
+            panel.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        // Event listeners
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('click', () => openPanel(node));
+        });
+
+        panelClose.addEventListener('click', closePanel);
+        overlay.addEventListener('click', closePanel);
+
+        // Initialize
+        drawArrows();
+        window.addEventListener('resize', () => {
+            document.querySelector('svg.arrows').innerHTML = '';
+            drawArrows();
+        });
+    </script>
+</body>
+</html>
