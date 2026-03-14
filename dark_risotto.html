@@ -1,241 +1,157 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Risotto - Diagrama RIA</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
-    h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
-    .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
-    .graph{max-width:1100px;margin:0 auto;position:relative;height:880px}
-    .n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
-    .n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
-    .node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
-    .node.hl{z-index:20}.node.dim{opacity:.15!important}
-    .node .glow{position:absolute;inset:-3px;border-radius:12px;opacity:0;transition:opacity .3s}
-    .node.hl .glow{opacity:1}
-    .n-mp{background:#1e3a5f;border:1.5px solid #3b82f6;color:#93c5fd}
-    .n-mp .glow{box-shadow:0 0 15px rgba(59,130,246,.5)}
-    .n-pre{background:#2d1b69;border:1.5px solid #8b5cf6;color:#c4b5fd}
-    .n-pre .glow{box-shadow:0 0 15px rgba(139,92,246,.5)}
-    .n-mix{background:#4c1d1d;border:2px solid #ef4444;color:#fca5a5}
-    .n-mix .glow{box-shadow:0 0 15px rgba(239,68,68,.5)}
-    .n-cal{background:#14532d;border:2px solid #22c55e;color:#86efac}
-    .n-cal .glow{box-shadow:0 0 15px rgba(34,197,94,.5)}
-    .n-prod{background:#78350f;border:2.5px solid #f59e0b;color:#fde68a;font-weight:700;font-size:18px}
-    .n-prod .glow{box-shadow:0 0 20px rgba(245,158,11,.6)}
-    .panel{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:280px;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.5);transition:all .3s;opacity:0;pointer-events:none;z-index:50}
-    .panel.vis{opacity:1;pointer-events:auto}
-    .panel h3{font-size:15px;color:#f1f5f9;margin-bottom:4px}
-    .panel .code{font-size:11px;color:#fbbf24;margin-bottom:10px}
-    .panel .info{font-size:12px;line-height:1.7;color:#94a3b8}
-    .panel .tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:2px 2px 0 0}
-    .t-v{background:#14532d;color:#86efac}.t-a{background:#4c1d1d;color:#fca5a5}.t-c{background:#1e3a5f;color:#93c5fd}
-    .panel .x{position:absolute;top:8px;right:12px;cursor:pointer;color:#64748b;font-size:18px}.panel .x:hover{color:#f1f5f9}
-    svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-    .ln{fill:none;stroke-width:1.5;transition:opacity .3s}.ln.dim{opacity:.03!important}.ln.hl{opacity:1!important;stroke-width:2.5}
-    .lb{stroke:#3b82f6;opacity:.25}.lp{stroke:#8b5cf6;opacity:.25}.lr{stroke:#ef4444;opacity:.3}.lg{stroke:#22c55e;opacity:.35}.lo{stroke:#f59e0b;opacity:.4}.ld{stroke-dasharray:6 4}
-    @keyframes pulse{0%,100%{opacity:.35}50%{opacity:.8}}.ln.hl{animation:pulse 1.5s ease-in-out infinite}
-    .legend{max-width:1100px;margin:20px auto 0;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#64748b}
-    .legend-i{display:flex;align-items:center;gap:5px}.legend-d{width:12px;height:12px;border-radius:3px}
-    .back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risotto — Flujo Producción</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
+h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
+.sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
+.inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
+.inst span{color:#fbbf24}
+.graph{max-width:1100px;margin:0 auto;position:relative;height:900px}
+.n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
+.n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
+.node{position:absolute;border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;transition:all .3s;text-align:center;line-height:1.3;user-select:none}
+.node.hl{z-index:20}.node.dim{opacity:.15!important}
+.node .glow{position:absolute;inset:-3px;border-radius:12px;opacity:0;transition:opacity .3s}
+.node.hl .glow{opacity:1}
+.n-mp{background:#1e3a5f;border:1.5px solid #3b82f6;color:#93c5fd}
+.n-mp .glow{box-shadow:0 0 15px rgba(59,130,246,.5)}
+.n-pre{background:#2d1b69;border:1.5px solid #8b5cf6;color:#c4b5fd}
+.n-pre .glow{box-shadow:0 0 15px rgba(139,92,246,.5)}
+.n-mix{background:#4c1d1d;border:2px solid #ef4444;color:#fca5a5}
+.n-mix .glow{box-shadow:0 0 15px rgba(239,68,68,.5)}
+.n-cal{background:#14532d;border:2px solid #22c55e;color:#86efac}
+.n-cal .glow{box-shadow:0 0 15px rgba(34,197,94,.5)}
+.n-prod{background:#78350f;border:2.5px solid #f59e0b;color:#fde68a;font-weight:700;font-size:18px}
+.n-prod .glow{box-shadow:0 0 20px rgba(245,158,11,.6)}
+.panel{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:280px;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.5);transition:all .3s;opacity:0;pointer-events:none;z-index:50}
+.panel.vis{opacity:1;pointer-events:auto}
+.panel h3{font-size:15px;color:#f1f5f9;margin-bottom:4px}
+.panel .code{font-size:11px;color:#fbbf24;margin-bottom:10px}
+.panel .info{font-size:12px;line-height:1.7;color:#94a3b8}
+.panel .tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:2px 2px 0 0}
+.t-v{background:#14532d;color:#86efac}.t-a{background:#4c1d1d;color:#fca5a5}.t-c{background:#1e3a5f;color:#93c5fd}
+.panel .x{position:absolute;top:8px;right:12px;cursor:pointer;color:#64748b;font-size:18px}.panel .x:hover{color:#f1f5f9}
+svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.ln{fill:none;stroke-width:1.5;transition:opacity .3s}.ln.dim{opacity:.03!important}.ln.hl{opacity:1!important;stroke-width:2.5}
+.lb{stroke:#3b82f6;opacity:.25}.lp{stroke:#8b5cf6;opacity:.25}.lr{stroke:#ef4444;opacity:.3}.lg{stroke:#22c55e;opacity:.35}.lo{stroke:#f59e0b;opacity:.4}.ld{stroke-dasharray:6 4}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:.8}}.ln.hl{animation:pulse 1.5s ease-in-out infinite}
+.legend{max-width:1100px;margin:20px auto 0;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#64748b}
+.legend-i{display:flex;align-items:center;gap:5px}.legend-d{width:12px;height:12px;border-radius:3px}
+.back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
+</style>
 </head>
 <body>
-  <a class="back" href="diagramas.html">&larr; Menú</a>
+<a class="back" href="diagramas.html">&larr; Menú</a>
+<h1>Risotto</h1>
+<p class="sub">La Santa — Flujo completo de materias primas y productos intermedios</p>
 
-  <h1>Risotto</h1>
-  <div class="sub">Familia La Santa | Código 741</div>
+<div class="graph" id="G">
+<svg class="L">
+<!-- MP → Aceite Ajo -->
+<path class="ln lb" data-f="mp04" data-t="preAjo" d="M200,55 C240,55 260,50 290,50"/>
+<path class="ln lb" data-f="mpAjo" data-t="preAjo" d="M200,105 C240,85 260,62 290,57"/>
+<!-- MP → Pesado Risotto -->
+<path class="ln lb" data-f="mp35" data-t="prePR" d="M200,155 C240,175 260,185 290,190"/>
+<path class="ln lb" data-f="mp36" data-t="prePR" d="M200,205 C240,200 260,195 290,200"/>
+<path class="ln lb" data-f="mp34" data-t="prePR" d="M200,255 C240,225 260,210 290,207"/>
+<!-- MP → Mezcla Jarra Risotto -->
+<path class="ln lr" data-f="mp09" data-t="mezR" d="M200,355 C240,365 260,370 290,380"/>
+<path class="ln lr" data-f="mpAg" data-t="mezR" d="M200,305 C230,345 260,378 290,385"/>
+<!-- MP → Jarra Risotto -->
+<path class="ln lb" data-f="mp35" data-t="jarR" d="M200,155 C240,390 260,450 290,460"/>
+<path class="ln lb" data-f="mp36" data-t="jarR" d="M200,205 C240,420 260,460 290,468"/>
+<path class="ln lb" data-f="mp34" data-t="jarR" d="M200,255 C240,440 260,468 290,475"/>
+<path class="ln lb" data-f="mp06" data-t="jarR" d="M200,455 C240,475 260,480 290,482"/>
+<path class="ln lb" data-f="mp39" data-t="jarR" d="M200,655 C240,550 260,510 290,495"/>
+<path class="ln lb" data-f="mp38" data-t="jarR" d="M200,705 C240,570 260,520 290,500"/>
+<path class="ln lb" data-f="mpSal" data-t="jarR" d="M200,605 C240,530 260,495 290,485"/>
+<!-- Preelabs → Caldo -->
+<path class="ln lp" data-f="preAjo" data-t="calR" d="M500,52 C540,75 560,110 590,130"/>
+<path class="ln lp" data-f="prePR" data-t="calR" d="M500,200 C540,160 560,140 590,140"/>
+<!-- MP directos → Caldo -->
+<path class="ln lg" data-f="mpAg" data-t="calR" d="M200,305 C300,260 450,180 590,155"/>
+<path class="ln lg" data-f="mp04" data-t="calR" d="M200,55 C300,100 450,130 590,145"/>
+<path class="ln lg" data-f="mp13" data-t="calR" d="M200,455 C400,350 520,230 590,170"/>
+<path class="ln lg" data-f="mp06" data-t="calR" d="M200,455 C400,350 520,230 590,180"/>
+<path class="ln lg" data-f="mp07" data-t="calR" d="M200,505 C400,370 520,240 590,185"/>
+<path class="ln lg" data-f="mp12" data-t="calR" d="M200,555 C400,390 520,250 590,190"/>
+<!-- Caldo → Producción -->
+<path class="ln lo" data-f="calR" data-t="prod" d="M800,150 C830,155 850,160 870,165"/>
+<!-- Mezcla Jarra Risotto → Producción -->
+<path class="ln lo ld" data-f="mezR" data-t="prod" d="M500,383 C680,340 800,240 870,175"/>
+<!-- Jarra Risotto → Producción -->
+<path class="ln lo ld" data-f="jarR" data-t="prod" d="M500,480 C680,400 800,280 870,180"/>
+<!-- Arroz → Producción -->
+<path class="ln lo ld" data-f="mpArr" data-t="prod" d="M200,755 C500,600 800,350 870,185"/>
+<!-- Envases → Producción -->
+<path class="ln lo ld" data-f="mpBand" data-t="prod" d="M200,805 C500,650 800,380 870,190"/>
+<path class="ln lo ld" data-f="mpFilm" data-t="prod" d="M200,855 C500,700 800,410 870,195"/>
+</svg>
 
-  <div class="graph" id="G">
-    <svg class="L" id="S"></svg>
+<!-- ═══ MATERIAS PRIMAS ═══ -->
+<div class="node n-mp" id="mp04" style="left:10px;top:37px;width:182px" data-n="Aceite girasol" data-c="MP04 — Coreysa" data-i="Garrafa 25L|2500g → Caldo Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite girasol (MP04)</div>
+<div class="node n-mp" id="mpAjo" style="left:10px;top:87px;width:182px" data-n="Ajo" data-c="MP40 — Ajopel" data-i="5kg → Aceite de Ajo" data-v="" data-a="" data-s=""><div class="glow"></div>Ajo (MP40)</div>
+<div class="node n-mp" id="mp35" style="left:10px;top:137px;width:182px" data-n="Pollo deshidratado" data-c="MP35 — Ugeave" data-i="550g → Pesado Risotto|550g → Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Pollo deshid. (MP35)</div>
+<div class="node n-mp" id="mp36" style="left:10px;top:187px;width:182px" data-n="Puerro deshidratado" data-c="MP36" data-i="510g → Pesado Risotto|510g → Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Puerro deshid. (MP36)</div>
+<div class="node n-mp" id="mp34" style="left:10px;top:237px;width:182px" data-n="Cebolla deshidratada" data-c="MP34" data-i="815g → Pesado Risotto|815g → Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Cebolla deshid. (MP34)</div>
+<div class="node n-mp" id="mpAg" style="left:10px;top:287px;width:182px" data-n="Agua" data-c="Agua potable" data-i="19L → Caldo Risotto|3600ml → Mezcla Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
+<div class="node n-mp" id="mp09" style="left:10px;top:337px;width:182px" data-n="Hazelnut (colorante)" data-c="MP09 — Sensient" data-i="Bote 1kg|60ml → Mezcla Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Hazelnut (MP09)</div>
+<div class="node n-mp" id="mp13" style="left:10px;top:387px;width:182px" data-n="Mantequilla" data-c="MP13" data-i="800g directo al caldo" data-v="" data-a="LECHE" data-s=""><div class="glow"></div>Mantequilla (MP13)</div>
+<div class="node n-mp" id="mp06" style="left:10px;top:437px;width:182px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="180g → Caldo Risotto|132g → Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
+<div class="node n-mp" id="mp07" style="left:10px;top:487px;width:182px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="10,8g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Xantana (MP07)</div>
+<div class="node n-mp" id="mp12" style="left:10px;top:537px;width:182px" data-n="Almidón" data-c="MP12" data-i="38g directo al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Almidón (MP12)</div>
+<div class="node n-mp" id="mpSal" style="left:10px;top:587px;width:182px" data-n="Sal" data-c="MP37" data-i="220g → Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP37)</div>
+<div class="node n-mp" id="mp39" style="left:10px;top:637px;width:182px" data-n="Azúcar" data-c="MP39" data-i="110g → Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Azúcar (MP39)</div>
+<div class="node n-mp" id="mp38" style="left:10px;top:687px;width:182px" data-n="Ácido tartárico" data-c="MP38" data-i="0,11g → Jarra Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Ác. tartárico (MP38)</div>
+<div class="node n-mp" id="mpArr" style="left:10px;top:737px;width:182px" data-n="Arroz Nuovo Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Saco 25kg|Variedad Japónica|Directo a producción" data-v="" data-a="" data-s=""><div class="glow"></div>Arroz Maratelli (MP24)</div>
+<div class="node n-pkg" id="mpBand" style="left:10px;top:787px;width:182px" data-n="Bandeja EOS-35" data-c="MP50 — Sarabia" data-i="PP/PPEVOHPP 1000µ|Para formatos 190-300g" data-v="" data-a="" data-s=""><div class="glow"></div>Bandeja EOS-35 (MP50)</div>
+<div class="node n-pkg" id="mpFilm" style="left:10px;top:837px;width:182px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm" data-v="" data-a="" data-s=""><div class="glow"></div>Film top-seal (MP51)</div>
 
-    <!-- LEFT: Raw Materials (MP) -->
-    <div class="node n-mp" id="mp04" style="left:10px;top:80px;width:110px" data-n="Aceite Girasol" data-c="MP04 — Coreysa" data-i="Entrada:|2500g al Caldo|10L al Aceite de Ajo"></div>
-    <div class="node n-mp" id="mp40" style="left:10px;top:180px;width:110px" data-n="Ajo" data-c="MP40 — Ajopel" data-i="Entrada:|5kg al Aceite de Ajo"></div>
-    <div class="node n-mp" id="mp35" style="left:10px;top:280px;width:110px" data-n="Pollo Deshid" data-c="MP35 — Ugeave" data-i="Entrada:|550g a Jarra|2000g a Pesado Risotto"></div>
-    <div class="node n-mp" id="mp36" style="left:10px;top:380px;width:110px" data-n="Puerro Deshid" data-c="MP36 — La Margarita" data-i="Entrada:|510g a Jarra|2000g a Pesado Risotto"></div>
-    <div class="node n-mp" id="mp34" style="left:10px;top:480px;width:110px" data-n="Cebolla Deshid" data-c="MP34 — Vegenat" data-i="Entrada:|815g a Jarra|2000g a Pesado Risotto"></div>
-    <div class="node n-mp" id="mp09" style="left:10px;top:580px;width:110px" data-n="Hazelnut" data-c="MP09 — Sensient" data-i="Entrada:|60ml a Mezcla Jarra"></div>
-    <div class="node n-mp" id="agua" style="left:10px;top:680px;width:110px" data-n="Agua Potable" data-c="—" data-i="Entrada:|19000ml a Caldo|3600ml a Mezcla"></div>
+<!-- ═══ PREELABORACIONES ═══ -->
+<div class="node n-pre" id="preAjo" style="left:290px;top:30px;width:200px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="Lote: RIA-PRELAB-AJO-DDMMAA|10L girasol + 5kg ajo|Pasteurizar 100°C, 1h 20min|→ 1447ml al caldo" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite de Ajo</div>
+<div class="node n-pre" id="prePR" style="left:290px;top:120px;width:200px" data-n="Pesado Risotto" data-c="PRELAB-PESR" data-i="Lote: RIA-PRELAB-PESR-DDMMAA|Pollo deshid. 550g|Puerro deshid. 510g|Cebolla deshid. 815g|→ Caldo Risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Pesado Risotto<br><span style="font-size:10px">pollo+puerro+cebolla</span></div>
+<div class="node n-mix" id="mezR" style="left:290px;top:280px;width:200px" data-n="Mezcla Jarra Risotto" data-c="MEZCLA-JRISOTTO" data-i="Lote: RIA-MEZCLA-JRISOTTO-DDMMAA|60ml Hazelnut + 3600ml agua|NOTA: 60ml, NO 260ml|Para jarras risotto" data-v="" data-a="" data-s=""><div class="glow"></div>Mezcla Jarra Risotto<br><span style="font-size:10px">60ml Hz + 3,6L agua</span></div>
+<div class="node n-pre" id="jarR" style="left:290px;top:370px;width:200px" data-n="Jarra Risotto" data-c="JARRA-RISOTTO" data-i="Lote: RIA-JARRA-RISOTTO-DDMMAA|Pollo: 550g|Puerro: 510g|Cebolla: 815g|Umami: 132g|Azúcar: 110g|Ác. tartárico: 0,11g|Sal: 220g" data-v="" data-a="" data-s=""><div class="glow"></div>Jarra Risotto</div>
 
-    <div class="node n-mp" id="mp13" style="left:10px;top:750px;width:110px" data-n="Mantequilla" data-c="MP13 — Presidente" data-a="LECHE" data-i="Entrada: 800g al Caldo"></div>
-    <div class="node n-mp" id="mp06" style="left:220px;top:30px;width:110px" data-n="Umami" data-c="MP06 — Givaudan" data-i="Entrada: 180g al Caldo"></div>
-    <div class="node n-mp" id="mp07" style="left:220px;top:110px;width:110px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="Entrada: 10.8g al Caldo"></div>
-    <div class="node n-mp" id="mp12" style="left:220px;top:190px;width:110px" data-n="Almidón" data-c="MP12 — Ingredion" data-i="Entrada: 38g al Caldo"></div>
-    <div class="node n-mp" id="mp37" style="left:220px;top:270px;width:110px" data-n="Sal" data-c="MP37 — " data-i="Entrada: a Producción"></div>
-    <div class="node n-mp" id="mp24" style="left:220px;top:350px;width:110px" data-n="Arroz Maratelli" data-c="MP24 — Arrocera del Pirineo" data-i="Entrada: a Producción"></div>
-    <div class="node n-mp" id="mp50" style="left:220px;top:430px;width:110px" data-n="Bandeja EOS-35" data-c="MP50 — Sarabia" data-i="Entrada: a Producción"></div>
-    <div class="node n-mp" id="mp51" style="left:220px;top:510px;width:110px" data-n="Film Top-Seal" data-c="MP51 — Adrados" data-i="Entrada: a Producción"></div>
+<!-- ═══ CALDO ═══ -->
+<div class="node n-cal" id="calR" style="left:590px;top:110px;width:200px;font-size:15px" data-n="Caldo Risotto" data-c="REC-CALDO-005 · RIA-RISOTTO" data-i="Rendimiento: 25L|· Agua 19L|· Pesado Risotto (prelab)|· Aceite de Ajo 1447ml|· Mantequilla 800g|· Aceite girasol 2500g|· Xantana 10,8g|· Umami 180g|· Almidón 38g" data-v="" data-a="LECHE" data-s=""><div class="glow"></div>Caldo Risotto</div>
 
-    <!-- CENTER: Preelaborations -->
-    <div class="node n-pre" id="prelab_ajo" style="left:420px;top:100px;width:120px" data-n="Aceite de Ajo" data-c="PRELAB-AJO" data-i="10L girasol (MP04)|+ 5kg ajo (MP40)|Rendimiento: 11.4kg"></div>
-    <div class="node n-pre" id="pesado_ris" style="left:420px;top:220px;width:120px" data-n="Pesado Risotto" data-c="RIA-PESADO-RIS" data-i="Pollo (MP35)|+ Puerro (MP36)|+ Cebolla (MP34)|A Caldo"></div>
-    <div class="node n-mix" id="mezcla_jrisotto" style="left:420px;top:340px;width:120px" data-n="Mezcla Jarra Risotto" data-c="MEZCLA-JRISOTTO" data-i="60ml Hazelnut (MP09)|+ 3600ml Agua|Rendimiento: 3.66L"></div>
-    <div class="node n-pre" id="jarra_ris" style="left:420px;top:460px;width:120px" data-n="Jarra Risotto" data-c="JARRA-RIS" data-i="550g Pollo (MP35)|+ 510g Puerro (MP36)|+ 815g Cebolla (MP34)|Total: 1875g polvos"></div>
+<!-- ═══ PRODUCTO FINAL ═══ -->
+<div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:110px;display:flex;align-items:center;justify-content:center" data-n="RISOTTO" data-c="La Santa · Código 741 · NOT All-Included" data-i="Lote: L-741-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo Risotto|· Mezcla Jarra Risotto (60ml Hz + 3,6L agua)|· Jarra Risotto (polvos+especias)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="LECHE" data-s=""><div class="glow"></div>RISOTTO</div>
+</div>
 
-    <!-- CENTER: Caldo -->
-    <div class="node n-cal" id="caldo_risotto" style="left:420px;top:600px;width:120px" data-n="Caldo Risotto" data-c="REC-CALDO-005" data-s="4°C" data-i="Rendimiento: 23L|Ingredientes:|19L agua, 2kg Pesado,|1.45L Aceite Ajo, 800g Mantequilla,|2.5L Aceite Girasol, 10.8g Xantana,|180g Umami, 38g Almidón"></div>
+<div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div></div>
 
-    <!-- RIGHT: Product -->
-    <div class="node n-prod" id="producto" style="left:630px;top:350px;width:140px" data-n="RISOTTO" data-c="741 - La Santa" data-i="Lote: L-741-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24)|· Agua (en mezcla jarra)|· Caldo Risotto|· Mezcla Jarra Risotto (líquido)|· Jarra Risotto (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)"></div>
-  </div>
+<div class="legend">
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
+<div class="legend-i"><div class="legend-d" style="background:#2d1b69;border:1px solid #8b5cf6"></div>Preelaboración</div>
+<div class="legend-i"><div class="legend-d" style="background:#4c1d1d;border:1px solid #ef4444"></div>Mezcla jarra (15d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Caldo (21d)</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
+<div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
+<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ LECHE</div>
+</div>
 
-  <div class="panel" id="P">
-    <div class="x">×</div>
-    <h3 id="pN"></h3>
-    <div class="code" id="pC"></div>
-    <div class="info" id="pI"></div>
-    <div id="pT"></div>
-  </div>
-
-  <div class="legend">
-    <div class="legend-i">
-      <div class="legend-d" style="background:#3b82f6"></div>
-      <span>Materias Primas</span>
-    </div>
-    <div class="legend-i">
-      <div class="legend-d" style="background:#8b5cf6"></div>
-      <span>Preelaboraciones</span>
-    </div>
-    <div class="legend-i">
-      <div class="legend-d" style="background:#ef4444"></div>
-      <span>Mezclas</span>
-    </div>
-    <div class="legend-i">
-      <div class="legend-d" style="background:#22c55e"></div>
-      <span>Caldos/Salsas</span>
-    </div>
-    <div class="legend-i">
-      <div class="legend-d" style="background:#f59e0b"></div>
-      <span>Producto Final</span>
-    </div>
-  </div>
-
-  <script>
-    const svg = document.getElementById('S');
-    const nodes = {
-      mp04: {x: 65, y: 135},
-      mp40: {x: 65, y: 235},
-      mp35: {x: 65, y: 335},
-      mp36: {x: 65, y: 435},
-      mp34: {x: 65, y: 535},
-      mp09: {x: 65, y: 635},
-      agua: {x: 65, y: 735},
-      mp13: {x: 65, y: 805},
-      mp06: {x: 275, y: 85},
-      mp07: {x: 275, y: 165},
-      mp12: {x: 275, y: 245},
-      mp37: {x: 275, y: 325},
-      mp24: {x: 275, y: 405},
-      mp50: {x: 275, y: 485},
-      mp51: {x: 275, y: 565},
-      prelab_ajo: {x: 480, y: 160},
-      pesado_ris: {x: 480, y: 280},
-      mezcla_jrisotto: {x: 480, y: 400},
-      jarra_ris: {x: 480, y: 520},
-      caldo_risotto: {x: 480, y: 660},
-      producto: {x: 700, y: 420}
-    };
-
-    const edges = [
-      {from: 'mp04', to: 'prelab_ajo', cls: 'lb'},
-      {from: 'mp04', to: 'caldo_risotto', cls: 'lb'},
-      {from: 'mp40', to: 'prelab_ajo', cls: 'lb'},
-      {from: 'prelab_ajo', to: 'caldo_risotto', cls: 'lb'},
-      {from: 'mp35', to: 'pesado_ris', cls: 'lb'},
-      {from: 'mp35', to: 'jarra_ris', cls: 'lb'},
-      {from: 'mp36', to: 'pesado_ris', cls: 'lb'},
-      {from: 'mp36', to: 'jarra_ris', cls: 'lb'},
-      {from: 'mp34', to: 'pesado_ris', cls: 'lb'},
-      {from: 'mp34', to: 'jarra_ris', cls: 'lb'},
-      {from: 'pesado_ris', to: 'caldo_risotto', cls: 'lg'},
-      {from: 'mp09', to: 'mezcla_jrisotto', cls: 'lb'},
-      {from: 'agua', to: 'caldo_risotto', cls: 'lb'},
-      {from: 'agua', to: 'mezcla_jrisotto', cls: 'lb'},
-      {from: 'mp13', to: 'caldo_risotto', cls: 'lb'},
-      {from: 'mp06', to: 'caldo_risotto', cls: 'lb'},
-      {from: 'mp07', to: 'caldo_risotto', cls: 'lb'},
-      {from: 'mp12', to: 'caldo_risotto', cls: 'lb'},
-      {from: 'caldo_risotto', to: 'producto', cls: 'lg'},
-      {from: 'mezcla_jrisotto', to: 'producto', cls: 'lr'},
-      {from: 'jarra_ris', to: 'producto', cls: 'lb'},
-      {from: 'mp37', to: 'producto', cls: 'lo'},
-      {from: 'mp24', to: 'producto', cls: 'lo'},
-      {from: 'mp50', to: 'producto', cls: 'lo'},
-      {from: 'mp51', to: 'producto', cls: 'lo'}
-    ];
-
-    edges.forEach(e => {
-      const f = nodes[e.from];
-      const t = nodes[e.to];
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', f.x);
-      line.setAttribute('y1', f.y);
-      line.setAttribute('x2', t.x);
-      line.setAttribute('y2', t.y);
-      line.setAttribute('data-f', e.from);
-      line.setAttribute('data-t', e.to);
-      line.setAttribute('class', `ln ${e.cls}`);
-      svg.appendChild(line);
-    });
-
-    const ns = document.querySelectorAll('.node');
-    const ls = document.querySelectorAll('.ln');
-    const P = document.getElementById('P');
-    let sel = null;
-
-    ns.forEach(n => {
-      n.addEventListener('click', e => {
-        e.stopPropagation();
-        const id = n.id;
-        if (sel === id) {
-          clr();
-          return;
-        }
-        sel = id;
-        const c = new Set([id]);
-        ls.forEach(l => {
-          if (l.dataset.f === id || l.dataset.t === id) {
-            c.add(l.dataset.f);
-            c.add(l.dataset.t);
-          }
-        });
-        ns.forEach(x => {
-          x.classList.toggle('hl', c.has(x.id));
-          x.classList.toggle('dim', !c.has(x.id));
-        });
-        ls.forEach(l => {
-          const ok = l.dataset.f === id || l.dataset.t === id;
-          l.classList.toggle('hl', ok);
-          l.classList.toggle('dim', !ok);
-        });
-        document.getElementById('pN').textContent = n.dataset.n;
-        document.getElementById('pC').textContent = n.dataset.c;
-        document.getElementById('pI').innerHTML = n.dataset.i.split('|').join('<br>');
-        let t = '';
-        if (n.dataset.v) t += `<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
-        if (n.dataset.a) t += `<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
-        if (n.dataset.s) t += `<span class="tag t-c">❄ ${n.dataset.s}</span> `;
-        document.getElementById('pT').innerHTML = t;
-        P.classList.add('vis');
-      });
-    });
-
-    document.addEventListener('click', clr);
-
-    function clr() {
-      sel = null;
-      ns.forEach(n => {
-        n.classList.remove('hl', 'dim');
-      });
-      ls.forEach(l => {
-        l.classList.remove('hl', 'dim');
-      });
-      P.classList.remove('vis');
-    }
-  </script>
+<script>
+const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
+let sel=null;
+ns.forEach(n=>{n.addEventListener('click',e=>{e.stopPropagation();const id=n.id;if(sel===id){clr();return}sel=id;
+const c=new Set([id]);ls.forEach(l=>{if(l.dataset.f===id||l.dataset.t===id){c.add(l.dataset.f);c.add(l.dataset.t)}});
+ns.forEach(x=>{x.classList.toggle('hl',c.has(x.id));x.classList.toggle('dim',!c.has(x.id))});
+ls.forEach(l=>{const ok=l.dataset.f===id||l.dataset.t===id;l.classList.toggle('hl',ok);l.classList.toggle('dim',!ok)});
+document.getElementById('pN').textContent=n.dataset.n;document.getElementById('pC').textContent=n.dataset.c;
+document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
+let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
+if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
+if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
+document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
+document.addEventListener('click',clr);
+function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
+</script>
 </body>
 </html>

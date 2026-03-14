@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salsa Tartufata - Flujo de Producción</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salsa Tartufata — Flujo Producción</title>
+<style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
 h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
+.inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
+.inst span{color:#fbbf24}
 .graph{max-width:1200px;margin:0 auto;position:relative;height:650px}
 .n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
 .n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
@@ -30,7 +32,7 @@ h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .panel.vis{opacity:1;pointer-events:auto}
 .panel h3{font-size:15px;color:#f1f5f9;margin-bottom:4px}
 .panel .code{font-size:11px;color:#fbbf24;margin-bottom:10px}
-.panel .info{font-size:12px;line-height:1.7;color:#94a3b8;max-height:400px;overflow-y:auto}
+.panel .info{font-size:12px;line-height:1.7;color:#94a3b8}
 .panel .tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:2px 2px 0 0}
 .t-v{background:#14532d;color:#86efac}.t-a{background:#4c1d1d;color:#fca5a5}.t-c{background:#1e3a5f;color:#93c5fd}
 .panel .x{position:absolute;top:8px;right:12px;cursor:pointer;color:#64748b;font-size:18px}.panel .x:hover{color:#f1f5f9}
@@ -43,117 +45,100 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 .divider{position:absolute;border-left:1px dashed #334155;height:100%;top:0}
 .divider-label{position:absolute;top:-18px;font-size:10px;color:#475569;white-space:nowrap}
 .back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
-    </style>
+</style>
 </head>
 <body>
 <a class="back" href="diagramas.html">&larr; Menú</a>
 <h1>Salsa Tartufata</h1>
-<div class="sub">Receta REC-SALSA-TART | Lote: L-757-DDMMAA</div>
+<p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios · REC-SALSA-TAR</p>
 
-<div class="graph">
-    <svg class="L"></svg>
+<div class="graph" id="G">
+<!-- Dividers -->
+<div class="divider" style="left:220px"><div class="divider-label">Cocción Salsa</div></div>
+<div class="divider" style="left:530px"><div class="divider-label">Embolsado</div></div>
+<div class="divider" style="left:760px"><div class="divider-label">Encajado</div></div>
 
-    <!-- INGREDIENTS (Left) - split into 2 columns -->
-    <div class="node n-mp" id="agua1" style="left:20px;top:30px;width:110px" data-n="Agua" data-c="MP-AGUA" data-i="Agua destilada|1000g">
-        <div class="glow"></div>Agua
-    </div>
+<svg class="L">
+<!-- MP → Salsa Tartufata -->
+<path class="ln lb" data-f="mpAgua" data-t="salsa" d="M205,55 C280,80 320,120 370,140"/>
+<path class="ln lb" data-f="mpMant" data-t="salsa" d="M205,105 C280,110 320,125 370,145"/>
+<path class="ln lb" data-f="mpParm" data-t="salsa" d="M205,155 C280,155 320,150 370,150"/>
+<path class="ln lb" data-f="mpAceiteTrufado" data-t="salsa" d="M205,205 C280,195 320,170 370,160"/>
+<path class="ln lb" data-f="mpAceite" data-t="salsa" d="M205,255 C280,220 320,180 370,165"/>
+<path class="ln lb" data-f="mpGrasaPollo" data-t="salsa" d="M205,305 C280,245 320,210 370,175"/>
+<path class="ln lb" data-f="mpUmami" data-t="salsa" d="M205,355 C280,270 320,230 370,185"/>
+<path class="ln lb" data-f="mpXantana" data-t="salsa" d="M205,405 C280,290 320,245 370,195"/>
+<path class="ln lb" data-f="mpCeb" data-t="salsa" d="M205,455 C280,310 320,260 370,205"/>
+<path class="ln lb" data-f="mpSal" data-t="salsa" d="M205,505 C280,330 320,270 370,215"/>
+<path class="ln lb" data-f="mpHazelnut" data-t="salsa" d="M205,555 C280,350 320,280 370,225"/>
+<path class="ln lb" data-f="mpVino" data-t="salsa" d="M205,590 C280,370 320,290 370,235"/>
+<!-- Salsa → Embolsado -->
+<path class="ln lg" data-f="salsa" data-t="bolsa" d="M525,200 C540,200 550,200 570,200"/>
+<!-- Film → Embolsado -->
+<path class="ln lb" data-f="mpFilm" data-t="bolsa" d="M205,180 C380,550 500,380 570,220"/>
+<!-- Embolsado → Caja Cremoso Tartufato -->
+<path class="ln lk" data-f="bolsa" data-t="cajaRis" d="M740,200 C755,200 760,185 795,180"/>
+<!-- Caja → Producto final -->
+<path class="ln lo" data-f="cajaRis" data-t="prodRis" d="M990,180 C1010,175 1020,172 1040,170"/>
+</svg>
 
-    <div class="node n-mp" id="mp07" style="left:20px;top:120px;width:110px" data-n="Xantana" data-c="MP07" data-i="Xantana (Gomificante)|4.12g">
-        <div class="glow"></div>Xantana<br>MP07
-    </div>
+<!-- ═══════ MATERIAS PRIMAS ═══════ -->
+<div class="node n-mp" id="mpAgua" style="left:8px;top:37px;width:188px" data-n="Agua" data-c="Agua potable" data-i="Base de la salsa|Volumen según batch" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
 
-    <div class="node n-mp" id="mp06" style="left:20px;top:210px;width:110px" data-n="Umami" data-c="MP06" data-i="Umami (Givaudan)|13g">
-        <div class="glow"></div>Umami<br>MP06
-    </div>
+<div class="node n-mp" id="mpMant" style="left:8px;top:87px;width:188px" data-n="Mantequilla" data-c="MP13 — Presidente" data-i="51g|⚠ Contiene LECHE" data-v="" data-a="LECHE" data-s=""><div class="glow"></div>Mantequilla (MP13)</div>
 
-    <div class="node n-mp" id="mp37" style="left:20px;top:300px;width:110px" data-n="Sal" data-c="MP37" data-i="Sal de mesa|4.5g">
-        <div class="glow"></div>Sal<br>MP37
-    </div>
+<div class="node n-mp" id="mpParm" style="left:8px;top:137px;width:188px" data-n="Parmigiano Reggiano" data-c="MP14" data-i="29g|⚠ Contiene LECHE" data-v="" data-a="LECHE" data-s=""><div class="glow"></div>Parmesano (MP14)</div>
 
-    <div class="node n-mp" id="mp09" style="left:20px;top:390px;width:110px" data-n="Hazelnut" data-c="MP09" data-i="Hazelnut Flavor|0.7g">
-        <div class="glow"></div>Hazelnut<br>MP09
-    </div>
+<div class="node n-mp" id="mpAceiteTrufado" style="left:8px;top:187px;width:188px" data-n="Aceite girasol trufado" data-c="MP67" data-i="Aceite especializado|Sabor trufa" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite trufado (MP67)</div>
 
-    <div class="node n-mp" id="mp34" style="left:20px;top:480px;width:110px" data-n="Cebolla deshid" data-c="MP34" data-i="Cebolla deshidratada|3g">
-        <div class="glow"></div>Cebolla<br>deshid<br>MP34
-    </div>
+<div class="node n-mp" id="mpAceite" style="left:8px;top:237px;width:188px" data-n="Aceite girasol alto oleico" data-c="MP04 — Coreysa" data-i="149g" data-v="" data-a="" data-s=""><div class="glow"></div>Aceite girasol (MP04)</div>
 
-    <div class="node n-mp" id="mp21" style="left:20px;top:570px;width:110px" data-n="Boletus" data-c="MP21" data-i="Boletus seco (Honza)|3g">
-        <div class="glow"></div>Boletus<br>MP21
-    </div>
+<div class="node n-mp" id="mpGrasaPollo" style="left:8px;top:287px;width:188px" data-n="Grasa de pollo" data-c="MP66 — Ugeave" data-i="22g" data-v="" data-a="" data-s=""><div class="glow"></div>Grasa pollo (MP66)</div>
 
-    <div class="node n-mp" id="mp65" style="left:145px;top:30px;width:110px" data-n="Manzanilla" data-c="MP65" data-i="Manzanilla (Barbadillo)|20g">
-        <div class="glow"></div>Manzanilla<br>MP65
-    </div>
+<div class="node n-mp" id="mpUmami" style="left:8px;top:337px;width:188px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="16g" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
 
-    <div class="node n-mp" id="mp61" style="left:145px;top:120px;width:110px" data-n="CMC" data-c="MP61" data-i="CMC (Dalmau)|2.04g">
-        <div class="glow"></div>CMC<br>MP61
-    </div>
+<div class="node n-mp" id="mpXantana" style="left:8px;top:387px;width:188px" data-n="Xantana" data-c="MP07 — Corquimia" data-i="Espesante|4g" data-v="" data-a="" data-s=""><div class="glow"></div>Xantana (MP07)</div>
 
-    <div class="node n-mp" id="mp63" style="left:145px;top:210px;width:110px" data-n="Nata" data-c="MP63" data-i="Nata (Metro)|370g">
-        <div class="glow"></div>Nata<br>MP63
-    </div>
+<div class="node n-mp" id="mpCeb" style="left:8px;top:437px;width:188px" data-n="Cebolla deshidratada" data-c="MP34 — Vegenat" data-i="3g" data-v="" data-a="" data-s=""><div class="glow"></div>Cebolla deshid. (MP34)</div>
 
-    <div class="node n-mp" id="mp14" style="left:145px;top:300px;width:110px" data-n="Parmesano" data-c="MP14" data-i="Parmesano|42g">
-        <div class="glow"></div>Parmesano<br>MP14
-    </div>
+<div class="node n-mp" id="mpSal" style="left:8px;top:487px;width:188px" data-n="Sal" data-c="MP37" data-i="4g" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP37)</div>
 
-    <div class="node n-mp" id="mp13" style="left:145px;top:390px;width:110px" data-n="Mantequilla" data-c="MP13" data-i="Mantequilla (Presidente)|80g">
-        <div class="glow"></div>Mantequilla<br>MP13
-    </div>
+<div class="node n-mp" id="mpHazelnut" style="left:8px;top:537px;width:188px" data-n="Hazelnut (colorante)" data-c="MP09 — Sensient" data-i="Colorante|0,7g desde 3L" data-v="" data-a="" data-s=""><div class="glow"></div>Hazelnut (MP09)</div>
 
-    <div class="node n-mp" id="mp67" style="left:145px;top:480px;width:110px" data-n="Girasol trufado" data-c="MP67" data-i="Girasol trufado (Coreysa)|70g">
-        <div class="glow"></div>Girasol<br>trufado<br>MP67
-    </div>
+<div class="node n-mp" id="mpVino" style="left:8px;top:577px;width:188px" data-n="Vino blanco" data-c="MP65 — Barbadillo" data-i="⚠ SULFITOS" data-v="" data-a="SULFITOS" data-s=""><div class="glow"></div>Vino blanco (MP65)</div>
 
-    <div class="node n-mp" id="mp04" style="left:145px;top:570px;width:110px" data-n="Girasol normal" data-c="MP04" data-i="Girasol normal (Coreysa)|47g">
-        <div class="glow"></div>Girasol<br>normal<br>MP04
-    </div>
+<div class="node n-pkg" id="mpFilm" style="left:8px;top:155px;width:0;height:0;opacity:0" data-n="Film top-seal" data-c="MP51" data-i="Film" data-v="" data-a="" data-s=""><div class="glow"></div></div>
 
-    <div class="node n-mp" id="mp66" style="left:145px;top:600px;width:110px" data-n="Grasa pollo" data-c="MP66" data-i="Grasa de pollo (Ugeave)|15g">
-        <div class="glow"></div>Grasa<br>pollo<br>MP66
-    </div>
+<!-- ═══════ SALSA ═══════ -->
+<div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa Tartufata" data-c="REC-SALSA-TAR · Lote: L-757-DDMMAA" data-i="Receta Salsa Tartufata (90g):|· Agua|· Mantequilla (MP13): 51g (LECHE)|· Parmesano (MP14): 29g (LECHE)|· Aceite trufado (MP67)|· Aceite girasol (MP04): 149g|· Grasa pollo (MP66): 22g|· Umami (MP06): 16g|· Xantana (MP07): 4g|· Cebolla deshid. (MP34): 3g|· Sal (MP37): 4g|· Hazelnut (MP09)|· Vino blanco (MP65) (SULFITOS)|Alérgenos: LECHE SULFITOS" data-v="" data-a="LECHE SULFITOS" data-s=""><div class="glow"></div>Salsa<br>Tartufata<br><span style="font-size:10px">cocción completa</span></div>
 
-    <div class="node n-pkg" id="mp51" style="left:270px;top:30px;width:110px" data-n="Film" data-c="MP51" data-i="Película de empaque|Sellable">
-        <div class="glow"></div>Film MP51
-    </div>
+<!-- ═══════ EMBOLSADO ═══════ -->
+<div class="node n-env" id="bolsa" style="left:570px;top:165px;width:165px;height:75px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Embolsado 90g" data-c="Proceso de envasado en bolsa" data-i="La salsa terminada se envasa|en bolsas individuales de 90g.|Sellado y etiquetado:|· Lote producto: L-757-DDMMAA|· 24 bolsas por caja|Control de temperatura" data-v="" data-a="" data-s=""><div class="glow"></div>Embolsado<br><span style="font-size:10px">bolsas de 90g ×24</span></div>
 
-    <!-- SALSA (Center) -->
-    <div class="node n-sal" id="salsa" style="left:380px;top:200px;width:160px;height:100px" data-n="Salsa Tartufata" data-c="REC-SALSA-TART" data-a="LECHE, SULFITOS" data-i="Receta Salsa Tartufata (1.7L = 1675g):|· Agua: 1000g|· Xantana (MP07): 4.12g|· Umami (MP06): 13g|· Sal (MP37): 4.5g|· Hazelnut (MP09): 0.7g|· Cebolla deshid (MP34): 3g|· Boletus seco (MP21): 3g|· Manzanilla (MP65): 20g|· CMC (MP61): 2.04g|· Nata (MP63): 370g|· Parmesano (MP14): 42g|· Mantequilla (MP13): 80g|· Girasol trufado (MP67): 70g|· Girasol normal (MP04): 47g|· Grasa pollo (MP66): 15g|Volúmenes escalables: 1.7L, 5L, 7L, 10L, 15L, 20L">
-        <div class="glow"></div>SALSA<br>Tartufata<br>(Cremoso)
-    </div>
+<!-- ═══════ ENCAJADO ═══════ -->
+<div class="node n-box" id="cajaRis" style="left:795px;top:130px;width:190px;height:100px" data-n="Caja Cremoso Tartufato + Salsa 90g" data-c="24 unidades/caja" data-i="Cada caja contiene:|· 24× Cremoso|· 24× Bolsa salsa tartufata (90g)|Lote salsa: L-757-DDMMAA" data-v="" data-a="" data-s=""><div class="glow"></div>Caja Cremoso<br>Tartufato<br><b style="font-size:14px">+ Salsa 90g</b></div>
 
-    <!-- EMBOLSADO -->
-    <div class="node n-env" id="emb" style="left:640px;top:220px;width:120px" data-n="Embolsado" data-c="EMP-TART-90G" data-i="Porciones de 90g|En bolsas térmicas|Film MP51">
-        <div class="glow"></div>Embolsado<br>90g
-    </div>
+<!-- ═══════ PRODUCTOS FINALES ═══════ -->
+<div class="node n-prod" id="prodRis" style="left:1040px;top:110px;width:145px;height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Caja Cremoso + Salsa Tartufata" data-c="Cremosos · 24 uds" data-i="Cremoso|+ 24 bolsas salsa tartufata 90g|Lote salsa: L-757-DDMMAA" data-v="" data-a="LECHE SULFITOS" data-s=""><div class="glow"></div>Cremoso<br>Tartufato<br><span style="font-size:11px">+ salsa 90g</span></div>
 
-    <!-- ENCAJADO -->
-    <div class="node n-box" id="encaj" style="left:850px;top:220px;width:120px" data-n="Encajado" data-c="CAJA-TART-24" data-i="24 bolsas por caja|Cartón corrugado|Etiquetado">
-        <div class="glow"></div>Encajado<br>24/caja
-    </div>
-
-    <!-- FINAL PRODUCT -->
-    <div class="node n-prod" id="prod" style="left:1060px;top:200px;width:130px;height:80px" data-n="Producto Final" data-c="CAJA-CREMOSO-TART" data-i="Caja Cremoso Tartufato|Destino: All-Included|Alérgenos: LECHE, SULFITOS|Lote: L-757-DDMMAA">
-        <div class="glow"></div>CAJA<br>CREMOSO<br>TARTUFATO
-    </div>
+<!-- Info extra packaging -->
+<div style="position:absolute;left:795px;top:260px;font-size:11px;color:#67e8f9;opacity:.6;line-height:1.5;max-width:340px">
+La salsa tartufata se embosa y se incluye<br>dentro de las cajas de Cremosos.
+</div>
 </div>
 
-<div id="P" class="panel">
-    <span class="x">×</span>
-    <h3 id="pN"></h3>
-    <div class="code" id="pC"></div>
-    <div class="info" id="pI"></div>
-    <div id="pT"></div>
-</div>
+<!-- ═══════ PANEL ═══════ -->
+<div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div></div>
 
+<!-- ═══════ LEYENDA ═══════ -->
 <div class="legend">
-    <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div><span>Materia Prima (MP)</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div><span>Packaging</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div><span>Salsa</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#4a1942;border:1px solid #ec4899"></div><span>Embolsado</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #06b6d4"></div><span>Encajado</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#78350f;border:2px solid #f59e0b"></div><span>Producto</span></div>
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
+<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Salsa (cocción)</div>
+<div class="legend-i"><div class="legend-d" style="background:#4a1942;border:1px solid #ec4899"></div>Embolsado</div>
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #06b6d4"></div>Encajado</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
+<div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
+<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ Alérgenos: LECHE, SULFITOS</div>
 </div>
 
 <script>
@@ -171,18 +156,6 @@ if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
 document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
-
-// Draw SVG connections
-const svg=document.querySelector('svg.L'),rect=document.querySelector('.graph').getBoundingClientRect();
-function drawLine(f,t,cls='lb'){const fn=document.getElementById(f),tn=document.getElementById(t);if(!fn||!tn)return;
-const fr=fn.getBoundingClientRect(),tr=tn.getBoundingClientRect();
-const x1=fr.left-rect.left+fr.width/2,y1=fr.top-rect.top+fr.height/2,x2=tr.left-rect.left+tr.width/2,y2=tr.top-rect.top+tr.height/2;
-const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',x1);line.setAttribute('y1',y1);line.setAttribute('x2',x2);line.setAttribute('y2',y2);
-line.setAttribute('class',`ln ${cls}`);line.dataset.f=f;line.dataset.t=t;svg.appendChild(line)}
-drawLine('agua1','salsa','lg');drawLine('mp07','salsa','lg');drawLine('mp06','salsa','lg');drawLine('mp37','salsa','lg');drawLine('mp09','salsa','lg');
-drawLine('mp34','salsa','lg');drawLine('mp21','salsa','lg');drawLine('mp65','salsa','lg');drawLine('mp61','salsa','lg');drawLine('mp63','salsa','lg');
-drawLine('mp14','salsa','lg');drawLine('mp13','salsa','lg');drawLine('mp67','salsa','lg');drawLine('mp04','salsa','lg');drawLine('mp66','salsa','lg');
-drawLine('salsa','emb','lg');drawLine('mp51','emb','lg');drawLine('emb','encaj','lg');drawLine('encaj','prod','lo');
 </script>
 </body>
 </html>

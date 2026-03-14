@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salsa de Pollo - Flujo de Producción</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salsa de Pollo — Flujo Producción</title>
+<style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:30px 20px}
 h1{text-align:center;font-size:22px;color:#f1f5f9;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:10px}
+.inst{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:25px;background:#1e293b;padding:8px 16px;border-radius:8px;display:inline-block;margin-left:50%;transform:translateX(-50%)}
+.inst span{color:#fbbf24}
 .graph{max-width:1200px;margin:0 auto;position:relative;height:650px}
 .n-pkg{background:#1a3636;border:1.5px solid #14b8a6;color:#5eead4}
 .n-pkg .glow{box-shadow:0 0 15px rgba(20,184,166,.5)}
@@ -43,89 +45,81 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 .divider{position:absolute;border-left:1px dashed #334155;height:100%;top:0}
 .divider-label{position:absolute;top:-18px;font-size:10px;color:#475569;white-space:nowrap}
 .back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
-    </style>
+</style>
 </head>
 <body>
 <a class="back" href="diagramas.html">&larr; Menú</a>
 <h1>Salsa de Pollo</h1>
-<div class="sub">Receta REC-SALSA-POL | Lote: L-749S-DDMMAA</div>
+<p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios · REC-SALSA-POL</p>
 
-<div class="graph">
-    <svg class="L"></svg>
+<div class="graph" id="G">
+<!-- Dividers -->
+<div class="divider" style="left:220px"><div class="divider-label">Cocción Salsa</div></div>
+<div class="divider" style="left:530px"><div class="divider-label">Embolsado</div></div>
+<div class="divider" style="left:760px"><div class="divider-label">Encajado</div></div>
 
-    <!-- INGREDIENTS (Left) -->
-    <div class="node n-mp" id="mp03" style="left:20px;top:30px;width:110px" data-n="Paeller Pollo" data-c="MP03" data-i="Paeller de Pollo|18L (6 latas)|Proveedor: —">
-        <div class="glow"></div>Paeller Pollo<br>MP03
-    </div>
+<svg class="L">
+<!-- MP → Salsa Pollo -->
+<path class="ln lb" data-f="mpSalmorreta" data-t="salsa" d="M205,55 C280,80 320,120 370,140"/>
+<path class="ln lb" data-f="mpCaldoPollo" data-t="salsa" d="M205,105 C280,110 320,125 370,145"/>
+<path class="ln lb" data-f="mpAgua" data-t="salsa" d="M205,155 C280,155 320,150 370,150"/>
+<path class="ln lb" data-f="mpHazelnut" data-t="salsa" d="M205,205 C280,195 320,170 370,160"/>
+<path class="ln lb" data-f="mpUmami" data-t="salsa" d="M205,255 C280,220 320,180 370,165"/>
+<path class="ln lb" data-f="mpSal" data-t="salsa" d="M205,305 C280,245 320,210 370,175"/>
+<!-- Salsa → Embolsado -->
+<path class="ln lg" data-f="salsa" data-t="bolsa" d="M525,200 C540,200 550,200 570,200"/>
+<!-- Film → Embolsado -->
+<path class="ln lb" data-f="mpFilm" data-t="bolsa" d="M205,355 C380,580 500,400 570,220"/>
+<!-- Embolsado → Caja Arroz Pollo -->
+<path class="ln lk" data-f="bolsa" data-t="cajaRis" d="M740,200 C755,200 760,185 795,180"/>
+<!-- Caja Arroz Pollo → Producto final -->
+<path class="ln lo" data-f="cajaRis" data-t="prodRis" d="M990,180 C1010,175 1020,172 1040,170"/>
+</svg>
 
-    <div class="node n-mp" id="agua1" style="left:20px;top:120px;width:110px" data-n="Agua" data-c="MP-AGUA" data-i="Agua destilada|600g">
-        <div class="glow"></div>Agua
-    </div>
+<!-- ═══════ MATERIAS PRIMAS ═══════ -->
+<div class="node n-mp" id="mpSalmorreta" style="left:8px;top:37px;width:188px" data-n="Salmorreta (prelab)" data-c="MP43 — Prelab" data-i="Salsa base preelaborada|Prelab RIA-PRELAB-SALMORRETA" data-v="" data-a="" data-s=""><div class="glow"></div>Salmorreta (MP43)</div>
 
-    <div class="node n-mp" id="mp46" style="left:20px;top:210px;width:110px" data-n="Aceite Ajo" data-c="MP46" data-i="Prelab MP46|Aceite de Ajo|520g">
-        <div class="glow"></div>Aceite Ajo<br>MP46
-    </div>
+<div class="node n-mp" id="mpCaldoPollo" style="left:8px;top:87px;width:188px" data-n="Caldo de Pollo (prelab)" data-c="RIA-POLLO — Prelab" data-i="Caldo de pollo preelaborado|RIA-POLLO|Sin alérgenos principales" data-v="" data-a="" data-s=""><div class="glow"></div>Caldo Pollo (prelab)</div>
 
-    <div class="node n-mp" id="mp05" style="left:20px;top:300px;width:110px" data-n="Aceite Oliva" data-c="MP05" data-i="Aceite oliva Extra Virgen|Makro|288g">
-        <div class="glow"></div>Aceite Oliva<br>MP05
-    </div>
+<div class="node n-mp" id="mpAgua" style="left:8px;top:137px;width:188px" data-n="Agua" data-c="Agua potable" data-i="Base de la salsa|Volumen según batch" data-v="" data-a="" data-s=""><div class="glow"></div>Agua</div>
 
-    <div class="node n-mp" id="mp14" style="left:20px;top:390px;width:110px" data-n="Grasa Pollo" data-c="MP14" data-i="Grasa de pollo|Proveedor: —|480g">
-        <div class="glow"></div>Grasa Pollo<br>MP14
-    </div>
+<div class="node n-mp" id="mpHazelnut" style="left:8px;top:187px;width:188px" data-n="Hazelnut (colorante)" data-c="MP09 — Sensient" data-i="Colorante|0,7g desde 3L" data-v="" data-a="" data-s=""><div class="glow"></div>Hazelnut (MP09)</div>
 
-    <div class="node n-mp" id="mp43" style="left:20px;top:480px;width:110px" data-n="Salmorreta" data-c="MP43" data-i="Prelab MP43|Salmorreta|584g">
-        <div class="glow"></div>Salmorreta<br>MP43
-    </div>
+<div class="node n-mp" id="mpUmami" style="left:8px;top:237px;width:188px" data-n="Umami (Givaudan)" data-c="MP06 — Givaudan" data-i="Realzador de sabor|16g (batch)" data-v="" data-a="" data-s=""><div class="glow"></div>Umami (MP06)</div>
 
-    <div class="node n-mp" id="mp06" style="left:20px;top:570px;width:110px" data-n="Umami" data-c="MP06" data-i="Umami|Givaudan|0.28g">
-        <div class="glow"></div>Umami<br>MP06
-    </div>
+<div class="node n-mp" id="mpSal" style="left:8px;top:287px;width:188px" data-n="Sal" data-c="MP37" data-i="4g (batch)" data-v="" data-a="" data-s=""><div class="glow"></div>Sal (MP37)</div>
 
-    <div class="node n-mp" id="mp09" style="left:20px;top:600px;width:110px" data-n="Hazelnut" data-c="MP09" data-i="Hazelnut Flavor|Sensient|225g">
-        <div class="glow"></div>Hazelnut<br>MP09
-    </div>
+<div class="node n-pkg" id="mpFilm" style="left:8px;top:337px;width:188px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm|→ Embolsado" data-v="" data-a="" data-s=""><div class="glow"></div>Film top-seal (MP51)</div>
 
-    <div class="node n-pkg" id="mp51" style="left:145px;top:600px;width:110px" data-n="Film" data-c="MP51" data-i="Película de empaque|Sellable">
-        <div class="glow"></div>Film MP51
-    </div>
+<!-- ═══════ SALSA ═══════ -->
+<div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa de Pollo" data-c="REC-SALSA-POL · Lote: L-749S-DDMMAA" data-i="Receta Salsa de Pollo (40g):|· Salmorreta (MP43, prelab)|· Caldo Pollo (RIA-POLLO, prelab)|· Agua|· Hazelnut (MP09)|· Umami (MP06): 16g|· Sal (MP37): 4g|Sin alérgenos principales" data-v="" data-a="" data-s=""><div class="glow"></div>Salsa de<br>Pollo<br><span style="font-size:10px">cocción completa</span></div>
 
-    <!-- SALSA (Center) -->
-    <div class="node n-sal" id="salsa" style="left:380px;top:240px;width:160px" data-n="Salsa de Pollo" data-c="REC-SALSA-POL" data-i="Receta Salsa de Pollo (18L)|Paeller Pollo 18L (MP03)|+ Agua 600g|+ Aceite de Ajo 520g (MP46)|+ Aceite oliva 288g (MP05)|+ Grasa pollo 480g (MP14)|+ Salmorreta 584g (MP43)|+ Umami 0.28g (MP06)|+ Hazelnut 225g (MP09)">
-        <div class="glow"></div>SALSA de<br>Pollo
-    </div>
+<!-- ═══════ EMBOLSADO ═══════ -->
+<div class="node n-env" id="bolsa" style="left:570px;top:165px;width:165px;height:75px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Embolsado 40g" data-c="Proceso de envasado en bolsa" data-i="La salsa terminada se envasa|en bolsas individuales de 40g.|Sellado y etiquetado:|· Lote producto: L-749S-DDMMAA|· 24 bolsas por caja|Control de temperatura" data-v="" data-a="" data-s=""><div class="glow"></div>Embolsado<br><span style="font-size:10px">bolsas de 40g ×24</span></div>
 
-    <!-- EMBOLSADO -->
-    <div class="node n-env" id="emb" style="left:640px;top:240px;width:120px" data-n="Embolsado" data-c="EMP-POLLO-40G" data-i="Porciones de 40g|En bolsas térmicas|Film MP51">
-        <div class="glow"></div>Embolsado<br>40g
-    </div>
+<!-- ═══════ ENCAJADO ═══════ -->
+<div class="node n-box" id="cajaRis" style="left:795px;top:130px;width:190px;height:100px" data-n="Caja Arroz Pollo + Salsa 40g" data-c="24 unidades/caja" data-i="Cada caja contiene:|· 24× Arroz Pollo|· 24× Bolsa salsa pollo (40g)|Lote salsa: L-749S-DDMMAA" data-v="" data-a="" data-s=""><div class="glow"></div>Caja Arroz<br>Pollo<br><b style="font-size:14px">+ Salsa 40g</b></div>
 
-    <!-- ENCAJADO -->
-    <div class="node n-box" id="encaj" style="left:850px;top:240px;width:120px" data-n="Encajado" data-c="CAJA-POLLO-24" data-i="24 bolsas por caja|Cartón corrugado|Etiquetado">
-        <div class="glow"></div>Encajado<br>24/caja
-    </div>
+<!-- ═══════ PRODUCTOS FINALES ═══════ -->
+<div class="node n-prod" id="prodRis" style="left:1040px;top:110px;width:145px;height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Caja Arroz Pollo + Salsa" data-c="Arroz Pollo · 24 uds" data-i="Arroz Pollo|+ 24 bolsas salsa pollo 40g|Lote salsa: L-749S-DDMMAA" data-v="" data-a="" data-s=""><div class="glow"></div>Arroz Pollo<br><span style="font-size:11px">+ salsa 40g</span></div>
 
-    <!-- FINAL PRODUCT -->
-    <div class="node n-prod" id="prod" style="left:1060px;top:220px;width:130px;height:80px" data-n="Producto Final" data-c="CAJA-ARROZ-POLLO" data-i="Caja Arroz Pollo|Destino: La Santa|Alérgenos: (pendiente)|Lote: L-749S-DDMMAA">
-        <div class="glow"></div>CAJA ARROZ<br>POLLO<br>(La Santa)
-    </div>
+<!-- Info extra packaging -->
+<div style="position:absolute;left:795px;top:260px;font-size:11px;color:#67e8f9;opacity:.6;line-height:1.5;max-width:340px">
+La salsa de pollo se embosa y se incluye<br>dentro de las cajas de Arroz Pollo.
+</div>
 </div>
 
-<div id="P" class="panel">
-    <span class="x">×</span>
-    <h3 id="pN"></h3>
-    <div class="code" id="pC"></div>
-    <div class="info" id="pI"></div>
-    <div id="pT"></div>
-</div>
+<!-- ═══════ PANEL ═══════ -->
+<div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div></div>
 
+<!-- ═══════ LEYENDA ═══════ -->
 <div class="legend">
-    <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div><span>Materia Prima (MP)</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div><span>Packaging</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div><span>Salsa</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#4a1942;border:1px solid #ec4899"></div><span>Embolsado</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #06b6d4"></div><span>Encajado</span></div>
-    <div class="legend-i"><div class="legend-d" style="background:#78350f;border:2px solid #f59e0b"></div><span>Producto</span></div>
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #3b82f6"></div>Materia prima</div>
+<div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Salsa (cocción)</div>
+<div class="legend-i"><div class="legend-d" style="background:#4a1942;border:1px solid #ec4899"></div>Embolsado</div>
+<div class="legend-i"><div class="legend-d" style="background:#1e3a5f;border:1px solid #06b6d4"></div>Encajado</div>
+<div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
+<div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
 </div>
 
 <script>
@@ -143,17 +137,6 @@ if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
 document.getElementById('pT').innerHTML=t;P.classList.add('vis')})});
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
-
-// Draw SVG connections
-const svg=document.querySelector('svg.L'),rect=document.querySelector('.graph').getBoundingClientRect();
-function drawLine(f,t,cls='lb'){const fn=document.getElementById(f),tn=document.getElementById(t);if(!fn||!tn)return;
-const fr=fn.getBoundingClientRect(),tr=tn.getBoundingClientRect();
-const x1=fr.left-rect.left+fr.width/2,y1=fr.top-rect.top+fr.height/2,x2=tr.left-rect.left+tr.width/2,y2=tr.top-rect.top+tr.height/2;
-const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',x1);line.setAttribute('y1',y1);line.setAttribute('x2',x2);line.setAttribute('y2',y2);
-line.setAttribute('class',`ln ${cls}`);line.dataset.f=f;line.dataset.t=t;svg.appendChild(line)}
-drawLine('mp03','salsa','lg');drawLine('agua1','salsa','lg');drawLine('mp46','salsa','lg');drawLine('mp05','salsa','lg');drawLine('mp14','salsa','lg');
-drawLine('mp43','salsa','lg');drawLine('mp06','salsa','lg');drawLine('mp09','salsa','lg');
-drawLine('salsa','emb','lg');drawLine('mp51','emb','lg');drawLine('emb','encaj','lg');drawLine('encaj','prod','lo');
 </script>
 </body>
 </html>
