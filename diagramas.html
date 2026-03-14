@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagramas de Producción — Rice in Action S.L.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:40px 20px}
+.header{text-align:center;margin-bottom:40px}
+.header h1{font-size:26px;color:#f1f5f9;margin-bottom:6px}
+.header p{color:#64748b;font-size:14px}
+.header .badge{display:inline-block;background:#1e293b;border:1px solid #334155;color:#fbbf24;font-size:11px;padding:4px 12px;border-radius:6px;margin-top:10px}
+.grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:24px;transition:all .3s;cursor:pointer;text-decoration:none;display:block}
+.card:hover{border-color:#64748b;transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,.4)}
+.card .icon{font-size:32px;margin-bottom:12px}
+.card h2{font-size:17px;color:#f1f5f9;margin-bottom:6px}
+.card p{font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:10px}
+.card .tags{display:flex;flex-wrap:wrap;gap:5px}
+.card .tag{font-size:10px;padding:3px 8px;border-radius:4px}
+.tag-fish{background:#1e3a5f;color:#93c5fd}
+.tag-cream{background:#581c87;color:#d8b4fe}
+.tag-sauce{background:#14532d;color:#86efac}
+.tag-warn{background:#4c1d1d;color:#fca5a5}
+.tag-pack{background:#164e63;color:#67e8f9}
+.footer{text-align:center;margin-top:40px;color:#475569;font-size:12px;line-height:1.8}
+.footer a{color:#fbbf24;text-decoration:none}.footer a:hover{text-decoration:underline}
+.section-title{max-width:900px;margin:0 auto 15px;font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:1px;padding-left:4px}
+.section-title:not(:first-of-type){margin-top:30px}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Diagramas de Producción</h1>
+<p>Rice in Action S.L. — Flujos de producción interactivos para consultoría APPCC / IFS Food</p>
+<div class="badge">Click en cualquier nodo para ver conexiones y detalles</div>
+</div>
+
+<div class="section-title">Familia La Santa</div>
+<div class="grid">
+<a class="card" href="dark_pescado.html">
+<div class="icon">🐟</div>
+<h2>Arroz de Pescado y Marisco</h2>
+<p>Flujo completo: materias primas, aceite de ajo, aceite de ñora, agua de azafrán, caldo de pescado, mezcla jarra normal, jarra de pescado.</p>
+<div class="tags">
+<span class="tag tag-fish">La Santa · 748</span>
+<span class="tag tag-warn">PESCADO · MOLUSCOS · MARISCO · SULFITOS · APIO</span>
+</div>
+</a>
+
+<a class="card" href="dark_maestro.html">
+<div class="icon">👨‍🍳</div>
+<h2>Arroz Maestro</h2>
+<p>Sin caldo. Preparado maestro (polvos) + hazelnut + agua azafrán + agua forman la mezcla jarra maestro. Con arroz a producción.</p>
+<div class="tags">
+<span class="tag tag-fish">La Santa</span>
+<span class="tag tag-warn">SULFITOS</span>
+</div>
+</a>
+</div>
+
+<div class="section-title">Familia Cremosos / Risotto</div>
+<div class="grid">
+<a class="card" href="dark_cremoso_iberico.html">
+<div class="icon">🥘</div>
+<h2>Cremoso Ibérico</h2>
+<p>Mezcla jarra risotto + jarra risotto + sal, caldo risotto, salsa ibérico y jamón ibérico cortado. Con arroz al producto final.</p>
+<div class="tags">
+<span class="tag tag-cream">Cremosos</span>
+<span class="tag tag-warn">LÁCTEOS · SULFITOS</span>
+</div>
+</a>
+</div>
+
+<div class="section-title">Salsas — Envasado en bolsa</div>
+<div class="grid">
+<a class="card" href="dark_salsa_boletus.html">
+<div class="icon">🍄</div>
+<h2>Salsa de Setas (Boletus)</h2>
+<p>Receta de setas (sin CMC, con cebolla deshidratada). Embolsado individual. Encajado en 260g (24 uds) y 380g (20 uds) con arroz de pescado, maestro y risotto boletus.</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · REC-SALSA-SET</span>
+<span class="tag tag-pack">260g ×24 · 380g ×20</span>
+<span class="tag tag-warn">LECHE · SULFITOS</span>
+</div>
+</a>
+</div>
+
+<div class="footer">
+Rice in Action S.L. — Sistema de Gestión de Calidad APPCC / IFS Food<br>
+<a href="index.html">&larr; Volver a la aplicación principal</a>
+</div>
+</body>
+</html>
