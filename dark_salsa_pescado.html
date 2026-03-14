@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salsa de Pescado — Diagrama de Flujo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: #e5e7eb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #fbbf24;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #9ca3af;
+            letter-spacing: 0.5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 4px;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #334155;
+            border-color: #64748b;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .diagram-wrapper {
+            flex: 1;
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            overflow: auto;
+        }
+
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .divider {
+            position: absolute;
+            top: 20px;
+            width: 1px;
+            height: 400px;
+            background: rgba(107, 114, 128, 0.3);
+        }
+
+        .divider-label {
+            position: absolute;
+            top: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #6b7280;
+            letter-spacing: 0.5px;
+            transform: translateY(-100%);
+        }
+
+        .node {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            padding: 10px;
+            line-height: 1.3;
+        }
+
+        .node.hl {
+            filter: brightness(1.3);
+        }
+
+        .node.dim {
+            opacity: 0.3;
+            filter: grayscale(0.8);
+        }
+
+        .glow {
+            position: absolute;
+            inset: -8px;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        .n-mp {
+            background: #1e3a5f;
+            border: 1.5px solid #3b82f6;
+            color: #93c5fd;
+        }
+
+        .n-mp .glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .n-sal {
+            background: #14532d;
+            border: 2px solid #22c55e;
+            color: #86efac;
+            font-size: 15px;
+        }
+
+        .n-sal .glow {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+        }
+
+        .n-env {
+            background: #4a1942;
+            border: 2px solid #ec4899;
+            color: #f9a8d4;
+        }
+
+        .n-env .glow {
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+        }
+
+        .n-box {
+            background: #1e3a5f;
+            border: 2px solid #06b6d4;
+            color: #67e8f9;
+        }
+
+        .n-box .glow {
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+        }
+
+        .n-prod {
+            background: #78350f;
+            border: 2.5px solid #f59e0b;
+            color: #fde68a;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .n-prod .glow {
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+        }
+
+        .n-pkg {
+            background: #1a3636;
+            border: 1.5px solid #14b8a6;
+            color: #5eead4;
+        }
+
+        .n-pkg .glow {
+            box-shadow: 0 0 15px rgba(20, 184, 166, 0.5);
+        }
+
+        .ln {
+            transition: all 0.3s ease;
+        }
+
+        .ln.hl {
+            filter: brightness(1.4);
+        }
+
+        .ln.dim {
+            opacity: 0.2;
+        }
+
+        .lb { stroke: #3b82f6; stroke-width: 2; }
+        .lg { stroke: #22c55e; stroke-width: 2; }
+        .lk { stroke: #ec4899; stroke-width: 2; }
+        .lc { stroke: #06b6d4; stroke-width: 2; }
+        .lo { stroke: #f59e0b; stroke-width: 2; }
+        .ld { stroke-dasharray: 5, 5; }
+
+        .panel {
+            width: 280px;
+            background: #1a1f2e;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .panel.vis {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .panel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fbbf24;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #475569;
+        }
+
+        .panel-content {
+            font-size: 11px;
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+
+        .panel-content strong {
+            color: #f3f4f6;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        #pI {
+            color: #9ca3af;
+            font-size: 10px;
+            margin: 10px 0;
+        }
+
+        #pT {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .t-v {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .t-a {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .t-c {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .legend {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        .legend-item {
+            margin: 6px 0;
+        }
+
+        .legend-color {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .panel {
+                position: static;
+                max-height: none;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="back-link"><a href="diagramas.html" style="color: inherit; text-decoration: none;">← Volver a Diagramas</a></div>
+
+    <div class="header">
+        <h1>Salsa de Pescado</h1>
+        <p>Rice in Action S.L. — Flujo completo de materias primas y productos intermedios · REC-SALSA-PES</p>
+    </div>
+
+    <div class="container">
+        <div class="diagram-wrapper">
+            <div class="divider" style="left: 220px;"><div class="divider-label" style="left: -50px;">Cocción Salsa</div></div>
+            <div class="divider" style="left: 530px;"><div class="divider-label" style="left: -40px;">Embolsado</div></div>
+            <div class="divider" style="left: 760px;"><div class="divider-label" style="left: -35px;">Encajado</div></div>
+
+            <svg width="980" height="400" viewBox="0 0 980 400">
+                <!-- Left column: Ingredients -->
+                <g id="ingredients">
+                    <!-- Salmorreta MP43 -->
+                    <rect id="n-mp-salmorreta" class="node n-mp" x="40" y="80" width="120" height="80" rx="6">
+                        <title>Salmorreta congelada</title>
+                    </rect>
+                    <div class="node n-mp" style="position: absolute; left: 40px; top: 80px; width: 120px; height: 80px;" id="n-mp-salmorreta-label">
+                        Salmorreta<br/>MP43<br/><span style="font-size: 10px; opacity: 0.8;">RIA-PRELAB-SALMORRETA</span>
+                    </div>
+
+                    <!-- Caldo Pescado -->
+                    <rect id="n-mp-caldo" class="node n-mp" x="40" y="200" width="120" height="80" rx="6">
+                        <title>Caldo de Pescado</title>
+                    </rect>
+                    <div class="node n-mp" style="position: absolute; left: 40px; top: 200px; width: 120px; height: 80px;" id="n-mp-caldo-label">
+                        Caldo de<br/>Pescado<br/><span style="font-size: 10px; opacity: 0.8;">RIA-PESCADO</span>
+                    </div>
+
+                    <!-- Sal MP37 -->
+                    <rect id="n-mp-sal" class="node n-mp" x="40" y="320" width="120" height="60" rx="6">
+                        <title>Sal MP37</title>
+                    </rect>
+                    <div class="node n-mp" style="position: absolute; left: 40px; top: 320px; width: 120px; height: 60px;" id="n-mp-sal-label">
+                        Sal<br/>MP37
+                    </div>
+                </g>
+
+                <!-- Center: Salsa Cooking -->
+                <g id="salsa">
+                    <rect id="n-salsa" class="node n-sal" x="280" y="140" width="180" height="120" rx="8">
+                        <title>Salsa de Pescado</title>
+                    </rect>
+                    <div class="node n-sal" style="position: absolute; left: 280px; top: 140px; width: 180px; height: 120px;" id="n-salsa-label">
+                        Salsa de<br/>Pescado<br/><span style="font-size: 11px; opacity: 0.9;">L-748S-DDMMAA</span>
+                    </div>
+                </g>
+
+                <!-- Lines from ingredients to salsa -->
+                <line class="ln lg" x1="160" y1="120" x2="280" y2="180" data-f="n-mp-salmorreta" data-t="n-salsa" stroke-width="2"/>
+                <line class="ln lg" x1="160" y1="240" x2="280" y2="200" data-f="n-mp-caldo" data-t="n-salsa" stroke-width="2"/>
+                <line class="ln lg" x1="160" y1="350" x2="280" y2="240" data-f="n-mp-sal" data-t="n-salsa" stroke-width="2"/>
+
+                <!-- Right: Embolsado & Encajado -->
+                <g id="packaging">
+                    <!-- Embolsado 40g -->
+                    <rect id="n-embolsado" class="node n-env" x="590" y="140" width="130" height="100" rx="6">
+                        <title>Embolsado 40g</title>
+                    </rect>
+                    <div class="node n-env" style="position: absolute; left: 590px; top: 140px; width: 130px; height: 100px;" id="n-embolsado-label">
+                        Embolsado<br/>40g<br/><span style="font-size: 10px; opacity: 0.9;">24 bolsas/caja</span>
+                    </div>
+
+                    <!-- Line: Salsa to Embolsado -->
+                    <line class="ln lg" x1="460" y1="200" x2="590" y2="190" data-f="n-salsa" data-t="n-embolsado" stroke-width="2"/>
+
+                    <!-- Caja Pescado -->
+                    <rect id="n-caja" class="node n-box" x="800" y="140" width="130" height="100" rx="6">
+                        <title>Caja Pescado</title>
+                    </rect>
+                    <div class="node n-box" style="position: absolute; left: 800px; top: 140px; width: 130px; height: 100px;" id="n-caja-label">
+                        Caja<br/>Pescado +<br/>Salsa
+                    </div>
+
+                    <!-- Line: Embolsado to Caja -->
+                    <line class="ln lc" x1="720" y1="190" x2="800" y2="190" data-f="n-embolsado" data-t="n-caja" stroke-width="2"/>
+
+                    <!-- Film Top Seal (hidden) -->
+                    <rect id="n-film" class="node n-pkg" x="540" y="280" width="100" height="60" rx="6" style="opacity: 0;">
+                        <title>Film Top Seal MP51</title>
+                    </rect>
+                    <div class="node n-pkg" style="position: absolute; left: 540px; top: 280px; width: 100px; height: 60px; opacity: 0;" id="n-film-label">
+                        Film Top Seal<br/>MP51 · Adrados
+                    </div>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Information Panel -->
+        <div class="panel" id="P">
+            <div class="panel-title" id="pN">Selecciona un nodo</div>
+            <div class="panel-content">
+                <strong>Detalles:</strong>
+                <div id="pI">Haz clic en cualquier elemento del diagrama para ver la información detallada</div>
+                <div id="pT"></div>
+            </div>
+            <div class="panel-content">
+                <strong>Lote:</strong>
+                <div id="pC">—</div>
+            </div>
+            <div class="legend">
+                <div class="legend-item"><span class="legend-color" style="background: #1e3a5f; border: 1px solid #3b82f6;"></span>Materias Primas</div>
+                <div class="legend-item"><span class="legend-color" style="background: #14532d; border: 1px solid #22c55e;"></span>Salsa</div>
+                <div class="legend-item"><span class="legend-color" style="background: #4a1942; border: 1px solid #ec4899;"></span>Envase/Bolsa</div>
+                <div class="legend-item"><span class="legend-color" style="background: #1e3a5f; border: 1px solid #06b6d4;"></span>Caja</div>
+                <div class="legend-item"><span class="legend-color" style="background: #78350f; border: 1px solid #f59e0b;"></span>Producto Final</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Final Node (rendered in panel when appropriate) -->
+    <template id="product-template">
+        <div class="node n-prod" style="position: absolute; left: 900px; top: 300px; width: 70px; height: 80px;" id="n-product">
+            Caja<br/>Pescado<br/>+Salsa
+        </div>
+    </template>
+
+    <script>
+        // Data definitions
+        const nodes = {
+            'n-mp-salmorreta': {
+                n: 'Salmorreta MP43',
+                c: 'Prelab · Congelada',
+                i: 'Base salmorreta|RIA-PRELAB-SALMORRETA-DDMMAA',
+                v: '—',
+                s: 'Congelada'
+            },
+            'n-mp-caldo': {
+                n: 'Caldo de Pescado',
+                c: 'Producto Intermedio · Prelab',
+                i: 'Caldo de pescado|RIA-PESCADO-DDMMAA|Alérgenos: PESCADO MOLUSCOS CRUSTÁCEOS APIO',
+                v: '—',
+                a: 'PESCADO MOLUSCOS CRUSTÁCEOS APIO'
+            },
+            'n-mp-sal': {
+                n: 'Sal MP37',
+                c: 'Materia Prima',
+                i: 'Cloruro de sodio · MP37',
+                v: '—'
+            },
+            'n-salsa': {
+                n: 'Salsa de Pescado',
+                c: 'Salsa Terminada',
+                i: 'Receta Salsa de Pescado|Base salmorreta (RIA-PRELAB-SALMORRETA)|+ Caldo de Pescado (RIA-PESCADO)|+ Sal|Lote: L-748S-DDMMAA',
+                a: 'PESCADO MOLUSCOS CRUSTÁCEOS APIO'
+            },
+            'n-embolsado': {
+                n: 'Embolsado 40g',
+                c: 'Envasado Individual',
+                i: 'La salsa terminada se envasa|en bolsas individuales de 40g.|· Lote: L-748S-DDMMAA|· 24 bolsas por caja|· Film top-seal MP51 (Adrados)',
+                v: '~5 min'
+            },
+            'n-caja': {
+                n: 'Caja Pescado + Salsa',
+                c: 'Embalaje',
+                i: 'Cada caja contiene:|· 24x Bolsas salsa pescado (40g)|· Lote salsa: L-748S-DDMMAA|Destino: La Santa'
+            }
+        };
+
+        // Populate node data attributes
+        Object.entries(nodes).forEach(([id, data]) => {
+            const elem = document.getElementById(id);
+            if (elem) {
+                elem.dataset.n = data.n;
+                elem.dataset.c = data.c;
+                elem.dataset.i = data.i;
+                if (data.v) elem.dataset.v = data.v;
+                if (data.a) elem.dataset.a = data.a;
+                if (data.s) elem.dataset.s = data.s;
+            }
+        });
+
+        // Click handler script
+        const ns = document.querySelectorAll('.node[id]'),
+              ls = document.querySelectorAll('.ln'),
+              P = document.getElementById('P');
+        let sel = null;
+
+        ns.forEach(n => {
+            if (n.style.opacity === '0') return;
+            n.addEventListener('click', e => {
+                e.stopPropagation();
+                const id = n.id;
+                if (sel === id) { clr(); return; }
+                sel = id;
+
+                const c = new Set([id]);
+                ls.forEach(l => {
+                    if (l.dataset.f === id || l.dataset.t === id) {
+                        c.add(l.dataset.f);
+                        c.add(l.dataset.t);
+                    }
+                });
+
+                ns.forEach(x => {
+                    if (x.style.opacity === '0') return;
+                    x.classList.toggle('hl', c.has(x.id));
+                    x.classList.toggle('dim', !c.has(x.id));
+                });
+
+                ls.forEach(l => {
+                    const ok = l.dataset.f === id || l.dataset.t === id;
+                    l.classList.toggle('hl', ok);
+                    l.classList.toggle('dim', !ok);
+                });
+
+                document.getElementById('pN').textContent = n.dataset.n;
+                document.getElementById('pC').textContent = n.dataset.c;
+                document.getElementById('pI').innerHTML = n.dataset.i.split('|').join('<br>');
+
+                let t = '';
+                if (n.dataset.v) t += `<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
+                if (n.dataset.a) t += `<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
+                if (n.dataset.s) t += `<span class="tag t-c">❄ ${n.dataset.s}</span> `;
+                document.getElementById('pT').innerHTML = t;
+
+                P.classList.add('vis');
+            });
+        });
+
+        document.addEventListener('click', clr);
+
+        function clr() {
+            sel = null;
+            ns.forEach(n => { n.classList.remove('hl', 'dim'); });
+            ls.forEach(l => { l.classList.remove('hl', 'dim'); });
+            P.classList.remove('vis');
+        }
+    </script>
+</body>
+</html>
