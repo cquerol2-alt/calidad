@@ -55,37 +55,37 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="graph" id="G">
 <svg class="L">
 <!-- MP → Aceite Ajo -->
-<path class="ln lb" data-f="mp04" data-t="preAjo" d="M200,155 C240,155 260,155 290,55"/>
-<path class="ln lb" data-f="mpAjo" data-t="preAjo" d="M200,205 C240,190 260,70 290,62"/>
+<path class="ln lb" data-f="mp04" data-t="preAjo" d="M 200,155 C 240,155 260,53 290,53"/>
+<path class="ln lb" data-f="mpAjo" data-t="preAjo" d="M 200,205 C 240,205 260,53 290,53"/>
 <!-- MP → Agua Azafrán -->
-<path class="ln lb" data-f="mp19" data-t="preAz" d="M200,255 C240,255 260,155 290,148"/>
-<path class="ln lb" data-f="mpAg" data-t="preAz" d="M200,105 C240,85 260,165 290,155"/>
+<path class="ln lb" data-f="mp19" data-t="preAz" d="M 200,255 C 240,255 260,143 290,143"/>
+<path class="ln lb" data-f="mpAg" data-t="preAz" d="M 200,105 C 240,105 260,143 290,143"/>
 <!-- MP → Mezcla Jarra Risotto -->
-<path class="ln lr" data-f="mp09" data-t="mezJR" d="M200,305 C300,300 350,290 390,298"/>
-<path class="ln lr" data-f="mpAg" data-t="mezJR" d="M200,105 C300,190 350,280 390,295"/>
+<path class="ln lr" data-f="mp09" data-t="mezJR" d="M 200,305 C 300,305 350,293 390,293"/>
+<path class="ln lr" data-f="mpAg" data-t="mezJR" d="M 200,105 C 300,105 350,293 390,293"/>
 <!-- MP → Jarra Risotto -->
-<path class="ln lb" data-f="mp35" data-t="jarR" d="M200,355 C240,355 260,385 290,395"/>
-<path class="ln lb" data-f="mp33" data-t="jarR" d="M200,405 C240,400 260,395 290,398"/>
-<path class="ln lb" data-f="mp06" data-t="jarR" d="M200,455 C240,432 260,410 290,405"/>
+<path class="ln lb" data-f="mp35" data-t="jarR" d="M 200,355 C 240,355 260,393 290,393"/>
+<path class="ln lb" data-f="mp33" data-t="jarR" d="M 200,405 C 240,405 260,393 290,393"/>
+<path class="ln lb" data-f="mp06" data-t="jarR" d="M 200,455 C 240,455 260,393 290,393"/>
 <!-- Mezcla Jarra + Jarra + Sal → combo jarra -->
-<path class="ln lo" data-f="mezJR" data-t="prod" d="M600,305 C700,315 780,325 830,330"/>
-<path class="ln lo" data-f="jarR" data-t="prod" d="M500,400 C650,385 760,355 830,340"/>
-<path class="ln lo ld" data-f="mpSal" data-t="prod" d="M200,505 C500,490 760,380 830,350"/>
+<path class="ln lo" data-f="mezJR" data-t="prod" d="M 600,293 C 700,293 780,298 830,298"/>
+<path class="ln lo" data-f="jarR" data-t="prod" d="M 500,393 C 650,393 760,298 830,298"/>
+<path class="ln lo ld" data-f="mpSal" data-t="prod" d="M 200,505 C 500,505 760,298 830,298"/>
 <!-- Preelabs → Caldo Risotto -->
-<path class="ln lp" data-f="preAjo" data-t="calR" d="M500,55 C540,75 560,110 590,130"/>
-<path class="ln lp" data-f="preAz" data-t="calR" d="M500,148 C540,145 560,140 590,140"/>
+<path class="ln lp" data-f="preAjo" data-t="calR" d="M 500,53 C 540,53 560,128 590,128"/>
+<path class="ln lp" data-f="preAz" data-t="calR" d="M 500,143 C 540,143 560,128 590,128"/>
 <!-- MP directo al caldo -->
-<path class="ln lg" data-f="mp13" data-t="calR" d="M200,555 C400,510 520,250 590,160"/>
-<path class="ln lg" data-f="mp07" data-t="calR" d="M200,605 C400,550 520,270 590,168"/>
+<path class="ln lg" data-f="mp13" data-t="calR" d="M 200,555 C 400,555 520,128 590,128"/>
+<path class="ln lg" data-f="mp07" data-t="calR" d="M 200,605 C 400,605 520,128 590,128"/>
 <!-- Caldo + Salsa → Producción -->
-<path class="ln lo" data-f="calR" data-t="prod" d="M800,150 C810,200 820,270 830,310"/>
-<path class="ln lo" data-f="salTar" data-t="prod" d="M800,280 C810,300 815,310 830,320"/>
+<path class="ln lo" data-f="calR" data-t="prod" d="M 800,128 C 810,128 820,298 830,298"/>
+<path class="ln lo" data-f="salTar" data-t="prod" d="M 800,268 C 810,268 815,298 830,298"/>
 <!-- Directo a producción -->
-<path class="ln lo ld" data-f="mpArr" data-t="prod" d="M200,55 C500,430 760,390 830,355"/>
-<path class="ln lo ld" data-f="mp23" data-t="prod" d="M200,655 C500,630 760,400 830,360"/>
+<path class="ln lo ld" data-f="mpArr" data-t="prod" d="M 200,55 C 500,55 760,298 830,298"/>
+<path class="ln lo ld" data-f="mp23" data-t="prod" d="M 200,655 C 500,655 760,298 830,298"/>
 <!-- Envases → Producción -->
-<path class="ln lo ld" data-f="mpBand" data-t="prod" d="M200,645 C500,620 760,410 830,365"/>
-<path class="ln lo ld" data-f="mpFilm" data-t="prod" d="M200,695 C500,670 760,420 830,370"/>
+<path class="ln lo ld" data-f="mpBand" data-t="prod" d="M 200,645 C 500,645 760,298 830,298"/>
+<path class="ln lo ld" data-f="mpFilm" data-t="prod" d="M 200,695 C 500,695 760,298 830,298"/>
 </svg>
 
 <!-- ═══ MATERIAS PRIMAS ═══ -->
