@@ -13,19 +13,24 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f
 .grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
 .card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:24px;transition:all .3s;cursor:pointer;text-decoration:none;display:block}
 .card:hover{border-color:#64748b;transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,.4)}
+.card.disabled{opacity:.45;pointer-events:none;cursor:default}
 .card h2{font-size:17px;color:#f1f5f9;margin-bottom:6px}
-.card p{font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:10px}
+.card .desc{font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:8px}
+.card .lote{font-size:11px;color:#64748b;margin-bottom:10px;font-family:'Courier New',monospace}
 .card .tags{display:flex;flex-wrap:wrap;gap:5px}
 .card .tag{font-size:10px;padding:3px 8px;border-radius:4px}
-.tag-fish{background:#1e3a5f;color:#93c5fd}
-.tag-cream{background:#581c87;color:#d8b4fe}
+.tag-santa{background:#1e3a5f;color:#93c5fd}
+.tag-maestro{background:#78350f;color:#fbbf24}
+.tag-allinc{background:#581c87;color:#d8b4fe}
 .tag-sauce{background:#14532d;color:#86efac}
 .tag-warn{background:#4c1d1d;color:#fca5a5}
 .tag-pack{background:#164e63;color:#67e8f9}
+.tag-soon{background:#334155;color:#64748b;font-style:italic}
 .footer{text-align:center;margin-top:40px;color:#475569;font-size:12px;line-height:1.8}
 .footer a{color:#fbbf24;text-decoration:none}.footer a:hover{text-decoration:underline}
 .section-title{max-width:900px;margin:0 auto 15px;font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:1px;padding-left:4px}
 .section-title:not(:first-of-type){margin-top:30px}
+.section-desc{max-width:900px;margin:-8px auto 15px;font-size:12px;color:#475569;padding-left:4px}
 </style>
 </head>
 <body>
@@ -34,59 +39,232 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f
 <p>Rice in Action S.L. — Flujos de producción para consultoría APPCC / IFS Food</p>
 </div>
 
+<!-- ============================================ -->
+<!-- FAMILIA LA SANTA                             -->
+<!-- ============================================ -->
 <div class="section-title">Familia La Santa</div>
+<div class="section-desc">Arroz cocinado con ingredientes de la jarra, con Caldo. Salsa en sobre aparte.</div>
 <div class="grid">
+
 <a class="card" href="dark_pescado.html">
 <h2>Arroz de Pescado y Marisco</h2>
-<p>Lote: L-748-AAMMDD. Formatos: 260g (24 uds/caja), 1330g (6 uds/caja).</p>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo. Salsa en sobre aparte.</p>
+<p class="lote">Lote: L-748-AAMMDD</p>
 <div class="tags">
-<span class="tag tag-fish">La Santa · 748</span>
-<span class="tag tag-warn">PESCADO · MOLUSCOS · MARISCO · SULFITOS · APIO</span>
+<span class="tag tag-santa">La Santa · 748</span>
+<span class="tag tag-warn">PESCADO · MOLUSCOS · CRUSTACEOS · SULFITOS · APIO</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Arroz Negro</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo. Salsa en sobre aparte.</p>
+<p class="lote">Lote: L-740-AAMMDD</p>
+<div class="tags">
+<span class="tag tag-santa">La Santa · 740</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Arroz de Verduras</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo. Salsa en sobre aparte.</p>
+<p class="lote">Lote: L-750-AAMMDD</p>
+<div class="tags">
+<span class="tag tag-santa">La Santa · 750</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Arroz de Pollo</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo. Salsa en sobre aparte.</p>
+<p class="lote">Lote: L-749-AAMMDD</p>
+<div class="tags">
+<span class="tag tag-santa">La Santa · 749</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Risotto</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo. Salsa en sobre aparte.</p>
+<p class="lote">Lote: L-741-AAMMDD</p>
+<div class="tags">
+<span class="tag tag-santa">La Santa · 741</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
 </div>
 </a>
 
 </div>
 
+<!-- ============================================ -->
+<!-- FAMILIA MAESTRO                              -->
+<!-- ============================================ -->
 <div class="section-title">Familia Maestro</div>
+<div class="section-desc">Arroz cocinado con ingredientes de la jarra, sin Caldo. Sin Salsa.</div>
 <div class="grid">
+
 <a class="card" href="dark_maestro.html">
-<h2>Arroz Maestro</h2>
-<p>Lote: L-810B-AAMMDD. Sin caldo, sin salsa. Formatos: 190g (24), 380g (20), 450g (20), 1330g (6).</p>
+<h2>Maestro Seco</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, sin Caldo. Sin Salsa.</p>
+<p class="lote">Lote: L-810-B-AAMMDD</p>
 <div class="tags">
-<span class="tag tag-fish">Maestro · 810-B</span>
+<span class="tag tag-maestro">Maestro · 810-B</span>
 <span class="tag tag-warn">SULFITOS</span>
 </div>
 </a>
-</div>
 
-<div class="section-title">Familia Cremosos / Risotto</div>
-<div class="grid">
-<a class="card" href="dark_cremoso_iberico.html">
-<h2>Cremoso Ibérico</h2>
-<p>Lote: L-781-AAMMDD. Formato: 300g All-Included (24 uds/caja). Con caldo risotto, salsa ibérico y jamón ibérico (MP20).</p>
+<a class="card disabled">
+<h2>Maestro Meloso</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, sin Caldo. Sin Salsa.</p>
+<p class="lote">Lote: pendiente</p>
 <div class="tags">
-<span class="tag tag-cream">Cremosos · 781</span>
-<span class="tag tag-warn">LÁCTEOS · SULFITOS</span>
+<span class="tag tag-maestro">Maestro · 810</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
 </div>
 </a>
+
 </div>
 
-<div class="section-title">Salsas — Envasado en bolsa</div>
+<!-- ============================================ -->
+<!-- FAMILIA ALL-INCLUDED                         -->
+<!-- ============================================ -->
+<div class="section-title">Familia All-Included</div>
+<div class="section-desc">Arroz cocinado con ingredientes de la jarra, con Caldo de Risotto, con Salsa incluida y con un ingrediente extra.</div>
 <div class="grid">
-<a class="card" href="dark_salsa_boletus.html">
-<h2>Salsa de Setas (Boletus)</h2>
-<p>Lote: L-742S-AAMMDD. Receta REC-SALSA-SET (sin CMC, sin aroma setas). Embolsado 80g ×24, va con caja Risotto/Cremosos.</p>
+
+<a class="card" href="dark_cremoso_iberico.html">
+<h2>Cremoso Iberico</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo de Risotto, con Salsa incluida y con un ingrediente extra.</p>
+<p class="lote">Lote: L-781-AAMMDD</p>
 <div class="tags">
-<span class="tag tag-sauce">Salsa · REC-SALSA-SET</span>
-<span class="tag tag-pack">Bolsa 80g ×24</span>
+<span class="tag tag-allinc">All-Included · 781</span>
+<span class="tag tag-warn">LACTEOS · SULFITOS</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Cremoso Setas</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo de Risotto, con Salsa incluida y con un ingrediente extra.</p>
+<p class="lote">Lote: L-784-AAMMDD</p>
+<div class="tags">
+<span class="tag tag-allinc">All-Included · 784</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Cremoso Queso</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo de Risotto, con Salsa incluida y con un ingrediente extra.</p>
+<p class="lote">Lote: pendiente</p>
+<div class="tags">
+<span class="tag tag-allinc">All-Included</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Cremoso Tartufato</h2>
+<p class="desc">Arroz cocinado con ingredientes de la jarra, con Caldo de Risotto, con Salsa incluida y con un ingrediente extra.</p>
+<p class="lote">Lote: L-782-AAMMDD</p>
+<div class="tags">
+<span class="tag tag-allinc">All-Included · 782</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+</div>
+
+<!-- ============================================ -->
+<!-- SALSAS                                       -->
+<!-- ============================================ -->
+<div class="section-title">Salsas — Envasado en bolsa</div>
+<div class="section-desc">Cada salsa va dentro de la caja de su arroz correspondiente.</div>
+<div class="grid">
+
+<a class="card disabled">
+<h2>Salsa de Pescado</h2>
+<p class="desc">40g. Va con Arroz de Pescado y Marisco.</p>
+<p class="lote">Lote: L-748-S-DDMMAA</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · 748-S</span>
+<span class="tag tag-pack">Bolsa 40g</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Salsa Negra</h2>
+<p class="desc">80g. Va con Arroz Negro.</p>
+<p class="lote">Lote: L-745-DDMMAA</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · 745</span>
+<span class="tag tag-pack">Bolsa 80g</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Salsa Verduras</h2>
+<p class="desc">40g. Va con Arroz de Verduras.</p>
+<p class="lote">Lote: L-750-S-DDMMAA</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · 750-S</span>
+<span class="tag tag-pack">Bolsa 40g</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Salsa Pollo</h2>
+<p class="desc">40g. Va con Arroz de Pollo.</p>
+<p class="lote">Lote: L-749-S-DDMMAA</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · 749-S</span>
+<span class="tag tag-pack">Bolsa 40g</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card" href="dark_salsa_boletus.html">
+<h2>Salsa Boletus</h2>
+<p class="desc">80g. Va con Risotto y Cremoso Setas.</p>
+<p class="lote">Lote: L-755-DDMMAA</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · 755</span>
+<span class="tag tag-pack">Bolsa 80g</span>
 <span class="tag tag-warn">LECHE · SULFITOS</span>
 </div>
 </a>
+
+<a class="card disabled">
+<h2>Salsa Tartufata</h2>
+<p class="desc">90g. Va con Cremoso Tartufato.</p>
+<p class="lote">Lote: L-757-DDMMAA</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · 757</span>
+<span class="tag tag-pack">Bolsa 90g</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
+<a class="card disabled">
+<h2>Salsa Iberica</h2>
+<p class="desc">90g. Va con Cremoso Iberico.</p>
+<p class="lote">Lote: L-789-DDMMAA</p>
+<div class="tags">
+<span class="tag tag-sauce">Salsa · 789</span>
+<span class="tag tag-pack">Bolsa 90g</span>
+<span class="tag tag-soon">Diagrama pendiente</span>
+</div>
+</a>
+
 </div>
 
 <div class="footer">
-Rice in Action S.L. — Sistema de Gestión de Calidad APPCC / IFS Food<br>
-<a href="index.html">&larr; Volver a la aplicación principal</a>
+Rice in Action S.L. — Sistema de Gestion de Calidad APPCC / IFS Food<br>
+<a href="index.html">&larr; Volver a la aplicacion principal</a>
 </div>
 </body>
 </html>
