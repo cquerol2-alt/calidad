@@ -491,9 +491,6 @@ const CROSS_REF = {
       {d: 'dark_salsa_boletus.html', p: 'Salsa Boletus', f: 'Salsas'},
       {d: 'dark_salsa_tartufata.html', p: 'Salsa Tartufata', f: 'Salsas'},
     ],
-    'mpPimienta': [
-      {d: 'dark_salsa_queso.html', p: 'Salsa Queso', f: 'Salsas'},
-    ],
     'mpQuesoAzul': [
       {d: 'dark_cremoso_queso.html', p: 'Cremoso Queso', f: 'All-Included'},
       {d: 'dark_salsa_queso.html', p: 'Salsa Queso', f: 'Salsas'},
@@ -679,7 +676,6 @@ const CROSS_REF = {
     'mpManzanilla': {nombre: 'Vino manzanilla', proveedor: 'Makro', url: 'https://drive.google.com/file/d/1YTsaNwQ7YbWKYdZWyY5efhBAQwrBUYD9/view'},
     'mpNata': {nombre: 'Nata', proveedor: 'Makro', url: 'https://drive.google.com/file/d/1v6qwzvADKjQTspRmE-C_e0BYwkE4PYoz/view'},
     'mpParm': {nombre: 'Parmesano rallado', proveedor: 'Queso', url: 'https://drive.google.com/file/d/1hDAwSnqsyEeSAqtPH8AHsvC3MGL00HYy/view'},
-    'mpPimienta': {nombre: 'Pimienta', proveedor: 'Makro', url: 'https://drive.google.com/file/d/1wD19EhPCjGti7PdXrh0UZf1MN0-Ex2cx/view'},
     'mpQuesoAzul': {nombre: 'Queso azul', proveedor: 'Queso', url: 'https://drive.google.com/file/d/1hDAwSnqsyEeSAqtPH8AHsvC3MGL00HYy/view'},
     'mpSal': {nombre: 'Sal', proveedor: 'Sal', url: 'https://drive.google.com/file/d/1gE2SdBBKl9xAavioR3XOGalsYE6luS7r/view'},
     'mpSalmorreta': {nombre: 'Salmorreta prelab.', proveedor: 'Preelaboración', url: ''},
