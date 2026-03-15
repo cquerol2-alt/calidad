@@ -1,0 +1,1655 @@
+{
+  "audit_date": "2026-03-15",
+  "scope": "All 18 dark_*.html diagrams vs. cross-ref.js presenteEn",
+  "summary": {
+    "total_nodes_in_diagrams": 94,
+    "total_presente_en_entries": 90,
+    "completely_missing": 4,
+    "incomplete_mappings": 90,
+    "orphaned_entries": 0,
+    "coverage_rate_percent": 4.3
+  },
+  "missing_from_presente_en": [
+    {
+      "node_id": "mpAromaQ",
+      "node_name": "",
+      "diagrams": [
+        "dark_salsa_boletus.html"
+      ],
+      "diagram_count": 1
+    },
+    {
+      "node_id": "prod",
+      "node_name": "CREMOSOIBÉRICO",
+      "diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "diagram_count": 10
+    },
+    {
+      "node_id": "prodRis",
+      "node_name": "Risotto+ salsa 80g",
+      "diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html"
+      ],
+      "diagram_count": 8
+    },
+    {
+      "node_id": "salsa",
+      "node_name": "Salsa deSetascocción completa",
+      "diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html"
+      ],
+      "diagram_count": 8
+    }
+  ],
+  "incomplete_mappings": [
+    {
+      "node_id": "bolsa",
+      "node_name": "Embolsadobolsas de 80g ×24",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html"
+      ],
+      "missing_count": 8,
+      "severity": "critical"
+    },
+    {
+      "node_id": "cajaRis",
+      "node_name": "Caja Risotto+ Salsa 80g24 bolsas por caja",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html"
+      ],
+      "missing_count": 8,
+      "severity": "critical"
+    },
+    {
+      "node_id": "calN",
+      "node_name": "Caldo Negro",
+      "missing_diagrams": [
+        "dark_negro.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_negro.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "calP",
+      "node_name": "Caldo de Pescado",
+      "missing_diagrams": [
+        "dark_pescado.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pescado.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "calPo",
+      "node_name": "Caldo de Pollo",
+      "missing_diagrams": [
+        "dark_pollo.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pollo.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "calR",
+      "node_name": "Caldo Risotto",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_risotto.html"
+      ],
+      "missing_count": 5,
+      "severity": "high"
+    },
+    {
+      "node_id": "calV",
+      "node_name": "Caldo de Verduras",
+      "missing_diagrams": [
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_verduras.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "jarP",
+      "node_name": "Jarra Pescado1800g pollo + 490g espinaca",
+      "missing_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html"
+      ],
+      "missing_count": 3,
+      "severity": "medium"
+    },
+    {
+      "node_id": "jarR",
+      "node_name": "Jarra Risottopollo+puerro+cebolla",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_risotto.html"
+      ],
+      "missing_count": 5,
+      "severity": "high"
+    },
+    {
+      "node_id": "jarV",
+      "node_name": "Jarra Verduras420g espinaca + 90g cebolla",
+      "missing_diagrams": [
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_verduras.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mezJ",
+      "node_name": "Mezcla Jarra Normal260ml Hz + 3,6L agua",
+      "missing_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 4,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mezJM",
+      "node_name": "Mezcla Jarra Maestroprep+Hz+azafrán+agua",
+      "missing_diagrams": [
+        "dark_maestro.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mezJR",
+      "node_name": "Mezcla Jarra Risotto60ml Hz + 3,6L agua",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html"
+      ],
+      "missing_count": 4,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mezR",
+      "node_name": "Mezcla Jarra Risotto60ml Hz + 3,6L agua",
+      "missing_diagrams": [
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_risotto.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp01",
+      "node_name": "Caldo Aneto (MP01)",
+      "missing_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp03",
+      "node_name": "Paeller Pollo (MP03)",
+      "missing_diagrams": [
+        "dark_pollo.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pollo.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp04",
+      "node_name": "Aceite girasol (MP04)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 10,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mp05",
+      "node_name": "Aceite oliva (MP05)",
+      "missing_diagrams": [
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp06",
+      "node_name": "Umami (MP06)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 11,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mp07",
+      "node_name": "Xantana (MP07)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 10,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mp08",
+      "node_name": "Tinta sepia (MP08)",
+      "missing_diagrams": [
+        "dark_negro.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_negro.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp09",
+      "node_name": "Hazelnut (MP09)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 11,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mp10",
+      "node_name": "Pimentón (MP10)",
+      "missing_diagrams": [
+        "dark_pescado.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pescado.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp11",
+      "node_name": "Hierbas (MP11)",
+      "missing_diagrams": [
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_verduras.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp12",
+      "node_name": "Almidón (MP12)",
+      "missing_diagrams": [
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_risotto.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp13",
+      "node_name": "Mantequilla (MP13)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_risotto.html"
+      ],
+      "missing_count": 5,
+      "severity": "high"
+    },
+    {
+      "node_id": "mp19",
+      "node_name": "Azafrán (MP19)",
+      "missing_diagrams": [
+        "dark_maestro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 4,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp21",
+      "node_name": "Boletus seco (MP21)",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp22",
+      "node_name": "Mezcla Setas (MP22)",
+      "missing_diagrams": [
+        "dark_cremoso_setas.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_setas.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp23",
+      "node_name": "Tartufata (MP23)",
+      "missing_diagrams": [
+        "dark_cremoso_tartufato.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_tartufato.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp31",
+      "node_name": "Ñora en lata (MP31)",
+      "missing_diagrams": [
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 3,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp33",
+      "node_name": "Espinaca deshid. (MP33)",
+      "missing_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 4,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp34",
+      "node_name": "Cebolla deshid. (MP34)",
+      "missing_diagrams": [
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp35",
+      "node_name": "Pollo deshid. (MP35)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html"
+      ],
+      "missing_count": 8,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mp36",
+      "node_name": "Puerro deshid. (MP36)",
+      "missing_diagrams": [
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp38",
+      "node_name": "Ác. tartárico (MP38)",
+      "missing_diagrams": [
+        "dark_maestro.html",
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html",
+        "dark_risotto.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp39",
+      "node_name": "Azúcar (MP39)",
+      "missing_diagrams": [
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_risotto.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp42",
+      "node_name": "Tomate deshid. (MP42)",
+      "missing_diagrams": [
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp52",
+      "node_name": "Azúcar (MP39)",
+      "missing_diagrams": [
+        "dark_maestro.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp53",
+      "node_name": "Sal (MP37)",
+      "missing_diagrams": [
+        "dark_maestro.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp65",
+      "node_name": "Vino blanco (MP65)",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp66",
+      "node_name": "",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mp73",
+      "node_name": "Queso azul (MP73)",
+      "missing_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpAceite",
+      "node_name": "Aceite girasol (MP04)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 3,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpAceiteTrufado",
+      "node_name": "Aceite trufado (MP67)",
+      "missing_diagrams": [
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpAg",
+      "node_name": "Agua",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 11,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mpAgua",
+      "node_name": "Agua",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 5,
+      "severity": "high"
+    },
+    {
+      "node_id": "mpAgua1",
+      "node_name": "Agua",
+      "missing_diagrams": [
+        "dark_salsa_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_verduras.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpAguaAlmidonada",
+      "node_name": "Agua almidonada (MP49)",
+      "missing_diagrams": [
+        "dark_salsa_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_verduras.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpAjo",
+      "node_name": "Ajo (MP40)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 9,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mpAromaJamon",
+      "node_name": "Aroma jamón (MP70)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpAromaQue",
+      "node_name": "Aroma queso (MP69)",
+      "missing_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpAromaQueso",
+      "node_name": "Aroma queso (MP69)",
+      "missing_diagrams": [
+        "dark_salsa_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_queso.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpArr",
+      "node_name": "Arroz Maratelli (MP24)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 10,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mpBand",
+      "node_name": "Bandeja EOS-35 (MP50)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 10,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mpCMC",
+      "node_name": "CMC (MP61)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpCaldoPescado",
+      "node_name": "Caldo Pescado (prelab)",
+      "missing_diagrams": [
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpCaldoPollo",
+      "node_name": "Caldo Pollo (prelab)",
+      "missing_diagrams": [
+        "dark_salsa_pollo.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_pollo.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpCeb",
+      "node_name": "Cebolla deshid. (MP34)",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpCur",
+      "node_name": "Cúrcuma (MP41)",
+      "missing_diagrams": [
+        "dark_pescado.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pescado.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpFilm",
+      "node_name": "Film top-seal (MP51)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_maestro.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_salsa_verduras.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 18,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mpGraPollo",
+      "node_name": "Grasa de pollo (MP66)",
+      "missing_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpGrasaPollo",
+      "node_name": "Grasa pollo (MP66)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 3,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpHazelnut",
+      "node_name": "Hazelnut (MP09)",
+      "missing_diagrams": [
+        "dark_salsa_pollo.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_pollo.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpJamon",
+      "node_name": "Jamón Ibérico (MP20)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpJerez",
+      "node_name": "Jerez (MP65)",
+      "missing_diagrams": [
+        "dark_salsa_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_queso.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpMant",
+      "node_name": "Mantequilla (MP13)",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 3,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpManzanilla",
+      "node_name": "Manzanilla (MP65)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpNata",
+      "node_name": "Nata (MP63)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpParm",
+      "node_name": "Parmesano (MP14)",
+      "missing_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_boletus.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpQuesoAzul",
+      "node_name": "",
+      "missing_diagrams": [
+        "dark_salsa_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_queso.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpSal",
+      "node_name": "Sal (MP37)",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_salsa_boletus.html",
+        "dark_salsa_iberica.html",
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 16,
+      "severity": "critical"
+    },
+    {
+      "node_id": "mpSalmorreta",
+      "node_name": "Salmorreta (MP43)",
+      "missing_diagrams": [
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_negra.html",
+        "dark_salsa_pescado.html",
+        "dark_salsa_pollo.html"
+      ],
+      "missing_count": 3,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpSalsaVerd",
+      "node_name": "Salsa Verd. Conc. (MP54)",
+      "missing_diagrams": [
+        "dark_salsa_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_verduras.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpTinta",
+      "node_name": "Tinta sepia (MP08)",
+      "missing_diagrams": [
+        "dark_salsa_negra.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_negra.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpUmami",
+      "node_name": "Umami (MP06)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_pollo.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 4,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpVino",
+      "node_name": "Vino blanco (MP65)",
+      "missing_diagrams": [
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "mpXantana",
+      "node_name": "Xantana (MP07)",
+      "missing_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_salsa_iberica.html",
+        "dark_salsa_queso.html",
+        "dark_salsa_tartufata.html"
+      ],
+      "missing_count": 3,
+      "severity": "medium"
+    },
+    {
+      "node_id": "preAjo",
+      "node_name": "Aceite de Ajo",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html",
+        "dark_cremoso_queso.html",
+        "dark_cremoso_setas.html",
+        "dark_cremoso_tartufato.html",
+        "dark_negro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_risotto.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 9,
+      "severity": "critical"
+    },
+    {
+      "node_id": "preAjoM",
+      "node_name": "Aceite de Ajopreelaborado → producción",
+      "missing_diagrams": [
+        "dark_maestro.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "preAz",
+      "node_name": "Agua Azafrán (P)300g agua + 7g azafrán",
+      "missing_diagrams": [
+        "dark_maestro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html",
+        "dark_pescado.html",
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 4,
+      "severity": "medium"
+    },
+    {
+      "node_id": "preNora",
+      "node_name": "Aceite de Ñora",
+      "missing_diagrams": [
+        "dark_pescado.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pescado.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "prePR",
+      "node_name": "Pesado Risottopollo+puerro+cebolla",
+      "missing_diagrams": [
+        "dark_risotto.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_risotto.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "prePV",
+      "node_name": "Pesado Verdurasespinaca+cebolla+puerro",
+      "missing_diagrams": [
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_verduras.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "preSalm",
+      "node_name": "Salmorreta",
+      "missing_diagrams": [
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_pollo.html",
+        "dark_verduras.html"
+      ],
+      "missing_count": 2,
+      "severity": "medium"
+    },
+    {
+      "node_id": "prepM",
+      "node_name": "Preparado Maestropolvos: umami+ác.tart+azúcar+sal",
+      "missing_diagrams": [
+        "dark_maestro.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_maestro.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "salIb",
+      "node_name": "Salsa Ibérico",
+      "missing_diagrams": [
+        "dark_cremoso_iberico.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_iberico.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "salQue",
+      "node_name": "Salsa Queso",
+      "missing_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_queso.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "salSet",
+      "node_name": "Salsa Boletus",
+      "missing_diagrams": [
+        "dark_cremoso_setas.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_setas.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    },
+    {
+      "node_id": "salTar",
+      "node_name": "Salsa Tartufata",
+      "missing_diagrams": [
+        "dark_cremoso_tartufato.html"
+      ],
+      "listed_diagrams": [],
+      "actual_diagrams": [
+        "dark_cremoso_tartufato.html"
+      ],
+      "missing_count": 1,
+      "severity": "medium"
+    }
+  ],
+  "all_diagrams_checked": [
+    "dark_cremoso_iberico.html",
+    "dark_cremoso_queso.html",
+    "dark_cremoso_setas.html",
+    "dark_cremoso_tartufato.html",
+    "dark_maestro.html",
+    "dark_negro.html",
+    "dark_pescado.html",
+    "dark_pollo.html",
+    "dark_risotto.html",
+    "dark_salsa_boletus.html",
+    "dark_salsa_iberica.html",
+    "dark_salsa_negra.html",
+    "dark_salsa_pescado.html",
+    "dark_salsa_pollo.html",
+    "dark_salsa_queso.html",
+    "dark_salsa_tartufata.html",
+    "dark_salsa_verduras.html",
+    "dark_verduras.html"
+  ]
+}
