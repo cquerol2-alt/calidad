@@ -6,25 +6,22 @@
 </text>
 <text x="15" y="80" font-size="8" font-weight="bold" fill="#333">INGREDIENTES:</text>
 <text x="15" y="92" font-size="7" fill="black" font-family="monospace">
-<tspan fill="black">Aceite de girasol alto oleico, aceite de ajo</tspan>
+<tspan fill="black">Caldo Aneto (agua, </tspan><tspan font-weight="bold" fill="#c00">PESCADO</tspan><tspan fill="black">, aceite de oliva</tspan>
 </text>
 <text x="15" y="102" font-size="7" fill="black" font-family="monospace">
-<tspan fill="black">(aceite de girasol alto oleico, ajo), caldo</tspan>
-</text>
-<text x="15" y="112" font-size="7" fill="black" font-family="monospace">
-<tspan fill="black">Aneto (agua, </tspan><tspan font-weight="bold" fill="#c00">PESCADO</tspan><tspan fill="black">, aceite de oliva</tspan>
-</text>
-<text x="15" y="122" font-size="7" fill="black" font-family="monospace">
 <tspan fill="black">virgen extra, sal, </tspan><tspan font-weight="bold" fill="#c00">APIO</tspan><tspan fill="black">, </tspan><tspan font-weight="bold" fill="#c00">CRUSTACEOS</tspan><tspan fill="black">,</tspan>
 </text>
+<text x="15" y="112" font-size="7" fill="black" font-family="monospace">
+<tspan font-weight="bold" fill="#c00">MOLUSCOS</tspan><tspan fill="black">), agua, aceite de girasol alto oleico, aceite de ajo</tspan>
+</text>
+<text x="15" y="122" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">(aceite de girasol alto oleico, ajo), tinta de </tspan><tspan font-weight="bold" fill="#c00">SEPIA</tspan>
+</text>
 <text x="15" y="132" font-size="7" fill="black" font-family="monospace">
-<tspan font-weight="bold" fill="#c00">MOLUSCOS</tspan><tspan fill="black">), agua, potenciador de sabor</tspan>
+<tspan fill="black">(</tspan><tspan font-weight="bold" fill="#c00">MOLUSCOS</tspan><tspan fill="black">), potenciador de sabor</tspan>
 </text>
 <text x="15" y="142" font-size="7" fill="black" font-family="monospace">
-<tspan fill="black">umami, goma xantana (E415), tinta de </tspan><tspan font-weight="bold" fill="#c00">SEPIA</tspan>
-</text>
-<text x="15" y="152" font-size="7" fill="black" font-family="monospace">
-<tspan fill="black">(</tspan><tspan font-weight="bold" fill="#c00">MOLUSCOS</tspan><tspan fill="black">)</tspan>
+<tspan fill="black">umami, goma xantana (E415)</tspan>
 </text>
 <text x="15" y="172" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
 <text x="15" y="182" font-size="7" fill="black">Refrigeracion (0-4C)</text>
