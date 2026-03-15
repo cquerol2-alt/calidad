@@ -14,7 +14,7 @@ Guía de referencia para crear y mantener los diagramas de flujo de producción 
   data.js              ← FUENTE MAESTRA de datos (solo lectura)
   produccion.html      ← Formulario web de producción
   diagramas.html       ← Índice de todos los diagramas
-  dark_pescado.html    ← Diagrama Arroz de Pescado y Marisco
+  dark_pescado.html    ← Diagrama Arroz de Pescado
   dark_maestro.html    ← Diagrama Arroz Maestro
   dark_cremoso_iberico.html ← Diagrama Cremoso Ibérico
   dark_salsa_boletus.html   ← Diagrama Salsa de Setas (Boletus)
@@ -36,7 +36,7 @@ Descripción general: "Arroz cocinado con ingredientes de la jarra, con Caldo. S
 
 | Producto | Código lote | Arroz | Caldo | Salsa (aparte) |
 |----------|-------------|-------|-------|-----------------|
-| Arroz de Pescado y Marisco | L-748-AAMMDD | Maratelli (MP24) | Caldo Pescado (REC-CALDO-001) | Salsa Pescado 40g |
+| Arroz de Pescado | L-748-AAMMDD | Maratelli (MP24) | Caldo Pescado (REC-CALDO-001) | Salsa Pescado 40g |
 | Arroz Negro | pendiente | Maratelli (MP24) | pendiente | Salsa Negra 80g |
 | Arroz de Verduras | pendiente | pendiente | pendiente | Salsa Verduras 40g |
 | Arroz de Pollo | pendiente | pendiente | pendiente | Salsa Pollo 40g |
@@ -343,4 +343,5 @@ Cuando se listan los ingredientes en el nodo de producto final (data-i), seguir 
 7. Incluir proveedor en TODOS los nodos de materia prima
 8. Verificar que los IDs de nodo son únicos
 9. Comprobar que las flechas SVG conectan los nodos correctos
-10. Probar que el panel lateral muestra la info correcta al hacer click
+10. **IMPORTANTE**: Si se cambia la posición visual (CSS `top`) de un nodo, RECALCULAR las coordenadas Y de TODOS los `<path>` SVG conectados. Fórmula: pathY = top + 18. Afecta a startY (M x,Y) y cp1Y (primer valor tras C).
+11. Probar que el panel lateral muestra la info correcta al hacer click

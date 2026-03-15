@@ -47,34 +47,34 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 </head>
 <body>
 <a class="back" href="diagramas.html">&larr; Menú</a>
-<h1>Arroz de Pescado y Marisco</h1>
+<h1>Arroz de Pescado</h1>
 <p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios</p>
 
 <div class="graph" id="G">
 <svg class="L">
 <!-- MP → Aceite Ajo -->
-<path class="ln lb" data-f="mp04" data-t="preAjo" d="M 200,155 C 240,155 260,48 290,48"/>
-<path class="ln lb" data-f="mpAjo" data-t="preAjo" d="M 200,205 C 240,205 260,48 290,48"/>
+<path class="ln lb" data-f="mp04" data-t="preAjo" d="M 200,205 C 240,205 260,48 290,48"/>
+<path class="ln lb" data-f="mpAjo" data-t="preAjo" d="M 200,255 C 240,255 260,48 290,48"/>
 <!-- MP → Aceite Ñora -->
-<path class="ln lb" data-f="mp04" data-t="preNora" d="M 200,155 C 240,155 260,126 290,126"/>
-<path class="ln lb" data-f="mp31" data-t="preNora" d="M 200,255 C 240,255 260,126 290,126"/>
-<path class="ln lb" data-f="mp10" data-t="preNora" d="M 200,305 C 240,305 260,126 290,126"/>
-<path class="ln lb" data-f="mpCur" data-t="preNora" d="M 200,355 C 240,355 260,126 290,126"/>
+<path class="ln lb" data-f="mp04" data-t="preNora" d="M 200,205 C 240,205 260,126 290,126"/>
+<path class="ln lb" data-f="mp31" data-t="preNora" d="M 200,305 C 240,305 260,126 290,126"/>
+<path class="ln lb" data-f="mp10" data-t="preNora" d="M 200,355 C 240,355 260,126 290,126"/>
+<path class="ln lb" data-f="mpCur" data-t="preNora" d="M 200,405 C 240,405 260,126 290,126"/>
 <!-- MP → Agua Azafrán -->
-<path class="ln lb" data-f="mp19" data-t="preAz" d="M 200,405 C 240,405 260,228 290,228"/>
+<path class="ln lb" data-f="mp19" data-t="preAz" d="M 200,455 C 240,455 260,228 290,228"/>
 <path class="ln lb" data-f="mpAg" data-t="preAz" d="M 200,105 C 230,105 260,228 290,228"/>
 <!-- MP → Mezcla Jarra Normal -->
-<path class="ln lr" data-f="mp09" data-t="mezJ" d="M 200,455 C 240,455 260,373 290,373"/>
+<path class="ln lr" data-f="mp09" data-t="mezJ" d="M 200,505 C 240,505 260,373 290,373"/>
 <path class="ln lr" data-f="mpAg" data-t="mezJ" d="M 200,105 C 230,105 260,373 290,373"/>
 <!-- MP → Jarra Pescado -->
-<path class="ln lb" data-f="mp35" data-t="jarP" d="M 200,505 C 240,505 260,466 290,466"/>
-<path class="ln lb" data-f="mp33" data-t="jarP" d="M 200,555 C 240,555 260,466 290,466"/>
+<path class="ln lb" data-f="mp35" data-t="jarP" d="M 200,555 C 240,555 260,466 290,466"/>
+<path class="ln lb" data-f="mp33" data-t="jarP" d="M 200,605 C 240,605 260,466 290,466"/>
 <!-- Preelabs → Caldo -->
 <path class="ln lp" data-f="preAjo" data-t="calP" d="M 500,48 C 540,48 560,128 590,128"/>
 <path class="ln lp" data-f="preNora" data-t="calP" d="M 500,126 C 540,126 560,128 590,128"/>
 <path class="ln lp" data-f="preAz" data-t="calP" d="M 500,228 C 540,228 560,128 590,128"/>
 <!-- MP directos → Caldo -->
-<path class="ln lg" data-f="mp01" data-t="calP" d="M 200,605 C 400,605 520,128 590,128"/>
+<path class="ln lg" data-f="mp01" data-t="calP" d="M 200,155 C 400,155 520,128 590,128"/>
 <path class="ln lg" data-f="mp06" data-t="calP" d="M 200,655 C 400,655 520,128 590,128"/>
 <path class="ln lg" data-f="mp07" data-t="calP" d="M 200,705 C 400,705 520,128 590,128"/>
 <!-- Caldo → Producción -->
@@ -122,7 +122,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="node n-cal" id="calP" style="left:590px;top:110px;width:200px;font-size:15px" data-n="Caldo de Pescado" data-c="REC-CALDO-001 · RIA-PESCADO" data-i="Rendimiento: 25L|· Caldo Aneto 18L|· Aceite de Ñora 5000ml|· Aceite de Ajo 800ml|· Agua Azafrán (G) 400ml|· Umami 120g|· Xantana 10g" data-v="" data-a="PESCADO APIO" data-acc="CRUSTÁCEOS MOLUSCOS" data-s="" data-etiqueta="etiquetas/caldo_de_pescado.svg"><div class="glow"></div>Caldo de Pescado</div>
 
 <!-- ═══ PRODUCTO FINAL ═══ -->
-<div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:120px;display:flex;align-items:center;justify-content:center" data-n="ARROZ DE PESCADO Y MARISCO" data-c="La Santa · Código 748" data-i="Lote: L-748-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo de Pescado|· Mezcla Jarra Normal (líquido)|· Jarra Pescado (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="PESCADO APIO SULFITOS" data-acc="CRUSTÁCEOS MOLUSCOS" data-s=""><div class="glow"></div>ARROZ DE<br>PESCADO<br>Y MARISCO</div>
+<div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:120px;display:flex;align-items:center;justify-content:center" data-n="ARROZ DE PESCADO" data-c="La Santa · Código 748" data-i="Lote: L-748-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo de Pescado|· Mezcla Jarra Normal (líquido)|· Jarra Pescado (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="PESCADO APIO SULFITOS" data-acc="CRUSTÁCEOS MOLUSCOS" data-s=""><div class="glow"></div>ARROZ DE<br>PESCADO</div>
 </div>
 
 <div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div><div id="pTraz" style="margin-top:10px;border-top:1px solid #334155;padding-top:10px;display:none"></div></div>

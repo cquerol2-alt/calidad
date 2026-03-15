@@ -535,7 +535,7 @@ const CROSS_REF = {
 
   // Diagram metadata
   diagramas: {
-    'dark_pescado.html': {nombre: 'Arroz Pescado y Marisco', familia: 'La Santa'},
+    'dark_pescado.html': {nombre: 'Arroz Pescado', familia: 'La Santa'},
     'dark_negro.html': {nombre: 'Arroz Negro', familia: 'La Santa'},
     'dark_pollo.html': {nombre: 'Arroz Pollo', familia: 'La Santa'},
     'dark_verduras.html': {nombre: 'Arroz Verduras', familia: 'La Santa'},
