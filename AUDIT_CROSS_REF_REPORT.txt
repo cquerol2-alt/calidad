@@ -1,0 +1,581 @@
+====================================================================================================
+COMPREHENSIVE AUDIT OF NODE CROSS-REFERENCES
+====================================================================================================
+
+1. NODES IN DIAGRAMS BUT MISSING FROM presenteEn (completely absent)
+----------------------------------------------------------------------------------------------------
+
+Node ID: mpAromaQ
+  Node Name: 
+  Appears in 1 diagram(s): ['dark_salsa_boletus.html']
+
+Node ID: prod
+  Node Name: CREMOSOIBÉRICO
+  Appears in 10 diagram(s): ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+
+Node ID: prodRis
+  Node Name: Risotto+ salsa 80g
+  Appears in 8 diagram(s): ['dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html']
+
+Node ID: salsa
+  Node Name: Salsa deSetascocción completa
+  Appears in 8 diagram(s): ['dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html']
+
+
+2. NODES WITH INCOMPLETE presenteEn (missing some diagrams they appear in)
+----------------------------------------------------------------------------------------------------
+
+Node ID: bolsa
+  Node Name: Embolsadobolsas de 80g ×24
+  Missing from presenteEn: ['dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html']
+
+Node ID: cajaRis
+  Node Name: Caja Risotto+ Salsa 80g24 bolsas por caja
+  Missing from presenteEn: ['dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html']
+
+Node ID: calN
+  Node Name: Caldo Negro
+  Missing from presenteEn: ['dark_negro.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_negro.html']
+
+Node ID: calP
+  Node Name: Caldo de Pescado
+  Missing from presenteEn: ['dark_pescado.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pescado.html']
+
+Node ID: calPo
+  Node Name: Caldo de Pollo
+  Missing from presenteEn: ['dark_pollo.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pollo.html']
+
+Node ID: calR
+  Node Name: Caldo Risotto
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_risotto.html']
+
+Node ID: calV
+  Node Name: Caldo de Verduras
+  Missing from presenteEn: ['dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_verduras.html']
+
+Node ID: jarP
+  Node Name: Jarra Pescado1800g pollo + 490g espinaca
+  Missing from presenteEn: ['dark_negro.html', 'dark_pescado.html', 'dark_pollo.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_negro.html', 'dark_pescado.html', 'dark_pollo.html']
+
+Node ID: jarR
+  Node Name: Jarra Risottopollo+puerro+cebolla
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_risotto.html']
+
+Node ID: jarV
+  Node Name: Jarra Verduras420g espinaca + 90g cebolla
+  Missing from presenteEn: ['dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_verduras.html']
+
+Node ID: mezJ
+  Node Name: Mezcla Jarra Normal260ml Hz + 3,6L agua
+  Missing from presenteEn: ['dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+
+Node ID: mezJM
+  Node Name: Mezcla Jarra Maestroprep+Hz+azafrán+agua
+  Missing from presenteEn: ['dark_maestro.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html']
+
+Node ID: mezJR
+  Node Name: Mezcla Jarra Risotto60ml Hz + 3,6L agua
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html']
+
+Node ID: mezR
+  Node Name: Mezcla Jarra Risotto60ml Hz + 3,6L agua
+  Missing from presenteEn: ['dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_risotto.html']
+
+Node ID: mp01
+  Node Name: Caldo Aneto (MP01)
+  Missing from presenteEn: ['dark_negro.html', 'dark_pescado.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_negro.html', 'dark_pescado.html']
+
+Node ID: mp03
+  Node Name: Paeller Pollo (MP03)
+  Missing from presenteEn: ['dark_pollo.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pollo.html']
+
+Node ID: mp04
+  Node Name: Aceite girasol (MP04)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+
+Node ID: mp05
+  Node Name: Aceite oliva (MP05)
+  Missing from presenteEn: ['dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pollo.html', 'dark_verduras.html']
+
+Node ID: mp06
+  Node Name: Umami (MP06)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+
+Node ID: mp07
+  Node Name: Xantana (MP07)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+
+Node ID: mp08
+  Node Name: Tinta sepia (MP08)
+  Missing from presenteEn: ['dark_negro.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_negro.html']
+
+Node ID: mp09
+  Node Name: Hazelnut (MP09)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+
+Node ID: mp10
+  Node Name: Pimentón (MP10)
+  Missing from presenteEn: ['dark_pescado.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pescado.html', 'dark_verduras.html']
+
+Node ID: mp11
+  Node Name: Hierbas (MP11)
+  Missing from presenteEn: ['dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_verduras.html']
+
+Node ID: mp12
+  Node Name: Almidón (MP12)
+  Missing from presenteEn: ['dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_risotto.html']
+
+Node ID: mp13
+  Node Name: Mantequilla (MP13)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_risotto.html']
+
+Node ID: mp19
+  Node Name: Azafrán (MP19)
+  Missing from presenteEn: ['dark_maestro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+
+Node ID: mp21
+  Node Name: Boletus seco (MP21)
+  Missing from presenteEn: ['dark_salsa_boletus.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html']
+
+Node ID: mp22
+  Node Name: Mezcla Setas (MP22)
+  Missing from presenteEn: ['dark_cremoso_setas.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_setas.html']
+
+Node ID: mp23
+  Node Name: Tartufata (MP23)
+  Missing from presenteEn: ['dark_cremoso_tartufato.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_tartufato.html']
+
+Node ID: mp31
+  Node Name: Ñora en lata (MP31)
+  Missing from presenteEn: ['dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+
+Node ID: mp33
+  Node Name: Espinaca deshid. (MP33)
+  Missing from presenteEn: ['dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+
+Node ID: mp34
+  Node Name: Cebolla deshid. (MP34)
+  Missing from presenteEn: ['dark_risotto.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_risotto.html', 'dark_verduras.html']
+
+Node ID: mp35
+  Node Name: Pollo deshid. (MP35)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html']
+
+Node ID: mp36
+  Node Name: Puerro deshid. (MP36)
+  Missing from presenteEn: ['dark_risotto.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_risotto.html', 'dark_verduras.html']
+
+Node ID: mp38
+  Node Name: Ác. tartárico (MP38)
+  Missing from presenteEn: ['dark_maestro.html', 'dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html', 'dark_risotto.html']
+
+Node ID: mp39
+  Node Name: Azúcar (MP39)
+  Missing from presenteEn: ['dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_risotto.html']
+
+Node ID: mp42
+  Node Name: Tomate deshid. (MP42)
+  Missing from presenteEn: ['dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pollo.html', 'dark_verduras.html']
+
+Node ID: mp52
+  Node Name: Azúcar (MP39)
+  Missing from presenteEn: ['dark_maestro.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html']
+
+Node ID: mp53
+  Node Name: Sal (MP37)
+  Missing from presenteEn: ['dark_maestro.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html']
+
+Node ID: mp65
+  Node Name: Vino blanco (MP65)
+  Missing from presenteEn: ['dark_salsa_boletus.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html']
+
+Node ID: mp66
+  Node Name: 
+  Missing from presenteEn: ['dark_salsa_boletus.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html']
+
+Node ID: mp73
+  Node Name: Queso azul (MP73)
+  Missing from presenteEn: ['dark_cremoso_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_queso.html']
+
+Node ID: mpAceite
+  Node Name: Aceite girasol (MP04)
+  Missing from presenteEn: ['dark_salsa_iberica.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpAceiteTrufado
+  Node Name: Aceite trufado (MP67)
+  Missing from presenteEn: ['dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_tartufata.html']
+
+Node ID: mpAg
+  Node Name: Agua
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_verduras.html']
+
+Node ID: mpAgua
+  Node Name: Agua
+  Missing from presenteEn: ['dark_salsa_iberica.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpAgua1
+  Node Name: Agua
+  Missing from presenteEn: ['dark_salsa_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_verduras.html']
+
+Node ID: mpAguaAlmidonada
+  Node Name: Agua almidonada (MP49)
+  Missing from presenteEn: ['dark_salsa_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_verduras.html']
+
+Node ID: mpAjo
+  Node Name: Ajo (MP40)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+
+Node ID: mpAromaJamon
+  Node Name: Aroma jamón (MP70)
+  Missing from presenteEn: ['dark_salsa_iberica.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html']
+
+Node ID: mpAromaQue
+  Node Name: Aroma queso (MP69)
+  Missing from presenteEn: ['dark_cremoso_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_queso.html']
+
+Node ID: mpAromaQueso
+  Node Name: Aroma queso (MP69)
+  Missing from presenteEn: ['dark_salsa_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_queso.html']
+
+Node ID: mpArr
+  Node Name: Arroz Maratelli (MP24)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+
+Node ID: mpBand
+  Node Name: Bandeja EOS-35 (MP50)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+
+Node ID: mpCMC
+  Node Name: CMC (MP61)
+  Missing from presenteEn: ['dark_salsa_iberica.html', 'dark_salsa_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html', 'dark_salsa_queso.html']
+
+Node ID: mpCaldoPescado
+  Node Name: Caldo Pescado (prelab)
+  Missing from presenteEn: ['dark_salsa_negra.html', 'dark_salsa_pescado.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_negra.html', 'dark_salsa_pescado.html']
+
+Node ID: mpCaldoPollo
+  Node Name: Caldo Pollo (prelab)
+  Missing from presenteEn: ['dark_salsa_pollo.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_pollo.html']
+
+Node ID: mpCeb
+  Node Name: Cebolla deshid. (MP34)
+  Missing from presenteEn: ['dark_salsa_boletus.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpCur
+  Node Name: Cúrcuma (MP41)
+  Missing from presenteEn: ['dark_pescado.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pescado.html']
+
+Node ID: mpFilm
+  Node Name: Film top-seal (MP51)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_salsa_verduras.html', 'dark_verduras.html']
+
+Node ID: mpGraPollo
+  Node Name: Grasa de pollo (MP66)
+  Missing from presenteEn: ['dark_cremoso_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_queso.html']
+
+Node ID: mpGrasaPollo
+  Node Name: Grasa pollo (MP66)
+  Missing from presenteEn: ['dark_salsa_iberica.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpHazelnut
+  Node Name: Hazelnut (MP09)
+  Missing from presenteEn: ['dark_salsa_pollo.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_pollo.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpJamon
+  Node Name: Jamón Ibérico (MP20)
+  Missing from presenteEn: ['dark_cremoso_iberico.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html']
+
+Node ID: mpJerez
+  Node Name: Jerez (MP65)
+  Missing from presenteEn: ['dark_salsa_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_queso.html']
+
+Node ID: mpMant
+  Node Name: Mantequilla (MP13)
+  Missing from presenteEn: ['dark_salsa_boletus.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpManzanilla
+  Node Name: Manzanilla (MP65)
+  Missing from presenteEn: ['dark_salsa_iberica.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html']
+
+Node ID: mpNata
+  Node Name: Nata (MP63)
+  Missing from presenteEn: ['dark_salsa_iberica.html', 'dark_salsa_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html', 'dark_salsa_queso.html']
+
+Node ID: mpParm
+  Node Name: Parmesano (MP14)
+  Missing from presenteEn: ['dark_salsa_boletus.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_boletus.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpQuesoAzul
+  Node Name: 
+  Missing from presenteEn: ['dark_salsa_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_queso.html']
+
+Node ID: mpSal
+  Node Name: Sal (MP37)
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_salsa_boletus.html', 'dark_salsa_iberica.html', 'dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html', 'dark_verduras.html']
+
+Node ID: mpSalmorreta
+  Node Name: Salmorreta (MP43)
+  Missing from presenteEn: ['dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_negra.html', 'dark_salsa_pescado.html', 'dark_salsa_pollo.html']
+
+Node ID: mpSalsaVerd
+  Node Name: Salsa Verd. Conc. (MP54)
+  Missing from presenteEn: ['dark_salsa_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_verduras.html']
+
+Node ID: mpTinta
+  Node Name: Tinta sepia (MP08)
+  Missing from presenteEn: ['dark_salsa_negra.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_negra.html']
+
+Node ID: mpUmami
+  Node Name: Umami (MP06)
+  Missing from presenteEn: ['dark_salsa_iberica.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html', 'dark_salsa_pollo.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+
+Node ID: mpVino
+  Node Name: Vino blanco (MP65)
+  Missing from presenteEn: ['dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_tartufata.html']
+
+Node ID: mpXantana
+  Node Name: Xantana (MP07)
+  Missing from presenteEn: ['dark_salsa_iberica.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_salsa_iberica.html', 'dark_salsa_queso.html', 'dark_salsa_tartufata.html']
+
+Node ID: preAjo
+  Node Name: Aceite de Ajo
+  Missing from presenteEn: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+
+Node ID: preAjoM
+  Node Name: Aceite de Ajopreelaborado → producción
+  Missing from presenteEn: ['dark_maestro.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html']
+
+Node ID: preAz
+  Node Name: Agua Azafrán (P)300g agua + 7g azafrán
+  Missing from presenteEn: ['dark_maestro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_verduras.html']
+
+Node ID: preNora
+  Node Name: Aceite de Ñora
+  Missing from presenteEn: ['dark_pescado.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pescado.html']
+
+Node ID: prePR
+  Node Name: Pesado Risottopollo+puerro+cebolla
+  Missing from presenteEn: ['dark_risotto.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_risotto.html']
+
+Node ID: prePV
+  Node Name: Pesado Verdurasespinaca+cebolla+puerro
+  Missing from presenteEn: ['dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_verduras.html']
+
+Node ID: preSalm
+  Node Name: Salmorreta
+  Missing from presenteEn: ['dark_pollo.html', 'dark_verduras.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_pollo.html', 'dark_verduras.html']
+
+Node ID: prepM
+  Node Name: Preparado Maestropolvos: umami+ác.tart+azúcar+sal
+  Missing from presenteEn: ['dark_maestro.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_maestro.html']
+
+Node ID: salIb
+  Node Name: Salsa Ibérico
+  Missing from presenteEn: ['dark_cremoso_iberico.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_iberico.html']
+
+Node ID: salQue
+  Node Name: Salsa Queso
+  Missing from presenteEn: ['dark_cremoso_queso.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_queso.html']
+
+Node ID: salSet
+  Node Name: Salsa Boletus
+  Missing from presenteEn: ['dark_cremoso_setas.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_setas.html']
+
+Node ID: salTar
+  Node Name: Salsa Tartufata
+  Missing from presenteEn: ['dark_cremoso_tartufato.html']
+  Listed in presenteEn: []
+  Actually in diagrams: ['dark_cremoso_tartufato.html']
+
+
+3. NODES IN presenteEn BUT NOT IN ANY DIAGRAM (orphaned entries)
+----------------------------------------------------------------------------------------------------
+None found - all presenteEn entries correspond to actual nodes!
+
+
+====================================================================================================
+SUMMARY
+====================================================================================================
+Total unique node IDs in diagrams: 94
+Total presenteEn entries: 90
+Missing from presenteEn: 4
+Incomplete in presenteEn: 90
+Orphaned in presenteEn: 0
