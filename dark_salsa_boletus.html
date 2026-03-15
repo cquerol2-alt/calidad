@@ -184,7 +184,7 @@ function buildTraz(id, nodeEl){
   if(h){traz.innerHTML=h;traz.style.display='block';}else{traz.style.display='none';}
 }
 ns.forEach(n=>{n.addEventListener('click',e=>{e.stopPropagation();const id=n.id;if(sel===id){clr();return}sel=id;
-const c=new Set([id]);const hl=new Set();function trace(nid){ls.forEach(l=>{if(l.dataset.t===nid&&!hl.has(l)){hl.add(l);c.add(l.dataset.f);trace(l.dataset.f)}if(l.dataset.f===nid&&!hl.has(l)){hl.add(l);c.add(l.dataset.t);trace(l.dataset.t)}})}trace(id);
+const c=new Set([id]);const hl=new Set();function traceUp(nid){ls.forEach(l=>{if(l.dataset.t===nid&&!hl.has(l)){hl.add(l);c.add(l.dataset.f);traceUp(l.dataset.f)}})}traceUp(id);ls.forEach(l=>{if(l.dataset.f===id){hl.add(l);c.add(l.dataset.t)}});
 ns.forEach(x=>{x.classList.toggle('hl',c.has(x.id));x.classList.toggle('dim',!c.has(x.id))});
 ls.forEach(l=>{const ok=hl.has(l);l.classList.toggle('hl',ok);l.classList.toggle('dim',!ok)});
 document.getElementById('pN').textContent=n.dataset.n;document.getElementById('pC').textContent=n.dataset.c;
