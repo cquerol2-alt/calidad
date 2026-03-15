@@ -1308,7 +1308,7 @@
                                 <select class="card-variety" onchange="setVariety(${i}, this.value)" style="padding:6px 10px; border:1.5px solid var(--border-light); border-radius:6px; font-size:14px; background:white;">
                                     <option value="" ${!line.variety ? 'selected' : ''}>— Seleccionar —</option>
                                     <option value="bahia" ${line.variety === 'bahia' ? 'selected' : ''}>Bahía (Illa de Riu)</option>
-                                    <option value="marisma" ${line.variety === 'marisma' ? 'selected' : ''}>Marisma (Doña Ana)</option>
+                                    <option value="marisma" ${line.variety === 'marisma' ? 'selected' : ''}>Marisma (Arrozúa)</option>
                                 </select>
                             </div>
                             ` : ''}
@@ -1617,7 +1617,7 @@
                     item.format === 'all-included' ? 'All-Included (300g)' :
                     item.format === 'separado' ? 'Separado' : item.format;
 
-                const varietyInfo = item.variety ? (item.variety === 'bahia' ? ' [Bahía - Illa de Riu]' : ' [Marisma - Doña Ana]') : '';
+                const varietyInfo = item.variety ? (item.variety === 'bahia' ? ' [Bahía - Illa de Riu]' : ' [Marisma - Arrozúa]') : '';
                 // Convertir cajas a envases
                 let envases = item.quantity;
                 let unitLabel = '';
