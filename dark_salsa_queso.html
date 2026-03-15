@@ -186,6 +186,7 @@ document.getElementById('pN').textContent=n.dataset.n;document.getElementById('p
 document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
 let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
 if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
+if(n.dataset.acc)t+=`<span class="tag t-cc">⚠ Trazas: ${n.dataset.acc}</span> `;
 if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
 document.getElementById('pT').innerHTML=t;buildTraz(id, n);P.classList.add('vis')})}); 
 document.addEventListener('click',clr);

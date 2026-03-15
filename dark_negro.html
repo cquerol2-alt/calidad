@@ -107,10 +107,10 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="node n-pre" id="jarP" style="left:290px;top:310px;width:200px" data-n="Jarra de Pescado" data-c="JARRA-PESC" data-i="Lote: RIA-JARRA-PESC-DDMMAA|Pollo deshidratado: 1800g|Espinaca deshidratada: 490g" data-v="" data-a="" data-s=""><div class="glow"></div>Jarra Pescado<br><span style="font-size:10px">1800g pollo + 490g espinaca</span></div>
 
 <!-- ═══ CALDO ═══ -->
-<div class="node n-cal" id="calN" style="left:590px;top:110px;width:200px;font-size:15px" data-n="Caldo Negro" data-c="REC-CALDO-002 · RIA-NEGRO" data-i="Rendimiento: 25L|· Caldo Aneto 13,5L|· Aceite girasol 5000ml|· Aceite de Ajo 800ml|· Umami 120g|· Xantana 10g|· Tinta sepia 1400g|· Agua 5,5L" data-v="" data-a="PESCADO APIO CRUSTÁCEOS MOLUSCOS" data-s="" data-etiqueta="etiquetas/caldo_negro.svg"><div class="glow"></div>Caldo Negro</div>
+<div class="node n-cal" id="calN" style="left:590px;top:110px;width:200px;font-size:15px" data-n="Caldo Negro" data-c="REC-CALDO-002 · RIA-NEGRO" data-i="Rendimiento: 25L|· Caldo Aneto 13,5L|· Aceite girasol 5000ml|· Aceite de Ajo 800ml|· Umami 120g|· Xantana 10g|· Tinta sepia 1400g|· Agua 5,5L" data-v="" data-a="PESCADO APIO MOLUSCOS" data-acc="CRUSTÁCEOS" data-s="" data-etiqueta="etiquetas/caldo_negro.svg"><div class="glow"></div>Caldo Negro</div>
 
 <!-- ═══ PRODUCTO FINAL ═══ -->
-<div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:100px;display:flex;align-items:center;justify-content:center" data-n="ARROZ NEGRO" data-c="La Santa · Código 740" data-i="Lote: L-740-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo Negro|· Mezcla Jarra Normal (líquido)|· Jarra Pescado (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="PESCADO MOLUSCOS CRUSTÁCEOS APIO" data-s=""><div class="glow"></div>ARROZ<br>NEGRO</div>
+<div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:100px;display:flex;align-items:center;justify-content:center" data-n="ARROZ NEGRO" data-c="La Santa · Código 740" data-i="Lote: L-740-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo Negro|· Mezcla Jarra Normal (líquido)|· Jarra Pescado (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="PESCADO APIO MOLUSCOS SULFITOS" data-acc="CRUSTÁCEOS" data-s=""><div class="glow"></div>ARROZ<br>NEGRO</div>
 </div>
 
 <div class="panel" id="P"><div class="x" onclick="clr()">&times;</div><h3 id="pN"></h3><div class="code" id="pC"></div><div class="info" id="pI"></div><div id="pT" style="margin-top:8px"></div><div id="pTraz" style="margin-top:10px;border-top:1px solid #334155;padding-top:10px;display:none"></div></div>
@@ -122,7 +122,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="legend-i"><div class="legend-d" style="background:#14532d;border:1px solid #22c55e"></div>Caldo (21d)</div>
 <div class="legend-i"><div class="legend-d" style="background:#1a3636;border:1px solid #14b8a6"></div>Envase/Packaging</div>
 <div class="legend-i"><div class="legend-d" style="background:#78350f;border:1px solid #f59e0b"></div>Producto final</div>
-<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ PESCADO · MOLUSCOS · CRUSTÁCEOS · APIO</div>
+<div class="legend-i" style="margin-left:auto;color:#fca5a5">⚠ PESCADO · APIO · MOLUSCOS | <span style="color:#fbbf24">Trazas: CRUSTÁCEOS</span></div>
 </div>
 
 <script src="cross-ref.js"></script>
@@ -167,6 +167,7 @@ document.getElementById('pN').textContent=n.dataset.n;document.getElementById('p
 document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
 let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
 if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
+if(n.dataset.acc)t+=`<span class="tag t-cc">⚠ Trazas: ${n.dataset.acc}</span> `;
 if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
 document.getElementById('pT').innerHTML=t;buildTraz(id, n);P.classList.add('vis')})}); 
 document.addEventListener('click',clr);
