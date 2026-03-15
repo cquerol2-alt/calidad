@@ -161,12 +161,14 @@ function buildTraz(id, nodeEl){
   if(nodeEl && nodeEl.dataset.etiqueta){
     h+=`<div style="margin-bottom:8px"><a href="#" onclick="event.preventDefault();showLabel('${nodeEl.dataset.etiqueta}')" style="color:#fbbf24;text-decoration:none;font-size:12px">🏷️ Etiqueta producto intermedio</a></div>`;
   }
-  // Presente en
+  // Presente en (incluye arroz actual)
   const pe=CROSS_REF.presenteEn[id];
   if(pe && pe.length>0){
+    const cur=pe.find(x=>x.d===CURRENT_DIAG);
     const otros=pe.filter(x=>x.d!==CURRENT_DIAG);
-    if(otros.length>0){
+    if(cur||otros.length>0){
       h+=`<div style="font-size:12px;color:#94a3b8;margin-bottom:4px">📍 Presente en:</div><div style="display:flex;flex-wrap:wrap;gap:4px">`;
+      if(cur){h+=`<span style="display:inline-block;font-size:10px;padding:3px 8px;border-radius:4px;background:#fbbf2422;border:1px solid #fbbf24;color:#fbbf24;font-weight:bold">${cur.p} ●</span>`;}
       otros.forEach(o=>{
         const col=o.f==='La Santa'?'#3b82f6':o.f==='All-Included'?'#8b5cf6':o.f==='Salsas'?'#22c55e':o.f==='Maestro'?'#f59e0b':'#94a3b8';
         h+=`<a href="${o.d}" style="display:inline-block;font-size:10px;padding:3px 8px;border-radius:4px;background:#0f172a;border:1px solid ${col};color:${col};text-decoration:none;transition:all .2s" onmouseover="this.style.background='${col}22'" onmouseout="this.style.background='#0f172a'">${o.p}</a>`;

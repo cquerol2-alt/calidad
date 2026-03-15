@@ -190,6 +190,12 @@ const CROSS_REF = {
     ],
     'mp31': [
       {d: 'dark_pescado.html', p: 'Arroz Pescado', f: 'La Santa'},
+      {d: 'dark_pollo.html', p: 'Arroz Pollo', f: 'La Santa'},
+      {d: 'dark_verduras.html', p: 'Arroz Verduras', f: 'La Santa'},
+    ],
+    'mp42': [
+      {d: 'dark_pollo.html', p: 'Arroz Pollo', f: 'La Santa'},
+      {d: 'dark_verduras.html', p: 'Arroz Verduras', f: 'La Santa'},
     ],
     'mp33': [
       {d: 'dark_negro.html', p: 'Arroz Negro', f: 'La Santa'},
