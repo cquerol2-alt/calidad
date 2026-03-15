@@ -43,6 +43,8 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 .note{max-width:1000px;margin:15px auto 0;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;font-size:12px;color:#94a3b8;line-height:1.5}
 .note b{color:#fbbf24}
 .back{position:fixed;top:15px;left:15px;background:#1e293b;color:#94a3b8;border:1px solid #334155;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;z-index:99}.back:hover{color:#f1f5f9;border-color:#64748b}
+#labelModal.visible{display:flex!important}
+.t-cc{background:#4a3800;color:#fbbf24;font-style:italic}
 </style>
 </head>
 <body>
@@ -115,6 +117,13 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 </div>
 
 
+<div id="labelModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center">
+  <div style="position:relative;background:white;padding:30px;border-radius:12px;max-width:650px;width:95%;max-height:90vh;overflow:auto;box-shadow:0 15px 50px rgba(0,0,0,0.7)">
+    <button id="labelClose" onclick="document.getElementById('labelModal').classList.remove('visible')" style="position:absolute;top:12px;right:15px;background:none;border:none;font-size:28px;cursor:pointer;color:#999;font-weight:300">&times;</button>
+    <div id="labelContent" style="margin-top:20px;text-align:center"></div>
+  </div>
+</div>
+
 <script src="cross-ref.js"></script>
 <script>
 const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
@@ -160,8 +169,17 @@ if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
 if(n.dataset.acc)t+=`<span class="tag t-cc">⚠ Trazas: ${n.dataset.acc}</span> `;
 if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
 document.getElementById('pT').innerHTML=t;buildTraz(id, n);P.classList.add('vis')})}); 
-document.addEventListener('click',clr);
+document.addEventListener('click',e=>{if(!e.target.closest('#labelModal'))clr()});
+document.getElementById('labelModal').addEventListener('click',e=>{if(e.target===document.getElementById('labelModal'))document.getElementById('labelModal').classList.remove('visible')});
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
+function showLabel(etiquetaPath){
+  const modal=document.getElementById('labelModal');
+  const content=document.getElementById('labelContent');
+  fetch(etiquetaPath)
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text()})
+    .then(svg=>{content.innerHTML=svg;modal.classList.add('visible')})
+    .catch(err=>{content.innerHTML='<p style="color:#c00;font-size:14px">⚠ Error cargando etiqueta: '+err.message+'</p>';modal.classList.add('visible')});
+}
 </script>
 </body>
 </html>
