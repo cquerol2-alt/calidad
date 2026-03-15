@@ -43,7 +43,7 @@ const RIA_DATA = {
     productos: {
         // --- La Santa (producto final) ---
         pescado: {
-            nombre: 'Arroz de Pescado y Marisco',
+            nombre: 'Arroz de Pescado',
             familia: 'La Santa',
             codigoLote: '748',
             variantes: { '260g': '748-1', 'bulk': '748-3' },
