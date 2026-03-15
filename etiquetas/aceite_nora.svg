@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180" width="280" height="180">
+  <rect width="280" height="180" fill="white" stroke="#999" stroke-width="1" rx="3"/>
+  
+  <!-- Header -->
+  <rect x="5" y="5" width="270" height="28" fill="#1a1a1a" rx="2"/>
+  <text x="140" y="24" font-family="Arial,sans-serif" font-size="12" fill="white" text-anchor="middle" font-weight="bold">RICE IN ACTION S.L.</text>
+  
+  <!-- Product name -->
+  <text x="140" y="52" font-family="Arial,sans-serif" font-size="13" fill="#000" text-anchor="middle" font-weight="bold">Aceite Rojo de Nora</text>
+  
+  <!-- Separator -->
+  <line x1="10" y1="60" x2="270" y2="60" stroke="#ccc" stroke-width="0.5"/>
+  
+  <!-- Ingredientes label -->
+  <text x="10" y="75" font-family="Arial,sans-serif" font-size="9" fill="#666" font-weight="bold">INGREDIENTES:</text>
+  
+  <!-- Ingredient lines -->
+  <g font-family="Arial,sans-serif">
+  <text x="10" y="95" font-size="9" fill="#333">Aceite de girasol alto oleico, nora (pimiento</text>
+  <text x="10" y="108" font-size="9" fill="#333">seco), pimenton, curcuma</text>
+  </g>
+  
+  <!-- Separator -->
+  <line x1="10" y1="126" x2="270" y2="126" stroke="#ccc" stroke-width="0.5"/>
+  
+  <!-- Lote and vida util -->
+  <text x="10" y="143" font-family="Arial,sans-serif" font-size="9" fill="#333">
+    <tspan font-weight="bold">Lote:</tspan> RIA-PRELAB-NORA-DDMMAA
+  </text>
+  <text x="10" y="156" font-family="Arial,sans-serif" font-size="9" fill="#333">
+    <tspan font-weight="bold">Vida útil:</tspan> 90 días
+  </text>
+  <text x="10" y="169" font-family="Arial,sans-serif" font-size="9" fill="#333">
+    <tspan font-weight="bold">Conservar:</tspan> refrigerado 0-4°C
+  </text>
+</svg>
