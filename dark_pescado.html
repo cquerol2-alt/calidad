@@ -141,6 +141,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <script>
 const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
 const CURRENT_DIAG='dark_pescado.html';
+const CURRENT_FAMILY='La Santa';
 let sel=null;
 function buildTraz(id){
   const traz=document.getElementById('pTraz');
@@ -155,7 +156,7 @@ function buildTraz(id){
   // Presente en
   const pe=CROSS_REF.presenteEn[id];
   if(pe && pe.length>0){
-    const otros=pe.filter(x=>x.d!==CURRENT_DIAG);
+    const otros=pe.filter(x=>x.d!==CURRENT_DIAG&&x.f!==CURRENT_FAMILY);
     if(otros.length>0){
       h+=`<div style="font-size:12px;color:#94a3b8;margin-bottom:4px">📍 Presente en:</div><div style="display:flex;flex-wrap:wrap;gap:4px">`;
       otros.forEach(o=>{
