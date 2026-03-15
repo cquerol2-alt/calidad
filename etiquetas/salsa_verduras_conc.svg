@@ -16,11 +16,12 @@
   
   <!-- Ingredient lines -->
   <g font-family="Arial,sans-serif">
-  <text x="10" y="95" font-size="9" fill="#333">Salmorreta (ajo, aceite de oliva, nora, tomate</text>
-  <text x="10" y="108" font-size="9" fill="#333">deshidratado), caldo de verduras (agua, espinaca,</text>
-  <text x="10" y="121" font-size="9" fill="#333">cebolla, aceite de girasol, aceite de oliva,</text>
-  <text x="10" y="134" font-size="9" fill="#333">hierbas, umami, pimenton, azafran). Puede</text>
-  <text x="10" y="147" font-size="9" fill="#333">contener trazas de <tspan fill="#c00" font-weight="bold">APIO</tspan></text>
+  <text x="10" y="92" font-size="8" fill="#333">Salmorreta (ajo, tomate deshidratado (tomate,</text>
+  <text x="10" y="104" font-size="8" fill="#333">antiapelmazante: E551), carne de ñora, aceite</text>
+  <text x="10" y="116" font-size="8" fill="#333">de girasol, aceite de oliva), caldo de verduras</text>
+  <text x="10" y="128" font-size="8" fill="#333">(agua, espinaca, cebolla, aceite de girasol,</text>
+  <text x="10" y="140" font-size="8" fill="#333">aceite de oliva, hierbas, umami, pimenton,</text>
+  <text x="10" y="152" font-size="8" fill="#333">azafran). Puede contener trazas de <tspan fill="#c00" font-weight="bold">APIO</tspan></text>
   </g>
   
   <!-- Separator -->

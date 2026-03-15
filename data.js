@@ -194,7 +194,7 @@ const RIA_DATA = {
     tiposArroz: {
         maratelli: { nombre: 'Maratelli', marca: 'La Santa / Risotto / Cremosos' },
         bahia:     { nombre: 'Bahía', marca: 'Illa de Riu' },
-        marisma:   { nombre: 'Marisma', marca: 'Doña Ana' }
+        marisma:   { nombre: 'Marisma', marca: 'Arrozúa' }
     },
 
     // ========================================================================
@@ -820,7 +820,7 @@ const RIA_DATA = {
         // --- Arroces ---
         MP24: { nombre: 'Arroz Elaborado Variedad Nuovo Maratelli', proveedor: 'Arrocera del Pirineo', formato: 'Saco 25kg (también 1kg, 5kg, 20kg)', conservacion: 'Tª Ambiente (lugar limpio, fresco, seco)', tipo: 'ingrediente', fichaDrive: '', fichaLocal: 'Ficha técnica arroz n.maratelli ene-25.pdf', vidaUtil: '18 meses', alergenos: [], categoría: 'Extra', clasificacion: 'Oryza sativa, Subespecie Japónica', lote: '26Y04', caducidad: '06/2027' },
         MP25: { nombre: 'Arroz Bahía (Illa de Riu)', proveedor: 'Illa de Riu', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', lote: '62604', caducidad: '09/2026' },
-        MP26: { nombre: 'Arroz Marisma (Doña Ana)', proveedor: 'Doña Ana', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', lote: '3026D026', caducidad: '02/2027' },
+        MP26: { nombre: 'Arroz Marisma (Arrozúa)', proveedor: 'Arrozúa', formato: 'Saco 25kg', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: '', lote: '3026D026', caducidad: '02/2027' },
         // (MP27 eliminado: Arroz Maestro = Arroz Marisma, duplicado)
         // --- Tomate ---
         MP30: { nombre: 'Tomate deshidratado', proveedor: 'Mas Tomate', formato: 'Bolsa', conservacion: 'Tª Ambiente', tipo: 'ingrediente', fichaDrive: 'https://drive.google.com/drive/folders/1jzY5Y02cEe6SHLdAvi0S4xFicqxNGn9K', lote: 'V0', caducidad: '12/03/2030' },
@@ -894,8 +894,7 @@ const RIA_DATA = {
         honza:              { nombre: 'Honza', productos: ['MP21', 'MP22'], fichaDrive: 'https://drive.google.com/drive/folders/1Pq3Th7-CvFRZqs6Ys-Vs3vDxzJtAoHwI' },
         arroceraPirineo:    { nombre: 'Arrocera del Pirineo', productos: ['MP24'] },
         illaDeRiu:          { nombre: 'Illa de Riu', productos: ['MP25'] },
-        donaAna:            { nombre: 'Doña Ana', productos: ['MP26'] },
-        // (arrozua eliminado: MP27 Arroz Maestro era duplicado de MP26 Marisma)
+        arrozua:            { nombre: 'Arrozúa', productos: ['MP26'], direccion: 'Finca Veta La Mora, 41140 Isla Mayor, Sevilla', telefono: '+34 954 777 564', web: 'www.arrozua.com', certificaciones: ['IFS', 'BRC'] },
         masTomate:          { nombre: 'Mas Tomate', productos: ['MP30'], fichaDrive: 'https://drive.google.com/drive/folders/1jzY5Y02cEe6SHLdAvi0S4xFicqxNGn9K' },
         rajope:             { nombre: 'Rajope', productos: ['MP31'], fichaDrive: 'https://drive.google.com/drive/folders/14Y5TrAfb7BcJCH82AS6mG4rKlL3Vay8s' },
         vegenat:            { nombre: 'Vegenat', productos: ['MP34'], fichaDrive: 'https://drive.google.com/drive/folders/1QXYo8IL7jc9hBv1witFVCqqMv5USSuc0' },

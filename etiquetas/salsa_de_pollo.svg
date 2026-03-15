@@ -5,61 +5,32 @@
   Salsa de Pollo
 </text>
 <text x="15" y="80" font-size="8" font-weight="bold" fill="#333">INGREDIENTES:</text>
-<text x="15" y="92" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">S</tspan>
-<tspan fill="black">almorreta </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">ajo, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva, </tspan>
-<tspan fill="black">nora, </tspan>
-<tspan fill="black">tomate</tspan>
+<text x="15" y="92" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">Salmorreta (ajo, tomate deshidratado (tomate,</tspan>
 </text>
-<text x="15" y="102" font-size="7" fill="black" font-family="mono
-<tspan fill="black">deshidratado), </tspan>
-<tspan fill="black">caldo </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">pollo </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">agua, </tspan>
-<tspan fill="black">carne </tspan>
-<tspan fill="black">de</tspan>
+<text x="15" y="102" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">antiapelmazante: E551), carne de ñora, aceite</tspan>
 </text>
-<text x="15" y="112" font-size="7" fill="black" font-family="mono
-<tspan fill="black">pollo, </tspan>
-<tspan fill="black">sal, </tspan>
-<tspan fill="black">especias), </tspan>
-<tspan fill="black">agua, </tspan>
-<tspan fill="black">colorante </tspan>
-<tspan fill="black">hazelnut</tspan>
+<text x="15" y="112" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">de girasol, aceite de oliva), caldo de pollo</tspan>
 </text>
-<text x="15" y="122" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">contiene </tspan>
-<tspan font-weight="bold" fill="#c00">SULFITOS</tspan>
-<tspan font-weight="bold" fill="#c00">)</tspan>
-<tspan font-weight="bold" fill="#c00">,</tspan>
-<tspan fill="black"> </tspan>
-<tspan fill="black">potenciador </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">sabor </tspan>
-<tspan fill="black">umami,</tspan>
+<text x="15" y="122" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">(agua, carne de pollo, sal, especias), agua,</tspan>
 </text>
-<text x="15" y="132" font-size="7" fill="black" font-family="mono
-<tspan fill="black">sal. </tspan>
-<tspan font-weight="bold" fill="#c00">P</tspan>
-<tspan fill="black">uede </tspan>
-<tspan fill="black">contener </tspan>
-<tspan fill="black">trazas </tspan>
-<tspan fill="black">de </tspan>
-<tspan font-weight="bold" fill="#c00">APIO</tspan>
+<text x="15" y="132" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">colorante hazelnut (contiene </tspan><tspan font-weight="bold" fill="#c00">SULFITOS</tspan><tspan fill="black">),</tspan>
 </text>
-<text x="15" y="152" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
-<text x="15" y="162" font-size="7" fill="black">Refrigeracion (0-4C)</text>
-<text x="15" y="177" font-size="9" font-weight="bold" fill="black">
-  LOTE: RIA-SALSA-POLLO-150326
+<text x="15" y="142" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">potenciador de sabor umami, sal.</tspan>
 </text>
-<text x="15" y="193" font-size="8" fill="black">ELAB: 15/03/2026</text>
-<text x="15" y="205" font-size="8" fill="black">CAD: 05/04/2026</text>
+<text x="15" y="152" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">Puede contener trazas de </tspan><tspan font-weight="bold" fill="#c00">APIO</tspan>
+</text>
+<text x="15" y="172" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
+<text x="15" y="182" font-size="7" fill="black">Refrigeracion (0-4C)</text>
+<text x="15" y="197" font-size="9" font-weight="bold" fill="black">
+  LOTE: RIA-SALSA-POLLO-DDMMAA
+</text>
+<text x="15" y="213" font-size="8" fill="black">ELAB: __/__/____</text>
+<text x="15" y="225" font-size="8" fill="black">CAD: __/__/____</text>
 </svg>

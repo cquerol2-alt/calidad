@@ -5,68 +5,38 @@
   Caldo de Verduras
 </text>
 <text x="15" y="80" font-size="8" font-weight="bold" fill="#333">INGREDIENTES:</text>
-<text x="15" y="92" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">A</tspan>
-<tspan fill="black">gua, </tspan>
-<tspan fill="black">espinaca </tspan>
-<tspan fill="black">deshidratada, </tspan>
-<tspan fill="black">cebolla </tspan>
-<tspan fill="black">deshidratada,</tspan>
+<text x="15" y="92" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">Agua, espinaca deshidratada, cebolla</tspan>
 </text>
-<text x="15" y="102" font-size="7" fill="black" font-family="mono
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">ajo </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">girasol </tspan>
-<tspan fill="black">alto </tspan>
-<tspan fill="black">oleico, </tspan>
-<tspan fill="black">ajo),</tspan>
+<text x="15" y="102" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">deshidratada, aceite de ajo (aceite de</tspan>
 </text>
-<text x="15" y="112" font-size="7" fill="black" font-family="mono
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">girasol </tspan>
-<tspan fill="black">alto </tspan>
-<tspan fill="black">oleico, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva</tspan>
+<text x="15" y="112" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">girasol alto oleico, ajo), aceite de girasol</tspan>
 </text>
-<text x="15" y="122" font-size="7" fill="black" font-family="mono
-<tspan fill="black">virgen </tspan>
-<tspan fill="black">extra, </tspan>
-<tspan fill="black">aroma </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">hierbas, </tspan>
-<tspan fill="black">potenciador </tspan>
-<tspan fill="black">de</tspan>
+<text x="15" y="122" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">alto oleico, aceite de oliva virgen extra,</tspan>
 </text>
-<text x="15" y="132" font-size="7" fill="black" font-family="mono
-<tspan fill="black">sabor </tspan>
-<tspan fill="black">umami, </tspan>
-<tspan fill="black">salmorreta </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">ajo, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva,</tspan>
+<text x="15" y="132" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">aroma de hierbas, potenciador de sabor</tspan>
 </text>
-<text x="15" y="142" font-size="7" fill="black" font-family="mono
-<tspan fill="black">nora, </tspan>
-<tspan fill="black">tomate </tspan>
-<tspan fill="black">deshidratado), </tspan>
-<tspan fill="black">pimenton, </tspan>
-<tspan fill="black">goma </tspan>
-<tspan fill="black">xantana</tspan>
+<text x="15" y="142" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">umami, salmorreta (ajo, tomate deshidratado</tspan>
 </text>
-<text x="15" y="162" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
-<text x="15" y="172" font-size="7" fill="black">Refrigeracion (0-4C)</text>
-<text x="15" y="187" font-size="9" font-weight="bold" fill="black">
-  LOTE: RIA-VERDURAS-150326
+<text x="15" y="152" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">(tomate, antiapelmazante: E551), carne de</tspan>
 </text>
-<text x="15" y="203" font-size="8" fill="black">ELAB: 15/03/2026</text>
-<text x="15" y="215" font-size="8" fill="black">CAD: 05/04/2026</text>
+<text x="15" y="162" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">ñora, aceite de girasol, aceite de oliva),</tspan>
+</text>
+<text x="15" y="172" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">pimenton, goma xantana</tspan>
+</text>
+<text x="15" y="192" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
+<text x="15" y="202" font-size="7" fill="black">Refrigeracion (0-4C)</text>
+<text x="15" y="217" font-size="9" font-weight="bold" fill="black">
+  LOTE: RIA-VERDURAS-DDMMAA
+</text>
+<text x="15" y="233" font-size="8" fill="black">ELAB: __/__/____</text>
+<text x="15" y="245" font-size="8" fill="black">CAD: __/__/____</text>
 </svg>

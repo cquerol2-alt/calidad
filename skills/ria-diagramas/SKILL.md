@@ -103,7 +103,7 @@ Cada salsa va dentro de la caja de su arroz correspondiente.
 | MP23 | Tartufata (pasta de trufa) | Solchem | Tarro |
 | MP24 | Arroz Nuovo Maratelli | Arrocera del Pirineo | Saco 25kg |
 | MP25 | Arroz Bahía | Illa de Riu | Saco 25kg |
-| MP26 | Arroz Marisma | Doña Ana | Saco 25kg |
+| MP26 | Arroz Marisma | Arrozúa | Saco 25kg |
 | MP31 | Ñora | Rajope | Bolsa |
 | MP33 | Espinaca deshidratada | La Margarita | Bolsa |
 | MP34 | Cebolla deshidratada | Vegenat | Bolsa |

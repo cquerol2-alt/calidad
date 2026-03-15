@@ -5,64 +5,35 @@
   Salsa de Verduras
 </text>
 <text x="15" y="80" font-size="8" font-weight="bold" fill="#333">INGREDIENTES:</text>
-<text x="15" y="92" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">S</tspan>
-<tspan fill="black">alsa </tspan>
-<tspan fill="black">verduras </tspan>
-<tspan fill="black">concentrada </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">salmorreta: </tspan>
-<tspan fill="black">ajo,</tspan>
+<text x="15" y="92" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">Salsa verduras concentrada (salmorreta:</tspan>
 </text>
-<text x="15" y="102" font-size="7" fill="black" font-family="mono
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva, </tspan>
-<tspan fill="black">nora, </tspan>
-<tspan fill="black">tomate </tspan>
-<tspan fill="black">deshidratado; </tspan>
-<tspan fill="black">caldo</tspan>
+<text x="15" y="102" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">ajo, tomate deshidratado (tomate, E551),</tspan>
 </text>
-<text x="15" y="112" font-size="7" fill="black" font-family="mono
-<tspan fill="black">de </tspan>
-<tspan fill="black">verduras: </tspan>
-<tspan fill="black">agua, </tspan>
-<tspan fill="black">espinaca, </tspan>
-<tspan fill="black">cebolla, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de</tspan>
+<text x="15" y="112" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">carne de ñora, aceite de girasol, aceite</tspan>
 </text>
-<text x="15" y="122" font-size="7" fill="black" font-family="mono
-<tspan fill="black">girasol, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva, </tspan>
-<tspan fill="black">hierbas, </tspan>
-<tspan fill="black">umami, </tspan>
-<tspan fill="black">pimenton,</tspan>
+<text x="15" y="122" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">de oliva; caldo de verduras: agua, espinaca,</tspan>
 </text>
-<text x="15" y="132" font-size="7" fill="black" font-family="mono
-<tspan fill="black">azafran), </tspan>
-<tspan fill="black">agua, </tspan>
-<tspan fill="black">agua </tspan>
-<tspan fill="black">almidonada </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">agua, </tspan>
-<tspan fill="black">almidon).</tspan>
+<text x="15" y="132" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">cebolla, aceite de girasol, aceite de oliva,</tspan>
 </text>
-<text x="15" y="142" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">P</tspan>
-<tspan fill="black">uede </tspan>
-<tspan fill="black">contener </tspan>
-<tspan fill="black">trazas </tspan>
-<tspan fill="black">de </tspan>
-<tspan font-weight="bold" fill="#c00">APIO</tspan>
+<text x="15" y="142" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">hierbas, umami, pimenton, azafran), agua,</tspan>
 </text>
-<text x="15" y="162" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
-<text x="15" y="172" font-size="7" fill="black">Refrigeracion (0-4C)</text>
-<text x="15" y="187" font-size="9" font-weight="bold" fill="black">
-  LOTE: RIA-SALSA-VERDURAS-150326
+<text x="15" y="152" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">agua almidonada (agua, almidon).</tspan>
 </text>
-<text x="15" y="203" font-size="8" fill="black">ELAB: 15/03/2026</text>
-<text x="15" y="215" font-size="8" fill="black">CAD: 05/04/2026</text>
+<text x="15" y="162" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">Puede contener trazas de </tspan><tspan font-weight="bold" fill="#c00">APIO</tspan>
+</text>
+<text x="15" y="182" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
+<text x="15" y="192" font-size="7" fill="black">Refrigeracion (0-4C)</text>
+<text x="15" y="207" font-size="9" font-weight="bold" fill="black">
+  LOTE: RIA-SALSA-VERDURAS-DDMMAA
+</text>
+<text x="15" y="223" font-size="8" fill="black">ELAB: __/__/____</text>
+<text x="15" y="235" font-size="8" fill="black">CAD: __/__/____</text>
 </svg>
