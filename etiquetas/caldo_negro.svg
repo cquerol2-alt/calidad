@@ -5,76 +5,32 @@
   Caldo Negro
 </text>
 <text x="15" y="80" font-size="8" font-weight="bold" fill="#333">INGREDIENTES:</text>
-<text x="15" y="92" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">C</tspan>
-<tspan fill="black">aldo </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">pescado </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">agua, </tspan>
-<tspan font-weight="bold" fill="#c00">PESCADO</tspan>
-<tspan font-weight="bold" fill="#c00">,</tspan>
-<tspan fill="black"> </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva</tspan>
+<text x="15" y="92" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">Aceite de girasol alto oleico, aceite de ajo</tspan>
 </text>
-<text x="15" y="102" font-size="7" fill="black" font-family="mono
-<tspan fill="black">virgen </tspan>
-<tspan fill="black">extra, </tspan>
-<tspan fill="black">sal, </tspan>
-<tspan font-weight="bold" fill="#c00">APIO</tspan>
-<tspan font-weight="bold" fill="#c00">,</tspan>
-<tspan fill="black"> </tspan>
-<tspan font-weight="bold" fill="#c00">CRUSTACEOS</tspan>
-<tspan font-weight="bold" fill="#c00">,</tspan>
-<tspan fill="black"> </tspan>
-<tspan font-weight="bold" fill="#c00">MOLUSCOS</tspan>
-<tspan font-weight="bold" fill="#c00">)</tspan>
-<tspan font-weight="bold" fill="#c00">,</tspan>
+<text x="15" y="102" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">(aceite de girasol alto oleico, ajo), caldo</tspan>
 </text>
-<text x="15" y="112" font-size="7" fill="black" font-family="mono
-<tspan fill="black">agua, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">girasol </tspan>
-<tspan fill="black">alto </tspan>
-<tspan fill="black">oleico, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">ajo</tspan>
+<text x="15" y="112" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">de pescado (agua, </tspan><tspan font-weight="bold" fill="#c00">PESCADO</tspan><tspan fill="black">, aceite de oliva</tspan>
 </text>
-<text x="15" y="122" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">girasol </tspan>
-<tspan fill="black">alto </tspan>
-<tspan fill="black">oleico, </tspan>
-<tspan fill="black">ajo), </tspan>
-<tspan fill="black">potenciador</tspan>
+<text x="15" y="122" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">virgen extra, sal, </tspan><tspan font-weight="bold" fill="#c00">APIO</tspan><tspan fill="black">, </tspan><tspan font-weight="bold" fill="#c00">CRUSTACEOS</tspan><tspan fill="black">,</tspan>
 </text>
-<text x="15" y="132" font-size="7" fill="black" font-family="mono
-<tspan fill="black">de </tspan>
-<tspan fill="black">sabor </tspan>
-<tspan fill="black">umami, </tspan>
-<tspan fill="black">goma </tspan>
-<tspan fill="black">xantana </tspan>
-<tspan font-weight="bold" fill="#c00">(E</tspan>
-<tspan fill="black">415), </tspan>
-<tspan fill="black">tinta </tspan>
-<tspan fill="black">de </tspan>
-<tspan font-weight="bold" fill="#c00">SEPIA</tspan>
+<text x="15" y="132" font-size="7" fill="black" font-family="monospace">
+<tspan font-weight="bold" fill="#c00">MOLUSCOS</tspan><tspan fill="black">), agua, potenciador de sabor</tspan>
 </text>
-<text x="15" y="142" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">(MOLUSCOS</tspan>
-<tspan font-weight="bold" fill="#c00">)</tspan>
+<text x="15" y="142" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">umami, goma xantana (E415), tinta de </tspan><tspan font-weight="bold" fill="#c00">SEPIA</tspan>
 </text>
-<text x="15" y="162" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
-<text x="15" y="172" font-size="7" fill="black">Refrigeracion (0-4C)</text>
-<text x="15" y="187" font-size="9" font-weight="bold" fill="black">
-  LOTE: RIA-NEGRO-150326
+<text x="15" y="152" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">(</tspan><tspan font-weight="bold" fill="#c00">MOLUSCOS</tspan><tspan fill="black">)</tspan>
 </text>
-<text x="15" y="203" font-size="8" fill="black">ELAB: 15/03/2026</text>
-<text x="15" y="215" font-size="8" fill="black">CAD: 05/04/2026</text>
+<text x="15" y="172" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
+<text x="15" y="182" font-size="7" fill="black">Refrigeracion (0-4C)</text>
+<text x="15" y="197" font-size="9" font-weight="bold" fill="black">
+  LOTE: RIA-NEGRO-DDMMAA
+</text>
+<text x="15" y="213" font-size="8" fill="black">ELAB: __/__/____</text>
+<text x="15" y="225" font-size="8" fill="black">CAD: __/__/____</text>
 </svg>
