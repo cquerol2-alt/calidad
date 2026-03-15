@@ -17,8 +17,7 @@
   <!-- Ingredient lines -->
   <g font-family="Arial,sans-serif">
   <text x="10" y="95" font-size="9" fill="#333">Pollo deshidratado, puerro deshidratado, cebolla</text>
-  <text x="10" y="108" font-size="9" fill="#333">deshidratada. Contiene <tspan fill="#c00" font-weight="bold">LECHE</tspan> (parmesano,</text>
-  <text x="10" y="121" font-size="9" fill="#333">mantequilla)</text>
+  <text x="10" y="108" font-size="9" fill="#333">deshidratada</text>
   </g>
   
   <!-- Separator -->
