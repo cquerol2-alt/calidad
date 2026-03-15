@@ -1,0 +1,183 @@
+════════════════════════════════════════════════════════════════════════════════
+SATO THERMAL LABEL PREVIEWS & HTML INTEGRATION — COMPLETION SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+
+DATE: 2026-03-15
+STATUS: ✓ COMPLETE
+
+════════════════════════════════════════════════════════════════════════════════
+PHASE 1: SVG LABEL GENERATION
+════════════════════════════════════════════════════════════════════════════════
+
+Generated 14 SVG thermal label previews from Excel data:
+  Source: /IMPRESORA PRODUCTOS INTERMEDIOS/RIA_Referencia_Etiquetas_SATO.xlsx
+  Output: /calidad/etiquetas/
+
+CALDOS (5):
+  ✓ caldo_de_pescado.svg      (3.5 KB) — Caldo de Pescado
+  ✓ caldo_de_pollo.svg         (3.2 KB) — Caldo de Pollo
+  ✓ caldo_negro.svg            (3.3 KB) — Caldo Negro
+  ✓ caldo_de_verduras.svg      (2.9 KB) — Caldo de Verduras
+  ✓ caldo_de_risotto.svg       (2.6 KB) — Caldo de Risotto
+
+SALSAS (9):
+  ✓ salsa_de_pescado.svg       (2.5 KB) — Salsa de Pescado
+  ✓ salsa_negra.svg            (2.5 KB) — Salsa Negra
+  ✓ salsa_de_verduras.svg      (2.8 KB) — Salsa de Verduras
+  ✓ salsa_de_pollo.svg         (2.7 KB) — Salsa de Pollo
+  ✓ salsa_tartufata.svg        (3.1 KB) — Salsa Tartufata
+  ✓ salsa_de_boletus.svg       (2.6 KB) — Salsa de Boletus
+  ✓ salsa_de_setas.svg         (2.6 KB) — Salsa de Setas
+  ✓ salsa_de_queso.svg         (3.2 KB) — Salsa de Queso
+  ✓ salsa_iberico.svg          (2.7 KB) — Salsa Ibérico
+
+LABEL FORMAT (SVG):
+  • Thermal printer dimensions: 400 x 800 units (40mm x 80mm portrait)
+  • White background with black text, rounded corners
+  • Sections: PRODUCTO (bold, large), INGREDIENTES (small, allergens bold+red),
+    CONSERVACIÓN, LOTE, ELAB (elaboration), CAD (expiration)
+  • Allergen highlighting: ALL CAPS allergens in bold red (#c00)
+  • Example dates: 15/03/2026 (elaboration), +21 days for expiration
+
+════════════════════════════════════════════════════════════════════════════════
+PHASE 2: HTML DIAGRAM INTEGRATION
+════════════════════════════════════════════════════════════════════════════════
+
+Updated 17 HTML diagram files with clickable label previews:
+
+CALDOS (5):
+  ✓ dark_negro.html
+  ✓ dark_pescado.html
+  ✓ dark_pollo.html
+  ✓ dark_verduras.html
+  ✓ dark_risotto.html
+
+CREMOSOS (4 — caldo + salsa):
+  ✓ dark_cremoso_iberico.html      (2 products: caldo + salsa)
+  ✓ dark_cremoso_queso.html         (2 products: caldo + salsa)
+  ✓ dark_cremoso_setas.html         (2 products: caldo + salsa)
+  ✓ dark_cremoso_tartufato.html     (2 products: caldo + salsa)
+
+SALSAS (8):
+  ✓ dark_salsa_boletus.html
+  ✓ dark_salsa_iberica.html
+  ✓ dark_salsa_negra.html
+  ✓ dark_salsa_pescado.html
+  ✓ dark_salsa_pollo.html
+  ✓ dark_salsa_queso.html
+  ✓ dark_salsa_tartufata.html
+  ✓ dark_salsa_verduras.html
+
+NOT UPDATED (no labels):
+  - dark_maestro.html              (no caldos/salsas)
+
+════════════════════════════════════════════════════════════════════════════════
+PHASE 3: INTEGRATION FEATURES
+════════════════════════════════════════════════════════════════════════════════
+
+For each updated HTML diagram:
+
+1. MODAL OVERLAY SYSTEM:
+   • Added full-screen modal (#labelModal) for displaying label previews
+   • SVG previews centered, responsive, dismissible by:
+     - Click on background
+     - Press Escape key
+     - Click × button
+
+2. LABEL BUTTONS:
+   • Added clickable "🏷️ Etiqueta" button next to each caldo/salsa node
+   • Integrated into existing node divs (class="label-btn")
+   • Styling: Gold text (#fbbf24), hover effect with background
+
+3. DATA ATTRIBUTES:
+   • Added data-etiqueta="etiquetas/[filename].svg" to product nodes
+   • Enables future cross-referencing and label tracking
+
+4. JAVASCRIPT FUNCTIONALITY:
+   • showLabel(path) — Fetch and display SVG in modal
+   • Error handling for missing labels
+   • Keyboard support (Escape to close)
+   • Proper event delegation for click handling
+
+════════════════════════════════════════════════════════════════════════════════
+FILE LOCATIONS & PATHS
+════════════════════════════════════════════════════════════════════════════════
+
+SVG LABELS:
+  /sessions/confident-cool-maxwell/mnt/calidad/etiquetas/
+
+UPDATED HTML DIAGRAMS:
+  /sessions/confident-cool-maxwell/mnt/calidad/dark_*.html
+
+GENERATION SCRIPTS:
+  /sessions/confident-cool-maxwell/mnt/calidad/generar_etiquetas.py
+  /sessions/confident-cool-maxwell/mnt/calidad/integrar_etiquetas_v3.py
+
+════════════════════════════════════════════════════════════════════════════════
+TESTING INSTRUCTIONS
+════════════════════════════════════════════════════════════════════════════════
+
+1. Open any updated HTML diagram in a browser (e.g., dark_negro.html)
+2. Locate a caldo or salsa node (green "Caldo" or gray "Salsa" boxes)
+3. Click the "🏷️ Etiqueta" button next to the node
+4. Modal should open displaying the thermal label preview
+5. Press Escape or click background to close
+
+Expected behavior:
+  ✓ SVG loads without errors
+  ✓ Label shows all sections (producto, ingredientes, conservación, dates, etc.)
+  ✓ Allergens displayed in bold red text
+  ✓ Modal closes cleanly on dismissal
+
+════════════════════════════════════════════════════════════════════════════════
+PRODUCT NAME MAPPINGS
+════════════════════════════════════════════════════════════════════════════════
+
+Excel Source Names → HTML Node Names:
+
+CALDOS:
+  Caldo de Pescado → Caldo de Pescado
+  Caldo Negro → Caldo Negro
+  Caldo de Pollo → Caldo de Pollo
+  Caldo de Verduras → Caldo de Verduras
+  Caldo de Risotto → Caldo Risotto (note: missing "de")
+
+SALSAS:
+  Salsa de Pescado → Salsa de Pescado
+  Salsa Negra → Salsa Negra
+  Salsa de Verduras → Salsa de Verduras
+  Salsa de Pollo → Salsa de Pollo
+  Salsa Tartufata → Salsa Tartufata
+  Salsa de Boletus → Salsa de Setas (HTML diagram name difference)
+  Salsa de Setas → Salsa Boletus (HTML diagram name difference)
+  Salsa de Queso → Salsa Queso (note: missing "de")
+  Salsa Iberico → Salsa Ibérico (note: HTML has accent)
+
+════════════════════════════════════════════════════════════════════════════════
+QUALITY ASSURANCE CHECKLIST
+════════════════════════════════════════════════════════════════════════════════
+
+[✓] All 14 SVG labels generated and saved
+[✓] All product data extracted from Excel correctly
+[✓] All allergens identified and marked in BOLD RED in SVGs
+[✓] All 17 diagrams updated with modal overlay
+[✓] All product nodes have label buttons
+[✓] All product nodes have data-etiqueta attributes
+[✓] Modal dismissal functionality working (Escape, click background, click ×)
+[✓] No duplicate buttons or modals in single file
+[✓] Dates correctly calculated (elaboration: today, expiration: +21 days)
+[✓] Lote prefix correctly extracted from Excel
+[✓] SVG paths are relative (etiquetas/[filename].svg)
+[✓] Dark diagram styling preserved (no visual conflicts)
+
+════════════════════════════════════════════════════════════════════════════════
+NEXT STEPS (OPTIONAL)
+════════════════════════════════════════════════════════════════════════════════
+
+1. Verify labels display correctly in all browsers (desktop + mobile)
+2. Test print preview of labels for thermal printer compatibility
+3. Add functionality to print labels directly from diagrams
+4. Archive backup of original HTML files
+5. Document label regeneration process for future updates
+
+════════════════════════════════════════════════════════════════════════════════
