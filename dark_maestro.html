@@ -120,7 +120,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
 const CURRENT_DIAG='dark_maestro.html';
 let sel=null;
-function buildTraz(id){
+function buildTraz(id, nodeEl){
   const traz=document.getElementById('pTraz');
   if(typeof CROSS_REF==='undefined'){traz.style.display='none';return;}
   let h='';
@@ -129,6 +129,10 @@ function buildTraz(id){
   if(ft){
     if(ft.url){h+=`<div style="margin-bottom:8px"><a href="${ft.url}" target="_blank" style="color:#fbbf24;text-decoration:none;font-size:12px">📄 Ficha técnica — ${ft.nombre}</a></div>`;}
     else{h+=`<div style="margin-bottom:8px;font-size:12px;color:#64748b">📄 Ficha técnica — <span style="color:#94a3b8">${ft.nombre}</span> <span style="font-size:10px">(pendiente)</span></div>`;}
+  }
+  // Etiqueta SATO link
+  if(nodeEl && nodeEl.dataset.etiqueta){
+    h+=`<div style="margin-bottom:8px"><a href="#" onclick="event.preventDefault();showLabel('${nodeEl.dataset.etiqueta}')" style="color:#fbbf24;text-decoration:none;font-size:12px">🏷️ Etiqueta producto intermedio</a></div>`;
   }
   // Presente en
   const pe=CROSS_REF.presenteEn[id];
@@ -154,7 +158,7 @@ document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
 let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
 if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
 if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
-document.getElementById('pT').innerHTML=t;buildTraz(id);P.classList.add('vis')})}); 
+document.getElementById('pT').innerHTML=t;buildTraz(id, n);P.classList.add('vis')})}); 
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
 </script>

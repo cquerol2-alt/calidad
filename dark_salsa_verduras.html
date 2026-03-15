@@ -83,7 +83,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="node n-pkg" id="mpFilm" style="left:8px;top:187px;width:188px" data-n="Film top-seal" data-c="MP51 — Adrados" data-i="LFX501T062-K59|PE Fest/PP Peel/AF|66µm, 240mm|→ Embolsado" data-v="" data-a="" data-s=""><div class="glow"></div>Film top-seal (MP51)</div>
 
 <!-- ═══════ SALSA ═══════ -->
-<div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa de Verduras" data-c="REC-SALSA-VER · Lote: L-750S-DDMMAA" data-i="Receta Salsa de Verduras (40g):|· Salsa Verduras Concentrada (MP54, prelab)|· Agua|· Agua almidonada (MP49, prelab)|" data-v="" data-a="" data-s="" data-etiqueta="etiquetas/salsa_de_verduras.svg"><div class="glow"> <span class="label-btn" onclick="showLabel('etiquetas/salsa_de_verduras.svg')">🏷️ Etiqueta</span></div>Salsa de<br>Verduras<br><span style="font-size:10px">cocción completa</span></div>
+<div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa de Verduras" data-c="REC-SALSA-VER · Lote: L-750S-DDMMAA" data-i="Receta Salsa de Verduras (40g):|· Salsa Verduras Concentrada (MP54, prelab)|· Agua|· Agua almidonada (MP49, prelab)|" data-v="" data-a="" data-s="" data-etiqueta="etiquetas/salsa_de_verduras.svg"><div class="glow"></div>Salsa de<br>Verduras<br><span style="font-size:10px">cocción completa</span></div>
 
 <!-- ═══════ EMBOLSADO ═══════ -->
 <div class="node n-env" id="bolsa" style="left:570px;top:165px;width:165px;height:75px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Embolsado 40g" data-c="Proceso de envasado en bolsa" data-i="La salsa terminada se envasa|en bolsas individuales de 40g.|Sellado y etiquetado:|· Lote producto: L-750S-DDMMAA|· 24 bolsas por caja|Control de temperatura" data-v="" data-a="" data-s=""><div class="glow"></div>Embolsado<br><span style="font-size:10px">bolsas de 40g ×24</span></div>
@@ -120,7 +120,7 @@ La salsa de verduras se embosa y se incluye<br>dentro de las cajas de Arroz Verd
 const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
 const CURRENT_DIAG='dark_salsa_verduras.html';
 let sel=null;
-function buildTraz(id){
+function buildTraz(id, nodeEl){
   const traz=document.getElementById('pTraz');
   if(typeof CROSS_REF==='undefined'){traz.style.display='none';return;}
   let h='';
@@ -129,6 +129,10 @@ function buildTraz(id){
   if(ft){
     if(ft.url){h+=`<div style="margin-bottom:8px"><a href="${ft.url}" target="_blank" style="color:#fbbf24;text-decoration:none;font-size:12px">📄 Ficha técnica — ${ft.nombre}</a></div>`;}
     else{h+=`<div style="margin-bottom:8px;font-size:12px;color:#64748b">📄 Ficha técnica — <span style="color:#94a3b8">${ft.nombre}</span> <span style="font-size:10px">(pendiente)</span></div>`;}
+  }
+  // Etiqueta SATO link
+  if(nodeEl && nodeEl.dataset.etiqueta){
+    h+=`<div style="margin-bottom:8px"><a href="#" onclick="event.preventDefault();showLabel('${nodeEl.dataset.etiqueta}')" style="color:#fbbf24;text-decoration:none;font-size:12px">🏷️ Etiqueta producto intermedio</a></div>`;
   }
   // Presente en
   const pe=CROSS_REF.presenteEn[id];
@@ -154,7 +158,7 @@ document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
 let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
 if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
 if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
-document.getElementById('pT').innerHTML=t;buildTraz(id);P.classList.add('vis')})}); 
+document.getElementById('pT').innerHTML=t;buildTraz(id, n);P.classList.add('vis')})}); 
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
 
