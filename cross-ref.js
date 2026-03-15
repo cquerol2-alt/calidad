@@ -603,28 +603,6 @@ const CROSS_REF = {
     'prepM': [
       {d: 'dark_maestro.html', p: 'Maestro', f: 'Maestro'},
     ],
-    'prod': [
-      {d: 'dark_cremoso_iberico.html', p: 'Cremoso Ibérico', f: 'All-Included'},
-      {d: 'dark_cremoso_queso.html', p: 'Cremoso Queso', f: 'All-Included'},
-      {d: 'dark_cremoso_setas.html', p: 'Cremoso Setas', f: 'All-Included'},
-      {d: 'dark_cremoso_tartufato.html', p: 'Cremoso Tartufato', f: 'All-Included'},
-      {d: 'dark_maestro.html', p: 'Maestro', f: 'Maestro'},
-      {d: 'dark_negro.html', p: 'Arroz Negro', f: 'La Santa'},
-      {d: 'dark_pescado.html', p: 'Arroz Pescado', f: 'La Santa'},
-      {d: 'dark_pollo.html', p: 'Arroz Pollo', f: 'La Santa'},
-      {d: 'dark_risotto.html', p: 'Risotto', f: 'La Santa'},
-      {d: 'dark_verduras.html', p: 'Arroz Verduras', f: 'La Santa'},
-    ],
-    'prodRis': [
-      {d: 'dark_salsa_boletus.html', p: 'Salsa Boletus', f: 'Salsas'},
-      {d: 'dark_salsa_iberica.html', p: 'Salsa Ibérico', f: 'Salsas'},
-      {d: 'dark_salsa_negra.html', p: 'Salsa Negra', f: 'Salsas'},
-      {d: 'dark_salsa_pescado.html', p: 'Salsa Pescado', f: 'Salsas'},
-      {d: 'dark_salsa_pollo.html', p: 'Salsa Pollo', f: 'Salsas'},
-      {d: 'dark_salsa_queso.html', p: 'Salsa Queso', f: 'Salsas'},
-      {d: 'dark_salsa_tartufata.html', p: 'Salsa Tartufata', f: 'Salsas'},
-      {d: 'dark_salsa_verduras.html', p: 'Salsa Verduras', f: 'Salsas'},
-    ],
     'salIb': [
       {d: 'dark_cremoso_iberico.html', p: 'Cremoso Ibérico', f: 'All-Included'},
     ],
@@ -636,16 +614,6 @@ const CROSS_REF = {
     ],
     'salTar': [
       {d: 'dark_cremoso_tartufato.html', p: 'Cremoso Tartufato', f: 'All-Included'},
-    ],
-    'salsa': [
-      {d: 'dark_salsa_boletus.html', p: 'Salsa Boletus', f: 'Salsas'},
-      {d: 'dark_salsa_iberica.html', p: 'Salsa Ibérico', f: 'Salsas'},
-      {d: 'dark_salsa_negra.html', p: 'Salsa Negra', f: 'Salsas'},
-      {d: 'dark_salsa_pescado.html', p: 'Salsa Pescado', f: 'Salsas'},
-      {d: 'dark_salsa_pollo.html', p: 'Salsa Pollo', f: 'Salsas'},
-      {d: 'dark_salsa_queso.html', p: 'Salsa Queso', f: 'Salsas'},
-      {d: 'dark_salsa_tartufata.html', p: 'Salsa Tartufata', f: 'Salsas'},
-      {d: 'dark_salsa_verduras.html', p: 'Salsa Verduras', f: 'Salsas'},
     ],
   },
 
