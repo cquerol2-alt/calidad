@@ -556,7 +556,7 @@ const CROSS_REF = {
     'mpAromaJamon': {nombre: 'Aroma de jamón', proveedor: 'Givaudan', url: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq'},
     'mpAromaQue': {nombre: 'Aroma de queso', proveedor: 'Givaudan', url: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq'},
     'mpAromaQueso': {nombre: 'Aroma de queso', proveedor: 'Givaudan', url: 'https://drive.google.com/drive/folders/1HGKb1KAwa8EdQind601XHifbxwpopFnq'},
-    'mpBand': {nombre: 'Bandeja EOS-50', proveedor: 'Sarabia', url: ''},
+    'mpBand': {nombre: 'Bandeja EOS-50', proveedor: 'Sarabia', url: 'https://drive.google.com/file/d/11bHMMjNOQ9aLh5bb-EVWCO1YBYERoCDT/view'},
     'mpCMC': {nombre: 'CMC (carboximetilcelulosa)', proveedor: 'Dalmau', url: 'https://drive.google.com/file/d/1IsVh7rn5T98gSZDVzB3vx2ntk-8kkksL/view'},
     'mpCaldoPescado': {nombre: 'Caldo Pescado prelab.', proveedor: 'Aneto', url: 'https://drive.google.com/file/d/18TBLtfQ4ik1TH0Y6cji1UCboLKAWNeSo/view'},
     'mpCaldoPollo': {nombre: 'Caldo Pollo prelab.', proveedor: 'Caldos Paeller', url: 'https://drive.google.com/file/d/1wD0-WMNzNnBYgsb5th9b4KKZZgjfJh98/view'},
