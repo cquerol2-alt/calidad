@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="800" viewBox="0 0 400 800" xmlns="http://www.w3.org/2000/svg">
+<rect width="400" height="800" fill="white" stroke="#333" stroke-width="2" rx="8"/>
+<text x="200" y="30" font-size="28" font-weight="bold" text-anchor="middle" fill="black">
+  Salsa de Setas
+</text>
+<text x="15" y="80" font-size="8" font-weight="bold" fill="#333">INGREDIENTES:</text>
+<text x="15" y="92" font-size="7" fill="black" font-family="mono
+<tspan font-weight="bold" fill="#c00">A</tspan>
+<tspan fill="black">gua, </tspan>
+<tspan fill="black">aceite </tspan>
+<tspan fill="black">de </tspan>
+<tspan fill="black">girasol, </tspan>
+<tspan fill="black">mantequilla </tspan>
+<tspan font-weight="bold" fill="#c00">(LECHE</tspan>
+<tspan font-weight="bold" fill="#c00">)</tspan>
+<tspan font-weight="bold" fill="#c00">,</tspan>
+</text>
+<text x="15" y="102" font-size="7" fill="black" font-family="mono
+<tspan fill="black">queso </tspan>
+<tspan fill="black">parmesano </tspan>
+<tspan font-weight="bold" fill="#c00">(LECHE</tspan>
+<tspan font-weight="bold" fill="#c00">)</tspan>
+<tspan font-weight="bold" fill="#c00">,</tspan>
+<tspan fill="black"> </tspan>
+<tspan fill="black">boletus </tspan>
+<tspan fill="black">seco, </tspan>
+<tspan fill="black">cebolla</tspan>
+</text>
+<text x="15" y="112" font-size="7" fill="black" font-family="mono
+<tspan fill="black">deshidratada, </tspan>
+<tspan fill="black">potenciador </tspan>
+<tspan fill="black">de </tspan>
+<tspan fill="black">sabor </tspan>
+<tspan fill="black">umami, </tspan>
+<tspan fill="black">goma</tspan>
+</text>
+<text x="15" y="122" font-size="7" fill="black" font-family="mono
+<tspan fill="black">xantana </tspan>
+<tspan font-weight="bold" fill="#c00">(E</tspan>
+<tspan fill="black">415), </tspan>
+<tspan fill="black">sal, </tspan>
+<tspan fill="black">colorante </tspan>
+<tspan fill="black">hazelnut, </tspan>
+<tspan fill="black">vino</tspan>
+</text>
+<text x="15" y="132" font-size="7" fill="black" font-family="mono
+<tspan fill="black">blanco </tspan>
+<tspan font-weight="bold" fill="#c00">(</tspan>
+<tspan fill="black">contiene </tspan>
+<tspan font-weight="bold" fill="#c00">SULFITOS</tspan>
+<tspan font-weight="bold" fill="#c00">)</tspan>
+</text>
+<text x="15" y="152" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
+<text x="15" y="162" font-size="7" fill="black">Refrigeracion (0-4C)</text>
+<text x="15" y="177" font-size="9" font-weight="bold" fill="black">
+  LOTE: RIA-SALSA-SETAS-150326
+</text>
+<text x="15" y="193" font-size="8" fill="black">ELAB: 15/03/2026</text>
+<text x="15" y="205" font-size="8" fill="black">CAD: 05/04/2026</text>
+</svg>

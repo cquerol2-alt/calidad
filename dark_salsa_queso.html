@@ -112,7 +112,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="node n-pkg" id="mpFilm" style="left:8px;top:137px;width:0;height:0;opacity:0" data-n="Film top-seal" data-c="MP51" data-i="Film" data-v="" data-a="" data-s=""><div class="glow"></div></div>
 
 <!-- ═══════ SALSA ═══════ -->
-<div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa de Queso" data-c="REC-SALSA-QUE · Lote: L-759-DDMMAA" data-i="Receta Salsa de Queso (75g):|· Agua|· Xantana (MP07): 4g|· Umami (MP06): 16g|· Jerez (MP65) (SULFITOS)|· CMC (MP61)|· Sal (MP37): 4g|· Aroma queso (MP69)|· Grasa pollo (MP66): 22g|· Aceite girasol (MP04): 149g|· Nata (MP63) (LECHE)|· Mantequilla (MP13) (LECHE)|· Queso azul (MP73) (LECHE)|Alérgenos: LECHE SULFITOS" data-v="" data-a="LECHE SULFITOS" data-s=""><div class="glow"></div>Salsa de<br>Queso<br><span style="font-size:10px">cocción completa</span></div>
+<div class="node n-sal" id="salsa" style="left:370px;top:120px;width:150px;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Salsa de Queso" data-c="REC-SALSA-QUE · Lote: L-759-DDMMAA" data-i="Receta Salsa de Queso (75g):|· Agua|· Xantana (MP07): 4g|· Umami (MP06): 16g|· Jerez (MP65) (SULFITOS)|· CMC (MP61)|· Sal (MP37): 4g|· Aroma queso (MP69)|· Grasa pollo (MP66): 22g|· Aceite girasol (MP04): 149g|· Nata (MP63) (LECHE)|· Mantequilla (MP13) (LECHE)|· Queso azul (MP73) (LECHE)|Alérgenos: LECHE SULFITOS" data-v="" data-a="LECHE SULFITOS" data-s="" data-etiqueta="etiquetas/salsa_de_queso.svg"><div class="glow"> <span class="label-btn" onclick="showLabel('etiquetas/salsa_de_queso.svg')">🏷️ Etiqueta</span></div>Salsa de<br>Queso<br><span style="font-size:10px">cocción completa</span></div>
 
 <!-- ═══════ EMBOLSADO ═══════ -->
 <div class="node n-env" id="bolsa" style="left:570px;top:165px;width:165px;height:75px;display:flex;align-items:center;justify-content:center;flex-direction:column" data-n="Embolsado 75g" data-c="Proceso de envasado en bolsa" data-i="La salsa terminada se envasa|en bolsas individuales de 75g.|Sellado y etiquetado:|· Lote producto: L-759-DDMMAA|· 24 bolsas por caja|Control de temperatura" data-v="" data-a="" data-s=""><div class="glow"></div>Embolsado<br><span style="font-size:10px">bolsas de 75g ×24</span></div>
@@ -188,5 +188,111 @@ document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
 
 </script>
+
+<!-- LABEL MODAL OVERLAY -->
+<div id="labelModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center">
+  <div style="position:relative;background:white;padding:20px;border-radius:12px;max-width:600px;width:90%;max-height:80vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.5)">
+    <button onclick="document.getElementById('labelModal').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:24px;cursor:pointer;color:#666">×</button>
+    <div id="labelContent" style="margin-top:30px"></div>
+  </div>
+</div>
+
+<style>
+#labelModal { display: flex !important; }
+.label-button {
+  font-size: 14px;
+  cursor: pointer;
+  color: #fbbf24;
+  text-decoration: underline;
+  margin-left: 8px;
+}
+.label-button:hover { color: #fcd34d; }
+</style>
+
+<script>
+function showLabel(etiquetaPath) {
+  const modal = document.getElementById('labelModal');
+  const content = document.getElementById('labelContent');
+  fetch(etiquetaPath)
+    .then(r => r.text())
+    .then(svg => {
+      content.innerHTML = svg;
+      modal.style.display = 'flex';
+    })
+    .catch(err => {
+      content.innerHTML = '<p style="color:red">Error loading label: ' + err + '</p>';
+      modal.style.display = 'flex';
+    });
+}
+
+// Close modal on background click
+document.getElementById('labelModal').addEventListener('click', function(e) {
+  if (e.target === this) this.style.display = 'none';
+});
+</script>
+
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- SATO LABEL MODAL OVERLAY                                         -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div id="labelModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center">
+  <div style="position:relative;background:white;padding:30px;border-radius:12px;max-width:650px;width:95%;max-height:90vh;overflow:auto;box-shadow:0 15px 50px rgba(0,0,0,0.7)">
+    <button id="labelClose" onclick="document.getElementById('labelModal').style.display='none'" style="position:absolute;top:12px;right:15px;background:none;border:none;font-size:28px;cursor:pointer;color:#999;font-weight:300">×</button>
+    <div id="labelContent" style="margin-top:20px;text-align:center"></div>
+  </div>
+</div>
+
+<style>
+#labelModal { display: flex !important; }
+.label-btn {
+  display: inline-block;
+  font-size: 13px;
+  cursor: pointer;
+  color: #fbbf24;
+  text-decoration: none;
+  margin-left: 6px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.label-btn:hover {
+  color: #fcd34d;
+  background: rgba(251, 191, 36, 0.1);
+}
+</style>
+
+<script>
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('labelModal').style.display = 'none';
+  }
+});
+
+function showLabel(etiquetaPath) {
+  const modal = document.getElementById('labelModal');
+  const content = document.getElementById('labelContent');
+
+  fetch(etiquetaPath)
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(svg => {
+      content.innerHTML = svg;
+      modal.style.display = 'flex';
+    })
+    .catch(err => {
+      content.innerHTML = '<p style="color:#c00;font-size:14px">⚠ Error loading label: ' + err.message + '</p>';
+      modal.style.display = 'flex';
+    });
+}
+
+document.getElementById('labelModal').addEventListener('click', function(e) {
+  if (e.target === this || e.target.id === 'labelClose') {
+    this.style.display = 'none';
+  }
+});
+</script>
+
 </body>
 </html>
