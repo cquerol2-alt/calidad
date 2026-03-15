@@ -5,76 +5,41 @@
   Caldo de Pollo
 </text>
 <text x="15" y="80" font-size="8" font-weight="bold" fill="#333">INGREDIENTES:</text>
-<text x="15" y="92" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">C</tspan>
-<tspan fill="black">aldo </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">pollo </tspan>
-<tspan font-weight="bold" fill="#c00">P</tspan>
-<tspan fill="black">aeller </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">agua, </tspan>
-<tspan fill="black">carne </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">pollo, </tspan>
-<tspan fill="black">sal,</tspan>
+<text x="15" y="92" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">Aceite de ajo (aceite de girasol alto oleico,</tspan>
 </text>
-<text x="15" y="102" font-size="7" fill="black" font-family="mono
-<tspan fill="black">especias), </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">ajo </tspan>
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">girasol </tspan>
-<tspan fill="black">alto</tspan>
+<text x="15" y="102" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">ajo), aceite de oliva virgen extra, caldo de</tspan>
 </text>
-<text x="15" y="112" font-size="7" fill="black" font-family="mono
-<tspan fill="black">oleico, </tspan>
-<tspan fill="black">ajo), </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva </tspan>
-<tspan fill="black">virgen </tspan>
-<tspan fill="black">extra, </tspan>
-<tspan fill="black">aceite</tspan>
+<text x="15" y="112" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">pollo Paeller (agua, carne de pollo, sal,</tspan>
 </text>
-<text x="15" y="122" font-size="7" fill="black" font-family="mono
-<tspan fill="black">de </tspan>
-<tspan fill="black">girasol </tspan>
-<tspan fill="black">alto </tspan>
-<tspan fill="black">oleico, </tspan>
-<tspan fill="black">grasa </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">pollo, </tspan>
-<tspan fill="black">salmorreta</tspan>
+<text x="15" y="122" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">especias), aceite de girasol alto oleico,</tspan>
 </text>
-<text x="15" y="132" font-size="7" fill="black" font-family="mono
-<tspan font-weight="bold" fill="#c00">(</tspan>
-<tspan fill="black">ajo, </tspan>
-<tspan fill="black">aceite </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">oliva, </tspan>
-<tspan fill="black">nora, </tspan>
-<tspan fill="black">tomate </tspan>
-<tspan fill="black">deshidratado),</tspan>
+<text x="15" y="132" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">salmorreta (ajo, tomate deshidratado (tomate,</tspan>
 </text>
-<text x="15" y="142" font-size="7" fill="black" font-family="mono
-<tspan fill="black">potenciador </tspan>
-<tspan fill="black">de </tspan>
-<tspan fill="black">sabor </tspan>
-<tspan fill="black">umami, </tspan>
-<tspan fill="black">goma </tspan>
-<tspan fill="black">xantana </tspan>
-<tspan font-weight="bold" fill="#c00">(E</tspan>
-<tspan fill="black">415),</tspan>
+<text x="15" y="142" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">antiapelmazante: E551), carne de ñora, aceite</tspan>
 </text>
-<text x="15" y="162" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
-<text x="15" y="172" font-size="7" fill="black">Refrigeracion (0-4C)</text>
-<text x="15" y="187" font-size="9" font-weight="bold" fill="black">
-  LOTE: RIA-POLLO-150326
+<text x="15" y="152" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">de girasol, aceite de oliva), potenciador de</tspan>
 </text>
-<text x="15" y="203" font-size="8" fill="black">ELAB: 15/03/2026</text>
-<text x="15" y="215" font-size="8" fill="black">CAD: 05/04/2026</text>
+<text x="15" y="162" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">sabor umami, goma xantana (E415), colorante</tspan>
+</text>
+<text x="15" y="172" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">hazelnut (contiene </tspan><tspan font-weight="bold" fill="#c00">SULFITOS</tspan><tspan fill="black">), agua de</tspan>
+</text>
+<text x="15" y="182" font-size="7" fill="black" font-family="monospace">
+<tspan fill="black">azafran (agua, azafran)</tspan>
+</text>
+<text x="15" y="202" font-size="8" font-weight="bold" fill="#333">CONSERVACIÓN:</text>
+<text x="15" y="212" font-size="7" fill="black">Refrigeracion (0-4C)</text>
+<text x="15" y="227" font-size="9" font-weight="bold" fill="black">
+  LOTE: RIA-POLLO-DDMMAA
+</text>
+<text x="15" y="243" font-size="8" fill="black">ELAB: __/__/____</text>
+<text x="15" y="255" font-size="8" fill="black">CAD: __/__/____</text>
 </svg>
