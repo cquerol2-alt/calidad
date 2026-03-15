@@ -1,0 +1,522 @@
+================================================================================
+EXTENDED AUDIT REPORT: HTML vs Excel Ingredient Mapping
+================================================================================
+
+Excel ingredient codes: 45
+HTML ingredient codes: 45
+Total unique nodes: 93
+
+MP codes in Excel but NOT in HTML: 4
+  MP26: Arroz Marisma
+  MP52: Etiqueta producto
+  MP56: Bandeja Bulk GN1225
+  MP68: Aroma de setas
+
+MP codes in HTML but NOT in Excel: 4
+  MP43
+  MP46
+  MP49
+  MP54
+
+
+All unique nodes:
+
+MP Ingredient nodes:
+  mp01: MP01 - MP01 — Aneto
+    Found in 2 diagrams:
+      • dark_negro.html
+      • dark_pescado.html
+  mp03: MP03 - MP03
+    Found in 1 diagrams:
+      • dark_pollo.html
+  mp04: MP04 - MP04 — Coreysa
+    Found in 10 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_salsa_boletus.html
+      • dark_verduras.html
+  mp05: MP05 - MP05 — AOVE
+    Found in 2 diagrams:
+      • dark_pollo.html
+      • dark_verduras.html
+  mp06: MP06 - MP06 — Givaudan
+    Found in 11 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_maestro.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_salsa_boletus.html
+      • dark_verduras.html
+  mp07: MP07 - MP07 — Corquimia
+    Found in 10 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_salsa_boletus.html
+      • dark_verduras.html
+  mp08: MP08 - MP08
+    Found in 1 diagrams:
+      • dark_negro.html
+  mp09: MP09 - MP09 — Sensient
+    Found in 11 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_maestro.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_salsa_boletus.html
+      • dark_verduras.html
+  mp10: MP10 - MP10 — Coato
+    Found in 2 diagrams:
+      • dark_pescado.html
+      • dark_verduras.html
+  mp11: MP11 - MP11
+    Found in 1 diagrams:
+      • dark_verduras.html
+  mp12: MP12 - MP12
+    Found in 1 diagrams:
+      • dark_risotto.html
+  mp13: MP13 - MP13 — Presidente
+    Found in 5 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_risotto.html
+  mp19: MP19 - MP19 — Verdú Cantó
+    Found in 4 diagrams:
+      • dark_maestro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_verduras.html
+  mp21: MP21 - MP21 — Honza
+    Found in 1 diagrams:
+      • dark_salsa_boletus.html
+  mp22: MP22 - MP22 — Honza
+    Found in 1 diagrams:
+      • dark_cremoso_setas.html
+  mp23: MP23 - MP23 — Solchem
+    Found in 1 diagrams:
+      • dark_cremoso_tartufato.html
+  mp31: MP31 - MP31 — Rajope
+    Found in 1 diagrams:
+      • dark_pescado.html
+  mp33: MP33 - MP33 — La Margarita
+    Found in 4 diagrams:
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_verduras.html
+  mp34: MP34 - MP34
+    Found in 2 diagrams:
+      • dark_risotto.html
+      • dark_verduras.html
+  mp35: MP35 - MP35 — Ugeave
+    Found in 8 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+  mp36: MP36 - MP36
+    Found in 2 diagrams:
+      • dark_risotto.html
+      • dark_verduras.html
+  mp38: MP38 - MP38 — Dalmau
+    Found in 2 diagrams:
+      • dark_maestro.html
+      • dark_risotto.html
+  mp39: MP39 - MP39
+    Found in 1 diagrams:
+      • dark_risotto.html
+  mp52: MP39 - MP39 — Azucarera
+    Found in 1 diagrams:
+      • dark_maestro.html
+  mp53: MP37 - MP37
+    Found in 1 diagrams:
+      • dark_maestro.html
+  mp65: MP65 - MP65 — Barbadillo
+    Found in 1 diagrams:
+      • dark_salsa_boletus.html
+  mp66: MP66 - MP66 — Ugeave
+    Found in 1 diagrams:
+      • dark_salsa_boletus.html
+  mp73: MP73 - MP73 — Givaudan
+    Found in 1 diagrams:
+      • dark_cremoso_queso.html
+  mpAceite: MP04 - MP04 — Coreysa
+    Found in 3 diagrams:
+      • dark_salsa_iberica.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+  mpAceiteTrufado: MP67 - MP67
+    Found in 1 diagrams:
+      • dark_salsa_tartufata.html
+  mpAguaAlmidonada: MP49 - MP49 — Prelab
+    Found in 1 diagrams:
+      • dark_salsa_verduras.html
+  mpAjo: MP40 - MP40 — Ajopel
+    Found in 9 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_verduras.html
+  mpAromaJamon: MP70 - MP70
+    Found in 1 diagrams:
+      • dark_salsa_iberica.html
+  mpAromaQue: MP69 - MP69 — Givaudan
+    Found in 1 diagrams:
+      • dark_cremoso_queso.html
+  mpAromaQueso: MP69 - MP69
+    Found in 1 diagrams:
+      • dark_salsa_queso.html
+  mpArr: MP24 - MP24 — Arrocera del Pirineo
+    Found in 10 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_maestro.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_verduras.html
+  mpBand: MP50 - MP50 — Sarabia
+    Found in 10 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_maestro.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_verduras.html
+  mpCMC: MP61 - MP61
+    Found in 2 diagrams:
+      • dark_salsa_iberica.html
+      • dark_salsa_queso.html
+  mpCeb: MP34 - MP34 — Vegenat
+    Found in 2 diagrams:
+      • dark_salsa_boletus.html
+      • dark_salsa_tartufata.html
+  mpCur: MP41 - MP41 — Ajopel
+    Found in 1 diagrams:
+      • dark_pescado.html
+  mpFilm: MP51 - MP51 — Adrados
+    Found in 18 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_maestro.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_salsa_boletus.html
+      • dark_salsa_iberica.html
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+      • dark_salsa_verduras.html
+      • dark_verduras.html
+  mpGraPollo: MP66 - MP66 — Ugeave
+    Found in 1 diagrams:
+      • dark_cremoso_queso.html
+  mpGrasaPollo: MP66 - MP66 — Ugeave
+    Found in 3 diagrams:
+      • dark_salsa_iberica.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+  mpHazelnut: MP09 - MP09 — Sensient
+    Found in 2 diagrams:
+      • dark_salsa_pollo.html
+      • dark_salsa_tartufata.html
+  mpJamon: MP20 - MP20 — Enrique Tomás
+    Found in 1 diagrams:
+      • dark_cremoso_iberico.html
+  mpJerez: MP65 - MP65 — Barbadillo
+    Found in 1 diagrams:
+      • dark_salsa_queso.html
+  mpMant: MP13 - MP13 — Presidente
+    Found in 3 diagrams:
+      • dark_salsa_boletus.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+  mpManzanilla: MP65 - MP65 — Barbadillo
+    Found in 1 diagrams:
+      • dark_salsa_iberica.html
+  mpNata: MP63 - MP63
+    Found in 2 diagrams:
+      • dark_salsa_iberica.html
+      • dark_salsa_queso.html
+  mpParm: MP14 - MP14
+    Found in 2 diagrams:
+      • dark_salsa_boletus.html
+      • dark_salsa_tartufata.html
+  mpQuesoAzul: MP73 - MP73
+    Found in 1 diagrams:
+      • dark_salsa_queso.html
+  mpSal: MP37 - MP37
+    Found in 16 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_salsa_boletus.html
+      • dark_salsa_iberica.html
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+      • dark_verduras.html
+  mpSalmorreta: MP43 - MP43 — Prelab
+    Found in 3 diagrams:
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+  mpSalsaVerd: MP54 - MP54 — Prelab
+    Found in 1 diagrams:
+      • dark_salsa_verduras.html
+  mpTinta: MP08 - MP08
+    Found in 1 diagrams:
+      • dark_salsa_negra.html
+  mpUmami: MP06 - MP06 — Givaudan
+    Found in 4 diagrams:
+      • dark_salsa_iberica.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+  mpVino: MP65 - MP65 — Barbadillo
+    Found in 1 diagrams:
+      • dark_salsa_tartufata.html
+  mpXantana: MP07 - MP07 — Corquimia
+    Found in 3 diagrams:
+      • dark_salsa_iberica.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+  preAjoM: MP46 - PRELAB-AJO · MP46
+    Found in 1 diagrams:
+      • dark_maestro.html
+
+Other process nodes:
+  bolsa: Proceso de envasado en bolsa
+    Found in 8 diagrams:
+      • dark_salsa_boletus.html
+      • dark_salsa_iberica.html
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+      • dark_salsa_verduras.html
+  cajaRis: 24 unidades/caja
+    Found in 8 diagrams:
+      • dark_salsa_boletus.html
+      • dark_salsa_iberica.html
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+      • dark_salsa_verduras.html
+  calN: REC-CALDO-002 · RIA-NEGRO
+    Found in 1 diagrams:
+      • dark_negro.html
+  calP: REC-CALDO-001 · RIA-PESCADO
+    Found in 1 diagrams:
+      • dark_pescado.html
+  calPo: REC-CALDO-003 · RIA-POLLO
+    Found in 1 diagrams:
+      • dark_pollo.html
+  calR: REC-CALDO-005 · RIA-RISOTTO
+    Found in 5 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_risotto.html
+  calV: REC-CALDO-004 · RIA-VERDURAS
+    Found in 1 diagrams:
+      • dark_verduras.html
+  jarP: JARRA-PESC
+    Found in 3 diagrams:
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+  jarR: JARRA-RISOTTO
+    Found in 5 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_risotto.html
+  jarV: JARRA-VERD
+    Found in 1 diagrams:
+      • dark_verduras.html
+  mezJ: MEZCLA-JNORMAL
+    Found in 4 diagrams:
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_verduras.html
+  mezJM: MEZCLA-JMAESTRO
+    Found in 1 diagrams:
+      • dark_maestro.html
+  mezJR: MEZCLA-JRISOTTO
+    Found in 4 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+  mezR: MEZCLA-JRISOTTO
+    Found in 1 diagrams:
+      • dark_risotto.html
+  mpAg: Agua potable
+    Found in 11 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_maestro.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_salsa_boletus.html
+      • dark_verduras.html
+  mpAgua: Agua potable
+    Found in 5 diagrams:
+      • dark_salsa_iberica.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+  mpAgua1: Agua potable
+    Found in 1 diagrams:
+      • dark_salsa_verduras.html
+  mpCaldoPescado: RIA-PESCADO — Prelab
+    Found in 2 diagrams:
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+  mpCaldoPollo: RIA-POLLO — Prelab
+    Found in 1 diagrams:
+      • dark_salsa_pollo.html
+  mpPimienta: Especia
+    Found in 1 diagrams:
+      • dark_salsa_queso.html
+  preAjo: PRELAB-AJO
+    Found in 9 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_verduras.html
+  preAz: PRELAB-AZAFRAN-P
+    Found in 4 diagrams:
+      • dark_maestro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_verduras.html
+  preNora: PRELAB-NORA
+    Found in 1 diagrams:
+      • dark_pescado.html
+  prePR: PRELAB-PESR
+    Found in 1 diagrams:
+      • dark_risotto.html
+  prePV: PRELAB-PESV
+    Found in 1 diagrams:
+      • dark_verduras.html
+  preSalm: PRELAB-SALM
+    Found in 2 diagrams:
+      • dark_pollo.html
+      • dark_verduras.html
+  prepM: PRELAB-MAESTRO
+    Found in 1 diagrams:
+      • dark_maestro.html
+  prod: Familia Cremosos · Código 781
+    Found in 10 diagrams:
+      • dark_cremoso_iberico.html
+      • dark_cremoso_queso.html
+      • dark_cremoso_setas.html
+      • dark_cremoso_tartufato.html
+      • dark_maestro.html
+      • dark_negro.html
+      • dark_pescado.html
+      • dark_pollo.html
+      • dark_risotto.html
+      • dark_verduras.html
+  prodRis: Risotto/Cremosos · 24 uds
+    Found in 8 diagrams:
+      • dark_salsa_boletus.html
+      • dark_salsa_iberica.html
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+      • dark_salsa_verduras.html
+  salIb: REC-SALSA-IBERICO
+    Found in 1 diagrams:
+      • dark_cremoso_iberico.html
+  salQue: REC-SALSA-QUE
+    Found in 1 diagrams:
+      • dark_cremoso_queso.html
+  salSet: REC-SALSA-SET
+    Found in 1 diagrams:
+      • dark_cremoso_setas.html
+  salTar: REC-SALSA-TAR
+    Found in 1 diagrams:
+      • dark_cremoso_tartufato.html
+  salsa: REC-SALSA-SET · Lote: L-742S-DDMMAA
+    Found in 8 diagrams:
+      • dark_salsa_boletus.html
+      • dark_salsa_iberica.html
+      • dark_salsa_negra.html
+      • dark_salsa_pescado.html
+      • dark_salsa_pollo.html
+      • dark_salsa_queso.html
+      • dark_salsa_tartufata.html
+      • dark_salsa_verduras.html

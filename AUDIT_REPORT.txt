@@ -1,0 +1,22 @@
+================================================================================
+COMPREHENSIVE AUDIT REPORT: Presente En Data
+Excel Master vs cross-ref.js vs HTML Diagrams
+Generated: 2026-03-15
+================================================================================
+
+SOURCES:
+  Excel: /sessions/confident-cool-maxwell/mnt/Documentos--Calidad/RIA_Datos_Maestros_v2.xlsx
+  Cross-ref: /sessions/confident-cool-maxwell/mnt/calidad/cross-ref.js
+  HTML dir: /sessions/confident-cool-maxwell/mnt/calidad
+
+STATISTICS:
+  Excel ingredients: 45
+  Excel products: 26
+  Node IDs in HTML: 93
+  Node IDs in presenteEn: 92
+  Total discrepancies: 1
+
+1. MISSING IN presenteEn (1 items)
+   Ingredients in HTML but NOT in cross-ref.js:
+   - mpArr: ['dark_cremoso_iberico.html', 'dark_cremoso_queso.html', 'dark_cremoso_setas.html', 'dark_cremoso_tartufato.html', 'dark_maestro.html', 'dark_negro.html', 'dark_pescado.html', 'dark_pollo.html', 'dark_risotto.html', 'dark_verduras.html']
+
