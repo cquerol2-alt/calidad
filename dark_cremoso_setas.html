@@ -186,7 +186,7 @@ function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEa
 </div>
 
 <style>
-#labelModal { display: flex !important; }
+#labelModal.visible { display: flex !important; }
 .label-btn {
   display: inline-block;
   font-size: 13px;
@@ -207,7 +207,7 @@ function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEa
 <script>
 window.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    document.getElementById('labelModal').style.display = 'none';
+    document.getElementById('labelModal').classList.remove('visible');
   }
 });
 
@@ -222,17 +222,17 @@ function showLabel(etiquetaPath) {
     })
     .then(svg => {
       content.innerHTML = svg;
-      modal.style.display = 'flex';
+      modal.classList.add('visible');
     })
     .catch(err => {
       content.innerHTML = '<p style="color:#c00;font-size:14px">⚠ Error loading label: ' + err.message + '</p>';
-      modal.style.display = 'flex';
+      modal.classList.add('visible');
     });
 }
 
 document.getElementById('labelModal').addEventListener('click', function(e) {
   if (e.target === this || e.target.id === 'labelClose') {
-    this.style.display = 'none';
+    this.classList.remove('visible');
   }
 });
 </script>
