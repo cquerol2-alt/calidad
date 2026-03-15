@@ -107,7 +107,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 <div class="node n-pre" id="jarP" style="left:290px;top:310px;width:200px" data-n="Jarra de Pescado" data-c="JARRA-PESC" data-i="Lote: RIA-JARRA-PESC-DDMMAA|Pollo deshidratado: 1800g|Espinaca deshidratada: 490g" data-v="" data-a="" data-s=""><div class="glow"></div>Jarra Pescado<br><span style="font-size:10px">1800g pollo + 490g espinaca</span></div>
 
 <!-- ═══ CALDO ═══ -->
-<div class="node n-cal" id="calN" style="left:590px;top:110px;width:200px;font-size:15px" data-n="Caldo Negro" data-c="REC-CALDO-002 · RIA-NEGRO" data-i="Rendimiento: 25L|· Caldo Aneto 13,5L|· Aceite girasol 5000ml|· Aceite de Ajo 800ml|· Umami 120g|· Xantana 10g|· Tinta sepia 1400g|· Agua 5,5L" data-v="" data-a="PESCADO APIO CRUSTÁCEOS MOLUSCOS" data-s="" data-etiqueta="etiquetas/caldo_negro.svg"><div class="glow"> <span class="label-btn" onclick="showLabel('etiquetas/caldo_negro.svg')">🏷️ Etiqueta</span></div>Caldo Negro</div>
+<div class="node n-cal" id="calN" style="left:590px;top:110px;width:200px;font-size:15px" data-n="Caldo Negro" data-c="REC-CALDO-002 · RIA-NEGRO" data-i="Rendimiento: 25L|· Caldo Aneto 13,5L|· Aceite girasol 5000ml|· Aceite de Ajo 800ml|· Umami 120g|· Xantana 10g|· Tinta sepia 1400g|· Agua 5,5L" data-v="" data-a="PESCADO APIO CRUSTÁCEOS MOLUSCOS" data-s="" data-etiqueta="etiquetas/caldo_negro.svg"><div class="glow"></div>Caldo Negro</div>
 
 <!-- ═══ PRODUCTO FINAL ═══ -->
 <div class="node n-prod" id="prod" style="left:870px;top:130px;width:195px;height:100px;display:flex;align-items:center;justify-content:center" data-n="ARROZ NEGRO" data-c="La Santa · Código 740" data-i="Lote: L-740-AAMMDD|En producción se mezcla:|· Arroz Maratelli (MP24, Lote: 26Y04)|· Agua (en mezcla jarra)|· Caldo Negro|· Mezcla Jarra Normal (líquido)|· Jarra Pescado (polvos)|· Sal (MP37)|Formatos: 260g (24 uds/caja), 1330g (6 uds/caja)" data-v="" data-a="PESCADO MOLUSCOS CRUSTÁCEOS APIO" data-s=""><div class="glow"></div>ARROZ<br>NEGRO</div>
@@ -130,7 +130,7 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 const ns=document.querySelectorAll('.node'),ls=document.querySelectorAll('.ln'),P=document.getElementById('P');
 const CURRENT_DIAG='dark_negro.html';
 let sel=null;
-function buildTraz(id){
+function buildTraz(id, nodeEl){
   const traz=document.getElementById('pTraz');
   if(typeof CROSS_REF==='undefined'){traz.style.display='none';return;}
   let h='';
@@ -139,6 +139,10 @@ function buildTraz(id){
   if(ft){
     if(ft.url){h+=`<div style="margin-bottom:8px"><a href="${ft.url}" target="_blank" style="color:#fbbf24;text-decoration:none;font-size:12px">📄 Ficha técnica — ${ft.nombre}</a></div>`;}
     else{h+=`<div style="margin-bottom:8px;font-size:12px;color:#64748b">📄 Ficha técnica — <span style="color:#94a3b8">${ft.nombre}</span> <span style="font-size:10px">(pendiente)</span></div>`;}
+  }
+  // Etiqueta SATO link
+  if(nodeEl && nodeEl.dataset.etiqueta){
+    h+=`<div style="margin-bottom:8px"><a href="#" onclick="event.preventDefault();showLabel('${nodeEl.dataset.etiqueta}')" style="color:#fbbf24;text-decoration:none;font-size:12px">🏷️ Etiqueta producto intermedio</a></div>`;
   }
   // Presente en
   const pe=CROSS_REF.presenteEn[id];
@@ -164,7 +168,7 @@ document.getElementById('pI').innerHTML=n.dataset.i.split('|').join('<br>');
 let t='';if(n.dataset.v)t+=`<span class="tag t-v">⏱ ${n.dataset.v}</span> `;
 if(n.dataset.a)t+=`<span class="tag t-a">⚠ ${n.dataset.a}</span> `;
 if(n.dataset.s)t+=`<span class="tag t-c">❄ ${n.dataset.s}</span> `;
-document.getElementById('pT').innerHTML=t;buildTraz(id);P.classList.add('vis')})}); 
+document.getElementById('pT').innerHTML=t;buildTraz(id, n);P.classList.add('vis')})}); 
 document.addEventListener('click',clr);
 function clr(){sel=null;ns.forEach(n=>{n.classList.remove('hl','dim')});ls.forEach(l=>{l.classList.remove('hl','dim')});P.classList.remove('vis')}
 </script>
