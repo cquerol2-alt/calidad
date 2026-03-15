@@ -16,8 +16,9 @@
   
   <!-- Ingredient lines -->
   <g font-family="Arial,sans-serif">
-  <text x="10" y="95" font-size="9" fill="#333">Ajo, tomate deshidratado, carne de ñora</text>
-  <text x="10" y="108" font-size="9" fill="#333">(pimiento seco), aceite de girasol, aceite de oliva</text>
+  <text x="10" y="92" font-size="8" fill="#333">Ajo, tomate deshidratado (tomate,</text>
+  <text x="10" y="103" font-size="8" fill="#333">antiapelmazante: E551), carne de ñora</text>
+  <text x="10" y="114" font-size="8" fill="#333">(pimiento seco), aceite de girasol, aceite de oliva</text>
   </g>
   
   <!-- Separator -->
