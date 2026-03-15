@@ -640,6 +640,7 @@
                             <option value="Ibérico">Ibérico Cremoso</option>
                             <option value="Setas">Setas Cremoso</option>
                             <option value="Tartufata">Tartufata Cremoso</option>
+                            <option value="Queso">Queso Cremoso</option>
                         </optgroup>
                         <optgroup label="Maestro">
                             <option value="Maestro">Maestro</option>
@@ -652,6 +653,7 @@
                             <option value="Salsa Boletus">Salsa Boletus (sobres)</option>
                             <option value="Salsa Setas">Salsa Setas (sobres)</option>
                             <option value="Salsa Tartufata">Salsa Tartufata (sobres)</option>
+                            <option value="Salsa Ibérica">Salsa Ibérica (sobres)</option>
                             <option value="Salsa Queso">Salsa Queso (sobres)</option>
                         </optgroup>
                         <optgroup label="Caldos">
@@ -826,7 +828,7 @@
 
         function getConversions(product, format) {
             const p = product.toLowerCase();
-            const isCremoso = ['ibérico', 'setas', 'tartufata'].includes(p);
+            const isCremoso = ['ibérico', 'setas', 'tartufata', 'queso'].includes(p);
             const isMaestro = p === 'maestro';
             const isSalsaSobre = p.startsWith('salsa ');
             const isCaldo = p.startsWith('caldo ');
@@ -1201,7 +1203,7 @@
             const select = document.getElementById('formatSelect');
             const quantityLabel = document.getElementById('quantityInput').previousElementSibling || document.querySelector('label[for="quantityInput"]');
             const isMaestro = product === 'Maestro';
-            const isCremoso = ['Ibérico', 'Setas', 'Tartufata'].includes(product);
+            const isCremoso = ['Ibérico', 'Setas', 'Tartufata', 'Queso'].includes(product);
             const isSalsaSobre = product.startsWith('Salsa ');
             const isCaldo = product.startsWith('Caldo ');
 
