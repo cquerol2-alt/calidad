@@ -836,6 +836,9 @@
             try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
         }
 
+        // === ALERTA TELEGRAM con cada recepción ===
+        enviarAlertaTelegram(data);
+
         // === ALIMENTAR REGISTRO DE LOTES DISPONIBLES ===
         if (data.decision === 'aceptada' && data.loteProveedor) {
             try {
@@ -932,6 +935,67 @@
         updateCheckCount();
 
         window.scrollTo(0, 0);
+    }
+    // ============================================================
+    // ALERTA TELEGRAM
+    // ============================================================
+    function enviarAlertaTelegram(data) {
+        const TOKEN = 'TELEGRAM_BOT_TOKEN';
+        const CHAT_ID = '8613784608';
+
+        // Detectar si hay algún problema
+        let problemas = [];
+        if (data.decision === 'rechazada') {
+            problemas.push('RECHAZADA — ' + (data.motivoRechazo || 'sin motivo'));
+        }
+        if (data.temperatura && state.tipo) {
+            const temp = parseFloat(data.temperatura);
+            if (temp < state.tipoMin || temp > state.tipoMax) {
+                problemas.push('Temp fuera de rango: ' + temp + '°C (rango: ' + state.tipoMin + '-' + state.tipoMax + '°C)');
+            }
+        }
+        if (data.verificaciones.failed > 0) {
+            problemas.push('Verificaciones fallidas: ' + data.verificaciones.failed + '/' + data.verificaciones.total);
+        }
+
+        const hayProblema = problemas.length > 0;
+        const icono = hayProblema ? '🔴' : '✅';
+        const titulo = hayProblema ? 'RECEPCIÓN — INCIDENCIA' : 'RECEPCIÓN MP';
+
+        const ahora = new Date();
+        const hora = ahora.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+        const fecha = ahora.toLocaleDateString('es-ES');
+
+        let msg = icono + ' ' + titulo + '\n\n'
+            + 'Proveedor: ' + data.proveedor + '\n'
+            + 'Producto: ' + data.producto + '\n'
+            + (data.loteProveedor ? 'Lote: ' + data.loteProveedor + '\n' : '')
+            + (data.cantidad ? 'Cantidad: ' + data.cantidad + '\n' : '')
+            + (data.temperatura ? 'Temperatura: ' + data.temperatura + '°C\n' : '')
+            + 'Decisión: ' + (data.decision || '—').toUpperCase() + '\n';
+
+        if (hayProblema) {
+            msg += '\n⚠️ ' + problemas.join('\n⚠️ ') + '\n';
+        }
+
+        msg += '\nOperario: ' + (data.operario || '—')
+            + (data.observaciones ? '\nObs: ' + data.observaciones : '')
+            + '\n' + fecha + ' ' + hora;
+
+        fetch('https://api.telegram.org/bot' + TOKEN + '/sendMessage', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({chat_id: CHAT_ID, text: msg})
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.ok) {
+                console.log('✅ Alerta Telegram enviada');
+            } else {
+                console.error('❌ Telegram error:', res.description);
+            }
+        })
+        .catch(err => console.error('❌ Telegram fetch error:', err));
     }
     </script>
     <script src="ria-backend.js"></script>
