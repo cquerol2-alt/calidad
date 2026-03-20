@@ -572,11 +572,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="envaseFormat">Formato/Presentación</label>
-                        <input type="text" id="envaseFormat" placeholder="Ej: 260g, 450ml, 1L, etc.">
-                    </div>
-
-                    <div class="form-group">
                         <label for="loteEnvase">Lote del Envase</label>
                         <div class="lot-with-photo">
                             <input type="text" id="loteEnvase" placeholder="Lote del envase" data-original-lot="" data-mp="MP50" onchange="onLoteChangeProd(this)">
@@ -988,6 +983,8 @@
                         <input type="file" id="fotosIncidencias" accept="image/*" multiple>
                         <div id="fotosPreview" style="margin-top: 8px;"></div>
                     </div>
+
+                    <div id="alertaTelegramStatus" style="display:none; margin-top:8px; padding:10px; border-radius:6px; font-size:13px;"></div>
                 </div>
             </div>
         </div>
@@ -1018,6 +1015,7 @@
             loadOrdenDelDia();
             initSavedRecords();
             initSalsaLotHistory();
+            initTelegramAutoAlert();
         });
 
         // Populate ingredientes extra select from RIA_DATA
@@ -1074,12 +1072,17 @@
             document.getElementById('etiquetaDate').value = today;
         }
 
-        // Generate ingredient form groups from RIA_DATA
+        // Generate ingredient form groups from RIA_DATA — con cámara, OCR y lote pre-rellenado
         function generarIngredientesJarra() {
             const container = document.getElementById('ingredientesJarraContainer');
             if (!container || !RIA_DATA || !RIA_DATA.ingredientesJarraProduccion) {
                 return;
             }
+
+            // Mapa de ingredientes con lote almacenado en materiaPrima
+            const lotesAlmacenados = {
+                'hazelnut': { mp: 'MP09', lote: (RIA_DATA.materiaPrima && RIA_DATA.materiaPrima.MP09) ? RIA_DATA.materiaPrima.MP09.lote : '' }
+            };
 
             container.innerHTML = '';
             RIA_DATA.ingredientesJarraProduccion.forEach((ingrediente, index) => {
@@ -1088,6 +1091,13 @@
                     .replace(/\s+/g, '')
                     .replace(/[^a-z0-9]/g, '');
                 const inputId = ingredienteId + 'Lot';
+                const photoInputId = inputId + 'Photo';
+                const previewId = inputId + 'Preview';
+
+                // Buscar lote almacenado
+                const stored = lotesAlmacenados[ingredienteId] || null;
+                const storedLote = stored ? stored.lote : '';
+                const storedMP = stored ? stored.mp : '';
 
                 const formGroup = document.createElement('div');
                 formGroup.className = 'form-group';
@@ -1096,13 +1106,45 @@
                 label.htmlFor = inputId;
                 label.textContent = `${ingrediente.nombre} (Lote)`;
 
+                // Contenedor con input + botón cámara
+                const lotWithPhoto = document.createElement('div');
+                lotWithPhoto.className = 'lot-with-photo';
+
                 const input = document.createElement('input');
                 input.type = 'text';
                 input.id = inputId;
-                input.placeholder = `Ej: ${ingrediente.nombre.toUpperCase()}-2026-001`;
+                input.placeholder = storedLote ? storedLote : `Ej: ${ingrediente.nombre.toUpperCase()}-2026-001`;
+                if (storedLote) {
+                    input.value = storedLote;
+                    input.dataset.originalLot = storedLote;
+                    input.dataset.mp = storedMP;
+                }
+
+                const cameraBtn = document.createElement('button');
+                cameraBtn.type = 'button';
+                cameraBtn.className = 'btn-camera-lot';
+                cameraBtn.textContent = '\uD83D\uDCF7';
+                cameraBtn.onclick = function() { triggerLotPhoto(photoInputId); };
+
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.id = photoInputId;
+                fileInput.className = 'lot-photo-input';
+                fileInput.accept = 'image/*';
+                fileInput.setAttribute('capture', 'environment');
+                fileInput.onchange = function() { previewLotPhoto(this, previewId); };
+
+                lotWithPhoto.appendChild(input);
+                lotWithPhoto.appendChild(cameraBtn);
+                lotWithPhoto.appendChild(fileInput);
+
+                const preview = document.createElement('div');
+                preview.className = 'lot-photo-preview';
+                preview.id = previewId;
 
                 formGroup.appendChild(label);
-                formGroup.appendChild(input);
+                formGroup.appendChild(lotWithPhoto);
+                formGroup.appendChild(preview);
                 container.appendChild(formGroup);
             });
         }
@@ -1283,8 +1325,7 @@
                     envaseSelect.value = 'Barqueta 1330';
                 }
 
-                // Pre-rellenar formato/presentación
-                document.getElementById('envaseFormat').value = format;
+                // formato derivado del producto (ya no hay campo manual)
 
                 // Pre-rellenar redes
                 if (redes && redes > 0) {
@@ -1599,21 +1640,82 @@
                 const qty = record.produccionQuantity || '?';
                 const isEditing = currentEditIndex === idx;
 
+                // Estado de progreso
+                const hasPast = record.pastTempFinal;
+                const hasAbat = record.abatTemp;
+                const hasEtiqueta = record.etiquetaCheck;
+                let statusEmoji = '🔄'; // en progreso
+                let statusText = 'En curso';
+                if (hasPast && hasAbat && hasEtiqueta) {
+                    statusEmoji = '✅'; statusText = 'Completo';
+                } else if (hasPast && !hasAbat) {
+                    statusEmoji = '❄️'; statusText = 'Abatiendo';
+                } else if (hasPast && hasAbat && !hasEtiqueta) {
+                    statusEmoji = '🏷️'; statusText = 'Pendiente etiquetado';
+                }
+
+                // Detalle expandible
+                let detailRows = '';
+                const addDetail = (label, value) => {
+                    if (value) detailRows += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:13px;"><span style="color:#757575;">${label}</span><span style="font-weight:600;">${value}</span></div>`;
+                };
+                addDetail('Lote', record.produccionLot);
+                addDetail('Hora inicio', record.produccionHora);
+                addDetail('Envase', record.envaseType);
+                addDetail('Arroz', record.arrozType);
+                addDetail('Lote arroz', record.arrozLot);
+                addDetail('Redes', record.arrozRedes);
+                addDetail('Lote caldo', record.caldoLot);
+                addDetail('Temp. caldo', record.caldoTemp ? record.caldoTemp + '°C' : '');
+                addDetail('Salsa', record.salsaType !== 'sin-salsa' ? record.salsaType : '');
+                addDetail('Lote salsa', record.salsaLot);
+                // Ingredientes jarra
+                if (RIA_DATA && RIA_DATA.ingredientesJarraProduccion) {
+                    RIA_DATA.ingredientesJarraProduccion.forEach(ing => {
+                        const ingId = ing.nombre.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + 'Lot';
+                        if (record[ingId]) addDetail(ing.nombre, record[ingId]);
+                    });
+                }
+                addDetail('Past. temp', record.pastTempFinal ? record.pastTempFinal + '°C' : '');
+                addDetail('Past. hora', record.pastHoraInicio && record.pastHoraFin ? `${record.pastHoraInicio} → ${record.pastHoraFin}` : '');
+                addDetail('Abat. temp', record.abatTemp ? record.abatTemp + '°C' : '');
+                addDetail('Abat. hora', record.abatHoraInicio && record.abatHoraFin ? `${record.abatHoraInicio} → ${record.abatHoraFin}` : '');
+                addDetail('Sellado OK/NOK', (record.selladoOK || record.selladoNOK) ? `${record.selladoOK || 0} / ${record.selladoNOK || 0}` : '');
+                addDetail('Etiquetado', record.etiquetaCheck);
+                if (record.incidencias) addDetail('Incidencias', record.incidencias);
+
                 html += `
-                    <div style="background:${isEditing ? '#FFF3E0' : 'white'}; border:1.5px solid ${isEditing ? '#FF9800' : '#E0E0E0'}; border-radius:8px; padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                        <div style="flex:1; font-size:14px;">
-                            <strong>${idx + 1}. ${productName}</strong>
-                            <span style="color:#666; margin-left:6px;">${format || ''} — ${qty} uds.</span>
-                            ${isEditing ? '<span style="color:#FF9800; font-size:12px; margin-left:8px;">● editando</span>' : ''}
+                    <div class="orden-item ${isEditing ? 'active' : ''}" style="border-color:${isEditing ? '#FF9800' : '#E0E0E0'}; background:${isEditing ? '#FFF3E0' : 'white'};">
+                        <div class="orden-item-header" onclick="toggleSavedRecordDetail(${idx})">
+                            <div style="flex:1;">
+                                <strong style="color:var(--primary-green);">${idx + 1}. ${productName}</strong>
+                                <span style="color:#666; margin-left:4px;">${format || ''} — ${qty} uds.</span>
+                                <span style="margin-left:6px;">${statusEmoji} ${statusText}</span>
+                                ${isEditing ? '<span style="color:#FF9800; font-size:12px; margin-left:6px;">● editando</span>' : ''}
+                            </div>
+                            <span class="orden-arrow">▶</span>
                         </div>
-                        <div style="display:flex; gap:6px;">
-                            <button type="button" onclick="loadSavedRecord(${idx})" style="padding:6px 12px; font-size:12px; border:1px solid var(--primary-green); border-radius:6px; background:white; color:var(--primary-green); cursor:pointer;">${isEditing ? 'Editando' : 'Ver/Editar'}</button>
-                            <button type="button" onclick="deleteSavedRecord(${idx})" style="padding:6px 10px; font-size:12px; border:none; border-radius:6px; background:#EF5350; color:white; cursor:pointer;">✕</button>
+                        <div class="orden-item-body">
+                            ${detailRows || '<div style="color:#999;font-size:13px;">Sin datos aún</div>'}
+                            <div style="display:flex;gap:8px;margin-top:10px;">
+                                <button type="button" onclick="event.stopPropagation(); loadSavedRecord(${idx})" style="flex:1;padding:10px;font-size:14px;font-weight:600;border:none;border-radius:6px;background:var(--light-green);color:white;cursor:pointer;">
+                                    ${isEditing ? '📝 Editando' : '📝 Continuar'}
+                                </button>
+                                <button type="button" onclick="event.stopPropagation(); deleteSavedRecord(${idx})" style="padding:10px 14px;font-size:14px;border:none;border-radius:6px;background:#EF5350;color:white;cursor:pointer;">✕</button>
+                            </div>
                         </div>
                     </div>
                 `;
             });
             list.innerHTML = html;
+        }
+
+        function toggleSavedRecordDetail(idx) {
+            const items = document.querySelectorAll('#savedRecordsList .orden-item');
+            items.forEach((item, i) => {
+                if (i === idx) item.classList.toggle('active');
+                else item.classList.remove('active');
+            });
         }
 
         function loadSavedRecord(index) {
@@ -1637,6 +1739,7 @@
             currentEditIndex = null;
             clearAllFormFields();
             setTodayDate();
+            resetTelegramAlert();
             renderSavedRecordsList();
             // Scroll to Orden del Día if it exists, so user can pick the next line easily
             const ordenSection = document.getElementById('ordenDelDia');
@@ -1652,7 +1755,7 @@
             document.getElementById('produccionQuantity').value = '';
             document.getElementById('produccionHora').value = '';
             document.getElementById('envaseType').selectedIndex = 0;
-            document.getElementById('envaseFormat').value = '';
+            // envaseFormat eliminado del HTML — se deriva del producto
             document.getElementById('loteEnvase').value = '';
             document.getElementById('arrozType').selectedIndex = 0;
             document.getElementById('arrozLot').value = '';
@@ -1726,7 +1829,7 @@
             document.getElementById('produccionQuantity').value = data.produccionQuantity || '';
             document.getElementById('produccionHora').value = data.produccionHora || '';
             document.getElementById('envaseType').value = data.envaseType || '';
-            document.getElementById('envaseFormat').value = data.envaseFormat || '';
+            // envaseFormat eliminado — se deriva del producto
             document.getElementById('loteEnvase').value = data.loteEnvase || '';
             document.getElementById('arrozType').value = data.arrozType || '';
             document.getElementById('arrozLot').value = data.arrozLot || '';
@@ -1848,7 +1951,7 @@
                 produccionQuantity: document.getElementById('produccionQuantity').value,
                 produccionHora: document.getElementById('produccionHora').value,
                 envaseType: document.getElementById('envaseType').value,
-                envaseFormat: document.getElementById('envaseFormat').value,
+                envaseFormat: (document.getElementById('produccionProduct').value || '').split('|')[1] || '',
                 loteEnvase: document.getElementById('loteEnvase').value,
                 arrozType: document.getElementById('arrozType').value,
                 arrozLot: document.getElementById('arrozLot').value,
@@ -1992,8 +2095,23 @@
             const lotesActualizados = recogerLotesActualizadosProd();
             enviarLotesActualizados(lotesActualizados);
 
-            alert('Línea guardada correctamente');
-            newLineHandler();
+            // Comprobar si la línea está completa
+            const isComplete = formData.pastTempFinal && formData.abatTemp && formData.etiquetaCheck;
+
+            if (isComplete) {
+                alert('✅ Línea completada y guardada');
+                newLineHandler();
+            } else {
+                // Línea parcial — preguntar qué hacer
+                const action = confirm('💾 Línea guardada (parcial).\n\n¿Quieres empezar una nueva línea?\n\n(OK = Nueva línea / Cancelar = Seguir editando esta)');
+                if (action) {
+                    newLineHandler();
+                } else {
+                    // Seguir en la línea actual — marcar como editando
+                    currentEditIndex = savedRecords.length - 1;
+                    renderSavedRecordsList();
+                }
+            }
         }
 
         // Load form data from localStorage
@@ -2008,7 +2126,7 @@
             document.getElementById('produccionQuantity').value = data.produccionQuantity || '';
             document.getElementById('produccionHora').value = data.produccionHora || '';
             document.getElementById('envaseType').value = data.envaseType || '';
-            document.getElementById('envaseFormat').value = data.envaseFormat || '';
+            // envaseFormat eliminado — se deriva del producto
             document.getElementById('loteEnvase').value = data.loteEnvase || '';
             document.getElementById('arrozType').value = data.arrozType || '';
             document.getElementById('arrozLot').value = data.arrozLot || '';
@@ -2116,50 +2234,151 @@
         //   LOTE: RIA-PESCADO-130326
         //   ELAB: 13/03/2026        CAD: 18/03/2026
         //   Refrigeracion (0-4C)
+        // También lotes de proveedor: b060238, HA0072S398, 124112U133, etc.
         function extractLotFromText(text) {
-            // Limpiar caracteres basura OCR
-            const clean = text.replace(/[|]/g, 'l').replace(/[{}¡!¿?]/g, '').replace(/[–—]/g, '-');
+            // Limpiar caracteres basura OCR comunes
+            let clean = text
+                .replace(/[|]/g, 'l')
+                .replace(/[{}¡!¿?©®™°]/g, '')
+                .replace(/[–—]/g, '-')
+                .replace(/[''`]/g, "'")
+                .replace(/\u00AD/g, '-')  // soft hyphen
+                .replace(/O(\d)/g, '0$1') // O seguido de dígito → 0
+                .replace(/(\d)O/g, '$10'); // dígito seguido de O → 0
             const allText = clean.replace(/\n/g, ' ');
             const lines = clean.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             let lote = '';
 
-            // 1) Buscar patrón exacto RIA-XXXX-DDMMYY en todo el texto
+            // Palabras a ignorar en la búsqueda de lotes
+            const ignoreWords = /^(LOTE|ELAB|CAD|CADUCIDAD|Caldo|Salsa|Aceite|Refrigeracion|Congelacion|Ingredientes|Conservar|Temperatura|Elabor|Fecha|FECHA|RICE|ACTION|PRODUCCION|SATO|ETIQUETA|MANTENER)/i;
+
+            // 1) Patrón RIA con variantes OCR: R1A, RlA, etc.
+            const riaVariants = allText.match(/R[Il1][AÁ][-\s]?[A-Z]{2,}[-\s]?\d{6}/i);
+            if (riaVariants) {
+                lote = riaVariants[0].replace(/\s+/g, '').replace(/R[Il1][AÁ]/i, 'RIA').toUpperCase();
+                return { lote };
+            }
+
+            // 2) Patrón exacto RIA-XXXX-DDMMYY
             const riaExact = allText.match(/RIA-[A-Z]+-\d{6}/i);
             if (riaExact) {
                 lote = riaExact[0].toUpperCase();
                 return { lote };
             }
 
-            // 2) Buscar LOTE: seguido de texto, luego limpiar
-            for (const line of lines) {
-                if (!lote) {
-                    const loteMatch = line.match(/L\s*O\s*T\s*E\s*[:;.\s]\s*(.+)/i);
-                    if (loteMatch) {
-                        let raw = loteMatch[1].trim().replace(/\s+/g, '');
-                        // Cortar en el primer carácter que no sea parte del lote
-                        const lotClean = raw.match(/^[A-Z0-9][-A-Z0-9]*-\d{6}/i);
-                        lote = lotClean ? lotClean[0] : raw.replace(/[^A-Z0-9-]/gi, '');
-                    }
-                }
-                if (lote) break;
+            // 3) Patrón RIA con guiones separados por espacios OCR
+            const riaSpaced = allText.match(/RIA\s*[-–]\s*[A-Z]{2,}\s*[-–]\s*\d{6}/i);
+            if (riaSpaced) {
+                lote = riaSpaced[0].replace(/\s+/g, '').replace(/[–]/g, '-').toUpperCase();
+                return { lote };
             }
 
-            // 3) Fallback: código alfanumérico largo (lotes de proveedor)
+            // 4) Buscar LOTE: seguido de texto
+            for (const line of lines) {
+                const loteMatch = line.match(/L\s*O\s*T\s*E\s*[:;.\s]+\s*(.+)/i);
+                if (loteMatch) {
+                    let raw = loteMatch[1].trim().replace(/\s+/g, '');
+                    // Intentar patrón RIA
+                    const lotRIA = raw.match(/R[Il1][AÁ][-]?[A-Z]+-\d{6}/i);
+                    if (lotRIA) {
+                        lote = lotRIA[0].replace(/R[Il1][AÁ]/i, 'RIA').toUpperCase();
+                        break;
+                    }
+                    // Código alfanumérico genérico (proveedor)
+                    const lotGeneric = raw.match(/^[A-Za-z0-9][-A-Za-z0-9.]{3,}/);
+                    if (lotGeneric) {
+                        lote = lotGeneric[0].replace(/[^A-Za-z0-9.\-]/g, '');
+                        break;
+                    }
+                }
+            }
+
+            // 5) Buscar prefijos SATO conocidos: RIA-PRELAB-, RIA-SALSA-, RIA-CALDO-, RIA-MEZCLA-, RIA-JARRA-, RIA-PREP-
+            if (!lote) {
+                const satoPrefixes = allText.match(/RIA[-\s]?(PRELAB|SALSA|CALDO|MEZCLA|JARRA|PREP)[-\s]?[A-Z]*[-\s]?\d{6}/i);
+                if (satoPrefixes) {
+                    lote = satoPrefixes[0].replace(/\s+/g, '').replace(/[–]/g, '-').toUpperCase();
+                }
+            }
+
+            // 6) Fallback: código alfanumérico largo (lotes de proveedor tipo b060238, HA0072S398)
             if (!lote) {
                 for (const line of lines) {
-                    const codeMatch = line.match(/([A-Z0-9][-A-Z0-9]{4,})/i);
-                    if (codeMatch && !codeMatch[1].match(/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/)
-                        && !codeMatch[1].match(/^(LOTE|ELAB|CAD|Caldo|Salsa|Aceite|Refrigeracion|Ingredientes)/i)) {
-                        lote = codeMatch[1]; break;
+                    // Buscar secuencias que parezcan lotes (mín 5 chars, mezcla de letras y números)
+                    const codes = line.match(/\b([A-Za-z0-9][-A-Za-z0-9.]{4,})\b/g);
+                    if (codes) {
+                        for (const code of codes) {
+                            // Descartar fechas
+                            if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/.test(code)) continue;
+                            // Descartar palabras conocidas
+                            if (ignoreWords.test(code)) continue;
+                            // Debe tener al menos un dígito y al menos una letra, o ser todo dígitos de 5+
+                            if ((/\d/.test(code) && /[A-Za-z]/.test(code)) || /^\d{5,}$/.test(code)) {
+                                lote = code;
+                                break;
+                            }
+                        }
                     }
+                    if (lote) break;
                 }
             }
             return { lote };
         }
 
+        // Preprocesar imagen para mejorar OCR: escala de grises + contraste + binarización
+        function preprocessImageForOCR(file) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        // Escalar a ancho óptimo para Tesseract (máx 1200px)
+                        const maxW = 1200;
+                        const scale = img.width > maxW ? maxW / img.width : 1;
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+                        const ctx = canvas.getContext('2d');
+
+                        // Dibujar imagen escalada
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        // Obtener pixels
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const data = imageData.data;
+
+                        // Convertir a escala de grises + aumentar contraste
+                        for (let i = 0; i < data.length; i += 4) {
+                            // Escala de grises
+                            const gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
+                            // Contraste: estirar histograma
+                            let val = ((gray - 128) * 1.8) + 128;
+                            // Binarización con umbral adaptativo (Otsu simplificado)
+                            val = val > 140 ? 255 : 0;
+                            data[i] = data[i+1] = data[i+2] = val;
+                        }
+                        ctx.putImageData(imageData, 0, 0);
+
+                        canvas.toBlob(function(blob) {
+                            resolve(blob);
+                        }, 'image/png');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
         async function ocrFromPhoto(imageFile) {
+            // Preprocesar imagen para mejorar resultados
+            const processed = await preprocessImageForOCR(imageFile);
             const worker = await Tesseract.createWorker('spa');
-            const { data } = await worker.recognize(imageFile);
+            // Configurar Tesseract para modo de texto disperso (etiquetas)
+            await worker.setParameters({
+                tessedit_pageseg_mode: '6',  // Bloque de texto uniforme
+                tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-:/.() ',
+            });
+            const { data } = await worker.recognize(processed);
             await worker.terminate();
             return data.text;
         }
@@ -2273,6 +2492,111 @@
             setupPhotoPreview('fotoEtiqueta', 'fotoEtiquetaPreview');
             setupPhotoPreview('fotosIncidencias', 'fotosPreview');
         });
+
+        // ============================================================================
+        // ALERTA TELEGRAM AUTOMÁTICA — Se dispara al escribir incidencia o subir foto
+        // ============================================================================
+        const TELEGRAM_BOT_TOKEN = '8727612681:AAF-GLV4itjpCo4--DrJWkXDt5XFwolW_P8';
+        const TELEGRAM_CHAT_ID = '8613784608';
+        let _telegramDebounce = null;
+        let _telegramSentForLine = null; // evitar duplicados por línea
+
+        function initTelegramAutoAlert() {
+            const incTextarea = document.getElementById('incidencias');
+            const fotosInput = document.getElementById('fotosIncidencias');
+
+            // Auto-enviar cuando se escribe texto (debounce 3s para dar tiempo a escribir)
+            incTextarea.addEventListener('input', function() {
+                const text = this.value.trim();
+                if (text.length < 5) return; // mínimo 5 chars para evitar falsos positivos
+                clearTimeout(_telegramDebounce);
+                _telegramDebounce = setTimeout(() => {
+                    enviarAlertaTelegramAuto('texto');
+                }, 3000);
+            });
+
+            // Auto-enviar inmediatamente al subir foto de incidencia
+            fotosInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    enviarAlertaTelegramAuto('foto');
+                }
+            });
+        }
+
+        async function enviarAlertaTelegramAuto(trigger) {
+            const incText = document.getElementById('incidencias').value.trim();
+            const fotosInput = document.getElementById('fotosIncidencias');
+            const hasFoto = fotosInput.files && fotosInput.files.length > 0;
+
+            // Nada que enviar
+            if (!incText && !hasFoto) return;
+
+            // Evitar enviar duplicados para la misma línea+contenido
+            const lineKey = (currentEditIndex !== null ? currentEditIndex : 'new') + '_' + incText.substring(0, 30);
+            if (_telegramSentForLine === lineKey && trigger === 'texto') return;
+
+            const statusDiv = document.getElementById('alertaTelegramStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#FFF3E0';
+            statusDiv.style.color = '#E65100';
+            statusDiv.textContent = '📡 Enviando alerta automática...';
+
+            // Construir mensaje
+            const productSelect = document.getElementById('produccionProduct');
+            const productText = productSelect.selectedOptions[0]?.text || 'Sin producto';
+            const fecha = document.getElementById('produccionDate').value || new Date().toISOString().split('T')[0];
+            const hora = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const lote = document.getElementById('produccionLot').value || '—';
+
+            let mensaje = `⚠️ *INCIDENCIA DE PRODUCCIÓN*\n\n` +
+                `📅 ${fecha}  🕐 ${hora}\n` +
+                `📦 ${productText}\n` +
+                `🔖 Lote: ${lote}\n` +
+                `👷 Operador: Diego\n`;
+
+            if (incText) {
+                mensaje += `\n📝 *Descripción:*\n${incText}\n`;
+            }
+            if (hasFoto) {
+                mensaje += `\n📸 ${fotosInput.files.length} foto(s) adjunta(s)\n`;
+            }
+            mensaje += `\n_Alerta automática — RIA-FORM-PROD-002_`;
+
+            try {
+                const resp = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: mensaje,
+                        parse_mode: 'Markdown'
+                    })
+                });
+                const data = await resp.json();
+                if (data.ok) {
+                    _telegramSentForLine = lineKey;
+                    statusDiv.style.background = '#E8F5E9';
+                    statusDiv.style.color = '#2E7D32';
+                    statusDiv.textContent = '✓ Alerta enviada a Cristina';
+                } else {
+                    throw new Error(data.description || 'Error desconocido');
+                }
+            } catch (err) {
+                console.error('Error Telegram:', err);
+                statusDiv.style.background = '#FFEBEE';
+                statusDiv.style.color = '#C62828';
+                statusDiv.textContent = '✗ Error al enviar: ' + err.message;
+            }
+            setTimeout(() => { statusDiv.style.display = 'none'; }, 6000);
+        }
+
+        // Reset alerta al cambiar de línea
+        function resetTelegramAlert() {
+            _telegramSentForLine = null;
+            clearTimeout(_telegramDebounce);
+            const statusDiv = document.getElementById('alertaTelegramStatus');
+            if (statusDiv) statusDiv.style.display = 'none';
+        }
 
         // === ENVÍO A GOOGLE SHEETS ===
         // === DETECCIÓN DE CAMBIO DE LOTE ===
