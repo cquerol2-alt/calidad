@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspección Semanal Cámaras - RIA-FORM-CAL-001</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: #1B5E20;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .form-code {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .section-title {
+            background: #4CAF50;
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .section-title:hover {
+            background: #45a049;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .section-title.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            padding: 1rem;
+            display: none;
+        }
+
+        .section-content.visible {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #1B5E20;
+        }
+
+        .required::after {
+            content: " *";
+            color: #d32f2f;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            background: white;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .toggle-btn.active {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+
+        .toggle-btn.inactive {
+            background: #ffebee;
+            border-color: #ef5350;
+            color: #c62828;
+        }
+
+        .subsection {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #4CAF50;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .subsection-title {
+            font-weight: 600;
+            color: #1B5E20;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .photo-button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .photo-button:hover {
+            background: #1976D2;
+        }
+
+        .photo-preview {
+            margin-top: 0.5rem;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .dynamic-products {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .product-item {
+            background: #fff3e0;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .product-item input,
+        .product-item select {
+            margin-bottom: 0.5rem;
+        }
+
+        .remove-product {
+            background: #ef5350;
+            color: white;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .remove-product:hover {
+            background: #c62828;
+        }
+
+        .add-product {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .add-product:hover {
+            background: #45a049;
+        }
+
+        .header-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-fields .form-group {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.75rem;
+            }
+
+            .header h1 {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 0.95rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .section-content {
+                padding: 0.75rem;
+            }
+        }
+
+        .zone-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .zone-status {
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .zone-status.conforme {
+            background: #4CAF50;
+        }
+
+        .zone-status.nc {
+            background: #f44336;
+        }
+
+        .zone-status.pendiente {
+            background: #ffb300;
+        }
+
+        .footer-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-draft {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-draft:hover {
+            background: #f57c00;
+        }
+
+        .btn-submit {
+            background: #1B5E20;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #145a1f;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .overall-status {
+            background: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #1B5E20;
+        }
+
+        .overall-status h3 {
+            color: #1B5E20;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: white;
+            margin-top: 0.5rem;
+        }
+
+        .status-badge.conforme {
+            background: #4CAF50;
+        }
+
+        .status-badge.nc {
+            background: #f44336;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #4CAF50;
+        }
+
+        .success-message {
+            display: none;
+            background: #c8e6c9;
+            color: #2e7d32;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .error-message {
+            display: none;
+            background: #ffcdd2;
+            color: #c62828;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #f44336;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .footer-buttons {
+                display: none;
+            }
+            .header {
+                margin-bottom: 1rem;
+            }
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏢 RICE IN ACTION</h1>
+        <p>Inspección Semanal de Cámaras y Almacenes</p>
+        <div class="form-code">Código: RIA-FORM-CAL-001</div>
+    </div>
+
+    <div class="container">
+        <div class="success-message" id="successMessage">
+            ✓ Registro guardado exitosamente en Google Sheets
+        </div>
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="inspectionForm">
+            <!-- DATOS GENERALES -->
+            <div class="section">
+                <div class="section-title">
+                    <span>📋 Datos Generales</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content visible">
+                    <div class="header-fields">
+                        <div class="form-group">
+                            <label for="date" class="required">Fecha</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="week" class="required">Semana</label>
+                            <input type="text" id="week" name="week" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="responsible" class="required">Responsable</label>
+                        <select id="responsible" name="responsible" required>
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Cristina">Cristina Querol</option>
+                            <option value="Diego">Diego</option>
+                            <option value="Gerónimo">Gerónimo</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESUMEN DE ZONAS -->
+            <div class="overall-status">
+                <h3>📊 Resumen de Zonas</h3>
+                <div class="zone-summary" id="zoneSummary">
+                    <!-- Se rellena dinámicamente -->
+                </div>
+            </div>
+
+            <!-- CÁMARA REFRIGERACIÓN -->
+            <div class="section" data-zone="camaraRefrigeracion">
+                <div class="section-title">
+                    <span>❄️ Cámara Refrigeración</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content visible">
+                    <div class="subsection">
+                        <div class="subsection-title">1. Orden e Identificación</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona ordenada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_ordenada" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_ordenada" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_ordenada" name="camaraRefrigeracion_ordenada" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO NO CONFORME visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_cartelNC" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_cartelNC" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_cartelNC" name="camaraRefrigeracion_cartelNC" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO APTO visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_cartelApto" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_cartelApto" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_cartelApto" name="camaraRefrigeracion_cartelApto" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Todos los productos identificados con etiqueta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_etiquetas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_etiquetas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_etiquetas" name="camaraRefrigeracion_etiquetas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona de muestras/estudios correctamente separada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_muestras" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_muestras" data-value="no">No</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_muestras" data-value="na">N/A</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_muestras" name="camaraRefrigeracion_muestras" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="camaraRefrigeracion" data-subsection="orden">
+                                📷 Foto del estado de la zona
+                            </button>
+                            <input type="hidden" id="camaraRefrigeracion_fotoOrden" name="camaraRefrigeracion_fotoOrden">
+                            <img id="camaraRefrigeracion_fotoOrdenPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="camaraRefrigeracion_obsOrden">Observaciones</label>
+                            <textarea id="camaraRefrigeracion_obsOrden" name="camaraRefrigeracion_obsOrden" placeholder="Notas sobre orden e identificación"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">2. Control de Fechas de Caducidad</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se han revisado TODAS las fechas de caducidad/consumo preferente?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_revisionFechas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_revisionFechas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_revisionFechas" name="camaraRefrigeracion_revisionFechas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se ha encontrado algún producto caducado o próximo a caducar?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_productosVencidos" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_productosVencidos" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_productosVencidos" name="camaraRefrigeracion_productosVencidos" value="no">
+                        </div>
+
+                        <div id="camaraRefrigeracion_productosContainer" style="display:none;">
+                            <div class="dynamic-products" id="camaraRefrigeracion_productosLista"></div>
+                            <button type="button" class="add-product" data-zone="camaraRefrigeracion">+ Añadir producto</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Rotación FEFO correcta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraRefrigeracion_fefo" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraRefrigeracion_fefo" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraRefrigeracion_fefo" name="camaraRefrigeracion_fefo" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="camaraRefrigeracion" data-subsection="expiry">
+                                📷 Foto de productos retirados (si aplica)
+                            </button>
+                            <input type="hidden" id="camaraRefrigeracion_fotoExpiry" name="camaraRefrigeracion_fotoExpiry">
+                            <img id="camaraRefrigeracion_fotoExpiryPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="camaraRefrigeracion_obsExpiry">Observaciones</label>
+                            <textarea id="camaraRefrigeracion_obsExpiry" name="camaraRefrigeracion_obsExpiry" placeholder="Notas sobre control de fechas"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CÁMARA CONGELACIÓN -->
+            <div class="section" data-zone="camaraCongelacion">
+                <div class="section-title">
+                    <span>🧊 Cámara Congelación</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content visible">
+                    <div class="subsection">
+                        <div class="subsection-title">1. Orden e Identificación</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona ordenada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_ordenada" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_ordenada" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_ordenada" name="camaraCongelacion_ordenada" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO NO CONFORME visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_cartelNC" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_cartelNC" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_cartelNC" name="camaraCongelacion_cartelNC" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO APTO visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_cartelApto" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_cartelApto" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_cartelApto" name="camaraCongelacion_cartelApto" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Todos los productos identificados con etiqueta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_etiquetas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_etiquetas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_etiquetas" name="camaraCongelacion_etiquetas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona de muestras/estudios correctamente separada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_muestras" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_muestras" data-value="no">No</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_muestras" data-value="na">N/A</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_muestras" name="camaraCongelacion_muestras" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="camaraCongelacion" data-subsection="orden">
+                                📷 Foto del estado de la zona
+                            </button>
+                            <input type="hidden" id="camaraCongelacion_fotoOrden" name="camaraCongelacion_fotoOrden">
+                            <img id="camaraCongelacion_fotoOrdenPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="camaraCongelacion_obsOrden">Observaciones</label>
+                            <textarea id="camaraCongelacion_obsOrden" name="camaraCongelacion_obsOrden" placeholder="Notas sobre orden e identificación"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">2. Control de Fechas de Caducidad</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se han revisado TODAS las fechas de caducidad/consumo preferente?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_revisionFechas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_revisionFechas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_revisionFechas" name="camaraCongelacion_revisionFechas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se ha encontrado algún producto caducado o próximo a caducar?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_productosVencidos" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_productosVencidos" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_productosVencidos" name="camaraCongelacion_productosVencidos" value="no">
+                        </div>
+
+                        <div id="camaraCongelacion_productosContainer" style="display:none;">
+                            <div class="dynamic-products" id="camaraCongelacion_productosLista"></div>
+                            <button type="button" class="add-product" data-zone="camaraCongelacion">+ Añadir producto</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Rotación FEFO correcta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="camaraCongelacion_fefo" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="camaraCongelacion_fefo" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="camaraCongelacion_fefo" name="camaraCongelacion_fefo" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="camaraCongelacion" data-subsection="expiry">
+                                📷 Foto de productos retirados (si aplica)
+                            </button>
+                            <input type="hidden" id="camaraCongelacion_fotoExpiry" name="camaraCongelacion_fotoExpiry">
+                            <img id="camaraCongelacion_fotoExpiryPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="camaraCongelacion_obsExpiry">Observaciones</label>
+                            <textarea id="camaraCongelacion_obsExpiry" name="camaraCongelacion_obsExpiry" placeholder="Notas sobre control de fechas"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALMACÉN SECO -->
+            <div class="section" data-zone="almacenSeco">
+                <div class="section-title">
+                    <span>📦 Almacén Seco</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content visible">
+                    <div class="subsection">
+                        <div class="subsection-title">1. Orden e Identificación</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona ordenada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_ordenada" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_ordenada" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_ordenada" name="almacenSeco_ordenada" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO NO CONFORME visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_cartelNC" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_cartelNC" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_cartelNC" name="almacenSeco_cartelNC" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO APTO visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_cartelApto" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_cartelApto" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_cartelApto" name="almacenSeco_cartelApto" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Todos los productos identificados con etiqueta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_etiquetas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_etiquetas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_etiquetas" name="almacenSeco_etiquetas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona de muestras/estudios correctamente separada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_muestras" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_muestras" data-value="no">No</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_muestras" data-value="na">N/A</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_muestras" name="almacenSeco_muestras" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="almacenSeco" data-subsection="orden">
+                                📷 Foto del estado de la zona
+                            </button>
+                            <input type="hidden" id="almacenSeco_fotoOrden" name="almacenSeco_fotoOrden">
+                            <img id="almacenSeco_fotoOrdenPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="almacenSeco_obsOrden">Observaciones</label>
+                            <textarea id="almacenSeco_obsOrden" name="almacenSeco_obsOrden" placeholder="Notas sobre orden e identificación"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">2. Control de Fechas de Caducidad</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se han revisado TODAS las fechas de caducidad/consumo preferente?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_revisionFechas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_revisionFechas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_revisionFechas" name="almacenSeco_revisionFechas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se ha encontrado algún producto caducado o próximo a caducar?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_productosVencidos" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_productosVencidos" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_productosVencidos" name="almacenSeco_productosVencidos" value="no">
+                        </div>
+
+                        <div id="almacenSeco_productosContainer" style="display:none;">
+                            <div class="dynamic-products" id="almacenSeco_productosLista"></div>
+                            <button type="button" class="add-product" data-zone="almacenSeco">+ Añadir producto</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Rotación FEFO correcta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="almacenSeco_fefo" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="almacenSeco_fefo" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="almacenSeco_fefo" name="almacenSeco_fefo" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="almacenSeco" data-subsection="expiry">
+                                📷 Foto de productos retirados (si aplica)
+                            </button>
+                            <input type="hidden" id="almacenSeco_fotoExpiry" name="almacenSeco_fotoExpiry">
+                            <img id="almacenSeco_fotoExpiryPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="almacenSeco_obsExpiry">Observaciones</label>
+                            <textarea id="almacenSeco_obsExpiry" name="almacenSeco_obsExpiry" placeholder="Notas sobre control de fechas"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZONA ENVASADO -->
+            <div class="section" data-zone="zonaEnvasado">
+                <div class="section-title">
+                    <span>🎁 Zona Envasado</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content visible">
+                    <div class="subsection">
+                        <div class="subsection-title">1. Orden e Identificación</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona ordenada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_ordenada" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_ordenada" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_ordenada" name="zonaEnvasado_ordenada" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO NO CONFORME visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_cartelNC" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_cartelNC" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_cartelNC" name="zonaEnvasado_cartelNC" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Cartel PRODUCTO APTO visible?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_cartelApto" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_cartelApto" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_cartelApto" name="zonaEnvasado_cartelApto" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Todos los productos identificados con etiqueta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_etiquetas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_etiquetas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_etiquetas" name="zonaEnvasado_etiquetas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Zona de muestras/estudios correctamente separada?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_muestras" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_muestras" data-value="no">No</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_muestras" data-value="na">N/A</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_muestras" name="zonaEnvasado_muestras" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="zonaEnvasado" data-subsection="orden">
+                                📷 Foto del estado de la zona
+                            </button>
+                            <input type="hidden" id="zonaEnvasado_fotoOrden" name="zonaEnvasado_fotoOrden">
+                            <img id="zonaEnvasado_fotoOrdenPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zonaEnvasado_obsOrden">Observaciones</label>
+                            <textarea id="zonaEnvasado_obsOrden" name="zonaEnvasado_obsOrden" placeholder="Notas sobre orden e identificación"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">2. Control de Fechas de Caducidad</div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se han revisado TODAS las fechas de caducidad/consumo preferente?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_revisionFechas" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_revisionFechas" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_revisionFechas" name="zonaEnvasado_revisionFechas" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Se ha encontrado algún producto caducado o próximo a caducar?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_productosVencidos" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_productosVencidos" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_productosVencidos" name="zonaEnvasado_productosVencidos" value="no">
+                        </div>
+
+                        <div id="zonaEnvasado_productosContainer" style="display:none;">
+                            <div class="dynamic-products" id="zonaEnvasado_productosLista"></div>
+                            <button type="button" class="add-product" data-zone="zonaEnvasado">+ Añadir producto</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">¿Rotación FEFO correcta?</label>
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-field="zonaEnvasado_fefo" data-value="si">Sí</button>
+                                <button type="button" class="toggle-btn" data-field="zonaEnvasado_fefo" data-value="no">No</button>
+                            </div>
+                            <input type="hidden" id="zonaEnvasado_fefo" name="zonaEnvasado_fefo" value="si">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="photo-button" data-zone="zonaEnvasado" data-subsection="expiry">
+                                📷 Foto de productos retirados (si aplica)
+                            </button>
+                            <input type="hidden" id="zonaEnvasado_fotoExpiry" name="zonaEnvasado_fotoExpiry">
+                            <img id="zonaEnvasado_fotoExpiryPreview" class="photo-preview" style="display:none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zonaEnvasado_obsExpiry">Observaciones</label>
+                            <textarea id="zonaEnvasado_obsExpiry" name="zonaEnvasado_obsExpiry" placeholder="Notas sobre control de fechas"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INCIDENCIAS GENERALES -->
+            <div class="section">
+                <div class="section-title">
+                    <span>⚠️ Incidencias Generales</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <label for="incidenciasGenerales">Describa cualquier incidencia o no conformidad encontrada</label>
+                        <textarea id="incidenciasGenerales" name="incidenciasGenerales" placeholder="Notas generales, acciones correctivas, etc."></textarea>
+                    </div>
+
+                    <div class="overall-status">
+                        <h3>📋 Resultado Final</h3>
+                        <p id="finalStatus">-</p>
+                        <div id="statusBadge" style="margin-top: 0.5rem;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTONES -->
+            <div class="footer-buttons">
+                <button type="button" class="btn btn-draft" id="saveDraftBtn">💾 Guardar borrador</button>
+                <button type="submit" class="btn btn-submit" id="submitBtn">✓ Enviar registro</button>
+            </div>
+
+            <div class="loading" id="loading">Enviando datos...</div>
+        </form>
+    </div>
+
+    <input type="file" id="photoInput" accept="image/*">
+
+    <script>
+        // Configuración
+        const SHEETS_ENDPOINT = 'https://script.google.com/macros/d/YOUR_SCRIPT_ID/usercontent'; // Cambiar por tu endpoint
+        const STORAGE_KEY = 'ria_inspection_form_';
+        const ZONES = ['camaraRefrigeracion', 'camaraCongelacion', 'almacenSeco', 'zonaEnvasado'];
+        const ZONE_LABELS = {
+            camaraRefrigeracion: 'Cámara Refrigeración',
+            camaraCongelacion: 'Cámara Congelación',
+            almacenSeco: 'Almacén Seco',
+            zonaEnvasado: 'Zona Envasado'
+        };
+
+        let currentPhotoZone = null;
+        let currentPhotoSubsection = null;
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            setTodayDate();
+            loadFromStorage();
+            setupEventListeners();
+            updateZoneSummary();
+            calculateWeekNumber();
+        });
+
+        // Establecer fecha actual
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+        }
+
+        // Calcular número de semana ISO
+        function calculateWeekNumber() {
+            const date = new Date(document.getElementById('date').value);
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            const week = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+            document.getElementById('week').value = 'Semana ' + week;
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Cambio de fecha
+            document.getElementById('date').addEventListener('change', calculateWeekNumber);
+
+            // Colapsables
+            document.querySelectorAll('.section-title').forEach(title => {
+                title.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    content.classList.toggle('visible');
+                    this.classList.toggle('collapsed');
+                });
+            });
+
+            // Botones toggle
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const fieldId = this.getAttribute('data-field');
+                    const value = this.getAttribute('data-value');
+                    const group = this.parentElement;
+
+                    group.querySelectorAll('.toggle-btn').forEach(b => {
+                        b.classList.remove('active', 'inactive');
+                    });
+
+                    this.classList.add('active');
+                    document.getElementById(fieldId).value = value;
+
+                    // Mostrar/ocultar contenedor de productos si aplica
+                    if (fieldId.includes('productosVencidos')) {
+                        const zone = fieldId.replace('_productosVencidos', '');
+                        const container = document.getElementById(zone + '_productosContainer');
+                        if (value === 'si') {
+                            container.style.display = 'block';
+                        } else {
+                            container.style.display = 'none';
+                        }
+                    }
+
+                    saveToStorage();
+                    updateZoneSummary();
+                });
+            });
+
+            // Botones de foto
+            document.querySelectorAll('.photo-button').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentPhotoZone = this.getAttribute('data-zone');
+                    currentPhotoSubsection = this.getAttribute('data-subsection');
+                    document.getElementById('photoInput').click();
+                });
+            });
+
+            // Input de foto
+            document.getElementById('photoInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file && currentPhotoZone) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64 = event.target.result;
+                        const fieldId = currentPhotoZone + '_foto' +
+                            (currentPhotoSubsection === 'orden' ? 'Orden' : 'Expiry');
+                        const previewId = fieldId + 'Preview';
+
+                        document.getElementById(fieldId).value = base64;
+                        const preview = document.getElementById(previewId);
+                        preview.src = base64;
+                        preview.style.display = 'block';
+
+                        saveToStorage();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Botones añadir producto
+            document.querySelectorAll('.add-product').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const zone = this.getAttribute('data-zone');
+                    addProductRow(zone);
+                });
+            });
+
+            // Input de texto y textarea
+            document.querySelectorAll('input[type="text"], textarea, select').forEach(field => {
+                field.addEventListener('change', saveToStorage);
+                field.addEventListener('blur', saveToStorage);
+            });
+
+            // Formulario
+            document.getElementById('inspectionForm').addEventListener('submit', handleSubmit);
+            document.getElementById('saveDraftBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                showMessage('Borrador guardado en el dispositivo', 'success');
+            });
+        }
+
+        // Añadir fila de producto
+        function addProductRow(zone) {
+            const container = document.getElementById(zone + '_productosLista');
+            const index = container.children.length;
+            const html = `
+                <div class="product-item" data-index="${index}">
+                    <input type="text" placeholder="Nombre del producto" class="product-name" data-zone="${zone}" data-index="${index}">
+                    <input type="date" class="product-date" data-zone="${zone}" data-index="${index}">
+                    <select class="product-action" data-zone="${zone}" data-index="${index}">
+                        <option value="">-- Acción tomada --</option>
+                        <option value="Retirado a zona NC">Retirado a zona NC</option>
+                        <option value="Priorizado FEFO">Priorizado FEFO</option>
+                        <option value="Eliminado">Eliminado</option>
+                    </select>
+                    <button type="button" class="remove-product" onclick="removeProductRow('${zone}', ${index})">Eliminar</button>
+                </div>
+            `;
+            container.innerHTML += html;
+
+            // Añadir listeners
+            container.querySelectorAll('[data-index="' + index + '"]').forEach(el => {
+                el.addEventListener('change', saveToStorage);
+            });
+        }
+
+        // Eliminar fila de producto
+        function removeProductRow(zone, index) {
+            const item = document.querySelector(`[data-zone="${zone}"][data-index="${index}"]`).closest('.product-item');
+            item.remove();
+            saveToStorage();
+        }
+
+        // Actualizar resumen de zonas
+        function updateZoneSummary() {
+            const summary = document.getElementById('zoneSummary');
+            let html = '';
+            let allConforme = true;
+            let anyNC = false;
+
+            ZONES.forEach(zone => {
+                const isCompliant = checkZoneCompliance(zone);
+                const hasNC = hasAnyNC(zone);
+
+                let status = 'conforme';
+                if (hasNC) {
+                    status = 'nc';
+                    anyNC = true;
+                }
+                if (!isCompliant) {
+                    allConforme = false;
+                }
+
+                html += `
+                    <div class="zone-status ${status}">
+                        <div>${ZONE_LABELS[zone]}</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.25rem;">
+                            ${status === 'nc' ? 'No Conforme' : status === 'conforme' ? 'Conforme' : 'Pendiente'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            summary.innerHTML = html;
+
+            // Actualizar estado final
+            updateFinalStatus(anyNC || !allConforme);
+        }
+
+        // Verificar conformidad de zona
+        function checkZoneCompliance(zone) {
+            // Si hay algún "No" en campos obligatorios, es no conforme
+            const noBtns = document.querySelectorAll(`[data-field^="${zone}_"] .toggle-btn.toggle-btn`);
+            for (let btn of noBtns) {
+                if (btn.classList.contains('active') && document.getElementById(btn.getAttribute('data-field')).value === 'no') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Verificar si hay "No" en la zona
+        function hasAnyNC(zone) {
+            const fields = [
+                zone + '_ordenada',
+                zone + '_cartelNC',
+                zone + '_cartelApto',
+                zone + '_etiquetas',
+                zone + '_revisionFechas',
+                zone + '_fefo'
+            ];
+
+            for (let fieldId of fields) {
+                const field = document.getElementById(fieldId);
+                if (field && field.value === 'no') {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Actualizar estado final
+        function updateFinalStatus(isNC) {
+            const badge = document.getElementById('statusBadge');
+            const status = document.getElementById('finalStatus');
+
+            if (isNC) {
+                status.textContent = 'RESULTADO: NO CONFORME';
+                badge.innerHTML = '<span class="status-badge nc">❌ NO CONFORME</span>';
+            } else {
+                status.textContent = 'RESULTADO: CONFORME';
+                badge.innerHTML = '<span class="status-badge conforme">✓ CONFORME</span>';
+            }
+        }
+
+        // Guardar en localStorage
+        function saveToStorage() {
+            const formData = new FormData(document.getElementById('inspectionForm'));
+            const data = Object.fromEntries(formData);
+
+            // Guardar productos dinámicos
+            ZONES.forEach(zone => {
+                const productos = [];
+                const container = document.getElementById(zone + '_productosLista');
+                if (container) {
+                    container.querySelectorAll('.product-item').forEach(item => {
+                        const name = item.querySelector('.product-name').value;
+                        const date = item.querySelector('.product-date').value;
+                        const action = item.querySelector('.product-action').value;
+                        if (name || date || action) {
+                            productos.push({ name, date, action });
+                        }
+                    });
+                }
+                data[zone + '_productos'] = JSON.stringify(productos);
+            });
+
+            localStorage.setItem(STORAGE_KEY + new Date().toISOString().split('T')[0], JSON.stringify(data));
+            updateZoneSummary();
+        }
+
+        // Cargar desde localStorage
+        function loadFromStorage() {
+            const today = new Date().toISOString().split('T')[0];
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY + today)) || {};
+
+            for (let key in data) {
+                if (key.includes('_productos')) {
+                    // Restaurar productos dinámicos
+                    const zone = key.replace('_productos', '');
+                    try {
+                        const productos = JSON.parse(data[key]);
+                        const container = document.getElementById(zone + '_productosLista');
+                        if (container) {
+                            container.innerHTML = '';
+                            productos.forEach(prod => {
+                                addProductRow(zone);
+                                const lastItem = container.lastChild;
+                                lastItem.querySelector('.product-name').value = prod.name || '';
+                                lastItem.querySelector('.product-date').value = prod.date || '';
+                                lastItem.querySelector('.product-action').value = prod.action || '';
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error al restaurar productos:', e);
+                    }
+                } else if (key.includes('_foto')) {
+                    // Restaurar fotos
+                    const field = document.getElementById(key);
+                    if (field && data[key]) {
+                        field.value = data[key];
+                        const previewId = key + 'Preview';
+                        const preview = document.getElementById(previewId);
+                        if (preview) {
+                            preview.src = data[key];
+                            preview.style.display = 'block';
+                        }
+                    }
+                } else {
+                    // Restaurar otros campos
+                    const field = document.getElementById(key);
+                    if (field) {
+                        field.value = data[key];
+
+                        // Restaurar estado de botones toggle
+                        if (key.includes('_') && !key.includes('obs') && !key.includes('Incidencias')) {
+                            const btns = document.querySelectorAll(`[data-field="${key}"]`);
+                            btns.forEach(btn => {
+                                btn.classList.remove('active', 'inactive');
+                                if (btn.getAttribute('data-value') === data[key]) {
+                                    btn.classList.add('active');
+                                }
+                            });
+                        }
+
+                        // Mostrar/ocultar contenedor de productos
+                        if (key.includes('productosVencidos') && data[key] === 'si') {
+                            const zone = key.replace('_productosVencidos', '');
+                            const container = document.getElementById(zone + '_productosContainer');
+                            if (container) container.style.display = 'block';
+                        }
+                    }
+                }
+            }
+
+            updateZoneSummary();
+        }
+
+        // Auto-guardado cada 30 segundos
+        setInterval(saveToStorage, 30000);
+
+        // Enviar formulario
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+
+            const formData = new FormData(document.getElementById('inspectionForm'));
+            const data = {
+                timestamp: new Date().toISOString(),
+                date: formData.get('date'),
+                week: formData.get('week'),
+                responsible: formData.get('responsible'),
+                zones: {}
+            };
+
+            // Compilar datos por zona
+            ZONES.forEach(zone => {
+                data.zones[zone] = {
+                    orden: {
+                        ordenada: formData.get(zone + '_ordenada'),
+                        cartelNC: formData.get(zone + '_cartelNC'),
+                        cartelApto: formData.get(zone + '_cartelApto'),
+                        etiquetas: formData.get(zone + '_etiquetas'),
+                        muestras: formData.get(zone + '_muestras'),
+                        observaciones: formData.get(zone + '_obsOrden')
+                    },
+                    expiry: {
+                        revisionFechas: formData.get(zone + '_revisionFechas'),
+                        productosVencidos: formData.get(zone + '_productosVencidos'),
+                        fefo: formData.get(zone + '_fefo'),
+                        observaciones: formData.get(zone + '_obsExpiry')
+                    }
+                };
+
+                // Productos dinámicos
+                const container = document.getElementById(zone + '_productosLista');
+                if (container) {
+                    data.zones[zone].expiry.productos = [];
+                    container.querySelectorAll('.product-item').forEach(item => {
+                        data.zones[zone].expiry.productos.push({
+                            nombre: item.querySelector('.product-name').value,
+                            fechaCaducidad: item.querySelector('.product-date').value,
+                            accion: item.querySelector('.product-action').value
+                        });
+                    });
+                }
+            });
+
+            data.incidenciasGenerales = formData.get('incidenciasGenerales');
+
+            console.log('Datos a enviar:', data);
+
+            try {
+                // Descomentar cuando tengas el endpoint configurado
+                // const response = await fetch(SHEETS_ENDPOINT, {
+                //     method: 'POST',
+                //     body: JSON.stringify(data)
+                // });
+
+                // Por ahora, simular envío
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                loading.style.display = 'none';
+                showMessage('Registro enviado exitosamente a Google Sheets', 'success');
+
+                // Limpiar localStorage
+                localStorage.removeItem(STORAGE_KEY + document.getElementById('date').value);
+
+                // Recargar
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+
+            } catch (error) {
+                loading.style.display = 'none';
+                showMessage('Error al enviar: ' + error.message, 'error');
+            }
+        }
+
+        // Mostrar mensajes
+        function showMessage(msg, type) {
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            if (type === 'success') {
+                successMsg.textContent = '✓ ' + msg;
+                successMsg.style.display = 'block';
+                setTimeout(() => successMsg.style.display = 'none', 4000);
+            } else {
+                errorMsg.textContent = '❌ ' + msg;
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 4000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>RIA Quality Hub</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1B5E20">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; }
+        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background:#111; color:#fff; overflow:hidden; height:100vh; }
+
+        /* === LAYOUT === */
+        #app { width:100%; max-width:480px; height:100vh; margin:0 auto; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+        .screen { display:none; flex:1; flex-direction:column; overflow:hidden; }
+        .screen.active { display:flex; animation:fadeIn .25s ease; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+        /* === HEADER === */
+        .header { background:linear-gradient(135deg,#1B5E20,#2E7D32); padding:14px 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; box-shadow:0 2px 12px rgba(0,0,0,.4); z-index:10; }
+        .header-left { display:flex; align-items:center; gap:10px; }
+        .header-title { font-size:17px; font-weight:700; }
+        .header-sub { font-size:12px; opacity:.8; }
+        .header-right { display:flex; gap:8px; align-items:center; }
+        .h-btn { background:rgba(255,255,255,.15); border:none; color:#fff; width:38px; height:38px; border-radius:50%; font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; position:relative; transition:background .15s; }
+        .h-btn:active { background:rgba(255,255,255,.3); }
+        .badge { position:absolute; top:-4px; right:-4px; background:#f44336; color:#fff; border-radius:50%; min-width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; padding:0 5px; }
+
+        /* === SCROLLABLE CONTENT === */
+        .content { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:12px 14px 100px; }
+        .content::-webkit-scrollbar { width:3px; }
+        .content::-webkit-scrollbar-thumb { background:#1B5E20; border-radius:2px; }
+
+        /* === LOGIN === */
+        .login-wrap { display:flex; flex-direction:column; align-items:center; padding:24px 8px; }
+        .logo-area { text-align:center; margin-bottom:32px; }
+        .logo-icon { font-size:56px; margin-bottom:8px; }
+        .logo-name { font-size:22px; font-weight:800; color:#4CAF50; letter-spacing:.5px; }
+        .logo-sub { font-size:13px; color:#888; margin-top:2px; }
+        .login-date { font-size:13px; color:#666; margin-top:12px; }
+        .op-grid { display:flex; flex-direction:column; gap:10px; width:100%; }
+        .op-btn { background:linear-gradient(135deg,#1a1a1a,#222); border:2px solid #333; color:#fff; padding:16px 18px; border-radius:12px; font-size:17px; font-weight:600; cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:14px; text-align:left; }
+        .op-btn:active { border-color:#1B5E20; background:#1a2e1a; transform:scale(.98); }
+        .op-btn .op-info { flex:1; }
+        .op-btn .op-role { display:block; font-size:12px; color:#888; font-weight:400; margin-top:2px; }
+        .op-btn .op-emoji { font-size:28px; width:44px; height:44px; background:rgba(255,255,255,.05); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+
+        /* === RESUMEN BARRA === */
+        .summary-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+        .sum-chip { background:#1a1a1a; border:1px solid #333; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px; }
+        .sum-chip.urgent { border-color:#f44336; color:#f44336; }
+        .sum-chip.progress { border-color:#FF9800; color:#FF9800; }
+        .sum-chip.done { border-color:#4CAF50; color:#4CAF50; }
+
+        /* === SECTION DIVIDER === */
+        .section-label { font-size:11px; font-weight:700; color:#666; text-transform:uppercase; letter-spacing:1.5px; margin:18px 0 8px; padding-left:4px; }
+        .section-label:first-child { margin-top:4px; }
+
+        /* === TASK CARD === */
+        .task { background:#1a1a1a; border-left:4px solid #444; padding:14px 14px 12px; margin-bottom:8px; border-radius:10px; cursor:pointer; transition:all .15s; position:relative; }
+        .task:active { transform:scale(.985); }
+        .task.st-pending { border-left-color:#FF9800; }
+        .task.st-in-progress { border-left-color:#2196F3; background:#111a22; box-shadow:0 0 12px rgba(33,150,243,.15); }
+        .task.st-done { border-left-color:#4CAF50; opacity:.65; }
+        .task.st-overdue { border-left-color:#f44336; background:#1a1111; }
+        .task.st-blocked { border-left-color:#9E9E9E; opacity:.5; }
+        .task.st-future { border-left-color:#555; opacity:.45; }
+
+        .task-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+        .task-name { font-size:15px; font-weight:600; flex:1; line-height:1.3; }
+        .task-badge { padding:3px 9px; border-radius:10px; font-size:10px; font-weight:700; white-space:nowrap; letter-spacing:.3px; }
+        .bg-pending { background:#FF9800; color:#000; }
+        .bg-progress { background:#2196F3; color:#fff; }
+        .bg-done { background:#4CAF50; color:#fff; }
+        .bg-overdue { background:#f44336; color:#fff; }
+        .bg-blocked { background:#9E9E9E; color:#000; }
+        .bg-future { background:#555; color:#ccc; }
+
+        .task-desc { font-size:12px; color:#999; margin-top:6px; line-height:1.3; }
+        .task-meta { display:flex; gap:10px; margin-top:8px; font-size:11px; color:#777; align-items:center; }
+        .task-meta .pcc { color:#f44336; font-weight:700; }
+        .task-link { display:inline-flex; align-items:center; gap:4px; background:#1B5E20; color:#fff; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none; margin-top:8px; border:none; cursor:pointer; }
+        .task-link:active { background:#145218; }
+        .timer-badge { color:#2196F3; font-weight:600; font-size:11px; }
+
+        /* === TASK DETAIL === */
+        .detail-card { background:#1a1a1a; border-radius:12px; padding:20px; margin-bottom:14px; border-left:4px solid #1B5E20; }
+        .detail-title { font-size:20px; font-weight:700; margin-bottom:6px; }
+        .detail-desc { font-size:14px; color:#aaa; line-height:1.5; }
+        .detail-info { margin-top:12px; font-size:13px; color:#777; }
+        .detail-info span { display:block; margin-bottom:4px; }
+        .btn-action { width:100%; padding:16px; border-radius:10px; border:none; font-size:16px; font-weight:700; cursor:pointer; transition:all .15s; margin-bottom:10px; }
+        .btn-action:active { transform:scale(.98); }
+        .btn-start { background:#2196F3; color:#fff; }
+        .btn-done { background:#4CAF50; color:#fff; }
+        .btn-form { background:transparent; border:2px solid #1B5E20; color:#4CAF50; }
+        .btn-cancel { background:transparent; border:1px solid #555; color:#999; font-size:13px; }
+
+        /* === ALERTS === */
+        .alert-card { background:#1a1a1a; padding:12px 14px; margin-bottom:8px; border-radius:10px; border-left:4px solid #555; font-size:13px; line-height:1.4; }
+        .alert-card.a-warn { border-left-color:#FF9800; }
+        .alert-card.a-error { border-left-color:#f44336; }
+        .alert-card.a-ok { border-left-color:#4CAF50; }
+        .alert-time { font-size:11px; color:#666; margin-top:4px; }
+
+        /* === FAB === */
+        .fab { position:fixed; bottom:20px; right:20px; width:56px; height:56px; background:#1B5E20; border:none; border-radius:50%; color:#fff; font-size:28px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:50; transition:all .2s; }
+        .fab:active { transform:scale(.9); }
+        .fab.open { transform:rotate(45deg); background:#f44336; }
+        .fab-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; z-index:40; }
+        .fab-overlay.active { display:block; }
+        .fab-menu { position:fixed; bottom:88px; right:20px; display:none; flex-direction:column; gap:10px; z-index:50; }
+        .fab-menu.active { display:flex; }
+        .fab-item { background:#222; border:1px solid #444; color:#fff; padding:12px 16px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:10px; box-shadow:0 2px 10px rgba(0,0,0,.4); transition:all .15s; white-space:nowrap; }
+        .fab-item:active { background:#333; transform:scale(.97); }
+        .fab-item.danger { border-color:#f44336; }
+
+        /* === EMPTY STATE === */
+        .empty { text-align:center; padding:48px 20px; color:#666; }
+        .empty-icon { font-size:48px; margin-bottom:12px; }
+
+        /* === TOAST === */
+        .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; z-index:200; opacity:0; transition:opacity .3s; pointer-events:none; }
+        .toast.show { opacity:1; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- ===== LOGIN ===== -->
+    <div id="scr-login" class="screen active">
+        <div class="content">
+            <div class="login-wrap">
+                <div class="logo-area">
+                    <div class="logo-icon">🍚</div>
+                    <div class="logo-name">Rice in Action</div>
+                    <div class="logo-sub">Quality Hub</div>
+                    <div class="login-date" id="login-date"></div>
+                </div>
+                <div class="op-grid" id="op-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TASKS ===== -->
+    <div id="scr-tasks" class="screen">
+        <div class="header">
+            <div class="header-left">
+                <div>
+                    <div class="header-title" id="hdr-name"></div>
+                    <div class="header-sub" id="hdr-shift"></div>
+                </div>
+            </div>
+            <div class="header-right">
+                <span id="hdr-clock" style="font-size:14px;font-weight:600;opacity:.9"></span>
+                <button class="h-btn" onclick="showAlerts()">🔔<span class="badge" id="alert-badge" style="display:none"></span></button>
+                <button class="h-btn" onclick="goLogin()">↩</button>
+            </div>
+        </div>
+        <div class="content" id="tasks-content"></div>
+    </div>
+
+    <!-- ===== DETAIL ===== -->
+    <div id="scr-detail" class="screen">
+        <div class="header">
+            <button class="h-btn" onclick="goBack()" style="width:auto;padding:0 10px;border-radius:8px;font-size:14px;">← Atrás</button>
+            <div class="header-title">Detalle tarea</div>
+            <div style="width:38px"></div>
+        </div>
+        <div class="content" id="detail-content"></div>
+    </div>
+
+    <!-- ===== ALERTS ===== -->
+    <div id="scr-alerts" class="screen">
+        <div class="header">
+            <button class="h-btn" onclick="goBack()" style="width:auto;padding:0 10px;border-radius:8px;font-size:14px;">← Atrás</button>
+            <div class="header-title">Alertas</div>
+            <div style="width:38px"></div>
+        </div>
+        <div class="content" id="alerts-content"></div>
+    </div>
+</div>
+
+<!-- BACKEND -->
+<script src="ria-backend.js"></script>
+
+<!-- FAB -->
+<div class="fab-overlay" id="fab-overlay" onclick="toggleFab()"></div>
+<div class="fab-menu" id="fab-menu">
+    <button class="fab-item danger" onclick="quickAction('nc')">🔴 No Conforme</button>
+    <button class="fab-item" onclick="quickAction('recepcion')">📦 Recepción MP</button>
+    <button class="fab-item" onclick="quickAction('incidencia')">⚠️ Incidencia</button>
+</div>
+<button class="fab" id="fab-btn" onclick="toggleFab()">+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const BASE_URL = 'https://cquerol2-alt.github.io/calidad/';
+const FORMS = {
+    plan:        BASE_URL + 'plan.html',
+    produccion:  BASE_URL + 'produccion.html',
+    caldos:      BASE_URL + 'caldos.html',
+    ld:          BASE_URL + 'ld.html',
+    temp_camaras:BASE_URL + 'temp_camaras.html',
+    checklist:   BASE_URL + 'checklist_semanal_camaras.html',
+    lotes:       BASE_URL + 'lotes.html',
+    registros:   BASE_URL + 'registros-pdf.html',
+    recepcion:   BASE_URL + 'recepcion_mp.html',
+};
+
+// ============================================================
+// OPERATORS
+// ============================================================
+const OPERATORS = {
+    diego:     { name:'Diego',     emoji:'👨‍🔧', role:'Producción + Logística', shift:'7:00–15:00' },
+    isabel:    { name:'Isabel',    emoji:'👩‍🍳', role:'Caldos / Salsas + L+D',  shift:'7:30–15:30' },
+    geronimo:  { name:'Gerónimo',  emoji:'📦',   role:'Envasado + L+D',         shift:'8:00–15:00' },
+    christophe:{ name:'Christophe',emoji:'🛠️',   role:'Apoyo',                  shift:'Flexible'   },
+    cristina:  { name:'Cristina',  emoji:'👩‍💼', role:'CEO / Calidad',          shift:'Gestión por excepción' },
+};
+
+// ============================================================
+// TASK DEFINITIONS
+// freq: 'diaria' | 'semanal' | 'quincenal' | 'mensual'
+// dow: 1=lun ... 5=vie (solo para semanal)
+// blocked: 'diego+isabel' = requiere que tareas de esos operarios estén hechas
+// pcc: true = tarea crítica APPCC
+// ============================================================
+const TASK_DB = {
+    diego: [
+        { id:'d-temp',    emoji:'🌡️', title:'Temperatura cámaras',       time:'07:00', freq:'diaria', form:'temp_camaras', desc:'Registrar temperatura de todas las cámaras frigoríficas', pcc:false },
+        { id:'d-plan',    emoji:'📋', title:'Ver plan de producción',     time:'07:00', freq:'diaria', form:'plan',         desc:'Consultar el plan del día: productos, cantidades, prioridades', pcc:false },
+        { id:'d-jarras',  emoji:'🍚', title:'Preparar jarras (según plan)', time:'07:15', freq:'diaria', form:'produccion', desc:'Jarras de arroz según plan. Registrar lotes MP, temperatura PCC1 (≥70°C)', pcc:true },
+        { id:'d-redes',   emoji:'🥘', title:'Arroz en redes (según plan)',  time:'07:15', freq:'diaria', form:'produccion', desc:'Cocinar arroz en redes según plan', pcc:false },
+        { id:'d-logist',  emoji:'🚚', title:'Logística (Holded + Logista)', time:'10:00', freq:'diaria', form:null,         desc:'Procesar pedidos del día en Holded, generar envíos en Logista', pcc:false },
+        { id:'d-cierre',  emoji:'✅', title:'Verificar registros del día',  time:'14:30', freq:'diaria', form:null,         desc:'Comprobar que todos los registros de producción están completos', pcc:false },
+    ],
+    isabel: [
+        { id:'i-caldos',  emoji:'🍲', title:'Caldos (según plan)',         time:'07:30', freq:'diaria', form:'caldos',  desc:'Preparar caldos del día según plan. Registrar lotes, temperaturas', pcc:false },
+        { id:'i-salsas',  emoji:'🫕', title:'Salsas (según plan)',         time:'07:30', freq:'diaria', form:'caldos',  desc:'Preparar salsas del día según plan. Registrar lotes, ingredientes', pcc:false },
+        { id:'i-ld-cf',   emoji:'🧹', title:'L+D Cuarto Frío',            time:'13:30', freq:'diaria', form:'ld',      desc:'Limpieza y desinfección del Cuarto Frío al terminar producción. VIXCLOR SE suelos, ASEPCOL PLUS superficies', pcc:false },
+        { id:'i-ld-zona', emoji:'🧹', title:'L+D zonas asignadas',        time:'13:30', freq:'diaria', form:'ld',      desc:'Limpieza y desinfección de zonas asignadas', pcc:false },
+        { id:'i-caduc',   emoji:'📅', title:'Control caducidades (todas las zonas)', time:'08:00', freq:'semanal', dow:1, form:'checklist', desc:'Revisar caducidades en todas las cámaras y zonas de almacenamiento', pcc:false },
+        { id:'i-desag',   emoji:'🚿', title:'Desagües y bajomesas',        time:'13:00', freq:'semanal', dow:1, form:'ld', desc:'Limpieza profunda de desagües y bajomesas', pcc:false },
+        { id:'i-prof-cf', emoji:'🧽', title:'Limpieza profunda Cuarto Frío', time:'13:00', freq:'quincenal', form:'ld', desc:'Limpieza profunda integral del Cuarto Frío (techo, paredes, estantes, drenajes)', pcc:false },
+        { id:'i-prof-z',  emoji:'🧽', title:'Limpieza profunda zonas asignadas', time:'13:00', freq:'quincenal', form:'ld', desc:'Limpieza profunda integral de zonas asignadas', pcc:false },
+    ],
+    geronimo: [
+        { id:'g-envase',  emoji:'📦', title:'Envasado (según plan)',       time:'08:00', freq:'diaria', form:'produccion', desc:'Envasado de productos según plan. BLOQUEADO hasta que jarras y caldos estén listos', blocked:'diego+isabel', pcc:false },
+        { id:'g-termo',   emoji:'🔥', title:'Termosellado',               time:'09:00', freq:'diaria', form:'produccion', desc:'Control de termosellado: verificar sellado correcto, temperatura', pcc:false },
+        { id:'g-detect',  emoji:'🔍', title:'Detector metales (PCC2)',     time:'09:30', freq:'diaria', form:'produccion', desc:'Verificación detector de metales: pasar testigos Fe/NFe/SS. REGISTRAR resultado', pcc:true },
+        { id:'g-etiquet', emoji:'🏷️', title:'Verificación etiquetado',    time:'10:00', freq:'diaria', form:'produccion', desc:'Verificar correspondencia etiqueta↔producto, lote, caducidad', pcc:false },
+        { id:'g-ld-env',  emoji:'🧹', title:'L+D Zona Envasado',          time:'13:30', freq:'diaria', form:'ld',         desc:'Limpieza y desinfección zona de envasado. ASEPCOL PLUS mesas, VIXCLOR SE suelos', pcc:false },
+        { id:'g-ld-bunk', emoji:'🧹', title:'L+D Bunker',                 time:'13:30', freq:'diaria', form:'ld',         desc:'Limpieza y desinfección del Bunker', pcc:false },
+        { id:'g-orden',   emoji:'📋', title:'Control orden cámaras',       time:'08:00', freq:'semanal', dow:1, form:'checklist', desc:'Revisar orden y organización de cámaras', pcc:false },
+        { id:'g-prof',    emoji:'🧽', title:'Limpieza profunda Envasado + Bunker', time:'13:00', freq:'quincenal', form:'ld', desc:'Limpieza profunda integral de zona envasado y bunker', pcc:false },
+    ],
+    christophe: [
+        { id:'ch-apoyo',  emoji:'🛠️', title:'Apoyo producción',          time:'08:00', freq:'diaria', form:null, desc:'Tareas de apoyo según necesidad del equipo', pcc:false },
+        { id:'ch-recep',  emoji:'📦', title:'Recepción materias primas',   time:'09:00', freq:'diaria', form:'recepcion', desc:'Recepción de MP: verificar temperatura, estado, documentación, lote proveedor', pcc:false },
+    ],
+    cristina: [
+        { id:'cr-plan',   emoji:'📋', title:'Crear plan de producción',    time:'06:30', freq:'diaria', form:'plan',      desc:'Definir productos, cantidades y prioridades del día', pcc:false },
+        { id:'cr-verif',  emoji:'📊', title:'Verificar registros (excepción)', time:'18:00', freq:'diaria', form:null,     desc:'Revisar alertas y registros incompletos del día', pcc:false },
+        { id:'cr-recep',  emoji:'📦', title:'Recepción MP (si aplica)',     time:'10:00', freq:'diaria', form:'recepcion', desc:'Recepción de materia prima: temperatura, estado, lote, albarán', pcc:false },
+        { id:'cr-simul',  emoji:'🔬', title:'Simulacro trazabilidad',      time:'10:00', freq:'mensual', form:null,       desc:'Ejercicio de trazabilidad completo: desde producto final hasta MP y viceversa', pcc:false },
+    ],
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentOp = null;
+let screenStack = ['scr-login'];
+
+function todayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getState() {
+    try {
+        const raw = localStorage.getItem('ria-hub-state');
+        if (!raw) return {};
+        const s = JSON.parse(raw);
+        // Limpiar estados de días anteriores (mantener solo hoy + periodicTracker)
+        const today = todayKey();
+        const cleaned = {};
+        if (s.periodicTracker) cleaned.periodicTracker = s.periodicTracker;
+        if (s[today]) cleaned[today] = s[today];
+        return cleaned;
+    } catch(e) { return {}; }
+}
+
+function saveState(state) {
+    localStorage.setItem('ria-hub-state', JSON.stringify(state));
+}
+
+function getTaskState(taskId) {
+    const state = getState();
+    const day = state[todayKey()] || {};
+    return day[taskId] || null;
+}
+
+function setTaskState(taskId, status, extra={}) {
+    const state = getState();
+    const key = todayKey();
+    if (!state[key]) state[key] = {};
+    state[key][taskId] = { status, ts: new Date().toISOString(), ...extra };
+    saveState(state);
+}
+
+function getPeriodicTracker() {
+    const state = getState();
+    return state.periodicTracker || {};
+}
+
+function setPeriodicDone(taskId) {
+    const state = getState();
+    if (!state.periodicTracker) state.periodicTracker = {};
+    state.periodicTracker[taskId] = todayKey();
+    saveState(state);
+}
+
+// ============================================================
+// TASK ENGINE
+// ============================================================
+function getTasksForToday(opKey) {
+    const defs = TASK_DB[opKey] || [];
+    const now = new Date();
+    const dow = now.getDay(); // 0=dom, 1=lun...
+    const today = todayKey();
+    const periodic = getPeriodicTracker();
+
+    return defs.filter(t => {
+        // Filtrar por frecuencia
+        if (t.freq === 'diaria') return true;
+        if (t.freq === 'semanal') return dow === (t.dow || 1);
+        if (t.freq === 'quincenal') {
+            const last = periodic[t.id];
+            if (!last) return true; // Nunca hecha → mostrar
+            const lastDate = new Date(last);
+            const diffDays = Math.floor((now - lastDate) / 86400000);
+            return diffDays >= 12; // Mostrar si han pasado 12+ días (margen)
+        }
+        if (t.freq === 'mensual') {
+            const last = periodic[t.id];
+            if (!last) return true;
+            const lastDate = new Date(last);
+            const diffDays = Math.floor((now - lastDate) / 86400000);
+            return diffDays >= 25;
+        }
+        return true;
+    }).map(t => {
+        const saved = getTaskState(t.id);
+        let status = 'pending';
+
+        if (saved) {
+            status = saved.status;
+        } else if (t.blocked) {
+            // Comprobar si las tareas bloqueantes están hechas
+            const blockers = t.blocked.split('+');
+            const allDone = blockers.every(bOp => {
+                const bTasks = TASK_DB[bOp] || [];
+                return bTasks.filter(bt => bt.freq === 'diaria' && bt.time < t.time).every(bt => {
+                    const bs = getTaskState(bt.id);
+                    return bs && bs.status === 'done';
+                });
+            });
+            status = allDone ? 'pending' : 'blocked';
+        } else {
+            // Marcar como 'future' si la hora aún no ha llegado (con 30 min de margen)
+            const [h,m] = t.time.split(':').map(Number);
+            const taskMin = h * 60 + m;
+            const nowMin = now.getHours() * 60 + now.getMinutes();
+            if (nowMin < taskMin - 30 && t.freq === 'diaria') status = 'future';
+        }
+
+        // Comprobar vencidas (periódicas)
+        if ((t.freq === 'quincenal' || t.freq === 'mensual') && status === 'pending') {
+            const last = periodic[t.id];
+            if (last) {
+                const lastDate = new Date(last);
+                const diffDays = Math.floor((now - lastDate) / 86400000);
+                const limit = t.freq === 'quincenal' ? 16 : 35;
+                if (diffDays > limit) status = 'overdue';
+            }
+        }
+
+        return { ...t, status };
+    });
+}
+
+function countByStatus(tasks, st) {
+    return tasks.filter(t => t.status === st).length;
+}
+
+// ============================================================
+// RENDER: LOGIN
+// ============================================================
+function renderLogin() {
+    const now = new Date();
+    const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    const dateStr = now.toLocaleDateString('es-ES', opts);
+    document.getElementById('login-date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+    const grid = document.getElementById('op-grid');
+    grid.innerHTML = '';
+    for (const [key, op] of Object.entries(OPERATORS)) {
+        const btn = document.createElement('button');
+        btn.className = 'op-btn';
+        btn.innerHTML = `<div class="op-emoji">${op.emoji}</div><div class="op-info"><strong>${op.name}</strong><span class="op-role">${op.role} · ${op.shift}</span></div>`;
+        btn.onclick = () => selectOperator(key);
+        grid.appendChild(btn);
+    }
+}
+
+// ============================================================
+// RENDER: TASKS
+// ============================================================
+function renderTasks() {
+    const op = OPERATORS[currentOp];
+    document.getElementById('hdr-name').textContent = `${op.emoji} ${op.name}`;
+    document.getElementById('hdr-shift').textContent = op.shift;
+    updateClock();
+
+    const tasks = getTasksForToday(currentOp);
+    const container = document.getElementById('tasks-content');
+    container.innerHTML = '';
+
+    // Summary bar
+    const pending = countByStatus(tasks, 'pending') + countByStatus(tasks, 'future');
+    const progress = countByStatus(tasks, 'in-progress');
+    const done = countByStatus(tasks, 'done');
+    const overdue = countByStatus(tasks, 'overdue');
+
+    let sumHTML = '<div class="summary-bar">';
+    if (overdue > 0) sumHTML += `<div class="sum-chip urgent">🔴 ${overdue} vencida${overdue>1?'s':''}</div>`;
+    if (progress > 0) sumHTML += `<div class="sum-chip progress">🔵 ${progress} en curso</div>`;
+    sumHTML += `<div class="sum-chip">${pending} pendiente${pending!==1?'s':''}</div>`;
+    sumHTML += `<div class="sum-chip done">✓ ${done} hecha${done!==1?'s':''}</div>`;
+    sumHTML += '</div>';
+    container.innerHTML = sumHTML;
+
+    // Group by status priority
+    const groups = [
+        { key:'overdue', label:'⚠️ VENCIDAS', tasks: tasks.filter(t => t.status==='overdue') },
+        { key:'in-progress', label:'🔵 EN CURSO', tasks: tasks.filter(t => t.status==='in-progress') },
+        { key:'pending', label:'📋 PENDIENTES', tasks: tasks.filter(t => t.status==='pending') },
+        { key:'blocked', label:'🔒 BLOQUEADAS', tasks: tasks.filter(t => t.status==='blocked') },
+        { key:'future', label:'⏳ MÁS TARDE', tasks: tasks.filter(t => t.status==='future') },
+        { key:'done', label:'✅ HECHAS', tasks: tasks.filter(t => t.status==='done') },
+    ];
+
+    groups.forEach(g => {
+        if (g.tasks.length === 0) return;
+        container.innerHTML += `<div class="section-label">${g.label}</div>`;
+        g.tasks.forEach(t => {
+            container.innerHTML += renderTaskCard(t);
+        });
+    });
+
+    // Update alerts badge
+    const alertCount = overdue + tasks.filter(t => t.status==='pending' && t.pcc).length;
+    const badge = document.getElementById('alert-badge');
+    if (alertCount > 0) {
+        badge.textContent = alertCount;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function renderTaskCard(t) {
+    const statusLabels = {
+        'pending':'PENDIENTE', 'in-progress':'EN CURSO', 'done':'HECHO',
+        'overdue':'VENCIDA', 'blocked':'BLOQUEADO', 'future':'MÁS TARDE'
+    };
+    const bgClass = {
+        'pending':'bg-pending', 'in-progress':'bg-progress', 'done':'bg-done',
+        'overdue':'bg-overdue', 'blocked':'bg-blocked', 'future':'bg-future'
+    };
+
+    let metaHTML = '';
+    if (t.time) metaHTML += `<span>⏰ ${t.time}</span>`;
+    if (t.freq !== 'diaria') metaHTML += `<span>🔄 ${t.freq}</span>`;
+    if (t.pcc) metaHTML += `<span class="pcc">⚠️ PCC</span>`;
+    if (t.status === 'in-progress') {
+        const saved = getTaskState(t.id);
+        if (saved && saved.ts) {
+            const elapsed = Math.floor((Date.now() - new Date(saved.ts).getTime()) / 60000);
+            metaHTML += `<span class="timer-badge">⏱ ${elapsed}min</span>`;
+        }
+    }
+    if (t.status === 'done') {
+        const saved = getTaskState(t.id);
+        if (saved && saved.ts) {
+            const time = new Date(saved.ts).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+            metaHTML += `<span>✓ ${time}</span>`;
+        }
+    }
+
+    return `
+        <div class="task st-${t.status}" onclick="openDetail('${t.id}')">
+            <div class="task-top">
+                <div class="task-name">${t.emoji} ${t.title}</div>
+                <span class="task-badge ${bgClass[t.status]}">${statusLabels[t.status]}</span>
+            </div>
+            <div class="task-desc">${t.desc}</div>
+            <div class="task-meta">${metaHTML}</div>
+        </div>
+    `;
+}
+
+// ============================================================
+// DETAIL
+// ============================================================
+function openDetail(taskId) {
+    const tasks = getTasksForToday(currentOp);
+    const t = tasks.find(x => x.id === taskId);
+    if (!t) return;
+
+    const container = document.getElementById('detail-content');
+    const freqLabel = {diaria:'Diaria',semanal:'Semanal (lunes)',quincenal:'Quincenal',mensual:'Mensual'};
+
+    let actionsHTML = '';
+
+    if (t.status === 'pending' || t.status === 'overdue' || t.status === 'future') {
+        actionsHTML += `<button class="btn-action btn-start" onclick="startTask('${t.id}')">▶️ EMPEZAR TAREA</button>`;
+    }
+    if (t.status === 'in-progress') {
+        actionsHTML += `<button class="btn-action btn-done" onclick="completeTask('${t.id}')">✅ MARCAR HECHO</button>`;
+        actionsHTML += `<button class="btn-action btn-cancel" onclick="cancelTask('${t.id}')">Cancelar</button>`;
+    }
+    if (t.status === 'blocked') {
+        actionsHTML += `<div style="padding:16px;text-align:center;color:#999;font-size:14px;">🔒 Bloqueada hasta que las tareas previas estén completadas</div>`;
+    }
+    if (t.form) {
+        actionsHTML += `<a class="btn-action btn-form" href="${FORMS[t.form]}" target="_blank" style="display:block;text-align:center;text-decoration:none;" onclick="event.stopPropagation()">📋 Abrir formulario →</a>`;
+    }
+    if (t.status === 'done') {
+        const saved = getTaskState(t.id);
+        const time = saved ? new Date(saved.ts).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}) : '';
+        actionsHTML += `<div style="padding:16px;text-align:center;color:#4CAF50;font-weight:600;font-size:16px;">✅ Completada a las ${time}</div>`;
+        if (t.form) {
+            actionsHTML += `<a class="btn-action btn-form" href="${FORMS[t.form]}" target="_blank" style="display:block;text-align:center;text-decoration:none;" onclick="event.stopPropagation()">📋 Ver formulario →</a>`;
+        }
+    }
+
+    container.innerHTML = `
+        <div class="detail-card">
+            <div class="detail-title">${t.emoji} ${t.title}</div>
+            <div class="detail-desc">${t.desc}</div>
+            <div class="detail-info">
+                <span>⏰ Hora: ${t.time}</span>
+                <span>🔄 Frecuencia: ${freqLabel[t.freq] || t.freq}</span>
+                ${t.pcc ? '<span style="color:#f44336;font-weight:700;">⚠️ PUNTO CRÍTICO DE CONTROL</span>' : ''}
+                ${t.blocked ? '<span>🔒 Depende de: ' + t.blocked.split('+').map(b => OPERATORS[b]?.name || b).join(' + ') + '</span>' : ''}
+            </div>
+        </div>
+        ${actionsHTML}
+    `;
+
+    pushScreen('scr-detail');
+}
+
+// ============================================================
+// ACTIONS
+// ============================================================
+function startTask(taskId) {
+    setTaskState(taskId, 'in-progress');
+    // Enviar al backend
+    if (typeof RIA !== 'undefined') {
+        const allDefs = Object.values(TASK_DB).flat();
+        const def = allDefs.find(t => t.id === taskId);
+        RIA.enviar('hub_tarea', {
+            operario: OPERATORS[currentOp].name,
+            tarea_id: taskId,
+            tarea_nombre: def ? def.title : taskId,
+            accion: 'iniciar',
+            fecha: todayKey()
+        });
+    }
+    toast('Tarea iniciada');
+    if (navigator.vibrate) navigator.vibrate([80,40,80]);
+    openDetail(taskId);
+    renderTasks();
+}
+
+function completeTask(taskId) {
+    setTaskState(taskId, 'done');
+    const allDefs = Object.values(TASK_DB).flat();
+    const def = allDefs.find(t => t.id === taskId);
+    if (def && (def.freq === 'quincenal' || def.freq === 'mensual')) {
+        setPeriodicDone(taskId);
+    }
+    // Enviar al backend
+    if (typeof RIA !== 'undefined') {
+        RIA.enviar('hub_tarea', {
+            operario: OPERATORS[currentOp].name,
+            tarea_id: taskId,
+            tarea_nombre: def ? def.title : taskId,
+            accion: 'completar',
+            fecha: todayKey()
+        });
+    }
+    toast('✅ Tarea completada');
+    if (navigator.vibrate) navigator.vibrate([80,40,80,40,80]);
+
+    checkUnblocks();
+    goBack();
+}
+
+function cancelTask(taskId) {
+    setTaskState(taskId, 'pending');
+    toast('Tarea devuelta a pendiente');
+    goBack();
+}
+
+function checkUnblocks() {
+    // Cuando Diego o Isabel completan, revisar tareas bloqueadas de Gerónimo
+    const gTasks = getTasksForToday('geronimo');
+    gTasks.forEach(t => {
+        if (t.status === 'blocked') {
+            // Re-evaluar
+            const def = TASK_DB.geronimo.find(d => d.id === t.id);
+            if (def && def.blocked) {
+                const blockers = def.blocked.split('+');
+                const allDone = blockers.every(bOp => {
+                    const bTasks = TASK_DB[bOp] || [];
+                    return bTasks.filter(bt => bt.freq === 'diaria' && bt.time < def.time).every(bt => {
+                        const bs = getTaskState(bt.id);
+                        return bs && bs.status === 'done';
+                    });
+                });
+                // No cambiar estado automáticamente, se recalcula al renderizar
+            }
+        }
+    });
+}
+
+// ============================================================
+// QUICK ACTIONS
+// ============================================================
+function quickAction(action) {
+    toggleFab();
+    switch(action) {
+        case 'nc':
+            if (confirm('¿Registrar producto NO CONFORME?\n\nSe abrirá el proceso de no conformidad.')) {
+                toast('🔴 No Conforme registrado');
+                // En producción: llamar a API para imprimir etiqueta SATO NC
+            }
+            break;
+        case 'recepcion':
+            window.open(FORMS.recepcion, '_blank');
+            break;
+        case 'incidencia':
+            const desc = prompt('Describe la incidencia brevemente:');
+            if (desc) {
+                if (typeof RIA !== 'undefined') {
+                    RIA.enviar('hub_tarea', {
+                        operario: currentOp ? OPERATORS[currentOp].name : 'Desconocido',
+                        tarea_id: 'incidencia-' + Date.now(),
+                        tarea_nombre: 'Incidencia manual',
+                        accion: 'incidencia',
+                        observaciones: desc,
+                        fecha: todayKey()
+                    });
+                }
+                toast('⚠️ Incidencia registrada');
+            }
+            break;
+    }
+}
+
+// ============================================================
+// ALERTS
+// ============================================================
+function showAlerts() {
+    const tasks = getTasksForToday(currentOp);
+    const container = document.getElementById('alerts-content');
+    let html = '';
+
+    // Overdue
+    tasks.filter(t => t.status === 'overdue').forEach(t => {
+        html += `<div class="alert-card a-error">🔴 <strong>${t.title}</strong> — tarea vencida (${t.freq})<div class="alert-time">${t.desc}</div></div>`;
+    });
+
+    // PCC pendientes
+    tasks.filter(t => t.pcc && t.status !== 'done').forEach(t => {
+        html += `<div class="alert-card a-warn">⚠️ <strong>PCC:</strong> ${t.title} aún no completada<div class="alert-time">Punto Crítico de Control — requiere registro</div></div>`;
+    });
+
+    // Pendientes con hora pasada
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    tasks.filter(t => t.status === 'pending' && t.time).forEach(t => {
+        const [h,m] = t.time.split(':').map(Number);
+        const tMin = h * 60 + m;
+        if (nowMin > tMin + 60) {
+            html += `<div class="alert-card a-warn">⏰ <strong>${t.title}</strong> — pendiente desde las ${t.time}<div class="alert-time">Lleva ${Math.floor((nowMin-tMin)/60)}h de retraso</div></div>`;
+        }
+    });
+
+    // Completadas
+    tasks.filter(t => t.status === 'done').forEach(t => {
+        const saved = getTaskState(t.id);
+        const time = saved ? new Date(saved.ts).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}) : '';
+        html += `<div class="alert-card a-ok">✅ ${t.title} — completada a las ${time}</div>`;
+    });
+
+    if (!html) {
+        html = '<div class="empty"><div class="empty-icon">✅</div><div>Sin alertas — todo en orden</div></div>';
+    }
+
+    container.innerHTML = html;
+    pushScreen('scr-alerts');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function pushScreen(id) {
+    screenStack.push(id);
+    showScreen(id);
+}
+
+function goBack() {
+    if (screenStack.length > 1) screenStack.pop();
+    const prev = screenStack[screenStack.length - 1];
+    showScreen(prev);
+    if (prev === 'scr-tasks') renderTasks();
+}
+
+function selectOperator(key) {
+    currentOp = key;
+    screenStack = ['scr-login', 'scr-tasks'];
+    renderTasks();
+    showScreen('scr-tasks');
+}
+
+function goLogin() {
+    currentOp = null;
+    screenStack = ['scr-login'];
+    showScreen('scr-login');
+}
+
+// ============================================================
+// FAB
+// ============================================================
+function toggleFab() {
+    const menu = document.getElementById('fab-menu');
+    const overlay = document.getElementById('fab-overlay');
+    const btn = document.getElementById('fab-btn');
+    const isOpen = menu.classList.contains('active');
+    menu.classList.toggle('active');
+    overlay.classList.toggle('active');
+    btn.classList.toggle('open');
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function updateClock() {
+    const now = new Date();
+    document.getElementById('hdr-clock').textContent = now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+}
+
+function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    renderLogin();
+    setInterval(updateClock, 30000);
+
+    // Backend: estado de conexión
+    if (typeof RIA !== 'undefined') {
+        const est = RIA.estado();
+        if (est.pendientes > 0) console.log(`🔄 ${est.pendientes} registros pendientes de envío`);
+    }
+
+    // FAB solo visible en pantalla de tareas
+    const fab = document.getElementById('fab-btn');
+    const observer = new MutationObserver(() => {
+        const tasksActive = document.getElementById('scr-tasks').classList.contains('active') ||
+                           document.getElementById('scr-detail').classList.contains('active');
+        fab.style.display = tasksActive ? 'flex' : 'none';
+    });
+    document.querySelectorAll('.screen').forEach(s => {
+        observer.observe(s, { attributes:true, attributeFilter:['class'] });
+    });
+    fab.style.display = 'none';
+});
+</script>
+</body>
+</html>

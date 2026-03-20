@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperaturas Cámaras - RIA-FORM-CAL-002</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5; color: #333; line-height: 1.6;
+        }
+        .header {
+            background-color: #1B5E20; color: white; padding: 1rem;
+            text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 1.3rem; margin-bottom: 0.25rem; font-weight: 600; }
+        .header p { font-size: 0.9rem; opacity: 0.9; }
+        .form-code { font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.8; }
+        .container { max-width: 600px; margin: 0 auto; padding: 1rem; }
+
+        .info-bar {
+            background: #E8F5E9; border-left: 4px solid #1B5E20;
+            padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0 4px 4px 0;
+            font-size: 0.9rem;
+        }
+        .info-bar strong { color: #1B5E20; }
+
+        .turno-selector {
+            display: flex; gap: 0.5rem; margin-bottom: 1rem;
+        }
+        .turno-btn {
+            flex: 1; padding: 1rem; border: 2px solid #ddd; background: white;
+            border-radius: 8px; cursor: pointer; text-align: center;
+            font-weight: 600; font-size: 1rem; transition: all 0.2s;
+        }
+        .turno-btn.active {
+            border-color: #1B5E20; background: #E8F5E9; color: #1B5E20;
+        }
+        .turno-btn .hora { font-size: 0.8rem; font-weight: 400; color: #666; margin-top: 0.25rem; }
+        .turno-btn.active .hora { color: #2E7D32; }
+
+        .section {
+            background: white; margin-bottom: 1rem; border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;
+        }
+        .section-title {
+            background: #4CAF50; color: white; padding: 0.75rem 1rem;
+            font-weight: 600; display: flex; justify-content: space-between; align-items: center;
+        }
+        .section-content { padding: 1rem; }
+
+        .camara-card {
+            background: #f9f9f9; border-left: 4px solid #4CAF50;
+            border-radius: 0 8px 8px 0; padding: 1rem; margin-bottom: 1rem;
+        }
+        .camara-card.congelador { border-left-color: #1565C0; }
+        .camara-card h3 {
+            font-size: 1rem; margin-bottom: 0.75rem; display: flex;
+            align-items: center; gap: 0.5rem;
+        }
+        .camara-card h3 .icon { font-size: 1.3rem; }
+        .camara-card .rango {
+            font-size: 0.8rem; color: #666; font-weight: 400;
+            background: #e0e0e0; padding: 0.15rem 0.5rem; border-radius: 10px;
+        }
+
+        .temp-input-row {
+            display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+        }
+        .temp-input-row label {
+            min-width: 80px; font-weight: 500; color: #333; font-size: 0.9rem;
+        }
+        .temp-input-wrapper {
+            flex: 1; position: relative;
+        }
+        .temp-input {
+            width: 100%; padding: 0.75rem; padding-right: 2.5rem;
+            border: 2px solid #ddd; border-radius: 8px; font-size: 1.2rem;
+            font-weight: 600; text-align: center; font-family: inherit;
+        }
+        .temp-input:focus {
+            outline: none; border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76,175,80,0.15);
+        }
+        .temp-input.alerta {
+            border-color: #d32f2f; background: #ffebee;
+            box-shadow: 0 0 0 3px rgba(211,47,47,0.15);
+        }
+        .temp-input.ok {
+            border-color: #4CAF50; background: #E8F5E9;
+        }
+        .temp-unit {
+            position: absolute; right: 0.75rem; top: 50%;
+            transform: translateY(-50%); color: #999; font-weight: 500;
+        }
+
+        .alerta-msg {
+            color: #d32f2f; font-size: 0.85rem; font-weight: 500;
+            margin-top: 0.25rem; display: none;
+        }
+        .alerta-msg.visible { display: block; }
+
+        .obs-input {
+            width: 100%; padding: 0.5rem; border: 1px solid #ddd;
+            border-radius: 4px; font-size: 0.9rem; font-family: inherit;
+            margin-top: 0.5rem; resize: none;
+        }
+        .obs-input:focus { outline: none; border-color: #4CAF50; }
+
+        .resumen-box {
+            background: white; border-radius: 8px; padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1rem;
+        }
+        .resumen-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;
+        }
+        .resumen-item:last-child { border-bottom: none; }
+        .resumen-item .nombre { font-weight: 500; }
+        .resumen-item .valor { font-weight: 700; font-size: 1.1rem; }
+        .resumen-item .valor.ok { color: #2E7D32; }
+        .resumen-item .valor.alerta { color: #d32f2f; }
+        .resumen-item .valor.pendiente { color: #999; }
+
+        .submit-btn {
+            width: 100%; padding: 1rem; background: #1B5E20; color: white;
+            border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .submit-btn:hover { background: #2E7D32; }
+        .submit-btn:disabled { background: #bbb; cursor: not-allowed; }
+
+        .success-msg {
+            display: none; background: #E8F5E9; border: 2px solid #4CAF50;
+            border-radius: 8px; padding: 1.5rem; text-align: center;
+            margin-bottom: 1rem;
+        }
+        .success-msg.visible { display: block; }
+        .success-msg h2 { color: #1B5E20; margin-bottom: 0.5rem; }
+
+        .historial-link {
+            display: block; text-align: center; margin-top: 1rem;
+            color: #1B5E20; font-weight: 500; font-size: 0.9rem;
+        }
+
+        @media (max-width: 380px) {
+            .temp-input { font-size: 1rem; padding: 0.6rem; }
+            .turno-btn { padding: 0.75rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Temperaturas Cámaras</h1>
+        <p>Registro diario — 2 controles/día</p>
+        <div class="form-code">RIA-FORM-CAL-002 | Rev.1</div>
+    </div>
+
+    <div class="container">
+        <!-- Info -->
+        <div class="info-bar">
+            <strong>Operario:</strong> <span id="operario">Diego</span> &nbsp;|&nbsp;
+            <strong>Fecha:</strong> <span id="fechaHoy"></span>
+        </div>
+
+        <!-- Selector de turno -->
+        <div class="turno-selector">
+            <div class="turno-btn active" data-turno="manana" onclick="selectTurno(this)">
+                Mañana
+                <div class="hora">~7:00</div>
+            </div>
+            <div class="turno-btn" data-turno="mediodia" onclick="selectTurno(this)">
+                Mediodía
+                <div class="hora">~14:30</div>
+            </div>
+        </div>
+
+        <!-- Cámaras -->
+        <div class="section">
+            <div class="section-title">
+                <span>Registro de temperaturas</span>
+                <span id="contadorOk">0/4</span>
+            </div>
+            <div class="section-content" style="display:block;">
+                <!-- Congelador -->
+                <div class="camara-card congelador" data-camara="congelador" data-min="-22" data-max="-16">
+                    <h3>
+                        <span class="icon">&#10052;</span>
+                        Congelador
+                        <span class="rango">-22°C a -16°C</span>
+                    </h3>
+                    <div class="temp-input-row">
+                        <label>Temp:</label>
+                        <div class="temp-input-wrapper">
+                            <input type="number" class="temp-input" step="0.1"
+                                   placeholder="-18.0" inputmode="decimal"
+                                   oninput="validarTemp(this)">
+                            <span class="temp-unit">°C</span>
+                        </div>
+                    </div>
+                    <div class="alerta-msg">Temperatura fuera de rango</div>
+                    <textarea class="obs-input" rows="1" placeholder="Observaciones (opcional)"></textarea>
+                </div>
+
+                <!-- Cámara Refrigeración 1 -->
+                <div class="camara-card" data-camara="refrig1" data-min="0" data-max="5">
+                    <h3>
+                        <span class="icon">&#9729;</span>
+                        Cámara 1 (Refrigeración)
+                        <span class="rango">0°C a 5°C</span>
+                    </h3>
+                    <div class="temp-input-row">
+                        <label>Temp:</label>
+                        <div class="temp-input-wrapper">
+                            <input type="number" class="temp-input" step="0.1"
+                                   placeholder="3.0" inputmode="decimal"
+                                   oninput="validarTemp(this)">
+                            <span class="temp-unit">°C</span>
+                        </div>
+                    </div>
+                    <div class="alerta-msg">Temperatura fuera de rango</div>
+                    <textarea class="obs-input" rows="1" placeholder="Observaciones (opcional)"></textarea>
+                </div>
+
+                <!-- Cámara Refrigeración 2 -->
+                <div class="camara-card" data-camara="refrig2" data-min="0" data-max="5">
+                    <h3>
+                        <span class="icon">&#9729;</span>
+                        Cámara 2 (Refrigeración)
+                        <span class="rango">0°C a 5°C</span>
+                    </h3>
+                    <div class="temp-input-row">
+                        <label>Temp:</label>
+                        <div class="temp-input-wrapper">
+                            <input type="number" class="temp-input" step="0.1"
+                                   placeholder="3.0" inputmode="decimal"
+                                   oninput="validarTemp(this)">
+                            <span class="temp-unit">°C</span>
+                        </div>
+                    </div>
+                    <div class="alerta-msg">Temperatura fuera de rango</div>
+                    <textarea class="obs-input" rows="1" placeholder="Observaciones (opcional)"></textarea>
+                </div>
+
+                <!-- Cámara Refrigeración 3 -->
+                <div class="camara-card" data-camara="refrig3" data-min="0" data-max="5">
+                    <h3>
+                        <span class="icon">&#9729;</span>
+                        Cámara 3 (Refrigeración)
+                        <span class="rango">0°C a 5°C</span>
+                    </h3>
+                    <div class="temp-input-row">
+                        <label>Temp:</label>
+                        <div class="temp-input-wrapper">
+                            <input type="number" class="temp-input" step="0.1"
+                                   placeholder="3.0" inputmode="decimal"
+                                   oninput="validarTemp(this)">
+                            <span class="temp-unit">°C</span>
+                        </div>
+                    </div>
+                    <div class="alerta-msg">Temperatura fuera de rango</div>
+                    <textarea class="obs-input" rows="1" placeholder="Observaciones (opcional)"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen -->
+        <div class="resumen-box" id="resumen">
+            <div class="section-title" style="margin:-1rem -1rem 1rem -1rem; border-radius:8px 8px 0 0;">
+                <span>Resumen</span>
+            </div>
+            <div class="resumen-item">
+                <span class="nombre">&#10052; Congelador</span>
+                <span class="valor pendiente" id="res-congelador">—</span>
+            </div>
+            <div class="resumen-item">
+                <span class="nombre">&#9729; Cámara 1</span>
+                <span class="valor pendiente" id="res-refrig1">—</span>
+            </div>
+            <div class="resumen-item">
+                <span class="nombre">&#9729; Cámara 2</span>
+                <span class="valor pendiente" id="res-refrig2">—</span>
+            </div>
+            <div class="resumen-item">
+                <span class="nombre">&#9729; Cámara 3</span>
+                <span class="valor pendiente" id="res-refrig3">—</span>
+            </div>
+        </div>
+
+        <!-- Observaciones generales -->
+        <div class="section">
+            <div class="section-title"><span>Observaciones generales</span></div>
+            <div class="section-content" style="display:block;">
+                <textarea id="obsGenerales" class="obs-input" rows="3"
+                          placeholder="Incidencias, desescarches en curso, puerta abierta, etc."></textarea>
+            </div>
+        </div>
+
+        <!-- Mensaje éxito -->
+        <div class="success-msg" id="successMsg">
+            <h2>Registro guardado</h2>
+            <p id="successDetail"></p>
+        </div>
+
+        <!-- Botón enviar -->
+        <button class="submit-btn" id="submitBtn" onclick="enviar()" disabled>
+            Registrar temperaturas
+        </button>
+
+        <a class="historial-link" href="#" onclick="verHistorial(); return false;">
+            Ver historial de hoy
+        </a>
+    </div>
+
+    <script>
+    // === Configuración ===
+    const CAMARAS = [
+        { id: 'congelador', nombre: 'Congelador', min: -22, max: -16, tipo: 'congelacion' },
+        { id: 'refrig1', nombre: 'Cámara 1', min: 0, max: 5, tipo: 'refrigeracion' },
+        { id: 'refrig2', nombre: 'Cámara 2', min: 0, max: 5, tipo: 'refrigeracion' },
+        { id: 'refrig3', nombre: 'Cámara 3', min: 0, max: 5, tipo: 'refrigeracion' }
+    ];
+
+    // URL del Apps Script (rellenar al desplegar)
+    const APPS_SCRIPT_URL = '';
+
+    // === Estado ===
+    let turnoSeleccionado = 'manana';
+    let registrosPrevios = JSON.parse(localStorage.getItem('tempCamarasHoy') || '{}');
+
+    // === Init ===
+    function init() {
+        const hoy = new Date();
+        document.getElementById('fechaHoy').textContent =
+            hoy.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+        // Auto-seleccionar turno según hora
+        const hora = hoy.getHours();
+        const min = hoy.getMinutes();
+        if (hora > 14 || (hora === 14 && min >= 15)) {
+            document.querySelector('[data-turno="mediodia"]').click();
+        }
+
+        // Marcar turnos ya completados
+        actualizarEstadoTurnos();
+    }
+
+    function selectTurno(el) {
+        document.querySelectorAll('.turno-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        turnoSeleccionado = el.dataset.turno;
+
+        // Cargar valores previos si existen para este turno
+        const clave = claveHoy();
+        if (registrosPrevios[clave] && registrosPrevios[clave][turnoSeleccionado]) {
+            const datos = registrosPrevios[clave][turnoSeleccionado];
+            document.querySelectorAll('.camara-card').forEach(card => {
+                const id = card.dataset.camara;
+                if (datos[id]) {
+                    const input = card.querySelector('.temp-input');
+                    input.value = datos[id].temp;
+                    validarTemp(input);
+                    card.querySelector('.obs-input').value = datos[id].obs || '';
+                }
+            });
+        } else {
+            // Limpiar
+            document.querySelectorAll('.temp-input').forEach(i => {
+                i.value = '';
+                i.classList.remove('ok', 'alerta');
+            });
+            document.querySelectorAll('.obs-input').forEach(i => i.value = '');
+            document.querySelectorAll('.alerta-msg').forEach(m => m.classList.remove('visible'));
+            actualizarResumen();
+        }
+    }
+
+    function claveHoy() {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    function validarTemp(input) {
+        const card = input.closest('.camara-card');
+        const min = parseFloat(card.dataset.min);
+        const max = parseFloat(card.dataset.max);
+        const val = parseFloat(input.value);
+        const alertaMsg = card.querySelector('.alerta-msg');
+
+        if (input.value === '' || isNaN(val)) {
+            input.classList.remove('ok', 'alerta');
+            alertaMsg.classList.remove('visible');
+            actualizarResumen();
+            return;
+        }
+
+        if (val < min || val > max) {
+            input.classList.remove('ok');
+            input.classList.add('alerta');
+            if (val < min) {
+                alertaMsg.textContent = `Temperatura demasiado baja (mín: ${min}°C)`;
+            } else {
+                alertaMsg.textContent = `Temperatura demasiado alta (máx: ${max}°C)`;
+            }
+            alertaMsg.classList.add('visible');
+        } else {
+            input.classList.remove('alerta');
+            input.classList.add('ok');
+            alertaMsg.classList.remove('visible');
+        }
+
+        actualizarResumen();
+    }
+
+    function actualizarResumen() {
+        let completas = 0;
+        document.querySelectorAll('.camara-card').forEach(card => {
+            const id = card.dataset.camara;
+            const input = card.querySelector('.temp-input');
+            const resEl = document.getElementById('res-' + id);
+            const val = parseFloat(input.value);
+
+            if (input.value === '' || isNaN(val)) {
+                resEl.textContent = '—';
+                resEl.className = 'valor pendiente';
+            } else {
+                resEl.textContent = val.toFixed(1) + '°C';
+                completas++;
+                if (input.classList.contains('alerta')) {
+                    resEl.className = 'valor alerta';
+                } else {
+                    resEl.className = 'valor ok';
+                }
+            }
+        });
+
+        document.getElementById('contadorOk').textContent = completas + '/4';
+        document.getElementById('submitBtn').disabled = completas < 4;
+    }
+
+    function actualizarEstadoTurnos() {
+        const clave = claveHoy();
+        document.querySelectorAll('.turno-btn').forEach(btn => {
+            const turno = btn.dataset.turno;
+            if (registrosPrevios[clave] && registrosPrevios[clave][turno]) {
+                btn.style.borderColor = '#4CAF50';
+                btn.innerHTML += ' <span style="color:#4CAF50;font-size:0.8rem;">&#10003;</span>';
+            }
+        });
+    }
+
+    function enviar() {
+        const datos = {
+            fecha: claveHoy(),
+            turno: turnoSeleccionado,
+            hora: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+            operario: 'Diego',
+            camaras: {},
+            observaciones: document.getElementById('obsGenerales').value
+        };
+
+        let hayAlerta = false;
+        document.querySelectorAll('.camara-card').forEach(card => {
+            const id = card.dataset.camara;
+            const input = card.querySelector('.temp-input');
+            const val = parseFloat(input.value);
+            const min = parseFloat(card.dataset.min);
+            const max = parseFloat(card.dataset.max);
+            const obs = card.querySelector('.obs-input').value;
+            const enRango = val >= min && val <= max;
+
+            datos.camaras[id] = {
+                temp: val,
+                obs: obs,
+                enRango: enRango,
+                min: min,
+                max: max
+            };
+
+            if (!enRango) hayAlerta = true;
+        });
+
+        // Guardar en localStorage
+        if (!registrosPrevios[datos.fecha]) registrosPrevios[datos.fecha] = {};
+        registrosPrevios[datos.fecha][turnoSeleccionado] = datos.camaras;
+        localStorage.setItem('tempCamarasHoy', JSON.stringify(registrosPrevios));
+
+        // Enviar a Apps Script
+        if (APPS_SCRIPT_URL) {
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            }).catch(err => console.warn('Error enviando a Sheets:', err));
+        }
+
+        // Mostrar confirmación
+        const msg = document.getElementById('successMsg');
+        const detail = document.getElementById('successDetail');
+        const turnoTexto = turnoSeleccionado === 'manana' ? 'Mañana' : 'Mediodía';
+        detail.textContent = `${turnoTexto} — ${datos.hora}` +
+            (hayAlerta ? ' — HAY TEMPERATURAS FUERA DE RANGO' : ' — Todo OK');
+        msg.classList.add('visible');
+        msg.style.borderColor = hayAlerta ? '#d32f2f' : '#4CAF50';
+        msg.style.background = hayAlerta ? '#ffebee' : '#E8F5E9';
+
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').textContent = 'Registrado ✓';
+
+        // Scroll arriba
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function verHistorial() {
+        const clave = claveHoy();
+        const datos = registrosPrevios[clave];
+        if (!datos) {
+            alert('No hay registros para hoy');
+            return;
+        }
+        let texto = 'REGISTROS DE HOY\n' + '='.repeat(30) + '\n\n';
+        for (const turno of ['manana', 'mediodia']) {
+            if (datos[turno]) {
+                texto += (turno === 'manana' ? 'MAÑANA' : 'MEDIODÍA') + ':\n';
+                for (const [id, info] of Object.entries(datos[turno])) {
+                    const cam = CAMARAS.find(c => c.id === id);
+                    const emoji = info.temp >= info.min && info.temp <= info.max ? '✓' : '✗';
+                    texto += `  ${emoji} ${cam ? cam.nombre : id}: ${info.temp}°C\n`;
+                }
+                texto += '\n';
+            }
+        }
+        alert(texto);
+    }
+
+    // Inicializar
+    init();
+    </script>
+</body>
+</html>

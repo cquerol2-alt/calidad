@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro L+D Diario - RIA-FORM-LD-001</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+        }
+        .header {
+            background-color: #1B5E20;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header h1 { font-size: 1.2rem; font-weight: 600; }
+        .header p { font-size: 0.85rem; opacity: 0.9; }
+        .form-code { font-size: 0.7rem; margin-top: 0.4rem; opacity: 0.7; }
+        .container { max-width: 600px; margin: 0 auto; padding: 0.75rem; }
+
+        /* Meta section */
+        .meta-section {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .meta-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .meta-row:last-child { margin-bottom: 0; }
+        .meta-field { flex: 1; }
+        .meta-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1B5E20;
+            margin-bottom: 0.25rem;
+        }
+        .meta-field select, .meta-field input {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #fafafa;
+        }
+
+        /* Summary bar */
+        .summary-bar {
+            background: white;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        .summary-bar .count { font-weight: 700; color: #1B5E20; }
+        .summary-bar .pending { color: #e65100; }
+
+        /* Zone sections */
+        .zone {
+            background: white;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .zone-header {
+            background: #4CAF50;
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        .zone-header:active { background: #43A047; }
+        .zone-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+        .zone-badge.done { background: rgba(255,255,255,0.4); }
+        .zone-content { display: none; padding: 0; }
+        .zone-content.open { display: block; }
+
+        /* Task items */
+        .task {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 0.75rem 1rem;
+        }
+        .task:last-child { border-bottom: none; }
+        .task-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .task-check {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-top: 2px;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        .task-check.checked {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+        .task-info { flex: 1; }
+        .task-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .task-name.done { text-decoration: line-through; color: #999; }
+        .task-freq {
+            display: inline-block;
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            margin-left: 0.4rem;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        .freq-diaria { background: #E8F5E9; color: #2E7D32; }
+        .freq-semanal { background: #FFF3E0; color: #E65100; }
+        .freq-quincenal { background: #E3F2FD; color: #1565C0; }
+        .freq-mensual { background: #F3E5F5; color: #7B1FA2; }
+        .freq-tras-uso { background: #FFF8E1; color: #F57F17; }
+
+        .task-product {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.2rem;
+        }
+        .product-name { font-weight: 600; color: #1B5E20; }
+
+        /* Expandable dilution info */
+        .dilution-toggle {
+            font-size: 0.75rem;
+            color: #1976D2;
+            cursor: pointer;
+            margin-top: 0.2rem;
+            user-select: none;
+        }
+        .dilution-detail {
+            display: none;
+            background: #f8f9fa;
+            border-left: 3px solid #4CAF50;
+            padding: 0.5rem 0.75rem;
+            margin-top: 0.4rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.78rem;
+            line-height: 1.5;
+        }
+        .dilution-detail.open { display: block; }
+        .dilution-detail strong { color: #1B5E20; }
+
+        /* Task time */
+        .task-time {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 0.3rem;
+        }
+
+        /* Observations */
+        .task-obs {
+            margin-top: 0.5rem;
+        }
+        .task-obs textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 40px;
+            background: #fafafa;
+        }
+
+        /* Incidencia */
+        .btn-incidencia {
+            display: inline-block;
+            margin-top: 0.4rem;
+            padding: 0.3rem 0.6rem;
+            background: #FFF3E0;
+            border: 1px solid #FFB74D;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #E65100;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-incidencia.active {
+            background: #E65100;
+            color: white;
+            border-color: #E65100;
+        }
+        .incidencia-detail {
+            display: none;
+            margin-top: 0.4rem;
+        }
+        .incidencia-detail.open { display: block; }
+        .incidencia-detail textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #FFB74D;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            min-height: 50px;
+            background: #FFF8E1;
+        }
+
+        /* Product legend */
+        .legend {
+            background: white;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .legend-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #1B5E20;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .legend-content { display: none; }
+        .legend-content.open { display: block; }
+        .legend-item {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.8rem;
+        }
+        .legend-item:last-child { border-bottom: none; }
+        .legend-product { font-weight: 700; color: #1B5E20; }
+        .legend-reg { font-size: 0.7rem; color: #999; }
+
+        /* Submit */
+        .submit-section {
+            margin: 1rem 0 2rem;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: #1B5E20;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(27,94,32,0.3);
+        }
+        .btn-submit:active { background: #145218; }
+        .btn-submit:disabled {
+            background: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.success { background: #2E7D32; }
+        .toast.error { background: #C62828; }
+
+        /* Viernes highlight */
+        .viernes-hint {
+            background: #FFF8E1;
+            border-left: 3px solid #FFB74D;
+            padding: 0.5rem 0.75rem;
+            margin: 0.5rem 1rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.78rem;
+            color: #E65100;
+        }
+
+        /* No tasks message */
+        .no-tasks {
+            padding: 1.5rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Modal overlay for confirmations */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 340px;
+            width: 90%;
+            text-align: center;
+        }
+        .modal-box h3 { color: #1B5E20; margin-bottom: 0.5rem; }
+        .modal-box p { font-size: 0.9rem; color: #666; margin-bottom: 1rem; }
+        .modal-btns { display: flex; gap: 0.75rem; }
+        .modal-btns button {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .modal-cancel { background: #eee; color: #666; }
+        .modal-confirm { background: #1B5E20; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Registro L+D Diario</h1>
+    <p>Limpieza y Desinfección — Rice in Action</p>
+    <div class="form-code">RIA-FORM-LD-001 · Plan L+D Rev.2 Mar 2026</div>
+</div>
+
+<div class="container">
+    <!-- Meta -->
+    <div class="meta-section">
+        <div class="meta-row">
+            <div class="meta-field">
+                <label>Operario</label>
+                <select id="operario" onchange="onOperarioChange()">
+                    <option value="">Seleccionar...</option>
+                    <option value="Diego">Diego</option>
+                    <option value="Isabel">Isabel</option>
+                    <option value="Gerónimo">Gerónimo</option>
+                    <option value="Christophe">Christophe</option>
+                    <option value="Cristina">Cristina</option>
+                </select>
+            </div>
+            <div class="meta-field">
+                <label>Fecha</label>
+                <input type="date" id="fecha">
+            </div>
+        </div>
+    </div>
+
+    <!-- Producto legend (collapsible) -->
+    <div class="legend">
+        <div class="legend-title" onclick="toggleLegend()">
+            Productos Proquimia — Guía rápida ▾
+        </div>
+        <div class="legend-content" id="legendContent">
+            <div class="legend-item">
+                <span class="legend-product">VIXCLOR SE</span> — Desinf. clorado espuma. <strong>4–6% en agua</strong>, 10–15 min, aclarar siempre.
+                <div class="legend-reg">Reg. 18-20-04873-HA</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-product">ASEPCOL PLUS</span> — Desinf. hidroalcohólico spray. <strong>Puro</strong>, 15 min, NO aclarar.
+                <div class="legend-reg">Reg. ES/APF(NA)-2022-02/04-00830</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-product">ECOPLUS D</span> — Desinf. clorado CIP. <strong>2–5% en agua 40–60°C</strong>, 5 min, aclarar siempre.
+                <div class="legend-reg">Reg. 15-20-02885 HA</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-product">SUPERL</span> — Lavavajillas manual. <strong>5–10 g/l en agua</strong>, aclarar.
+                <div class="legend-reg">Detergente (sin reg. biocida)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-product">VITABAC</span> — Gel manos. <strong>3 ml, frotar 60 s</strong>, aclarar 10 s.
+                <div class="legend-reg">AEMPS 1387-DES</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary bar -->
+    <div class="summary-bar" id="summaryBar" style="display:none;">
+        <span>Tareas hoy: <span class="count" id="totalCount">0</span></span>
+        <span>Hechas: <span class="count" id="doneCount">0</span> · Pendientes: <span class="pending" id="pendingCount">0</span></span>
+    </div>
+
+    <!-- Zones container (rendered by JS) -->
+    <div id="zonesContainer"></div>
+
+    <!-- Observaciones generales -->
+    <div class="meta-section" id="obsSection" style="display:none;">
+        <label style="font-size:0.85rem; font-weight:600; color:#1B5E20; margin-bottom:0.3rem; display:block;">Observaciones generales</label>
+        <textarea id="obsGenerales" rows="2" placeholder="Cualquier incidencia general del día..." style="width:100%; padding:0.5rem; border:1px solid #ddd; border-radius:6px; font-size:0.85rem; font-family:inherit;"></textarea>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-section" id="submitSection" style="display:none;">
+        <button class="btn-submit" id="btnSubmit" onclick="submitForm()">
+            Enviar registro L+D
+        </button>
+    </div>
+</div>
+
+<!-- Confirmation modal -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal-box">
+        <h3>Confirmar envío</h3>
+        <p id="confirmMsg">¿Enviar el registro de L+D?</p>
+        <div class="modal-btns">
+            <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
+            <button class="modal-confirm" onclick="doSubmit()">Enviar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA: Tasks from Plan L+D Rev.2 March 2026
+// ============================================================
+const ZONES = {
+    cuarto_frio: {
+        name: "Cuarto Frío (Obrador)",
+        assignedTo: ["Diego"],
+        tasks: [
+            { id: "cf01", name: "Suelos", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Fregado con fregona. Aclarar con agua.", aclarado: true },
+            { id: "cf02", name: "Utensilios", freq: "tras-uso", product: "SUPERL", dose: "5–10 g/l", method: "Lavado manual en pila. Aclarar.", aclarado: true },
+            { id: "cf03", name: "Envasadora", freq: "tras-uso", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Pulverizar tras limpieza. 15 min contacto. Sin aclarado.", aclarado: false },
+            { id: "cf04", name: "Superficies de trabajo", freq: "diaria", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Retirar restos, pulverizar. 15 min contacto.", aclarado: false },
+            { id: "cf05", name: "Bajomesas", freq: "semanal", product: "VIXCLOR SE", dose: "4–6%", method: "Aplicar con bayeta. Aclarar.", aclarado: true },
+            { id: "cf06", name: "Desagües", freq: "semanal", product: "VIXCLOR SE", dose: "6%", method: "Verter solución. Dejar actuar 15 min. Aclarar.", aclarado: true },
+            { id: "cf07", name: "Lavadora arroz", freq: "tras-uso", product: "ECOPLUS D", dose: "2–5%, 40–60°C", method: "Inmersión o recirculación. 5 min mín. Aclarar.", aclarado: true },
+            { id: "cf08", name: "Dispensador sal", freq: "tras-uso", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Pulverizar exterior. Sin aclarado.", aclarado: false },
+            { id: "cf09", name: "Limpieza profunda (paredes, techos, estanterías)", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Espuma o bayeta. Aclarar.", aclarado: true },
+        ]
+    },
+    office: {
+        name: "Office",
+        assignedTo: ["Isabel", "Gerónimo"],
+        tasks: [
+            { id: "of01", name: "Suelos", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Fregado con fregona. Aclarar.", aclarado: true },
+            { id: "of02", name: "Pilas", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Aplicar con bayeta. Aclarar.", aclarado: true },
+            { id: "of03", name: "Superficies de trabajo", freq: "diaria", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Pulverizar. 15 min. Sin aclarado.", aclarado: false },
+            { id: "of04", name: "Cubos basura", freq: "semanal", product: "VIXCLOR SE", dose: "4–6%", method: "Vaciar, limpiar interior/exterior. Aclarar.", aclarado: true },
+            { id: "of05", name: "Limpieza profunda (paredes, techos, estanterías)", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Espuma o bayeta. Aclarar.", aclarado: true },
+        ]
+    },
+    bunker: {
+        name: "Bunker",
+        assignedTo: ["Gerónimo"],
+        tasks: [
+            { id: "bk01", name: "Suelos", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Fregado con fregona. Aclarar.", aclarado: true },
+            { id: "bk02", name: "Mesas y carros", freq: "diaria", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Retirar restos, pulverizar. 15 min.", aclarado: false },
+            { id: "bk03", name: "Mixers", freq: "tras-uso", product: "SUPERL + ASEPCOL", dose: "5–10 g/l + spray", method: "Lavar con SUPERL, aclarar, desinfectar ASEPCOL.", aclarado: true },
+            { id: "bk04", name: "Desagües", freq: "quincenal", product: "VIXCLOR SE", dose: "6%", method: "Verter solución. 15 min. Aclarar.", aclarado: true },
+            { id: "bk05", name: "Limpieza profunda", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Paredes, techos, estanterías. Aclarar.", aclarado: true },
+        ]
+    },
+    almacen_general: {
+        name: "Almacenamiento / Zonas Generales",
+        assignedTo: ["Gerónimo"],
+        tasks: [
+            { id: "ag01", name: "Suelo almacén", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Fregado con fregona. Aclarar.", aclarado: true },
+            { id: "ag02", name: "Baños", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Limpieza completa. Aclarar.", aclarado: true },
+            { id: "ag03", name: "Cámaras 1-2-3", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Vaciar, limpiar suelo/paredes/estantes. Aclarar.", aclarado: true },
+            { id: "ag04", name: "Cámara 5", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Vaciar, limpiar suelo/paredes/estantes. Aclarar.", aclarado: true },
+            { id: "ag05", name: "Cámara 6", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Vaciar, limpiar suelo/paredes/estantes. Aclarar.", aclarado: true },
+            { id: "ag06", name: "Cámaras 7-8", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Vaciar, limpiar suelo/paredes/estantes. Aclarar.", aclarado: true },
+            { id: "ag07", name: "Abatidor", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Limpiar interior tras uso. Aclarar. Secar.", aclarado: true },
+            { id: "ag08", name: "Suelos pasillos", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Fregado con fregona. Aclarar.", aclarado: true },
+            { id: "ag09", name: "Cuarto basura", freq: "semanal", product: "VIXCLOR SE", dose: "4–6%", method: "Vaciar, limpiar suelo y paredes. Aclarar.", aclarado: true },
+            { id: "ag10", name: "Limpieza profunda (techos, luminarias, zonas altas)", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Espuma o bayeta. Aclarar.", aclarado: true },
+        ]
+    },
+    envasado: {
+        name: "Zona Envasado",
+        assignedTo: ["Isabel"],
+        tasks: [
+            { id: "ev01", name: "Suelos", freq: "diaria", product: "VIXCLOR SE", dose: "4–6%", method: "Fregado con fregona. Aclarar.", aclarado: true },
+            { id: "ev02", name: "Dispensador arroz", freq: "tras-uso", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Pulverizar tras limpieza mecánica. Sin aclarado.", aclarado: false },
+            { id: "ev03", name: "Tolva", freq: "tras-uso", product: "SUPERL + ASEPCOL", dose: "5–10 g/l + spray", method: "Lavar con SUPERL, aclarar, desinfectar ASEPCOL.", aclarado: true },
+            { id: "ev04", name: "Cilindro tolva", freq: "tras-uso", product: "SUPERL + ASEPCOL", dose: "5–10 g/l + spray", method: "Lavar con SUPERL, aclarar, desinfectar ASEPCOL.", aclarado: true },
+            { id: "ev05", name: "Máquina salsas", freq: "tras-uso", product: "SUPERL + ASEPCOL", dose: "5–10 g/l + spray", method: "Desmontar, lavar SUPERL, aclarar, ASEPCOL.", aclarado: true },
+            { id: "ev06", name: "Klastein", freq: "tras-uso", product: "SUPERL + ASEPCOL", dose: "5–10 g/l + spray", method: "Lavar con SUPERL, aclarar, desinfectar ASEPCOL.", aclarado: true },
+            { id: "ev07", name: "Bomba", freq: "tras-uso", product: "SUPERL + ASEPCOL", dose: "5–10 g/l + spray", method: "Desmontar, lavar SUPERL, aclarar, ASEPCOL.", aclarado: true },
+            { id: "ev08", name: "Cintas mesa", freq: "tras-uso", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Pulverizar. 15 min. Sin aclarado.", aclarado: false },
+            { id: "ev09", name: "Termoselladora", freq: "cada-3-dias", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Pulverizar superficies. 15 min.", aclarado: false },
+            { id: "ev10a", name: "Molde termoselladora", freq: "tras-uso", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Pulverizar molde tras cada uso. 15 min. Sin aclarado.", aclarado: false },
+            { id: "ev10", name: "Molino", freq: "diaria", product: "SUPERL + ASEPCOL", dose: "5–10 g/l + spray", method: "Desmontar, lavar SUPERL, aclarar, ASEPCOL.", aclarado: true },
+            { id: "ev11", name: "Superficies de trabajo", freq: "diaria", product: "ASEPCOL PLUS", dose: "Puro spray", method: "Retirar restos, pulverizar. 15 min.", aclarado: false },
+            { id: "ev12", name: "Lavamanos (rellenar VITABAC)", freq: "diaria", product: "VITABAC", dose: "Dosificador", method: "Rellenar dosificador. 3 ml por uso, 60 s.", aclarado: true },
+            { id: "ev13", name: "Desagües", freq: "semanal", product: "VIXCLOR SE", dose: "6%", method: "Verter solución. 15 min. Aclarar.", aclarado: true },
+            { id: "ev14", name: "Estanterías envases", freq: "semanal", product: "VIXCLOR SE", dose: "4–6%", method: "Retirar envases, limpiar. Aclarar. Secar.", aclarado: true },
+            { id: "ev15", name: "Cubos basura", freq: "mensual", product: "VIXCLOR SE", dose: "4–6%", method: "Vaciar, limpiar interior/exterior. Aclarar.", aclarado: true },
+            { id: "ev16", name: "Techos", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Espuma o bayeta húmeda. Aclarar.", aclarado: true },
+            { id: "ev17", name: "Paredes", freq: "quincenal", product: "VIXCLOR SE", dose: "4–6%", method: "Espuma o bayeta húmeda. Aclarar.", aclarado: true },
+        ]
+    }
+};
+
+// Frequency display labels
+const FREQ_LABELS = {
+    "diaria": "Diaria",
+    "semanal": "Semanal (mié/jue)",
+    "quincenal": "Quincenal",
+    "mensual": "Mensual",
+    "tras-uso": "Tras cada uso",
+    "3-dias": "Cada 3 días",
+    "cada-3-dias": "Cada 3 días"
+};
+
+const FREQ_CSS = {
+    "diaria": "freq-diaria",
+    "semanal": "freq-semanal",
+    "quincenal": "freq-quincenal",
+    "mensual": "freq-mensual",
+    "tras-uso": "freq-tras-uso",
+    "3-dias": "freq-semanal",
+    "cada-3-dias": "freq-semanal"
+};
+
+// ============================================================
+// FREQUENCY LOGIC
+// ============================================================
+function shouldShowTask(task, date) {
+    const day = date.getDay(); // 0=Sun, 1=Mon...
+    const weekNum = getWeekNumber(date);
+
+    switch (task.freq) {
+        case "diaria":
+        case "tras-uso":
+            return true;
+        case "semanal":
+            return day === 3 || day === 4; // Miércoles o Jueves (lunes es día punta)
+        case "3-dias":
+        case "cada-3-dias":
+            // Show Mon, Thu (every 3 working days approx)
+            return day === 1 || day === 4;
+        case "quincenal":
+            // Odd weeks — preferencia viernes, pero flexible: se muestra L-V de semanas impares
+            return weekNum % 2 === 1;
+        case "mensual":
+            // First Wednesday of month
+            return day === 3 && date.getDate() <= 7;
+        default:
+            return true;
+    }
+}
+
+function getWeekNumber(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
+function isViernes(date) {
+    return date.getDay() === 5;
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let taskStates = {}; // { taskId: { checked: bool, time: string, obs: string, incidencia: bool, incidenciaText: string } }
+let currentOperario = "";
+let currentDate = new Date();
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+    const today = new Date();
+    document.getElementById("fecha").value = today.toISOString().split("T")[0];
+    currentDate = today;
+
+    document.getElementById("fecha").addEventListener("change", function() {
+        currentDate = new Date(this.value + "T12:00:00");
+        renderZones();
+    });
+
+    // Try to restore operario from localStorage
+    const saved = localStorage.getItem("ria_ld_operario");
+    if (saved) {
+        document.getElementById("operario").value = saved;
+        onOperarioChange();
+    }
+}
+
+function onOperarioChange() {
+    currentOperario = document.getElementById("operario").value;
+    if (currentOperario) {
+        localStorage.setItem("ria_ld_operario", currentOperario);
+    }
+    renderZones();
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderZones() {
+    const container = document.getElementById("zonesContainer");
+    container.innerHTML = "";
+    taskStates = {};
+
+    if (!currentOperario) {
+        container.innerHTML = '<div class="no-tasks">Selecciona un operario para ver sus tareas de L+D</div>';
+        document.getElementById("summaryBar").style.display = "none";
+        document.getElementById("obsSection").style.display = "none";
+        document.getElementById("submitSection").style.display = "none";
+        return;
+    }
+
+    let totalTasks = 0;
+    let zonesRendered = 0;
+
+    for (const [zoneKey, zone] of Object.entries(ZONES)) {
+        // Check if this operario is assigned to this zone
+        if (!zone.assignedTo.includes(currentOperario) && currentOperario !== "Cristina") continue;
+
+        // Filter tasks by frequency for today's date
+        const visibleTasks = zone.tasks.filter(t => shouldShowTask(t, currentDate));
+        if (visibleTasks.length === 0) continue;
+
+        totalTasks += visibleTasks.length;
+        zonesRendered++;
+
+        // Init state for each task
+        visibleTasks.forEach(t => {
+            taskStates[t.id] = { checked: false, time: "", obs: "", incidencia: false, incidenciaText: "" };
+        });
+
+        const zoneDiv = document.createElement("div");
+        zoneDiv.className = "zone";
+
+        const isFirst = zonesRendered <= 2; // Open first 2 zones by default
+
+        zoneDiv.innerHTML = `
+            <div class="zone-header" onclick="toggleZone('${zoneKey}')">
+                <span>${zone.name}</span>
+                <span class="zone-badge" id="badge_${zoneKey}">0/${visibleTasks.length}</span>
+            </div>
+            <div class="zone-content ${isFirst ? 'open' : ''}" id="zone_${zoneKey}">
+                ${isViernes(currentDate) && visibleTasks.some(t => t.freq === 'quincenal') ?
+                    '<div class="viernes-hint">Viernes: buen día para las tareas quincenales si hay menos producción</div>' : ''}
+                ${visibleTasks.map(t => renderTask(t)).join('')}
+            </div>
+        `;
+        container.appendChild(zoneDiv);
+    }
+
+    if (zonesRendered === 0) {
+        container.innerHTML = `<div class="no-tasks">${currentOperario} no tiene zonas de L+D asignadas hoy</div>`;
+        document.getElementById("summaryBar").style.display = "none";
+        document.getElementById("obsSection").style.display = "none";
+        document.getElementById("submitSection").style.display = "none";
+        return;
+    }
+
+    document.getElementById("summaryBar").style.display = "flex";
+    document.getElementById("obsSection").style.display = "block";
+    document.getElementById("submitSection").style.display = "block";
+    updateSummary();
+}
+
+function renderTask(task) {
+    const freqLabel = FREQ_LABELS[task.freq] || task.freq;
+    const freqCss = FREQ_CSS[task.freq] || "freq-diaria";
+    const aclaradoIcon = task.aclarado ? '💧' : '';
+
+    return `
+        <div class="task" id="task_${task.id}">
+            <div class="task-top">
+                <div class="task-check" id="check_${task.id}" onclick="toggleTask('${task.id}')"></div>
+                <div class="task-info">
+                    <div class="task-name" id="name_${task.id}">
+                        ${task.name}
+                        <span class="task-freq ${freqCss}">${freqLabel}</span>
+                    </div>
+                    <div class="task-product">
+                        <span class="product-name">${task.product}</span> · ${task.dose} ${aclaradoIcon ? '· ' + aclaradoIcon + ' Aclarar' : '· Sin aclarado'}
+                    </div>
+                    <div class="dilution-toggle" onclick="toggleDilution('${task.id}')">
+                        Ver método detallado ▾
+                    </div>
+                    <div class="dilution-detail" id="dilution_${task.id}">
+                        <strong>Producto:</strong> ${task.product}<br>
+                        <strong>Dosis:</strong> ${task.dose}<br>
+                        <strong>Método:</strong> ${task.method}<br>
+                        <strong>Aclarado:</strong> ${task.aclarado ? 'SÍ obligatorio' : 'NO necesario'}
+                    </div>
+                    <div class="task-time" id="time_${task.id}"></div>
+                    <button class="btn-incidencia" id="incBtn_${task.id}" onclick="toggleIncidencia('${task.id}')">
+                        ⚠ Incidencia
+                    </button>
+                    <div class="incidencia-detail" id="incDetail_${task.id}">
+                        <textarea placeholder="Describe la incidencia..." oninput="updateIncidencia('${task.id}', this.value)"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+function toggleTask(taskId) {
+    const state = taskStates[taskId];
+    state.checked = !state.checked;
+
+    const checkEl = document.getElementById(`check_${taskId}`);
+    const nameEl = document.getElementById(`name_${taskId}`);
+    const timeEl = document.getElementById(`time_${taskId}`);
+
+    if (state.checked) {
+        checkEl.classList.add("checked");
+        checkEl.textContent = "✓";
+        nameEl.classList.add("done");
+        state.time = new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+        timeEl.textContent = `Completado a las ${state.time}`;
+    } else {
+        checkEl.classList.remove("checked");
+        checkEl.textContent = "";
+        nameEl.classList.remove("done");
+        state.time = "";
+        timeEl.textContent = "";
+    }
+    updateSummary();
+}
+
+function toggleZone(zoneKey) {
+    const content = document.getElementById(`zone_${zoneKey}`);
+    content.classList.toggle("open");
+}
+
+function toggleDilution(taskId) {
+    document.getElementById(`dilution_${taskId}`).classList.toggle("open");
+}
+
+function toggleIncidencia(taskId) {
+    const state = taskStates[taskId];
+    state.incidencia = !state.incidencia;
+
+    const btn = document.getElementById(`incBtn_${taskId}`);
+    const detail = document.getElementById(`incDetail_${taskId}`);
+
+    btn.classList.toggle("active");
+    detail.classList.toggle("open");
+}
+
+function updateIncidencia(taskId, text) {
+    taskStates[taskId].incidenciaText = text;
+}
+
+function toggleLegend() {
+    document.getElementById("legendContent").classList.toggle("open");
+}
+
+function updateSummary() {
+    const total = Object.keys(taskStates).length;
+    const done = Object.values(taskStates).filter(s => s.checked).length;
+    document.getElementById("totalCount").textContent = total;
+    document.getElementById("doneCount").textContent = done;
+    document.getElementById("pendingCount").textContent = total - done;
+
+    // Update zone badges
+    for (const [zoneKey, zone] of Object.entries(ZONES)) {
+        const badge = document.getElementById(`badge_${zoneKey}`);
+        if (!badge) continue;
+        const zoneTasks = zone.tasks.filter(t => taskStates[t.id]);
+        const zoneDone = zoneTasks.filter(t => taskStates[t.id] && taskStates[t.id].checked).length;
+        badge.textContent = `${zoneDone}/${zoneTasks.length}`;
+        if (zoneDone === zoneTasks.length && zoneTasks.length > 0) {
+            badge.classList.add("done");
+        } else {
+            badge.classList.remove("done");
+        }
+    }
+}
+
+// ============================================================
+// SUBMIT
+// ============================================================
+function submitForm() {
+    const operario = document.getElementById("operario").value;
+    const fecha = document.getElementById("fecha").value;
+
+    if (!operario || !fecha) {
+        showToast("Selecciona operario y fecha", "error");
+        return;
+    }
+
+    const total = Object.keys(taskStates).length;
+    const done = Object.values(taskStates).filter(s => s.checked).length;
+    const incidencias = Object.values(taskStates).filter(s => s.incidencia).length;
+
+    let msg = `¿Enviar registro de ${operario} del ${fecha}?\n`;
+    msg += `${done}/${total} tareas completadas.`;
+    if (done < total) msg += ` (${total - done} sin completar)`;
+    if (incidencias > 0) msg += `\n${incidencias} incidencia(s) registrada(s).`;
+
+    document.getElementById("confirmMsg").textContent = msg;
+    document.getElementById("confirmModal").classList.add("show");
+}
+
+function closeModal() {
+    document.getElementById("confirmModal").classList.remove("show");
+}
+
+function doSubmit() {
+    closeModal();
+    const btn = document.getElementById("btnSubmit");
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+
+    const payload = buildPayload();
+
+    // Send to Google Apps Script
+    const APPS_SCRIPT_URL = ""; // ← Pegar URL del deployment de Apps Script
+
+    if (!APPS_SCRIPT_URL) {
+        // Demo mode: save to localStorage
+        const key = `ria_ld_${payload.fecha}_${payload.operario}`;
+        localStorage.setItem(key, JSON.stringify(payload));
+        console.log("Registro L+D (modo demo):", payload);
+        showToast("Registro guardado (modo local — conectar Apps Script)", "success");
+        btn.disabled = false;
+        btn.textContent = "Enviar registro L+D";
+        return;
+    }
+
+    fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(() => {
+        showToast("Registro de L+D enviado correctamente", "success");
+        btn.textContent = "✓ Enviado";
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = "Enviar registro L+D";
+        }, 3000);
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        // Fallback: save locally
+        const key = `ria_ld_${payload.fecha}_${payload.operario}`;
+        localStorage.setItem(key, JSON.stringify(payload));
+        showToast("Error de red. Guardado localmente, se reenviará.", "error");
+        btn.disabled = false;
+        btn.textContent = "Enviar registro L+D";
+    });
+}
+
+function buildPayload() {
+    const operario = document.getElementById("operario").value;
+    const fecha = document.getElementById("fecha").value;
+    const obsGenerales = document.getElementById("obsGenerales").value;
+
+    const tareas = [];
+    for (const [zoneKey, zone] of Object.entries(ZONES)) {
+        for (const task of zone.tasks) {
+            if (!taskStates[task.id]) continue;
+            const state = taskStates[task.id];
+            tareas.push({
+                zona: zone.name,
+                tarea: task.name,
+                frecuencia: task.freq,
+                producto: task.product,
+                completada: state.checked,
+                hora: state.time || "",
+                incidencia: state.incidencia,
+                incidenciaTexto: state.incidenciaText || "",
+            });
+        }
+    }
+
+    return {
+        tipo: "ld_diario",
+        operario,
+        fecha,
+        timestamp: new Date().toISOString(),
+        obsGenerales,
+        tareas,
+        resumen: {
+            total: tareas.length,
+            completadas: tareas.filter(t => t.completada).length,
+            incidencias: tareas.filter(t => t.incidencia).length
+        }
+    };
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, type) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.className = `toast ${type} show`;
+    setTimeout(() => { toast.classList.remove("show"); }, 3500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+init();
+</script>
+</body>
+</html>

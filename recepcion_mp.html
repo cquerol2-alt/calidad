@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recepción Materias Primas - RIA-FORM-CAL-003</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5; color: #333; line-height: 1.6;
+        }
+        .header {
+            background-color: #1B5E20; color: white; padding: 1rem;
+            text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 1.3rem; margin-bottom: 0.25rem; font-weight: 600; }
+        .header p { font-size: 0.9rem; opacity: 0.9; }
+        .form-code { font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.8; }
+        .container { max-width: 600px; margin: 0 auto; padding: 1rem; }
+
+        .info-bar {
+            background: #E8F5E9; border-left: 4px solid #1B5E20;
+            padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0 4px 4px 0;
+            font-size: 0.9rem;
+        }
+        .info-bar strong { color: #1B5E20; }
+
+        .section {
+            background: white; margin-bottom: 1rem; border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;
+        }
+        .section-title {
+            background: #4CAF50; color: white; padding: 0.75rem 1rem;
+            font-weight: 600; display: flex; justify-content: space-between; align-items: center;
+        }
+        .section-content { padding: 1rem; }
+
+        /* Campos */
+        .field { margin-bottom: 1rem; }
+        .field:last-child { margin-bottom: 0; }
+        .field label {
+            display: block; font-weight: 600; font-size: 0.9rem;
+            margin-bottom: 0.35rem; color: #333;
+        }
+        .field label .required { color: #d32f2f; }
+        .field label .hint { font-weight: 400; color: #888; font-size: 0.8rem; }
+
+        .field input[type="text"],
+        .field input[type="number"],
+        .field input[type="date"],
+        .field input[type="time"],
+        .field select,
+        .field textarea {
+            width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px;
+            font-size: 1rem; font-family: inherit; transition: border-color 0.2s;
+            background: white;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none; border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76,175,80,0.15);
+        }
+        .field textarea { resize: vertical; min-height: 60px; }
+
+        /* Temperatura con unidad */
+        .temp-wrap { position: relative; }
+        .temp-wrap input { padding-right: 2.5rem; text-align: center; font-weight: 600; font-size: 1.2rem; }
+        .temp-wrap .unit {
+            position: absolute; right: 0.75rem; top: 50%;
+            transform: translateY(-50%); color: #999; font-weight: 500;
+        }
+        .temp-wrap input.alerta { border-color: #d32f2f; background: #ffebee; }
+        .temp-wrap input.ok { border-color: #4CAF50; background: #E8F5E9; }
+
+        .alerta-msg {
+            color: #d32f2f; font-size: 0.85rem; font-weight: 500;
+            margin-top: 0.25rem; display: none;
+        }
+        .alerta-msg.visible { display: block; }
+
+        /* Verificaciones (checkboxes grandes) */
+        .check-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .check-item {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.75rem; background: #f9f9f9; border-radius: 8px;
+            border: 2px solid transparent; cursor: pointer; transition: all 0.15s;
+        }
+        .check-item:active { transform: scale(0.98); }
+        .check-item.checked { background: #E8F5E9; border-color: #4CAF50; }
+        .check-item.failed { background: #ffebee; border-color: #d32f2f; }
+        .check-item input[type="checkbox"] { display: none; }
+        .check-icon {
+            width: 32px; height: 32px; border: 2px solid #ccc; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0; transition: all 0.15s; background: white;
+        }
+        .check-item.checked .check-icon { background: #4CAF50; border-color: #4CAF50; color: white; }
+        .check-item.failed .check-icon { background: #d32f2f; border-color: #d32f2f; color: white; }
+        .check-text { font-size: 0.95rem; font-weight: 500; }
+        .check-sub { font-size: 0.8rem; color: #888; font-weight: 400; }
+
+        /* Selector tipo MP */
+        .tipo-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+        }
+        .tipo-btn {
+            padding: 0.75rem; border: 2px solid #ddd; background: white;
+            border-radius: 8px; cursor: pointer; text-align: center;
+            font-weight: 600; font-size: 0.9rem; transition: all 0.2s;
+        }
+        .tipo-btn:active { transform: scale(0.97); }
+        .tipo-btn.active { border-color: #1B5E20; background: #E8F5E9; color: #1B5E20; }
+        .tipo-btn .emoji { font-size: 1.5rem; display: block; margin-bottom: 0.25rem; }
+        .tipo-btn .rango { font-size: 0.75rem; color: #888; font-weight: 400; margin-top: 0.15rem; }
+        .tipo-btn.active .rango { color: #2E7D32; }
+
+        /* Decision buttons */
+        .decision-row { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+        .dec-btn {
+            flex: 1; padding: 1rem; border: 2px solid #ddd; background: white;
+            border-radius: 8px; cursor: pointer; text-align: center;
+            font-weight: 700; font-size: 1rem; transition: all 0.2s;
+        }
+        .dec-btn:active { transform: scale(0.97); }
+        .dec-btn.accept.active { border-color: #4CAF50; background: #E8F5E9; color: #1B5E20; }
+        .dec-btn.reject.active { border-color: #d32f2f; background: #ffebee; color: #d32f2f; }
+
+        /* Foto */
+        .foto-area {
+            border: 2px dashed #ccc; border-radius: 8px; padding: 1.5rem;
+            text-align: center; cursor: pointer; transition: all 0.2s;
+            background: #fafafa;
+        }
+        .foto-area:active { background: #f0f0f0; border-color: #4CAF50; }
+        .foto-area .icon { font-size: 2rem; margin-bottom: 0.25rem; }
+        .foto-area .text { font-size: 0.9rem; color: #888; }
+        .foto-area input { display: none; }
+        .foto-preview {
+            display: none; margin-top: 0.75rem;
+        }
+        .foto-preview img {
+            max-width: 100%; border-radius: 8px; border: 1px solid #ddd;
+        }
+        .foto-preview .foto-name {
+            font-size: 0.8rem; color: #666; margin-top: 0.25rem;
+        }
+
+        /* Proveedor frecuente */
+        .prov-quick {
+            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;
+        }
+        .prov-chip {
+            padding: 0.4rem 0.75rem; border: 1px solid #ddd; border-radius: 20px;
+            font-size: 0.85rem; cursor: pointer; background: white; transition: all 0.15s;
+        }
+        .prov-chip:active { transform: scale(0.95); }
+        .prov-chip.active { background: #E8F5E9; border-color: #1B5E20; color: #1B5E20; font-weight: 600; }
+
+        /* Submit */
+        .submit-btn {
+            width: 100%; padding: 1rem; background: #1B5E20; color: white;
+            border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600;
+            cursor: pointer; transition: background 0.2s; margin-top: 0.5rem;
+        }
+        .submit-btn:hover { background: #2E7D32; }
+        .submit-btn:disabled { background: #bbb; cursor: not-allowed; }
+
+        .submit-btn.reject-mode { background: #d32f2f; }
+        .submit-btn.reject-mode:hover { background: #b71c1c; }
+
+        .success-msg {
+            display: none; background: #E8F5E9; border: 2px solid #4CAF50;
+            border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1rem;
+        }
+        .success-msg.visible { display: block; }
+        .success-msg h2 { color: #1B5E20; margin-bottom: 0.5rem; }
+        .success-msg.reject-success { background: #ffebee; border-color: #d32f2f; }
+        .success-msg.reject-success h2 { color: #d32f2f; }
+
+        .new-btn {
+            display: inline-block; margin-top: 0.75rem; padding: 0.5rem 1.5rem;
+            background: #1B5E20; color: white; border: none; border-radius: 6px;
+            font-size: 0.9rem; cursor: pointer; text-decoration: none;
+        }
+
+        .resumen-box {
+            background: white; border-radius: 8px; padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1rem;
+        }
+        .resumen-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem;
+        }
+        .resumen-item:last-child { border-bottom: none; }
+        .resumen-item .nombre { font-weight: 500; color: #555; }
+        .resumen-item .valor { font-weight: 600; }
+        .resumen-item .valor.ok { color: #2E7D32; }
+        .resumen-item .valor.alerta { color: #d32f2f; }
+
+        @media (max-width: 380px) {
+            .tipo-grid { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+            .tipo-btn { padding: 0.5rem; font-size: 0.8rem; }
+            .tipo-btn .emoji { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Recepción Materias Primas</h1>
+        <p>Control de entrada — Temperatura + Estado</p>
+        <div class="form-code">RIA-FORM-CAL-003 | Rev.1</div>
+    </div>
+
+    <div class="container">
+        <div class="info-bar">
+            <strong>Operario:</strong> <span id="operario">—</span> &nbsp;|&nbsp;
+            <strong>Fecha:</strong> <span id="fechaHoy"></span> &nbsp;|&nbsp;
+            <strong>Hora:</strong> <span id="horaActual"></span>
+        </div>
+
+        <!-- ========== OPERARIO ========== -->
+        <div class="section">
+            <div class="section-title"><span>👤 Operario</span></div>
+            <div class="section-content">
+                <div class="tipo-grid">
+                    <div class="tipo-btn" onclick="selectOperario(this,'Cristina')"><span class="emoji">👩‍💼</span>Cristina</div>
+                    <div class="tipo-btn" onclick="selectOperario(this,'Christophe')"><span class="emoji">🛠️</span>Christophe</div>
+                    <div class="tipo-btn" onclick="selectOperario(this,'Diego')"><span class="emoji">👨‍🔧</span>Diego</div>
+                    <div class="tipo-btn" onclick="selectOperario(this,'Isabel')"><span class="emoji">👩‍🍳</span>Isabel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PROVEEDOR ========== -->
+        <div class="section">
+            <div class="section-title"><span>🏭 Proveedor</span></div>
+            <div class="section-content">
+                <div class="field">
+                    <label>Proveedor habitual:</label>
+                    <div class="prov-quick" id="provQuick"></div>
+                </div>
+                <div class="field">
+                    <label>O escribe el nombre: <span class="hint">(si no está arriba)</span></label>
+                    <input type="text" id="provNombre" placeholder="Nombre del proveedor" oninput="clearProvChips()">
+                </div>
+                <div class="field">
+                    <label>Nº Albarán <span class="required">*</span></label>
+                    <input type="text" id="albaran" placeholder="Ej: ALB-2026-0342" inputmode="text">
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TIPO MP ========== -->
+        <div class="section">
+            <div class="section-title"><span>📦 Tipo de Materia Prima</span></div>
+            <div class="section-content">
+                <div class="tipo-grid" id="tipoGrid">
+                    <div class="tipo-btn" onclick="selectTipo(this,'refrigerado')" data-min="0" data-max="5">
+                        <span class="emoji">❄️</span>Refrigerado
+                        <div class="rango">0°C – 5°C</div>
+                    </div>
+                    <div class="tipo-btn" onclick="selectTipo(this,'congelado')" data-min="-22" data-max="-15">
+                        <span class="emoji">🧊</span>Congelado
+                        <div class="rango">-22°C – -15°C</div>
+                    </div>
+                    <div class="tipo-btn" onclick="selectTipo(this,'ambiente')" data-min="" data-max="">
+                        <span class="emoji">🌡️</span>Ambiente
+                        <div class="rango">Sin control Tª</div>
+                    </div>
+                    <div class="tipo-btn" onclick="selectTipo(this,'envases')" data-min="" data-max="">
+                        <span class="emoji">🫙</span>Envases / Otros
+                        <div class="rango">Sin control Tª</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PRODUCTO ========== -->
+        <div class="section">
+            <div class="section-title"><span>🏷️ Producto / Materia Prima</span></div>
+            <div class="section-content">
+                <div class="field">
+                    <label>Buscar MP del catálogo <span class="hint">(escribe para filtrar)</span></label>
+                    <input type="text" id="mpSearch" placeholder="Ej: arroz, mantequilla, bandeja..." oninput="filterMP()" autocomplete="off">
+                    <div id="mpResults" style="max-height:200px;overflow-y:auto;margin-top:4px;display:none;"></div>
+                </div>
+                <div class="field">
+                    <label>Producto <span class="required">*</span> <span class="hint" id="mpCodeHint"></span></label>
+                    <input type="text" id="producto" placeholder="Nombre del producto o MP">
+                </div>
+                <div class="field">
+                    <label>Lote proveedor <span class="required">*</span></label>
+                    <input type="text" id="loteProveedor" placeholder="Lote que aparece en el producto" inputmode="text">
+                </div>
+                <div class="field">
+                    <label>Caducidad / Consumo preferente</label>
+                    <input type="date" id="caducidad">
+                </div>
+                <div class="field">
+                    <label>Cantidad</label>
+                    <input type="text" id="cantidad" placeholder="Ej: 10 kg, 5 cajas, 200 uds" inputmode="text">
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TEMPERATURA ========== -->
+        <div class="section" id="seccionTemp" style="display:none;">
+            <div class="section-title"><span>🌡️ Temperatura de recepción</span></div>
+            <div class="section-content">
+                <div class="field">
+                    <label>Temperatura <span class="required">*</span> <span class="hint" id="rangoHint"></span></label>
+                    <div class="temp-wrap">
+                        <input type="number" id="temperatura" step="0.1" inputmode="decimal"
+                               placeholder="—" oninput="validarTemp()">
+                        <span class="unit">°C</span>
+                    </div>
+                    <div class="alerta-msg" id="tempAlerta">⚠️ TEMPERATURA FUERA DE RANGO — Valorar rechazo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== VERIFICACIONES ========== -->
+        <div class="section">
+            <div class="section-title"><span>✅ Verificaciones</span><span id="checkCount">0/5</span></div>
+            <div class="section-content">
+                <div class="check-list" id="checkList">
+                    <div class="check-item" onclick="toggleCheck(this)">
+                        <input type="checkbox"><div class="check-icon"></div>
+                        <div><div class="check-text">Envase / embalaje íntegro</div><div class="check-sub">Sin roturas, abolladuras ni humedades</div></div>
+                    </div>
+                    <div class="check-item" onclick="toggleCheck(this)">
+                        <input type="checkbox"><div class="check-icon"></div>
+                        <div><div class="check-text">Etiquetado correcto</div><div class="check-sub">Lote, caducidad, alérgenos legibles</div></div>
+                    </div>
+                    <div class="check-item" onclick="toggleCheck(this)">
+                        <input type="checkbox"><div class="check-icon"></div>
+                        <div><div class="check-text">Aspecto visual correcto</div><div class="check-sub">Color, olor y textura normales</div></div>
+                    </div>
+                    <div class="check-item" onclick="toggleCheck(this)">
+                        <input type="checkbox"><div class="check-icon"></div>
+                        <div><div class="check-text">Documentación completa</div><div class="check-sub">Albarán coincide con pedido</div></div>
+                    </div>
+                    <div class="check-item" onclick="toggleCheck(this)">
+                        <input type="checkbox"><div class="check-icon"></div>
+                        <div><div class="check-text">Transporte adecuado</div><div class="check-sub">Vehículo limpio, cadena de frío mantenida</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== FOTO ========== -->
+        <div class="section">
+            <div class="section-title"><span>📸 Foto (opcional)</span></div>
+            <div class="section-content">
+                <div class="foto-area" onclick="document.getElementById('fotoInput').click()">
+                    <div class="icon">📷</div>
+                    <div class="text">Pulsa para hacer foto del albarán o producto</div>
+                    <input type="file" id="fotoInput" accept="image/*" capture="environment" onchange="previewFoto(this)">
+                </div>
+                <div class="foto-preview" id="fotoPreview">
+                    <img id="fotoImg" src="" alt="Foto recepción">
+                    <div class="foto-name" id="fotoName"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== DECISIÓN ========== -->
+        <div class="section">
+            <div class="section-title"><span>📋 Decisión</span></div>
+            <div class="section-content">
+                <div class="field">
+                    <label>¿Se acepta la mercancía? <span class="required">*</span></label>
+                    <div class="decision-row">
+                        <div class="dec-btn accept" onclick="selectDecision(this,'aceptada')">✅ ACEPTAR</div>
+                        <div class="dec-btn reject" onclick="selectDecision(this,'rechazada')">❌ RECHAZAR</div>
+                    </div>
+                </div>
+                <div class="field" id="motivoRechazoField" style="display:none;">
+                    <label>Motivo del rechazo <span class="required">*</span></label>
+                    <textarea id="motivoRechazo" placeholder="Describe el motivo: temperatura, estado, etiquetado..." rows="3"></textarea>
+                </div>
+                <div class="field">
+                    <label>Observaciones <span class="hint">(opcional)</span></label>
+                    <textarea id="observaciones" placeholder="Cualquier observación adicional..." rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== RESUMEN ========== -->
+        <div class="resumen-box" id="resumenBox" style="display:none;">
+            <div style="font-weight:700; margin-bottom:0.5rem; font-size:0.95rem;">📋 Resumen</div>
+            <div id="resumenContent"></div>
+        </div>
+
+        <!-- ========== ENVIAR ========== -->
+        <button class="submit-btn" id="submitBtn" onclick="enviar()" disabled>
+            ✅ Registrar recepción
+        </button>
+
+        <!-- ========== SUCCESS ========== -->
+        <div class="success-msg" id="successMsg">
+            <h2>✅ Recepción registrada</h2>
+            <p id="successDetail"></p>
+            <button class="new-btn" onclick="nuevaRecepcion()">+ Nueva recepción</button>
+        </div>
+    </div>
+
+    <script>
+    // ============================================================
+    // STATE
+    // ============================================================
+    let state = {
+        operario: null,
+        proveedor: null,
+        tipo: null,      // refrigerado | congelado | ambiente | envases
+        tipoMin: null,
+        tipoMax: null,
+        decision: null,  // aceptada | rechazada
+        selectedMP: null, // MP seleccionada del catálogo
+    };
+
+    // Proveedores — del fichero maestro RIA_Datos_Maestros_v2.xlsx
+    const PROVEEDORES = [
+        'Ajopel','Adrados','Aneto','Arrocera del Pirineo','Azucarera','Barbadillo',
+        'Coato','Coreysa','Corquimia','Dalmau','Doña Ana','Enrique Tomás',
+        'Expressions Aromatiques','Givaudan','Honza','Illa de Riu','Ingredion',
+        'La Margarita','Makro','Metro','Nortindal','Paeller','Presidente',
+        'Rajope','Sarabia','Sensient','Solchem','Ugeave','Varios','Vegenat','Verdú Cantó'
+    ];
+
+    // Ingredientes/MP — del fichero maestro (código, nombre, proveedor, conservación)
+    const INGREDIENTES = [
+        {c:'MP01', n:'Caldo Aneto Pescado',         p:'Aneto',                   cons:'ambiente'},
+        {c:'MP03', n:'Caldo Paeller Pollo',          p:'Paeller',                 cons:'ambiente'},
+        {c:'MP04', n:'Aceite girasol alto oleico',   p:'Coreysa',                 cons:'ambiente'},
+        {c:'MP05', n:'Aceite de oliva virgen extra',  p:'Makro',                   cons:'ambiente'},
+        {c:'MP06', n:'Umami',                         p:'Givaudan',                cons:'ambiente'},
+        {c:'MP07', n:'Goma xantana',                  p:'Corquimia',               cons:'ambiente'},
+        {c:'MP08', n:'Tinta de calamar',              p:'Nortindal',               cons:'refrigerado'},
+        {c:'MP09', n:'Hazelnut (colorante)',           p:'Sensient',                cons:'ambiente'},
+        {c:'MP10', n:'Pimentón',                       p:'Coato',                   cons:'ambiente'},
+        {c:'MP11', n:'Hierbas (mezcla)',               p:'Expressions Aromatiques', cons:'ambiente'},
+        {c:'MP12', n:'Almidón',                        p:'Ingredion',               cons:'ambiente'},
+        {c:'MP13', n:'Mantequilla',                    p:'Presidente',              cons:'refrigerado'},
+        {c:'MP14', n:'Parmigiano Reggiano',            p:'(sin asignar)',           cons:'refrigerado'},
+        {c:'MP19', n:'Azafrán',                        p:'Verdú Cantó',             cons:'ambiente'},
+        {c:'MP20', n:'Jamón ibérico (en trozos)',      p:'Enrique Tomás',           cons:'congelado'},
+        {c:'MP21', n:'Harina Fina de Boletus',         p:'Honza',                   cons:'ambiente'},
+        {c:'MP22', n:'Mezcla Setas con Boletus',       p:'Honza',                   cons:'ambiente'},
+        {c:'MP23', n:'Tartufata (pasta de trufa)',      p:'Solchem',                 cons:'refrigerado'},
+        {c:'MP24', n:'Arroz Nuovo Maratelli',          p:'Arrocera del Pirineo',    cons:'ambiente'},
+        {c:'MP25', n:'Arroz Bahía',                    p:'Illa de Riu',             cons:'ambiente'},
+        {c:'MP26', n:'Arroz Marisma',                  p:'Doña Ana',                cons:'ambiente'},
+        {c:'MP31', n:'Ñora',                           p:'Rajope',                  cons:'ambiente'},
+        {c:'MP33', n:'Espinaca deshidratada',          p:'La Margarita',            cons:'ambiente'},
+        {c:'MP34', n:'Cebolla deshidratada',           p:'Vegenat',                 cons:'ambiente'},
+        {c:'MP35', n:'Pollo deshidratado',             p:'Ugeave',                  cons:'ambiente'},
+        {c:'MP36', n:'Puerro deshidratado',            p:'La Margarita',            cons:'ambiente'},
+        {c:'MP37', n:'Sal',                            p:'Varios',                  cons:'ambiente'},
+        {c:'MP38', n:'Ácido tartárico',                p:'Dalmau',                  cons:'ambiente'},
+        {c:'MP39', n:'Azúcar',                         p:'Azucarera',               cons:'ambiente'},
+        {c:'MP40', n:'Ajo fresco',                     p:'Ajopel',                  cons:'refrigerado'},
+        {c:'MP41', n:'Cúrcuma',                        p:'Ajopel',                  cons:'ambiente'},
+        {c:'MP50', n:'Bandeja EOS-35',                 p:'Sarabia',                 cons:'envases'},
+        {c:'MP51', n:'Film top-seal',                  p:'Adrados',                 cons:'envases'},
+        {c:'MP52', n:'Etiqueta producto',              p:'(sin asignar)',           cons:'envases'},
+        {c:'MP55', n:'Bandeja EOS-50',                 p:'Sarabia',                 cons:'envases'},
+        {c:'MP56', n:'Bandeja Bulk GN1225',            p:'Sarabia',                 cons:'envases'},
+        {c:'MP61', n:'CMC (carboximetilcelulosa)',     p:'Dalmau',                  cons:'ambiente'},
+        {c:'MP63', n:'Nata (crema de leche)',          p:'Metro',                   cons:'refrigerado'},
+        {c:'MP65', n:'Vino (Manzanilla/Jerez)',        p:'Barbadillo',              cons:'ambiente'},
+        {c:'MP66', n:'Grasa de pollo',                 p:'Ugeave',                  cons:'refrigerado'},
+        {c:'MP67', n:'Aceite girasol trufado',         p:'Coreysa',                 cons:'ambiente'},
+        {c:'MP68', n:'Aroma de setas',                 p:'Givaudan',                cons:'ambiente'},
+        {c:'MP69', n:'Aroma de queso',                 p:'Givaudan',                cons:'ambiente'},
+        {c:'MP70', n:'Aroma de jamón (OSO)',           p:'Givaudan',                cons:'ambiente'},
+        {c:'MP73', n:'Queso azul',                     p:'Givaudan',                cons:'refrigerado'},
+    ];
+
+    // URL del formulario de lotes (para alimentar registro)
+    const LOTES_URL = 'https://cquerol2-alt.github.io/calidad/lotes.html';
+
+    // ============================================================
+    // BÚSQUEDA INTELIGENTE DE MP
+    // ============================================================
+    function filterMP() {
+        const q = document.getElementById('mpSearch').value.toLowerCase().trim();
+        const container = document.getElementById('mpResults');
+        if (q.length < 2) { container.style.display = 'none'; return; }
+
+        const matches = INGREDIENTES.filter(i =>
+            i.n.toLowerCase().includes(q) ||
+            i.c.toLowerCase().includes(q) ||
+            i.p.toLowerCase().includes(q)
+        );
+
+        if (matches.length === 0) {
+            container.innerHTML = '<div style="padding:8px;color:#999;font-size:13px;">Sin resultados — puedes escribir el nombre manualmente abajo</div>';
+        } else {
+            container.innerHTML = matches.map(i => {
+                const consIcon = i.cons === 'refrigerado' ? '❄️' : i.cons === 'congelado' ? '🧊' : i.cons === 'envases' ? '🫙' : '🌡️';
+                return `<div class="prov-chip" style="display:block;margin-bottom:4px;padding:8px 10px;border-radius:6px;cursor:pointer;"
+                    onclick="selectMP('${i.c}')">
+                    <strong>${i.c}</strong> — ${i.n} <span style="color:#888;font-size:0.8rem;">(${i.p}) ${consIcon}</span>
+                </div>`;
+            }).join('');
+        }
+        container.style.display = 'block';
+    }
+
+    function selectMP(codigo) {
+        const mp = INGREDIENTES.find(i => i.c === codigo);
+        if (!mp) return;
+
+        // Rellenar producto
+        document.getElementById('producto').value = `${mp.c} — ${mp.n}`;
+        document.getElementById('mpCodeHint').textContent = `(${mp.c})`;
+        document.getElementById('mpSearch').value = '';
+        document.getElementById('mpResults').style.display = 'none';
+        state.selectedMP = mp;
+
+        // Auto-seleccionar proveedor
+        const provChips = document.querySelectorAll('.prov-chip');
+        provChips.forEach(c => {
+            if (c.textContent.trim() === mp.p) {
+                c.classList.add('active');
+                state.proveedor = mp.p;
+                document.getElementById('provNombre').value = mp.p;
+            } else if (c.parentElement.id === 'provQuick') {
+                c.classList.remove('active');
+            }
+        });
+
+        // Auto-seleccionar tipo conservación
+        const tipoMap = { 'refrigerado':'refrigerado', 'congelado':'congelado', 'ambiente':'ambiente', 'envases':'envases' };
+        const tipo = tipoMap[mp.cons] || 'ambiente';
+        document.querySelectorAll('#tipoGrid .tipo-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.textContent.toLowerCase().includes(tipo === 'ambiente' ? 'ambiente' : tipo)) {
+                btn.click(); // Dispara selectTipo() que ya maneja la temperatura
+            }
+        });
+
+        if (navigator.vibrate) navigator.vibrate(30);
+        updateResumen();
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        // Fecha y hora
+        const now = new Date();
+        document.getElementById('fechaHoy').textContent = now.toLocaleDateString('es-ES');
+        document.getElementById('horaActual').textContent = now.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+        setInterval(() => {
+            document.getElementById('horaActual').textContent = new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+        }, 30000);
+
+        // Proveedores chips
+        const provQuick = document.getElementById('provQuick');
+        PROVEEDORES.forEach(p => {
+            const chip = document.createElement('span');
+            chip.className = 'prov-chip';
+            chip.textContent = p;
+            chip.onclick = () => selectProveedor(chip, p);
+            provQuick.appendChild(chip);
+        });
+
+        // Caducidad default: +30 días
+        const fut = new Date();
+        fut.setDate(fut.getDate() + 30);
+        document.getElementById('caducidad').valueAsDate = fut;
+
+        // Leer operario del hub (si viene por URL param)
+        const params = new URLSearchParams(window.location.search);
+        const opParam = params.get('operario');
+        if (opParam) {
+            document.querySelectorAll('.section:first-of-type .tipo-btn').forEach(btn => {
+                if (btn.textContent.trim().toLowerCase().includes(opParam.toLowerCase())) {
+                    btn.click();
+                }
+            });
+        }
+    });
+
+    // ============================================================
+    // SELECTORS
+    // ============================================================
+    function selectOperario(el, nombre) {
+        el.parentElement.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        state.operario = nombre;
+        document.getElementById('operario').textContent = nombre;
+        updateResumen();
+    }
+
+    function selectProveedor(chip, nombre) {
+        document.querySelectorAll('.prov-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        state.proveedor = nombre;
+        document.getElementById('provNombre').value = nombre;
+        updateResumen();
+    }
+
+    function clearProvChips() {
+        document.querySelectorAll('.prov-chip').forEach(c => c.classList.remove('active'));
+        state.proveedor = document.getElementById('provNombre').value || null;
+        updateResumen();
+    }
+
+    function selectTipo(el, tipo) {
+        document.querySelectorAll('#tipoGrid .tipo-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        state.tipo = tipo;
+        state.tipoMin = el.dataset.min ? parseFloat(el.dataset.min) : null;
+        state.tipoMax = el.dataset.max ? parseFloat(el.dataset.max) : null;
+
+        const secTemp = document.getElementById('seccionTemp');
+        if (tipo === 'refrigerado' || tipo === 'congelado') {
+            secTemp.style.display = 'block';
+            const rangoText = tipo === 'refrigerado' ? '(Rango: 0°C a 5°C)' : '(Rango: -22°C a -15°C)';
+            document.getElementById('rangoHint').textContent = rangoText;
+            document.getElementById('temperatura').value = '';
+            document.getElementById('temperatura').className = '';
+            document.getElementById('tempAlerta').classList.remove('visible');
+        } else {
+            secTemp.style.display = 'none';
+        }
+        updateResumen();
+    }
+
+    function selectDecision(el, decision) {
+        document.querySelectorAll('.dec-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        state.decision = decision;
+
+        const motivoField = document.getElementById('motivoRechazoField');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (decision === 'rechazada') {
+            motivoField.style.display = 'block';
+            submitBtn.textContent = '❌ Registrar RECHAZO';
+            submitBtn.classList.add('reject-mode');
+        } else {
+            motivoField.style.display = 'none';
+            submitBtn.textContent = '✅ Registrar recepción';
+            submitBtn.classList.remove('reject-mode');
+        }
+        updateResumen();
+    }
+
+    // ============================================================
+    // VERIFICACIONES
+    // ============================================================
+    function toggleCheck(el) {
+        const cb = el.querySelector('input[type="checkbox"]');
+        const icon = el.querySelector('.check-icon');
+
+        if (el.classList.contains('checked')) {
+            // Checked → Failed
+            el.classList.remove('checked');
+            el.classList.add('failed');
+            cb.checked = false;
+            icon.textContent = '✗';
+        } else if (el.classList.contains('failed')) {
+            // Failed → Unchecked
+            el.classList.remove('failed');
+            cb.checked = false;
+            icon.textContent = '';
+        } else {
+            // Unchecked → Checked
+            el.classList.add('checked');
+            cb.checked = true;
+            icon.textContent = '✓';
+        }
+
+        if (navigator.vibrate) navigator.vibrate(30);
+        updateCheckCount();
+        updateResumen();
+    }
+
+    function updateCheckCount() {
+        const items = document.querySelectorAll('.check-item');
+        const checked = document.querySelectorAll('.check-item.checked').length;
+        const failed = document.querySelectorAll('.check-item.failed').length;
+        document.getElementById('checkCount').textContent = `${checked}✓ ${failed > 0 ? failed + '✗' : ''} / ${items.length}`;
+    }
+
+    // ============================================================
+    // TEMPERATURA
+    // ============================================================
+    function validarTemp() {
+        const input = document.getElementById('temperatura');
+        const alerta = document.getElementById('tempAlerta');
+        const val = parseFloat(input.value);
+
+        if (isNaN(val) || input.value === '') {
+            input.className = '';
+            alerta.classList.remove('visible');
+            updateResumen();
+            return;
+        }
+
+        if (state.tipoMin !== null && state.tipoMax !== null) {
+            if (val < state.tipoMin || val > state.tipoMax) {
+                input.className = 'alerta';
+                alerta.classList.add('visible');
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            } else {
+                input.className = 'ok';
+                alerta.classList.remove('visible');
+            }
+        }
+        updateResumen();
+    }
+
+    // ============================================================
+    // FOTO
+    // ============================================================
+    function previewFoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('fotoImg').src = e.target.result;
+                document.getElementById('fotoName').textContent = input.files[0].name;
+                document.getElementById('fotoPreview').style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // ============================================================
+    // RESUMEN + VALIDACIÓN
+    // ============================================================
+    function updateResumen() {
+        const proveedor = document.getElementById('provNombre').value || state.proveedor;
+        const albaran = document.getElementById('albaran').value;
+        const producto = document.getElementById('producto').value;
+        const lote = document.getElementById('loteProveedor').value;
+        const temp = document.getElementById('temperatura').value;
+        const checked = document.querySelectorAll('.check-item.checked').length;
+        const failed = document.querySelectorAll('.check-item.failed').length;
+        const total = document.querySelectorAll('.check-item').length;
+
+        const box = document.getElementById('resumenBox');
+        const content = document.getElementById('resumenContent');
+        const btn = document.getElementById('submitBtn');
+
+        // ¿Requiere temperatura?
+        const needsTemp = (state.tipo === 'refrigerado' || state.tipo === 'congelado');
+
+        // Validación mínima
+        const valid = state.operario &&
+                      (proveedor || '').trim() &&
+                      (albaran || '').trim() &&
+                      (producto || '').trim() &&
+                      (lote || '').trim() &&
+                      state.tipo &&
+                      state.decision &&
+                      (!needsTemp || (temp !== '' && !isNaN(parseFloat(temp)))) &&
+                      (checked + failed === total) &&
+                      (state.decision !== 'rechazada' || document.getElementById('motivoRechazo').value.trim());
+
+        btn.disabled = !valid;
+
+        // Mostrar resumen si hay datos suficientes
+        if (producto || proveedor) {
+            box.style.display = 'block';
+            let html = '';
+            const row = (label, val, cls='') => `<div class="resumen-item"><span class="nombre">${label}</span><span class="valor ${cls}">${val || '—'}</span></div>`;
+
+            html += row('Operario', state.operario);
+            html += row('Proveedor', proveedor);
+            html += row('Albarán', albaran);
+            html += row('Producto', producto);
+            html += row('Lote', lote);
+            html += row('Tipo', state.tipo ? state.tipo.charAt(0).toUpperCase() + state.tipo.slice(1) : '—');
+
+            if (needsTemp && temp) {
+                const tempVal = parseFloat(temp);
+                const outOfRange = (state.tipoMin !== null && (tempVal < state.tipoMin || tempVal > state.tipoMax));
+                html += row('Temperatura', temp + '°C', outOfRange ? 'alerta' : 'ok');
+            }
+
+            html += row('Verificaciones', `${checked}✓ ${failed > 0 ? failed + '✗' : ''} / ${total}`, failed > 0 ? 'alerta' : 'ok');
+            html += row('Decisión', state.decision ? (state.decision === 'aceptada' ? '✅ Aceptada' : '❌ Rechazada') : '—',
+                         state.decision === 'rechazada' ? 'alerta' : (state.decision === 'aceptada' ? 'ok' : ''));
+
+            content.innerHTML = html;
+        } else {
+            box.style.display = 'none';
+        }
+    }
+
+    // Listen to all inputs for resumen updates
+    document.addEventListener('input', updateResumen);
+
+    // ============================================================
+    // ENVIAR
+    // ============================================================
+    function enviar() {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ Enviando...';
+
+        const data = {
+            timestamp: new Date().toISOString(),
+            operario: state.operario,
+            proveedor: document.getElementById('provNombre').value || state.proveedor,
+            albaran: document.getElementById('albaran').value,
+            producto: document.getElementById('producto').value,
+            loteProveedor: document.getElementById('loteProveedor').value,
+            caducidad: document.getElementById('caducidad').value,
+            cantidad: document.getElementById('cantidad').value,
+            tipo: state.tipo,
+            temperatura: document.getElementById('temperatura').value || null,
+            verificaciones: {
+                checked: document.querySelectorAll('.check-item.checked').length,
+                failed: document.querySelectorAll('.check-item.failed').length,
+                total: document.querySelectorAll('.check-item').length,
+            },
+            decision: state.decision,
+            motivoRechazo: document.getElementById('motivoRechazo').value || null,
+            observaciones: document.getElementById('observaciones').value || null,
+        };
+
+        console.log('📦 Recepción MP:', JSON.stringify(data, null, 2));
+
+        // Enviar al backend (con backup local automático)
+        if (typeof RIA !== 'undefined') {
+            RIA.enviar('recepcion_mp', data);
+        } else {
+            // Fallback: solo localStorage
+            const key = 'ria-recepcion-' + Date.now();
+            try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
+        }
+
+        // === ALIMENTAR REGISTRO DE LOTES DISPONIBLES ===
+        if (data.decision === 'aceptada' && data.loteProveedor) {
+            try {
+                const lotes = JSON.parse(localStorage.getItem('ria-lotes-mp') || '[]');
+                lotes.push({
+                    codigo_mp: state.selectedMP ? state.selectedMP.c : null,
+                    producto: data.producto,
+                    lote: data.loteProveedor,
+                    proveedor: data.proveedor,
+                    caducidad: data.caducidad,
+                    cantidad: data.cantidad,
+                    fecha_recepcion: new Date().toISOString().split('T')[0],
+                    activo: true
+                });
+                localStorage.setItem('ria-lotes-mp', JSON.stringify(lotes));
+                console.log('📋 Lote añadido al registro:', data.loteProveedor);
+            } catch(e) { console.warn('Error guardando lote:', e); }
+        }
+
+        // Mostrar confirmación
+        setTimeout(() => {
+            const msg = document.getElementById('successMsg');
+            const detail = document.getElementById('successDetail');
+
+            if (state.decision === 'rechazada') {
+                msg.classList.add('reject-success');
+                detail.innerHTML = `<strong>❌ RECHAZADA</strong><br>${data.producto} — ${data.proveedor}<br>Motivo: ${data.motivoRechazo}<br><br><em>Notificación enviada a Cristina</em>`;
+            } else {
+                msg.classList.remove('reject-success');
+                detail.innerHTML = `<strong>${data.producto}</strong><br>Proveedor: ${data.proveedor} | Lote: ${data.loteProveedor}` +
+                    (data.temperatura ? `<br>Temperatura: ${data.temperatura}°C` : '') +
+                    `<br><br><em>Registrado a las ${new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}</em>`;
+            }
+
+            msg.classList.add('visible');
+            btn.style.display = 'none';
+            document.getElementById('resumenBox').style.display = 'none';
+
+            if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
+        }, 800);
+    }
+
+    // ============================================================
+    // NUEVA RECEPCIÓN
+    // ============================================================
+    function nuevaRecepcion() {
+        // Mantener operario, resetear el resto
+        const opActual = state.operario;
+        state = { operario: opActual, proveedor: null, tipo: null, tipoMin: null, tipoMax: null, decision: null, selectedMP: null };
+
+        // Reset campos
+        document.getElementById('provNombre').value = '';
+        document.getElementById('albaran').value = '';
+        document.getElementById('producto').value = '';
+        document.getElementById('loteProveedor').value = '';
+        document.getElementById('cantidad').value = '';
+        document.getElementById('temperatura').value = '';
+        document.getElementById('motivoRechazo').value = '';
+        document.getElementById('observaciones').value = '';
+        document.getElementById('temperatura').className = '';
+        document.getElementById('tempAlerta').classList.remove('visible');
+
+        // Reset caducidad
+        const fut = new Date(); fut.setDate(fut.getDate() + 30);
+        document.getElementById('caducidad').valueAsDate = fut;
+
+        // Reset chips, tipos, checks, decision
+        document.querySelectorAll('.prov-chip').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('#tipoGrid .tipo-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.dec-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.check-item').forEach(el => {
+            el.classList.remove('checked', 'failed');
+            el.querySelector('input').checked = false;
+            el.querySelector('.check-icon').textContent = '';
+        });
+
+        document.getElementById('mpSearch').value = '';
+        document.getElementById('mpResults').style.display = 'none';
+        document.getElementById('mpCodeHint').textContent = '';
+        document.getElementById('seccionTemp').style.display = 'none';
+        document.getElementById('motivoRechazoField').style.display = 'none';
+        document.getElementById('fotoPreview').style.display = 'none';
+        document.getElementById('fotoInput').value = '';
+
+        // Reset UI
+        document.getElementById('successMsg').classList.remove('visible', 'reject-success');
+        const btn = document.getElementById('submitBtn');
+        btn.style.display = 'block';
+        btn.disabled = true;
+        btn.textContent = '✅ Registrar recepción';
+        btn.classList.remove('reject-mode');
+
+        document.getElementById('resumenBox').style.display = 'none';
+        updateCheckCount();
+
+        window.scrollTo(0, 0);
+    }
+    </script>
+    <script src="ria-backend.js"></script>
+</body>
+</html>
