@@ -637,8 +637,10 @@
         
         <div class="button-group">
           <button class="btn-primary" onclick="interpretOrder()">Interpretar</button>
-          <button class="btn-secondary" onclick="clearOrderText()">Limpiar</button>
+          <button class="btn-secondary" onclick="clearOrderText()">Limpiar texto</button>
+          <button class="btn-secondary" onclick="nuevaHojaDeCarga()" style="background:#FFF3E0;color:#E65100;border-color:#E65100;">Nueva hoja</button>
         </div>
+        <div id="hoja-status" style="margin-top:8px;font-size:13px;color:#666;text-align:center;"></div>
       </div>
 
       <!-- RESULTS -->
@@ -826,6 +828,55 @@
 // Si está vacío o el Worker no responde, se usa el parser regex local.
 // ============================================================
 const WORKER_URL = ''; // ej: 'https://ria-interpretar.tu-cuenta.workers.dev'
+
+// ============================================================
+// HOJA DE CARGA DEL DÍA — Acumulativa con persistencia
+// ============================================================
+const HOY = new Date().toISOString().slice(0, 10);
+const HOJA_KEY = 'ria_hoja_carga';
+
+function cargarHojaDelDia() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(HOJA_KEY) || '{}');
+    if (saved.fecha === HOY && Array.isArray(saved.pedidos)) {
+      return saved.pedidos;
+    }
+  } catch (e) {}
+  return [];
+}
+
+function guardarHojaDelDia() {
+  localStorage.setItem(HOJA_KEY, JSON.stringify({ fecha: HOY, pedidos: RENDERED_ORDERS }));
+}
+
+function nuevaHojaDeCarga() {
+  if (RENDERED_ORDERS.length > 0 && !confirm('¿Empezar una hoja de carga nueva? Se borrarán los pedidos actuales de la pantalla.')) return;
+  RENDERED_ORDERS = [];
+  guardarHojaDelDia();
+  document.getElementById('results-content').innerHTML = '<div class="results-empty">Hoja de carga vacía. Interpreta un pedido para empezar.</div>';
+  document.getElementById('summary-container').innerHTML = '';
+  showToast('Nueva hoja de carga iniciada', 'success');
+}
+
+function clienteYaEnHoja(customerCode) {
+  return RENDERED_ORDERS.some(o => o.client.customer_code === customerCode && !o._eliminado);
+}
+
+function marcarEnviadoHolded(idx) {
+  if (RENDERED_ORDERS[idx]) {
+    RENDERED_ORDERS[idx]._enviadoHolded = true;
+    RENDERED_ORDERS[idx]._horaEnvio = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    guardarHojaDelDia();
+  }
+}
+
+function eliminarPedidoDeHoja(idx) {
+  if (!confirm('¿Quitar este pedido de la hoja de carga?')) return;
+  RENDERED_ORDERS.splice(idx, 1);
+  guardarHojaDelDia();
+  renderOrders(RENDERED_ORDERS);
+  renderSummary(RENDERED_ORDERS);
+}
 
 // ============================================================
 // DATA: Clients (embedded from alias_clientes.json)
@@ -3463,21 +3514,88 @@ function interpretOrder() {
   // Try PDF-specific parsing first
   const pdfOrders = detectAndParsePDF(text);
   if (pdfOrders && pdfOrders.length > 0) {
-    renderOrders(pdfOrders);
-    renderSummary(pdfOrders);
+    acumularPedidos(pdfOrders);
     return;
   }
 
   // Try AI interpretation via middleware first, then fall back to regex
   interpretOrderWithAI(text).then(aiOrders => {
     if (aiOrders && aiOrders.length > 0) {
-      renderOrders(aiOrders);
-      renderSummary(aiOrders);
+      acumularPedidos(aiOrders);
     } else {
       // Fallback to local regex parsing
       interpretOrderLocal(text);
     }
   });
+}
+
+function acumularPedidos(newOrders) {
+  const duplicados = [];
+  const nuevos = [];
+
+  for (const order of newOrders) {
+    if (clienteYaEnHoja(order.client.customer_code)) {
+      duplicados.push(order);
+    } else {
+      nuevos.push(order);
+    }
+  }
+
+  // Add non-duplicates directly
+  RENDERED_ORDERS = RENDERED_ORDERS.concat(nuevos);
+
+  if (duplicados.length > 0) {
+    // Show duplicate warning modal
+    const nombres = duplicados.map(d => d.client.nombre).join(', ');
+    const modal = document.createElement('div');
+    modal.id = 'dup-modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+      <div style="background:white;border-radius:12px;max-width:420px;width:100%;padding:20px;">
+        <div style="text-align:center;margin-bottom:12px;">
+          <div style="font-size:36px;">⚠️</div>
+          <h3 style="color:#E65100;margin:8px 0 4px;">Cliente(s) ya en la hoja</h3>
+          <p style="color:#666;font-size:14px;">${nombres}</p>
+          <p style="font-size:13px;color:#888;">Ya tienen pedido hoy. ¿Añadir de todas formas?</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button id="dup-skip" style="flex:1;padding:12px;border:2px solid #E65100;background:white;color:#E65100;border-radius:8px;font-weight:700;cursor:pointer;">
+            No añadir
+          </button>
+          <button id="dup-add" style="flex:1;padding:12px;border:none;background:#E65100;color:white;border-radius:8px;font-weight:700;cursor:pointer;">
+            Añadir igualmente
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    document.getElementById('dup-skip').onclick = () => {
+      modal.remove();
+      guardarHojaDelDia();
+      renderOrders(RENDERED_ORDERS);
+      renderSummary(RENDERED_ORDERS);
+      if (nuevos.length > 0) showToast(`${nuevos.length} pedido(s) añadido(s), ${duplicados.length} duplicado(s) omitido(s)`, 'info');
+    };
+    document.getElementById('dup-add').onclick = () => {
+      modal.remove();
+      RENDERED_ORDERS = RENDERED_ORDERS.concat(duplicados);
+      guardarHojaDelDia();
+      renderOrders(RENDERED_ORDERS);
+      renderSummary(RENDERED_ORDERS);
+      showToast(`${newOrders.length} pedido(s) añadido(s) a la hoja de carga`, 'success');
+    };
+  }
+
+  guardarHojaDelDia();
+  renderOrders(RENDERED_ORDERS);
+  renderSummary(RENDERED_ORDERS);
+
+  // Clear input after successful interpretation
+  if (nuevos.length > 0 || duplicados.length === 0) {
+    document.getElementById('order-text').value = '';
+    if (duplicados.length === 0) showToast(`${nuevos.length} pedido(s) añadido(s) a la hoja de carga`, 'success');
+  }
 }
 
 function interpretOrderWithAI(text) {
@@ -3537,8 +3655,7 @@ function interpretOrderLocal(text) {
     showToast('No se pudieron interpretar pedidos. Comprueba que el nombre del cliente aparece en el texto.', 'error');
     return;
   }
-  renderOrders(orders);
-  renderSummary(orders);
+  acumularPedidos(orders);
 }
 
 // ============================================================
@@ -3839,7 +3956,7 @@ function parseQuantity(text) {
 }
 
 // Global: store rendered orders for middleware access
-let RENDERED_ORDERS = [];
+let RENDERED_ORDERS = cargarHojaDelDia();
 
 function renderOrders(orders) {
   RENDERED_ORDERS = orders; // Save for middleware buttons
@@ -3853,6 +3970,8 @@ function renderOrders(orders) {
     const op = operador || { operador: '?', motivo: '', stef: null, logista: null };
     const prefWarnings = warnings || [];
     const opColor = op.operador === 'Stef' ? '#1565C0' : op.operador === 'Mascaró' ? '#6A1B9A' : '#1B5E20';
+    const yaEnviado = order._enviadoHolded || false;
+    const horaEnvio = order._horaEnvio || '';
 
     // Build tariff comparison HTML
     let tarifaHtml = '';
@@ -3909,7 +4028,13 @@ function renderOrders(orders) {
     const currentOp = (op.operador || 'Logista').toLowerCase();
 
     html += `
-      <div class="order-card" id="card-${orderIdx}">
+      <div class="order-card" id="card-${orderIdx}" style="${yaEnviado ? 'border:2px solid #4CAF50;opacity:0.85;' : ''}">
+        ${yaEnviado ? `<div style="background:#4CAF50;color:white;padding:4px 12px;border-radius:8px 8px 0 0;margin:-16px -16px 12px -16px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center;">
+          <span>✅ Enviado a Holded${horaEnvio ? ' — ' + horaEnvio : ''}</span>
+          <button onclick="eliminarPedidoDeHoja(${orderIdx})" style="background:none;border:none;color:white;cursor:pointer;font-size:16px;" title="Quitar de la hoja">✕</button>
+        </div>` : `<div style="display:flex;justify-content:flex-end;margin:-8px -8px 4px 0;">
+          <button onclick="eliminarPedidoDeHoja(${orderIdx})" style="background:none;border:none;color:#bbb;cursor:pointer;font-size:14px;padding:2px 6px;" title="Quitar de la hoja">✕</button>
+        </div>`}
         <div class="order-card-header">
           <div style="flex:1;">
             <select id="client-select-${orderIdx}" onchange="changeClient(${orderIdx})"
@@ -3992,6 +4117,7 @@ function renderOrders(orders) {
 
   html += '</div>';
   container.innerHTML = html;
+  actualizarHojaStatus();
 }
 
 function renderSummary(orders) {
@@ -4051,8 +4177,18 @@ function renderSummary(orders) {
 
 function clearOrderText() {
   document.getElementById('order-text').value = '';
-  document.getElementById('results-content').innerHTML = '<div class="results-empty">Introduce un pedido y haz clic en "Interpretar"</div>';
-  document.getElementById('summary-container').innerHTML = '';
+}
+
+function actualizarHojaStatus() {
+  const el = document.getElementById('hoja-status');
+  if (!el) return;
+  const total = RENDERED_ORDERS.length;
+  const enviados = RENDERED_ORDERS.filter(o => o._enviadoHolded).length;
+  if (total === 0) {
+    el.textContent = '';
+  } else {
+    el.innerHTML = `📋 Hoja de carga: <strong>${total}</strong> pedido${total !== 1 ? 's' : ''} ${enviados > 0 ? `(${enviados} enviado${enviados !== 1 ? 's' : ''})` : ''}`;
+  }
 }
 
 function copyOrderToClipboard(clientName) {
@@ -5134,6 +5270,7 @@ function updateOrderTotals(orderIdx) {
 
   // Recalculate cost
   recalcCost(orderIdx);
+  guardarHojaDelDia();
 }
 
 function recalcCost(orderIdx) {
@@ -5185,6 +5322,7 @@ function changeClient(orderIdx) {
   if (opSelect) opSelect.value = (newOp.operador || 'logista').toLowerCase();
 
   recalcCost(orderIdx);
+  guardarHojaDelDia();
 }
 
 function changeOperator(orderIdx) {
@@ -5200,6 +5338,7 @@ function changeOperator(orderIdx) {
   RENDERED_ORDERS[orderIdx].operador.operador = opName.charAt(0).toUpperCase() + opName.slice(1);
 
   recalcCost(orderIdx);
+  guardarHojaDelDia();
 }
 
 function addProductFromSelect(orderIdx) {
@@ -5417,6 +5556,11 @@ async function ejecutarMiddleware(idx) {
     // Save to localStorage history
     saveOrderToHistory(order.client.customer_code, order.products);
 
+    // Mark as sent in hoja de carga
+    marcarEnviadoHolded(idx);
+    renderOrders(RENDERED_ORDERS);
+    renderSummary(RENDERED_ORDERS);
+
   } catch (e) {
     if (modal) modal.remove();
     showToast(`Error: ${e.message}`, 'error');
@@ -5546,6 +5690,9 @@ async function enviarSoloHolded(idx) {
     if (result.ok) {
       showToast(`OV creada en Holded para ${order.client.nombre}`, 'success');
       saveOrderToHistory(order.client.customer_code, order.products);
+      marcarEnviadoHolded(idx);
+      renderOrders(RENDERED_ORDERS);
+      renderSummary(RENDERED_ORDERS);
     } else {
       showToast(`Error Holded: ${result.error || 'Desconocido'}`, 'error');
     }
@@ -5698,6 +5845,13 @@ async function imprimirHojaCarga() {
 // INIT
 // ============================================================
 initProvinceSelect();
+
+// Restaurar hoja de carga del día al cargar
+if (RENDERED_ORDERS.length > 0) {
+  renderOrders(RENDERED_ORDERS);
+  renderSummary(RENDERED_ORDERS);
+  showToast(`Hoja de carga restaurada: ${RENDERED_ORDERS.length} pedido(s)`, 'info');
+}
 </script>
 
 </body>
