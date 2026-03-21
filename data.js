@@ -41,160 +41,318 @@ const RIA_DATA = {
     // PRODUCTOS
     // ========================================================================
     productos: {
-        // --- La Santa (producto final) ---
+        // =====================================================
+        // LA SANTA (producto final — marca La Santa)
+        // =====================================================
         pescado: {
-            nombre: 'Arroz de Pescado',
+            nombre: 'Arroz Pescado y Marisco',
             familia: 'La Santa',
+            marca: 'La Santa',
             codigoLote: '748',
-            variantes: { '260g': '748-1', 'bulk': '748-3' },
+            variantes: { '260g': '748-1', '1300g': '748-3', '1300g-E': '748-E' },
             arroz: 'Maratelli',
-            formatos: ['260g', 'bulk'],
+            formatos: ['260g', '1300g'],
             tipoJarra: 'pescado',
             tieneCaldo: true,
             caldoTipo: 'pescado',
-            aliases: ['pes', 'fish'],
+            tieneSalsa: true,
+            salsa: '748-S',
+            pesoSalsa: 40,
+            endurance: { codigo: '748-E', formato: '1300g', sinSalsa: true },
+            aliases: ['pes', 'fish', 'APM'],
+            alergenos: ['PESCADO', 'MOLUSCOS', 'CRUSTÁCEOS', 'APIO', 'SULFITOS'],
             lotePrefijo: ''
         },
         pollo: {
             nombre: 'Arroz de Pollo',
             familia: 'La Santa',
+            marca: 'La Santa',
             codigoLote: '749',
-            variantes: { '260g': '749-1', 'bulk': '749-3' },
+            variantes: { '260g': '749-1', '1300g-E': '749-E' },
             arroz: 'Maratelli',
-            formatos: ['260g', 'bulk'],
+            formatos: ['260g'],
             tipoJarra: 'pescado',
             tieneCaldo: true,
             caldoTipo: 'pollo',
-            aliases: ['pol', 'chicken'],
+            tieneSalsa: true,
+            salsa: '749-S',
+            pesoSalsa: 40,
+            endurance: { codigo: '749-E', formato: '1300g', sinSalsa: true },
+            aliases: ['pol', 'chicken', 'AP'],
+            alergenos: ['SULFITOS'],
+            notas: 'Solo 260g estándar. 1300g solo Endurance (sin salsa).',
             lotePrefijo: ''
         },
         negro: {
             nombre: 'Arroz Negro',
             familia: 'La Santa',
+            marca: 'La Santa',
             codigoLote: '740',
-            variantes: { '260g': '740-1', 'bulk': '740-3' },
+            variantes: { '260g': '740-1', '1300g': '740-3', '1300g-E': '740-E' },
             arroz: 'Maratelli',
-            formatos: ['260g', 'bulk'],
+            formatos: ['260g', '1300g'],
             tipoJarra: 'pescado',
             tieneCaldo: true,
             caldoTipo: 'pescado',  // negro usa caldo de pescado + tinta
-            aliases: ['neg', 'black'],
+            tieneSalsa: false,     // la salsa negra (745) se vende suelta o como Negro Meloso
+            endurance: { codigo: '740-E', formato: '1300g', sinSalsa: true },
+            negroMeloso: 'Arroz Negro (740) + Salsa Negra (745, 75g) = Negro Meloso. NO es producto independiente.',
+            aliases: ['neg', 'black', 'AN'],
+            alergenos: ['PESCADO', 'MOLUSCOS', 'CRUSTÁCEOS', 'APIO', 'SULFITOS'],
             lotePrefijo: ''
         },
         verduras: {
-            nombre: 'Arroz de Verdura',
+            nombre: 'Arroz de Verduras',
             familia: 'La Santa',
+            marca: 'La Santa',
             codigoLote: '750',
-            variantes: { '260g': '750-1', 'bulk': '750-3', '2kg': '750-4' },
+            variantes: { '260g': '750-1', '1300g': '750-3', '1300g-E': '750-E' },
             arroz: 'Maratelli',
-            formatos: ['260g', 'bulk'],
+            formatos: ['260g', '1300g'],
             tipoJarra: 'verdura',
             tieneCaldo: true,
             caldoTipo: 'verduras',
-            aliases: ['ver', 'verd', 'vegetables'],
+            tieneSalsa: true,
+            salsa: '750-S',
+            pesoSalsa: 40,
+            endurance: { codigo: '750-E', formato: '1300g', sinSalsa: true },
+            aliases: ['ver', 'verd', 'vegetables', 'AV'],
+            alergenos: ['SULFITOS'],
             lotePrefijo: ''
         },
         risotto: {
             nombre: 'Risotto',
             familia: 'La Santa',
+            marca: 'La Santa',
             codigoLote: '741',
-            variantes: { '260g': '741-1', 'bulk': '741-3' },
+            variantes: { '260g': '741-1' },
             arroz: 'Maratelli',
-            formatos: ['260g', 'bulk'],
+            formatos: ['260g'],
             tipoJarra: 'risotto',
             tieneCaldo: true,
             caldoTipo: 'risotto',
-            aliases: ['ris'],
+            tieneSalsa: false,
+            aliases: ['ris', 'R'],
+            alergenos: ['SULFITOS', 'LECHE'],
+            lotePrefijo: ''
+        },
+        arrozBlanco: {
+            nombre: 'Arroz Blanco',
+            familia: 'La Santa',
+            marca: 'La Santa',
+            codigoLote: '760',
+            variantes: { '260g': '760-1' },
+            arroz: 'Maratelli',
+            formatos: ['260g'],
+            tipoJarra: null,
+            tieneCaldo: false,
+            caldoTipo: null,
+            tieneSalsa: false,
+            aliases: ['blanco', 'AB'],
+            alergenos: [],
+            estado: 'nuevo',
+            lotePrefijo: ''
+        },
+        arancini: {
+            nombre: 'Arancini',
+            familia: 'La Santa',
+            marca: 'La Santa',
+            codigoLote: '770',
+            variantes: { '225g': '770-1' },
+            arroz: 'Maratelli',
+            formatos: ['225g'],
+            tipoJarra: null,
+            tieneCaldo: false,
+            caldoTipo: null,
+            tieneSalsa: false,
+            aliases: ['ARC'],
+            alergenos: [],
+            estado: 'nuevo',
             lotePrefijo: ''
         },
 
-        // --- Cremosos (producto final) ---
+        // =====================================================
+        // CREMOSOS (producto final — marca La Santa)
+        // 210g = con salsa aparte | 300g = all included | NO existe 260g
+        // =====================================================
         iberico: {
             nombre: 'Cremoso Ibérico',
-            familia: 'All-Included',
+            familia: 'Cremosos',
+            marca: 'La Santa',
             codigoLote: '781',
-            variantes: { '300g': '781-1', 'all-included': '781-2' },
+            variantes: { '210g': '781-1', '300g': '781-2' },
             arroz: 'Maratelli',
-            formatos: ['300g', 'all-included', 'separado', 'bulk'],
+            formatos: ['210g', '300g'],
             tipoJarra: 'risotto',
             tieneCaldo: true,
             caldoTipo: 'risotto',
-            aliases: ['ibe', 'iberico'],
+            tieneSalsa: true,
+            salsa: '789',
+            pesoSalsa: 90,
+            formatosSalsa: { '210g': 'salsa aparte', '300g': 'all included' },
+            aliases: ['ibe', 'iberico', 'CI'],
+            alergenos: ['SULFITOS', 'LECHE'],
             lotePrefijo: ''
         },
         setas: {
             nombre: 'Cremoso Setas',
-            familia: 'All-Included',
+            familia: 'Cremosos',
+            marca: 'La Santa',
             codigoLote: '784',
-            variantes: { '300g': '784-1', 'all-included': '784-2' },
+            variantes: { '300g': '784-2' },
             arroz: 'Maratelli',
-            formatos: ['300g', 'all-included', 'separado', 'bulk'],
+            formatos: ['300g'],
             tipoJarra: 'risotto',
             tieneCaldo: true,
             caldoTipo: 'risotto',
-            aliases: ['set', 'mushroom'],
+            tieneSalsa: true,
+            salsa: '742-S',
+            pesoSalsa: 80,
+            formatosSalsa: { '300g': 'all included' },
+            aliases: ['set', 'mushroom', 'CS'],
+            alergenos: ['LECHE', 'SULFITOS'],
             lotePrefijo: ''
         },
-        tartufata: {
-            nombre: 'Cremoso Tartufata',
-            familia: 'All-Included',
+        tartufato: {
+            nombre: 'Cremoso Tartufato',
+            familia: 'Cremosos',
+            marca: 'La Santa',
             codigoLote: '782',
-            variantes: { '300g': '782-1', 'all-included': '782-2' },
+            variantes: { '210g': '782-1', '300g': '782-2', '1300g': '782-3' },
             arroz: 'Maratelli',
-            formatos: ['300g', 'all-included', 'separado', 'bulk'],
+            formatos: ['210g', '300g', '1300g'],
             tipoJarra: 'risotto',
             tieneCaldo: true,
             caldoTipo: 'risotto',
-            aliases: ['tar', 'truffle'],
+            tieneSalsa: true,
+            salsa: '757',
+            pesoSalsa: 90,
+            formatosSalsa: { '210g': 'salsa aparte', '300g': 'all included' },
+            aliases: ['tar', 'truffle', 'CT'],
+            alergenos: ['SULFITOS', 'LECHE'],
+            lotePrefijo: ''
+        },
+        cremosoQueso: {
+            nombre: 'Cremoso Queso',
+            familia: 'Cremosos',
+            marca: 'La Santa',
+            codigoLote: '783',
+            variantes: { '300g': '783-2' },
+            arroz: 'Maratelli',
+            formatos: ['300g'],
+            tipoJarra: 'risotto',
+            tieneCaldo: true,
+            caldoTipo: 'risotto',
+            tieneSalsa: true,
+            salsa: '759',
+            pesoSalsa: 75,
+            formatosSalsa: { '300g': 'all included' },
+            aliases: ['queso', 'CQ'],
+            alergenos: ['LECHE', 'SULFITOS'],
             lotePrefijo: ''
         },
 
-        // --- Maestro (producto final) ---
+        // =====================================================
+        // MAESTRO SECO (producto final — marca MAESTRO)
+        // =====================================================
         maestroBahia: {
             nombre: 'Maestro Bahía',
             familia: 'Maestro',
+            marca: 'MAESTRO',
             codigoLote: '810-B',
-            variantes: { '190g': '810-B1', '380g': '810-B2', '450g': '810-B2', '1330g': '810-B7' },
+            variantes: { '190g': '810-B1', '380g': '810-B2', '1330g': '810-B7' },
             arroz: 'Bahía',
-            formatos: ['190g', '380g', '450g', '1330g'],
+            formatos: ['190g', '380g', '1330g'],
             tipoJarra: 'maestro',
             tieneCaldo: false,
             caldoTipo: null,
-            aliases: ['mae', 'master'],
+            tieneSalsa: false,
+            aliases: ['mae', 'master', 'MB'],
+            alergenos: ['SULFITOS'],
+            variantesEspeciales: {
+                cookObsession: { nombre: 'Cook Obsession Bahía Ed. Limitada', codigo: '810-B-CO', formato: '380g', nota: 'Misma receta, etiqueta diferente' }
+            },
             lotePrefijo: ''
         },
-        maestroMarisma: {
-            nombre: 'Maestro Marisma',
+        maestroClasico: {
+            nombre: 'Maestro Clásico',
+            nombreAnterior: 'Maestro Marisma',
             familia: 'Maestro',
+            marca: 'MAESTRO',
+            submarca: 'Arrozua',
             codigoLote: '810',
-            variantes: { '190g': '810-1', '380g': '810-2', '450g': '810-2', '1330g': '810-7' },
+            variantes: { '190g': '810-1', '380g': '810-2', '450g': '810-4', '1330g': '810-7' },
             arroz: 'Marisma',
             formatos: ['190g', '380g', '450g', '1330g'],
             tipoJarra: 'maestro',
             tieneCaldo: false,
             caldoTipo: null,
-            aliases: [],
+            tieneSalsa: false,
+            aliases: ['clasico', 'marisma', 'MC'],
+            alergenos: ['SULFITOS'],
             lotePrefijo: ''
         },
 
-        // --- Salsas en Sobres (producto final) ---
-        salsaSobrePescado:   { nombre: 'Salsa Pescado',   familia: 'Salsas en Sobres', codigoLote: '748-S', variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' },
-        salsaSobreNegro:     { nombre: 'Salsa Negra',     familia: 'Salsas en Sobres', codigoLote: '745',   variantes: { 'sobre': '745-1' }, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' },
-        salsaSobreVerduras:  { nombre: 'Salsa Verduras',  familia: 'Salsas en Sobres', codigoLote: '750-S', variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' },
-        salsaSobrePollo:     { nombre: 'Salsa Pollo',     familia: 'Salsas en Sobres', codigoLote: '749-S', variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' },
-        salsaSobreBoletus:   { nombre: 'Salsa Boletus',   familia: 'Salsas en Sobres', codigoLote: '755',   variantes: { 'sobre': '755-1', '375g': '755-3' }, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' },
-        salsaSobreSetas:     { nombre: 'Salsa Setas',     familia: 'Salsas en Sobres', codigoLote: '742-S', variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' },
-        salsaSobreTartufata: { nombre: 'Salsa Tartufata', familia: 'Salsas en Sobres', codigoLote: '757',   variantes: { 'sobre': '757-1' }, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' },
-        salsaSobreQueso:     { nombre: 'Salsa Queso',     familia: 'Salsas en Sobres', codigoLote: '759',   variantes: { '75g': '759-1', '375g': '759-3' }, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: [], lotePrefijo: 'L' }
+        // =====================================================
+        // MAESTRO MELOSO (producto final — marca MAESTRO, refrigerado)
+        // =====================================================
+        risottoBlanco: {
+            nombre: 'Risotto Blanco',
+            familia: 'Maestro Meloso',
+            marca: 'MAESTRO',
+            submarca: 'Arrozua',
+            codigoLote: '811',
+            variantes: { '190g': '811-1', '225g': '811-2' },
+            arroz: 'Marisma',
+            formatos: ['190g', '225g'],
+            tipoJarra: null,
+            tieneCaldo: false,
+            caldoTipo: null,
+            tieneSalsa: false,
+            aliases: ['MRB'],
+            alergenos: ['SULFITOS'],
+            estado: 'nuevo',
+            lotePrefijo: ''
+        },
+        melosoAzafranado: {
+            nombre: 'Meloso Azafranado',
+            familia: 'Maestro Meloso',
+            marca: 'MAESTRO',
+            submarca: 'Arrozua',
+            codigoLote: '812',
+            variantes: { '190g': '812-1', '225g': '812-2' },
+            arroz: 'Marisma',
+            formatos: ['190g', '225g'],
+            tipoJarra: null,
+            tieneCaldo: false,
+            caldoTipo: null,
+            tieneSalsa: false,
+            aliases: ['azafranado', 'meloso', 'maestro meloso', 'MA'],
+            alergenos: ['SULFITOS'],
+            estado: 'nuevo',
+            lotePrefijo: ''
+        },
+
+        // =====================================================
+        // SALSAS EN SOBRE (producto final — marca La Santa)
+        // =====================================================
+        salsaSobrePescado:   { nombre: 'Salsa Pescado',   familia: 'Salsas en Sobres', marca: 'La Santa', codigoLote: '748-S', pesoSobre: 40, variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: ['SP'],  complementoDe: '748', ventaSuelta: false, alergenos: ['PESCADO', 'MOLUSCOS', 'CRUSTÁCEOS', 'APIO'], lotePrefijo: 'L' },
+        salsaSobreNegro:     { nombre: 'Salsa Negra',     familia: 'Salsas en Sobres', marca: 'La Santa', codigoLote: '745',   pesoSobre: 75, variantes: { 'sobre': '745-1' }, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: ['SN'],  complementoDe: '740', ventaSuelta: true,  precio: 0.7, alergenos: ['PESCADO', 'MOLUSCOS', 'CRUSTÁCEOS', 'APIO'], lotePrefijo: 'L' },
+        salsaSobreVerduras:  { nombre: 'Salsa Verduras',  familia: 'Salsas en Sobres', marca: 'La Santa', codigoLote: '750-S', pesoSobre: 40, variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: ['SV'],  complementoDe: '750', ventaSuelta: false, alergenos: [], lotePrefijo: 'L' },
+        salsaSobrePollo:     { nombre: 'Salsa Pollo',     familia: 'Salsas en Sobres', marca: 'La Santa', codigoLote: '749-S', pesoSobre: 40, variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: ['SPo'], complementoDe: '749', ventaSuelta: false, alergenos: ['SULFITOS'], lotePrefijo: 'L' },
+        salsaSobreBoletus:   { nombre: 'Salsa Boletus',   familia: 'Salsas en Sobres', marca: 'La Santa', codigoLote: '755',   pesoSobre: 80, variantes: { 'sobre': '755-1' }, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: ['SB'],  complementoDe: '741', ventaSuelta: true, precio: 0.7, alergenos: ['LECHE', 'SULFITOS'], lotePrefijo: 'L' },
+        salsaSobreTartufato: { nombre: 'Salsa Tartufato', familia: 'Salsas en Sobres', marca: 'La Santa', codigoLote: '757',   pesoSobre: 90, variantes: { 'sobre': '757-1' }, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: ['ST'],  complementoDe: '782', ventaSuelta: false, alergenos: ['LECHE', 'SULFITOS'], lotePrefijo: 'L' },
+        salsaSobreIberico:   { nombre: 'Salsa Ibérico',   familia: 'Salsas en Sobres', marca: 'La Santa', codigoLote: '789',   pesoSobre: 90, variantes: {}, formatos: ['sobre'], tipoJarra: null, tieneCaldo: false, aliases: ['SI'],  complementoDe: '781', ventaSuelta: false, alergenos: ['LECHE', 'SULFITOS'], lotePrefijo: 'L' }
+        // NOTA: Salsa Setas (742-S) y Salsa Queso (759) NO son productos independientes — solo componentes internos de Cremosos AI
     },
 
     // ========================================================================
     // TIPOS DE ARROZ
     // ========================================================================
     tiposArroz: {
-        maratelli: { nombre: 'Maratelli', marca: 'La Santa / Risotto / Cremosos' },
-        bahia:     { nombre: 'Bahía', marca: 'Illa de Riu' },
-        marisma:   { nombre: 'Marisma', marca: 'Arrozúa' }
+        maratelli: { nombre: 'Nuovo Maratelli', marca: 'Arrocera del Pirineo', mpRef: 'MP24', usadoEn: 'La Santa, Cremosos, Risotto, Arroz Blanco, Arancini' },
+        bahia:     { nombre: 'Bahía', marca: 'Illa de Riu', mpRef: 'MP25', usadoEn: 'Maestro Bahía' },
+        marisma:   { nombre: 'Marisma', marca: 'Arrozúa (Doña Ana)', mpRef: 'MP26', usadoEn: 'Maestro Clásico, Maestro Meloso (Risotto Blanco, Azafranado)' }
     },
 
     // ========================================================================
@@ -202,15 +360,14 @@ const RIA_DATA = {
     // ========================================================================
     formatos: {
         '190g':  { peso: 190, unidadesCaja: 24, etiqueta: '190g x24', tipoEnvase: 'envase' },
-        '260g':  { peso: 260, unidadesCaja: 24, etiqueta: '260g x24', tipoEnvase: 'envase' },
+        '210g':  { peso: 210, unidadesCaja: 24, etiqueta: '210g x24', tipoEnvase: 'envase', nota: 'Cremosos con salsa aparte' },
+        '225g':  { peso: 225, unidadesCaja: 24, etiqueta: '225g x24', tipoEnvase: 'envase', nota: 'Maestro Meloso / Arancini' },
+        '260g':  { peso: 260, unidadesCaja: 24, etiqueta: '260g x24', tipoEnvase: 'envase', nota: 'La Santa estándar' },
+        '300g':  { peso: 300, unidadesCaja: 24, etiqueta: '300g x24', tipoEnvase: 'envase', nota: 'Cremosos All Included' },
         '380g':  { peso: 380, unidadesCaja: 20, etiqueta: '380g x20', tipoEnvase: 'envase' },
         '450g':  { peso: 450, unidadesCaja: 20, etiqueta: '450g x20', tipoEnvase: 'envase' },
-        '300g':  { peso: 300, unidadesCaja: 24, etiqueta: '300g x24', tipoEnvase: 'envase' },
-        '220g':  { peso: 220, unidadesCaja: 24, etiqueta: '220g x24', tipoEnvase: 'envase' },
-        '1330g': { peso: 1330, unidadesCaja: 6, etiqueta: '1330g x6', tipoEnvase: 'envase' },
-        'bulk':  { peso: 1330, unidadesCaja: 6, etiqueta: 'Bulk', tipoEnvase: 'envase' },
-        'all-included': { peso: 300, unidadesCaja: 24, etiqueta: 'All-Included x24', tipoEnvase: 'envase' },
-        'separado': { peso: 220, unidadesCaja: 24, etiqueta: 'Separado x24', tipoEnvase: 'envase' },
+        '1300g': { peso: 1300, unidadesCaja: 6, etiqueta: '1300g x6', tipoEnvase: 'envase', nota: 'La Santa y Cremosos formato grande' },
+        '1330g': { peso: 1330, unidadesCaja: 6, etiqueta: '1330g x6', tipoEnvase: 'envase', nota: 'Solo Maestro' },
         'sobre':    { peso: null, unidadesCaja: null, etiqueta: 'Sobre', tipoEnvase: 'sobre' },
         'redes':    { peso: null, unidadesCaja: null, etiqueta: 'Redes directas', tipoEnvase: 'red' }
     },
@@ -237,15 +394,15 @@ const RIA_DATA = {
             risotto:  { prefijo: 'RIA-RISOTTO',   formato: 'RIA-RISOTTO-DDMMYY' }
         },
         salsas: {
-            pescado:   { prefijo: 'RIA-SALSA-PESCADO',   formato: 'RIA-SALSA-PESCADO-DDMMYY' },
-            negra:     { prefijo: 'RIA-SALSA-NEGRA',     formato: 'RIA-SALSA-NEGRA-DDMMYY' },
-            verduras:  { prefijo: 'RIA-SALSA-VERDURAS',  formato: 'RIA-SALSA-VERDURAS-DDMMYY' },
-            pollo:     { prefijo: 'RIA-SALSA-POLLO',     formato: 'RIA-SALSA-POLLO-DDMMYY' },
-            boletus:   { prefijo: 'RIA-SALSA-BOLETUS',   formato: 'RIA-SALSA-BOLETUS-DDMMYY' },
-            setas:     { prefijo: 'RIA-SALSA-SETAS',     formato: 'RIA-SALSA-SETAS-DDMMYY' },
-            tartufata: { prefijo: 'RIA-SALSA-TARTUFATA', formato: 'RIA-SALSA-TARTUFATA-DDMMYY' },
-            queso:     { prefijo: 'RIA-SALSA-QUESO',     formato: 'RIA-SALSA-QUESO-DDMMYY' },
-            iberico:   { prefijo: 'RIA-SALSA-IBERICO',   formato: 'RIA-SALSA-IBERICO-DDMMYY' }
+            pescado:   { prefijo: 'RIA-SALSA-PESCADO',   formato: 'RIA-SALSA-PESCADO-DDMMYY',   peso: '40g' },
+            negra:     { prefijo: 'RIA-SALSA-NEGRA',     formato: 'RIA-SALSA-NEGRA-DDMMYY',     peso: '75g' },
+            verduras:  { prefijo: 'RIA-SALSA-VERDURAS',  formato: 'RIA-SALSA-VERDURAS-DDMMYY',  peso: '40g' },
+            pollo:     { prefijo: 'RIA-SALSA-POLLO',     formato: 'RIA-SALSA-POLLO-DDMMYY',     peso: '40g' },
+            boletus:   { prefijo: 'RIA-SALSA-BOLETUS',   formato: 'RIA-SALSA-BOLETUS-DDMMYY',   peso: '80g' },
+            setas:     { prefijo: 'RIA-SALSA-SETAS',     formato: 'RIA-SALSA-SETAS-DDMMYY',     peso: '80g' },
+            tartufata: { prefijo: 'RIA-SALSA-TARTUFATA', formato: 'RIA-SALSA-TARTUFATA-DDMMYY', peso: '90g' },
+            queso:     { prefijo: 'RIA-SALSA-QUESO',     formato: 'RIA-SALSA-QUESO-DDMMYY',     peso: '75g' },
+            iberico:   { prefijo: 'RIA-SALSA-IBERICO',   formato: 'RIA-SALSA-IBERICO-DDMMYY',   peso: '90g' }
         },
         preelaboraciones: {
             formato: 'RIA-PRELAB-{TIPO}-DDMMYY',
@@ -259,8 +416,8 @@ const RIA_DATA = {
     tiposJarra: {
         pescado: { nombre: 'Jarra de Pescado', para: ['pescado', 'negro', 'pollo'] },
         verdura: { nombre: 'Jarra de Verduras', para: ['verduras'] },
-        risotto: { nombre: 'Jarra de Risotto', para: ['risotto', 'ibérico', 'setas', 'tartufata'] },
-        maestro: { nombre: 'Jarra de Maestro', para: ['maestro'] }
+        risotto: { nombre: 'Jarra de Risotto', para: ['risotto', 'ibérico', 'setas', 'tartufato', 'queso'] },
+        maestro: { nombre: 'Jarra de Maestro', para: ['maestroBahia', 'maestroClasico'] }
     },
 
     // ========================================================================
