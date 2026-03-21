@@ -2230,99 +2230,253 @@
             document.getElementById(inputId).click();
         }
 
-        // Patrones de lote SATO TH208 — formato etiqueta:
-        //   LOTE: RIA-PESCADO-130326
-        //   ELAB: 13/03/2026        CAD: 18/03/2026
-        //   Refrigeracion (0-4C)
-        // También lotes de proveedor: b060238, HA0072S398, 124112U133, etc.
+        // =================================================================
+        // OCR INTELIGENTE DE LOTES — formato conocido RIA-[PREFIJO]-DDMMYY
+        // =================================================================
+        // Lista completa de prefijos SATO válidos (de RIA_Referencia_Etiquetas_SATO.xlsx)
+        const KNOWN_LOT_PREFIXES = [
+            'PESCADO', 'NEGRO', 'POLLO', 'VERDURAS', 'RISOTTO',
+            'SALSA-PESCADO', 'SALSA-NEGRA', 'SALSA-VERDURAS', 'SALSA-POLLO',
+            'SALSA-TARTUFATA', 'SALSA-BOLETUS', 'SALSA-SETAS', 'SALSA-QUESO', 'SALSA-IBERICO',
+            'PRELAB-AZAFRANP', 'PRELAB-AZAFRANG', 'PRELAB-AJO', 'PRELAB-NORA',
+            'PRELAB-SALMORRETA', 'PRELAB-ALMIDON', 'PRELAB-SVCONC', 'PRELAB-MAESTRO',
+            'PESADO-VERD', 'PESADO-RIS',
+            'JARRA-PESC', 'JARRA-VERD', 'JARRA-RIS',
+            'MEZCLA-JNORMAL', 'MEZCLA-JRISOTTO', 'MEZCLA-JMAESTRO'
+        ];
+
+        // Distancia de Levenshtein para fuzzy matching de prefijos
+        function levenshtein(a, b) {
+            const m = a.length, n = b.length;
+            const dp = Array.from({length: m + 1}, () => Array(n + 1).fill(0));
+            for (let i = 0; i <= m; i++) dp[i][0] = i;
+            for (let j = 0; j <= n; j++) dp[0][j] = j;
+            for (let i = 1; i <= m; i++)
+                for (let j = 1; j <= n; j++)
+                    dp[i][j] = Math.min(
+                        dp[i-1][j] + 1, dp[i][j-1] + 1,
+                        dp[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1)
+                    );
+            return dp[m][n];
+        }
+
+        // Buscar el prefijo SATO más parecido (máx 30% de distancia)
+        function fuzzyMatchPrefix(raw) {
+            const upper = raw.toUpperCase().replace(/[^A-Z\-]/g, '');
+            let best = null, bestDist = Infinity;
+            for (const prefix of KNOWN_LOT_PREFIXES) {
+                const d = levenshtein(upper, prefix);
+                if (d < bestDist) { bestDist = d; best = prefix; }
+            }
+            // Aceptar si la distancia es ≤ 30% de la longitud del prefijo (mín 2 chars de error)
+            const maxDist = Math.max(2, Math.ceil(best.length * 0.3));
+            return bestDist <= maxDist ? best : null;
+        }
+
+        // Corregir confusiones OCR típicas en la parte de fecha (DDMMYY)
+        function fixOCRDate(raw) {
+            // Mapeo de letras que se confunden con dígitos
+            const letterToDigit = { 'O': '0', 'o': '0', 'Q': '0', 'D': '0',
+                'I': '1', 'l': '1', 'i': '1', '|': '1',
+                'Z': '2', 'z': '2',
+                'E': '3',
+                'A': '4', 'h': '4',
+                'S': '5', 's': '5',
+                'G': '6', 'b': '6',
+                'T': '7',
+                'B': '8',
+                'g': '9', 'q': '9' };
+            let fixed = '';
+            for (const ch of raw) {
+                if (/\d/.test(ch)) { fixed += ch; }
+                else if (letterToDigit[ch]) { fixed += letterToDigit[ch]; }
+                // Ignorar caracteres que no mapean
+            }
+            // Validar fecha DDMMYY
+            if (fixed.length === 6) {
+                const dd = parseInt(fixed.slice(0,2));
+                const mm = parseInt(fixed.slice(2,4));
+                if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12) return fixed;
+            }
+            return null;
+        }
+
+        // Corregir confusiones OCR en la parte de letras (prefijo)
+        function fixOCRLetters(raw) {
+            const digitToLetter = { '0': 'O', '1': 'I', '3': 'E', '4': 'A',
+                '5': 'S', '6': 'G', '7': 'T', '8': 'B', '9': 'G' };
+            let fixed = '';
+            for (const ch of raw) {
+                if (/[A-Za-z\-]/.test(ch)) { fixed += ch.toUpperCase(); }
+                else if (digitToLetter[ch]) { fixed += digitToLetter[ch]; }
+                else { fixed += ch; }
+            }
+            return fixed;
+        }
+
+        // Intentar reconstruir un lote RIA a partir de texto OCR ruidoso
+        function tryReconstructRIALot(text) {
+            // Buscar algo que parezca "RIA" (con errores: R1A, RlA, RÁA, etc.)
+            const riaPattern = /R[Il1i|][AÁa4][^a-z]{0,2}[-\s.]*([A-Za-z0-9][-A-Za-z0-9\s.]{2,30})[-\s.]*(\S{4,8})/gi;
+            let match;
+            while ((match = riaPattern.exec(text)) !== null) {
+                const rawPrefix = fixOCRLetters(match[1].replace(/[-\s.]+$/, ''));
+                const rawDate = match[2];
+                const prefix = fuzzyMatchPrefix(rawPrefix);
+                if (prefix) {
+                    const date = fixOCRDate(rawDate);
+                    if (date) return 'RIA-' + prefix + '-' + date;
+                }
+            }
+            return null;
+        }
+
         function extractLotFromText(text) {
-            // Limpiar caracteres basura OCR comunes
+            // === Paso 1: Limpieza básica de caracteres basura OCR ===
             let clean = text
                 .replace(/[|]/g, 'l')
                 .replace(/[{}¡!¿?©®™°]/g, '')
                 .replace(/[–—]/g, '-')
                 .replace(/[''`]/g, "'")
-                .replace(/\u00AD/g, '-')  // soft hyphen
-                .replace(/O(\d)/g, '0$1') // O seguido de dígito → 0
-                .replace(/(\d)O/g, '$10'); // dígito seguido de O → 0
+                .replace(/\u00AD/g, '-');
             const allText = clean.replace(/\n/g, ' ');
             const lines = clean.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            let lote = '';
 
-            // Palabras a ignorar en la búsqueda de lotes
+            // Palabras a ignorar en fallback
             const ignoreWords = /^(LOTE|ELAB|CAD|CADUCIDAD|Caldo|Salsa|Aceite|Refrigeracion|Congelacion|Ingredientes|Conservar|Temperatura|Elabor|Fecha|FECHA|RICE|ACTION|PRODUCCION|SATO|ETIQUETA|MANTENER)/i;
 
-            // 1) Patrón RIA con variantes OCR: R1A, RlA, etc.
-            const riaVariants = allText.match(/R[Il1][AÁ][-\s]?[A-Z]{2,}[-\s]?\d{6}/i);
-            if (riaVariants) {
-                lote = riaVariants[0].replace(/\s+/g, '').replace(/R[Il1][AÁ]/i, 'RIA').toUpperCase();
-                return { lote };
-            }
-
-            // 2) Patrón exacto RIA-XXXX-DDMMYY
-            const riaExact = allText.match(/RIA-[A-Z]+-\d{6}/i);
-            if (riaExact) {
-                lote = riaExact[0].toUpperCase();
-                return { lote };
-            }
-
-            // 3) Patrón RIA con guiones separados por espacios OCR
-            const riaSpaced = allText.match(/RIA\s*[-–]\s*[A-Z]{2,}\s*[-–]\s*\d{6}/i);
-            if (riaSpaced) {
-                lote = riaSpaced[0].replace(/\s+/g, '').replace(/[–]/g, '-').toUpperCase();
-                return { lote };
-            }
-
-            // 4) Buscar LOTE: seguido de texto
-            for (const line of lines) {
-                const loteMatch = line.match(/L\s*O\s*T\s*E\s*[:;.\s]+\s*(.+)/i);
-                if (loteMatch) {
-                    let raw = loteMatch[1].trim().replace(/\s+/g, '');
-                    // Intentar patrón RIA
-                    const lotRIA = raw.match(/R[Il1][AÁ][-]?[A-Z]+-\d{6}/i);
-                    if (lotRIA) {
-                        lote = lotRIA[0].replace(/R[Il1][AÁ]/i, 'RIA').toUpperCase();
-                        break;
+            // === Paso 2: Match exacto RIA-PREFIJO-DDMMYY (solo dígitos en fecha) ===
+            const exactMatch = allText.match(/RIA-[A-Z]+-\d{6}/i);
+            if (exactMatch) {
+                const lot = exactMatch[0].toUpperCase();
+                const parts = lot.match(/^RIA-(.+)-(\d{6})$/);
+                if (parts) {
+                    const knownPrefix = fuzzyMatchPrefix(parts[1]);
+                    const validDate = fixOCRDate(parts[2]);
+                    if (knownPrefix && validDate) {
+                        return { lote: 'RIA-' + knownPrefix + '-' + validDate, confidence: 'high' };
                     }
-                    // Código alfanumérico genérico (proveedor)
+                }
+                return { lote: lot, confidence: 'medium' };
+            }
+
+            // === Paso 3: RIA con caracteres mixtos (errores OCR en prefijo y/o fecha) ===
+            // Captura RIA-[letras+dígitos]-[dígitos+letras] y aplica corrección
+            const riaFuzzy = allText.match(/R[Il1i|]?[AÁa4][-\s]*([A-Za-z0-9][-A-Za-z0-9\s]{1,30})[-\s]+([A-Za-z0-9]{4,8})/gi)
+                || allText.match(/R[Il1i|][AÁa4][-\s]?([A-Za-z0-9][-A-Za-z0-9]{1,30}?)[-\s]?([A-Za-z0-9]{4,8})(?:\s|$)/gi);
+            if (riaFuzzy) {
+                for (const rv of riaFuzzy) {
+                    // Normalizar: quitar RIA/R1A/RlA del inicio
+                    let cleaned = rv.replace(/^\s*R[Il1i|][AÁa4]\s*/i, '').replace(/\s+/g, '-').toUpperCase();
+                    // Separar en segmentos por guion; el último segmento que tenga ≥4 chars es candidato a fecha
+                    const segments = cleaned.split('-').filter(s => s.length > 0);
+                    if (segments.length >= 2) {
+                        const datePart = segments[segments.length - 1];
+                        const prefixPart = segments.slice(0, -1).join('-');
+                        const prefix = fuzzyMatchPrefix(fixOCRLetters(prefixPart));
+                        const date = fixOCRDate(datePart);
+                        if (prefix && date) return { lote: 'RIA-' + prefix + '-' + date, confidence: 'high' };
+                    }
+                }
+            }
+
+            // === Paso 3b: Patrón RIA pegado (sin separadores claros) ===
+            const riaPacked = allText.match(/R[Il1i|][AÁa4][-]?([A-Za-z0-9][-A-Za-z0-9]*?)[-]?([A-Za-z0-9]{6})(?:\s|$|[^A-Za-z0-9])/gi);
+            if (riaPacked) {
+                for (const rv of riaPacked) {
+                    let cleaned = rv.trim().replace(/R[Il1i|][AÁa4]/i, 'RIA');
+                    const parts = cleaned.match(/^RIA-?(.+?)-?([A-Za-z0-9]{6})$/);
+                    if (parts) {
+                        const prefix = fuzzyMatchPrefix(fixOCRLetters(parts[1]));
+                        const date = fixOCRDate(parts[2]);
+                        if (prefix && date) return { lote: 'RIA-' + prefix + '-' + date, confidence: 'high' };
+                    }
+                }
+            }
+
+            // === Paso 4: Buscar "LOTE:" y reconstruir ===
+            for (const line of lines) {
+                const loteLabel = line.match(/L\s*O\s*T\s*E\s*[:;.\s]+\s*(.+)/i);
+                if (loteLabel) {
+                    let raw = loteLabel[1].trim();
+
+                    // Intentar interpretación directa: separar en partes por guion/espacio
+                    const rawParts = raw.replace(/\s+/g, '-').replace(/--+/g, '-').split('-').filter(s => s);
+                    // Quitar "RIA" del inicio si está (con variantes OCR)
+                    let partIdx = 0;
+                    if (rawParts[0] && /^R[Il1i|]?[AÁa4]?$/i.test(rawParts[0])) partIdx = 1;
+                    if (rawParts.length - partIdx >= 2) {
+                        const dateCand = rawParts[rawParts.length - 1];
+                        const prefixCand = rawParts.slice(partIdx, -1).join('-');
+                        const prefix = fuzzyMatchPrefix(fixOCRLetters(prefixCand));
+                        const date = fixOCRDate(dateCand);
+                        if (prefix && date) return { lote: 'RIA-' + prefix + '-' + date, confidence: 'high' };
+                    }
+
+                    // Intentar reconstruir con método agresivo
+                    const reconstructed = tryReconstructRIALot('RIA-' + raw) || tryReconstructRIALot(raw);
+                    if (reconstructed) return { lote: reconstructed, confidence: 'high' };
+
+                    // Lote de proveedor genérico
+                    raw = raw.replace(/\s+/g, '');
                     const lotGeneric = raw.match(/^[A-Za-z0-9][-A-Za-z0-9.]{3,}/);
                     if (lotGeneric) {
-                        lote = lotGeneric[0].replace(/[^A-Za-z0-9.\-]/g, '');
-                        break;
+                        return { lote: lotGeneric[0].replace(/[^A-Za-z0-9.\-]/g, ''), confidence: 'low' };
                     }
                 }
             }
 
-            // 5) Buscar prefijos SATO conocidos: RIA-PRELAB-, RIA-SALSA-, RIA-CALDO-, RIA-MEZCLA-, RIA-JARRA-, RIA-PREP-
-            if (!lote) {
-                const satoPrefixes = allText.match(/RIA[-\s]?(PRELAB|SALSA|CALDO|MEZCLA|JARRA|PREP)[-\s]?[A-Z]*[-\s]?\d{6}/i);
-                if (satoPrefixes) {
-                    lote = satoPrefixes[0].replace(/\s+/g, '').replace(/[–]/g, '-').toUpperCase();
+            // === Paso 4b: Buscar cualquier cadena tipo RIA-xxx-xxx con caracteres mixtos ===
+            // Para casos donde no hay etiqueta "LOTE:" pero el texto contiene el lote
+            const anyRIA = allText.match(/R[Il1i|][AÁa4][-\s]?([A-Za-z0-9][-A-Za-z0-9\s]{1,25})[-\s]([A-Za-z0-9]{4,8})/gi);
+            if (anyRIA) {
+                for (const candidate of anyRIA) {
+                    const parts = candidate.replace(/\s+/g, '-').replace(/--+/g, '-').split('-').filter(s => s);
+                    let pIdx = 0;
+                    if (parts[0] && /^R[Il1i|][AÁa4]$/i.test(parts[0])) pIdx = 1;
+                    if (parts.length - pIdx >= 2) {
+                        const dateCand = parts[parts.length - 1];
+                        const prefixCand = parts.slice(pIdx, -1).join('-');
+                        const prefix = fuzzyMatchPrefix(fixOCRLetters(prefixCand));
+                        const date = fixOCRDate(dateCand);
+                        if (prefix && date) return { lote: 'RIA-' + prefix + '-' + date, confidence: 'medium' };
+                    }
                 }
             }
 
-            // 6) Fallback: código alfanumérico largo (lotes de proveedor tipo b060238, HA0072S398)
-            if (!lote) {
-                for (const line of lines) {
-                    // Buscar secuencias que parezcan lotes (mín 5 chars, mezcla de letras y números)
-                    const codes = line.match(/\b([A-Za-z0-9][-A-Za-z0-9.]{4,})\b/g);
-                    if (codes) {
-                        for (const code of codes) {
-                            // Descartar fechas
-                            if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/.test(code)) continue;
-                            // Descartar palabras conocidas
-                            if (ignoreWords.test(code)) continue;
-                            // Debe tener al menos un dígito y al menos una letra, o ser todo dígitos de 5+
-                            if ((/\d/.test(code) && /[A-Za-z]/.test(code)) || /^\d{5,}$/.test(code)) {
-                                lote = code;
-                                break;
-                            }
+            // === Paso 5: Reconstrucción agresiva en todo el texto ===
+            const reconstructed = tryReconstructRIALot(allText);
+            if (reconstructed) return { lote: reconstructed, confidence: 'medium' };
+
+            // === Paso 6: Buscar prefijos SATO conocidos con errores OCR ===
+            const satoPattern = allText.match(/R.{0,3}A[-\s]?(PRELAB|SALSA|CALDO|MEZCLA|JARRA|PESADO|PREP)[-\s]?[A-Z]*[-\s]?\d{4,8}/i);
+            if (satoPattern) {
+                const raw = satoPattern[0].replace(/\s+/g, '-').toUpperCase();
+                const parts = raw.match(/R.*?A-(.+?)-(\d{4,8})/);
+                if (parts) {
+                    const prefix = fuzzyMatchPrefix(parts[1]);
+                    const date = fixOCRDate(parts[2]);
+                    if (prefix && date) return { lote: 'RIA-' + prefix + '-' + date, confidence: 'medium' };
+                }
+            }
+
+            // === Paso 7: Fallback — lotes de proveedor (alfanuméricos) ===
+            let lote = '';
+            for (const line of lines) {
+                const codes = line.match(/\b([A-Za-z0-9][-A-Za-z0-9.]{4,})\b/g);
+                if (codes) {
+                    for (const code of codes) {
+                        if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/.test(code)) continue;
+                        if (ignoreWords.test(code)) continue;
+                        if ((/\d/.test(code) && /[A-Za-z]/.test(code)) || /^\d{5,}$/.test(code)) {
+                            lote = code;
+                            break;
                         }
                     }
-                    if (lote) break;
                 }
+                if (lote) break;
             }
-            return { lote };
+            return { lote, confidence: lote ? 'low' : 'none' };
         }
 
         // Preprocesar imagen para mejorar OCR: escala de grises + contraste + binarización
@@ -2416,8 +2570,17 @@
                 if (result.lote) {
                     lotInput.value = result.lote;
                     lotInput.dispatchEvent(new Event('change'));
-                    statusEl.className = 'ocr-status success';
-                    statusEl.textContent = '✓ Lote: ' + result.lote;
+                    if (result.confidence === 'high') {
+                        statusEl.className = 'ocr-status success';
+                        statusEl.textContent = '✓ Lote: ' + result.lote;
+                    } else if (result.confidence === 'medium') {
+                        statusEl.className = 'ocr-status success';
+                        statusEl.textContent = '✓ Lote: ' + result.lote + ' — revisa que sea correcto';
+                    } else {
+                        statusEl.className = 'ocr-status warning';
+                        statusEl.style.color = '#F57C00';
+                        statusEl.textContent = '⚠ Posible lote: ' + result.lote + ' — confirma manualmente';
+                    }
                 } else {
                     statusEl.className = 'ocr-status error';
                     statusEl.textContent = 'No se detectó lote — escríbelo manualmente';
