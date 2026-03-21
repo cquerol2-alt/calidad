@@ -726,6 +726,13 @@
     <script src="data.js"></script>
     <script>
         // ============================================================================
+        // CONFIG: Worker URL para interpretación con IA
+        // Cambiar a la URL real del Cloudflare Worker una vez desplegado.
+        // Si está vacío o el Worker no responde, se usa el parser regex local.
+        // ============================================================================
+        const WORKER_URL = ''; // ej: 'https://ria-interpretar.tu-cuenta.workers.dev'
+
+        // ============================================================================
         // DATA & STATE
         // ============================================================================
 
@@ -1185,17 +1192,44 @@
             const text = document.getElementById('productionInput').value.trim();
             if (!text) return;
 
-            const newLines = parseProduction(text);
-            if (newLines.length === 0) {
-                showErrorToast('⚠️ No se ha podido interpretar. Prueba: "4 cajas pescado 260" o "16 redes maestro marisma"');
-                return;
-            }
+            // Try AI interpretation first, then fall back to regex
+            interpretProductionWithAI(text).then(aiLines => {
+                const newLines = (aiLines && aiLines.length > 0) ? aiLines : parseProduction(text);
 
-            productionLines = productionLines.concat(newLines);
-            saveToLocalStorage();
-            renderCards();
-            document.getElementById('productionInput').value = '';
-            updateTimestamp();
+                if (newLines.length === 0) {
+                    showErrorToast('⚠️ No se ha podido interpretar. Prueba: "4 cajas pescado 260" o "16 redes maestro marisma"');
+                    return;
+                }
+
+                productionLines = productionLines.concat(newLines);
+                saveToLocalStorage();
+                renderCards();
+                document.getElementById('productionInput').value = '';
+                updateTimestamp();
+            });
+        }
+
+        function interpretProductionWithAI(text) {
+            if (!WORKER_URL) return Promise.resolve(null); // No Worker configurado → regex directo
+            return fetch(WORKER_URL + '/interpretar-produccion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ texto: text }),
+            })
+            .then(resp => {
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                return resp.json();
+            })
+            .then(data => {
+                if (!data.ok || !data.lineas || data.lineas.length === 0) {
+                    return null;
+                }
+                return data.lineas;
+            })
+            .catch(err => {
+                console.warn('Worker IA no disponible, fallback a regex:', err.message);
+                return null;
+            });
         }
 
         function updateFormatOptions() {
