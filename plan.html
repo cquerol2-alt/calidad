@@ -966,31 +966,38 @@
             let i = 0;
 
             while (i < words.length) {
-                const word = words[i];
+                // Strip trailing punctuation for number lookup
+                const rawWord = words[i];
+                const word = rawWord.replace(/[.,;:!?]+$/, '');
+                const trailing = rawWord.slice(word.length); // keep punctuation to re-append
                 let converted = false;
 
                 // Try to match number patterns
                 if (singles[word] !== undefined) {
-                    result = result.replace(/\s+$/, '') + singles[word] + ' ';
+                    result += singles[word] + trailing + ' ';
                     converted = true;
                 } else if (tens[word] !== undefined) {
-                    result = result.replace(/\s+$/, '') + tens[word] + ' ';
+                    result += tens[word] + trailing + ' ';
                     converted = true;
                 } else if (hundreds[word] !== undefined) {
-                    result = result.replace(/\s+$/, '') + hundreds[word] + ' ';
+                    result += hundreds[word] + trailing + ' ';
+                    converted = true;
+                } else if (word === 'y' && tens[words[i-1]?.replace(/[.,;:!?]+$/, '')] !== undefined) {
+                    // "treinta y dos" → combine with next word
+                    // skip 'y', will be handled by next word
                     converted = true;
                 } else if (scales[word] !== undefined) {
                     const lastNum = parseInt(result.trim().split(/\s+/).pop());
                     if (!isNaN(lastNum)) {
-                        result = result.substring(0, result.lastIndexOf(lastNum)) + (lastNum * scales[word]) + ' ';
+                        result = result.substring(0, result.lastIndexOf(lastNum)) + (lastNum * scales[word]) + trailing + ' ';
                     } else {
-                        result = result.replace(/\s+$/, '') + scales[word] + ' ';
+                        result += scales[word] + trailing + ' ';
                     }
                     converted = true;
                 }
 
                 if (!converted) {
-                    result += word + ' ';
+                    result += rawWord + ' ';
                 }
 
                 i++;
@@ -1022,7 +1029,9 @@
             // Split by comma or newline
             const entries = text.split(/[,\n]+/).map(e => e.trim()).filter(e => e);
 
-            for (const entry of entries) {
+            for (let entry of entries) {
+                // Strip trailing punctuation from dictation (e.g., "risotto." → "risotto")
+                entry = entry.replace(/[.!?]+$/, '').trim();
                 const parts = entry.split(/\s+/);
                 if (parts.length < 2) continue;
 
