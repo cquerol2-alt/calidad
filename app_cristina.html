@@ -77,7 +77,7 @@
     // Tokens con acceso a diagramas de flujo
     function canSeeDiagramas() {
         const r = getRole();
-        return r && (r.role === 'admin' || r.role === 'calidad');
+        return r && (r.role === 'admin' || r.role === 'calidad' || TOKEN.startsWith('ria_christophe_'));
     }
 
     function render() {
