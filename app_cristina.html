@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>RIA · Cristina</title>
+    <meta name="theme-color" content="#1B5E20">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:#111; color:#fff; min-height:100vh; }
+
+        .header { background:linear-gradient(135deg,#1B5E20,#2E7D32); padding:20px 16px 16px; text-align:center; }
+        .header h1 { font-size:20px; font-weight:800; }
+        .header .sub { font-size:12px; opacity:.8; margin-top:2px; }
+        .header .date { font-size:11px; opacity:.6; margin-top:6px; }
+
+        .status { display:flex; justify-content:center; gap:8px; padding:12px 16px 4px; }
+        .status .chip { background:#1a1a1a; border:1px solid #333; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:600; }
+        .status .chip.ok { border-color:#4CAF50; color:#4CAF50; }
+        .status .chip.warn { border-color:#FF9800; color:#FF9800; }
+
+        .section { padding:8px 14px 0; }
+        .section-title { font-size:11px; font-weight:700; color:#666; text-transform:uppercase; letter-spacing:1.5px; margin:14px 0 8px; padding-left:2px; }
+
+        .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+        .card { background:linear-gradient(135deg,#1a1a1a,#222); border:1.5px solid #333; border-radius:14px; padding:16px 14px; cursor:pointer; transition:all .15s; text-decoration:none; color:#fff; display:flex; flex-direction:column; gap:6px; }
+        .card:active { border-color:#1B5E20; background:#1a2e1a; transform:scale(.97); }
+        .card .icon { font-size:28px; }
+        .card .name { font-size:14px; font-weight:700; line-height:1.2; }
+        .card .desc { font-size:11px; color:#888; line-height:1.3; }
+        .card.full { grid-column:1/-1; flex-direction:row; align-items:center; gap:14px; }
+        .card.full .icon { font-size:32px; width:50px; text-align:center; }
+
+        .card.accent { border-color:#1B5E20; background:linear-gradient(135deg,#1a2e1a,#1d331d); }
+        .card.orange { border-color:#E65100; }
+        .card.blue { border-color:#1565C0; }
+
+        .footer { text-align:center; padding:20px; font-size:10px; color:#444; margin-top:12px; }
+
+        /* Token error */
+        .no-token { text-align:center; padding:60px 24px; }
+        .no-token .icon { font-size:48px; margin-bottom:16px; }
+        .no-token h2 { font-size:18px; margin-bottom:8px; }
+        .no-token p { font-size:13px; color:#888; line-height:1.5; }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+    const BASE = window.location.href.split('/').slice(0, -1).join('/');
+
+    // Token desde URL
+    const params = new URLSearchParams(window.location.search);
+    const TOKEN = params.get('token') || '';
+
+    function link(page) {
+        return `${BASE}/${page}?token=${TOKEN}`;
+    }
+
+    function render() {
+        const hoy = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+
+        if (!TOKEN) {
+            document.getElementById('app').innerHTML = `
+                <div class="header">
+                    <h1>🌾 Rice in Action</h1>
+                    <div class="sub">Quality Hub</div>
+                </div>
+                <div class="no-token">
+                    <div class="icon">🔑</div>
+                    <h2>Token no encontrado</h2>
+                    <p>Accede con tu URL personalizada:<br>
+                    <code style="color:#4CAF50;font-size:12px">app_cristina.html?token=ria_cristina_xxx</code></p>
+                </div>
+            `;
+            return;
+        }
+
+        document.getElementById('app').innerHTML = `
+            <div class="header">
+                <h1>🌾 Rice in Action</h1>
+                <div class="sub">Panel de Cristina · Admin</div>
+                <div class="date">${hoy}</div>
+            </div>
+
+            <div class="status">
+                <span class="chip ok">✓ Conectada</span>
+                <span class="chip">v2.0</span>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📋 Registros diarios</div>
+                <div class="grid">
+                    <a class="card accent" href="${link('produccion.html')}">
+                        <div class="icon">🏭</div>
+                        <div class="name">Producción</div>
+                        <div class="desc">PCC, lotes, detector metales</div>
+                    </a>
+                    <a class="card accent" href="${link('caldos.html')}">
+                        <div class="icon">🍲</div>
+                        <div class="name">Caldos y Salsas</div>
+                        <div class="desc">Recetas, lotes MP, tiempos</div>
+                    </a>
+                    <a class="card" href="${link('temp_camaras.html')}">
+                        <div class="icon">🌡️</div>
+                        <div class="name">Temperaturas</div>
+                        <div class="desc">Cámaras frío/congelación</div>
+                    </a>
+                    <a class="card" href="${link('ld.html')}">
+                        <div class="icon">🧹</div>
+                        <div class="name">L+D</div>
+                        <div class="desc">Limpieza y desinfección</div>
+                    </a>
+                </div>
+
+                <div class="section-title">📦 Control</div>
+                <div class="grid">
+                    <a class="card" href="${link('recepcion_mp.html')}">
+                        <div class="icon">📥</div>
+                        <div class="name">Recepción MP</div>
+                        <div class="desc">Materia prima, proveedores</div>
+                    </a>
+                    <a class="card" href="${link('limpieza.html')}">
+                        <div class="icon">✨</div>
+                        <div class="name">Limpieza</div>
+                        <div class="desc">Registro detallado L+D</div>
+                    </a>
+                    <a class="card" href="${link('checklist_semanal_camaras.html')}">
+                        <div class="icon">❄️</div>
+                        <div class="name">Checklist cámaras</div>
+                        <div class="desc">Revisión semanal</div>
+                    </a>
+                    <a class="card" href="${link('checklist_semanal_caducidades.html')}">
+                        <div class="icon">📅</div>
+                        <div class="name">Caducidades</div>
+                        <div class="desc">Control semanal</div>
+                    </a>
+                </div>
+
+                <div class="section-title">⚡ Gestión</div>
+                <div class="grid">
+                    <a class="card orange" href="${link('incidencias_acciones_correctivas.html')}">
+                        <div class="icon">⚠️</div>
+                        <div class="name">Incidencias</div>
+                        <div class="desc">No conformidades, AC/AP</div>
+                    </a>
+                    <a class="card" href="${link('preoperativo_diario.html')}">
+                        <div class="icon">✅</div>
+                        <div class="name">Preoperativo</div>
+                        <div class="desc">Checklist diario</div>
+                    </a>
+                    <a class="card" href="${link('tareas_baja_produccion.html')}">
+                        <div class="icon">📝</div>
+                        <div class="name">Tareas baja prod.</div>
+                        <div class="desc">Días sin producción</div>
+                    </a>
+                    <a class="card blue" href="${link('registros-pdf.html')}">
+                        <div class="icon">📊</div>
+                        <div class="name">Registros PDF</div>
+                        <div class="desc">Exportar registros</div>
+                    </a>
+                </div>
+
+                <div class="section-title">🔍 Consulta</div>
+                <div class="grid">
+                    <a class="card full" href="${link('diagramas.html')}">
+                        <div class="icon">🔄</div>
+                        <div>
+                            <div class="name">Diagramas de flujo</div>
+                            <div class="desc">Todos los productos — ingredientes, alérgenos, trazabilidad</div>
+                        </div>
+                    </a>
+                    <a class="card full" href="${link('lotes.html')}">
+                        <div class="icon">🏷️</div>
+                        <div>
+                            <div class="name">Gestión de lotes</div>
+                            <div class="desc">Materia prima activa, caducidades, proveedores</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer">
+                Rice in Action · Quality Hub v2.0<br>
+                Token activo · Rol admin
+            </div>
+        `;
+    }
+
+    render();
+    </script>
+</body>
+</html>
