@@ -804,8 +804,11 @@
         btn.disabled = true;
         btn.textContent = '⏳ Enviando...';
 
+        const now = new Date();
         const data = {
-            timestamp: new Date().toISOString(),
+            fecha: now.toISOString().split('T')[0],
+            hora: now.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}),
+            timestamp: now.toISOString(),
             operario: state.operario,
             proveedor: document.getElementById('provNombre').value || state.proveedor,
             albaran: document.getElementById('albaran').value,
@@ -813,7 +816,7 @@
             loteProveedor: document.getElementById('loteProveedor').value,
             caducidad: document.getElementById('caducidad').value,
             cantidad: document.getElementById('cantidad').value,
-            tipo: state.tipo,
+            tipo_mp: state.tipo,
             temperatura: document.getElementById('temperatura').value || null,
             verificaciones: {
                 checked: document.querySelectorAll('.check-item.checked').length,
@@ -937,6 +940,6 @@
         window.scrollTo(0, 0);
     }
     </script>
-    <script src="ria-backend.js"></script>
+    <script src="ria-backend-v2.js"></script>
 </body>
 </html>

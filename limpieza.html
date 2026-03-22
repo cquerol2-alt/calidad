@@ -377,7 +377,8 @@
 
 <script>
 // ==================== CONFIG ====================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiYEXd1pXMNx2j3PrL3R1mfNQFVykbk3QGKmrZpbW7Ug2kWIelInGWUDN7UtPe1vxa/exec';
+// Backend v2 — usa ria-backend-v2.js cargado al final del body
+const APPS_SCRIPT_URL = null; // Ya no se usa directamente
 
 // ==================== ZONE DATA ====================
 // Based on actual scanned records from December 2025
@@ -655,28 +656,40 @@ function submitLimpieza() {
         });
     });
 
-    fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(() => {
-        // Save last submission date
-        localStorage.setItem('ria_limpieza_last', fecha);
+    // Mapear tareas a resumen para v2
+    const tareasCompletadas = Object.entries(taskStates).filter(([k, v]) => v === 'done').length;
+    const tareasTotal = Object.keys(taskStates).length;
 
-        showToast('Registro guardado correctamente');
-        btn.textContent = 'Guardado!';
-        setTimeout(() => {
+    const payload = {
+        fecha: fecha,
+        resumen: {
+            completadas: tareasCompletadas,
+            total: tareasTotal,
+            incidencias: Object.entries(taskStates).filter(([k, v]) => v === 'issue').length
+        },
+        tareas: taskStates,
+        comentarios: comentarios
+    };
+
+    if (typeof RIA !== 'undefined') {
+        RIA.enviar('ld_diario', payload).then(res => {
+            localStorage.setItem('ria_limpieza_last', fecha);
+            showToast('Registro guardado correctamente');
+            btn.textContent = 'Guardado!';
+            setTimeout(() => {
+                btn.textContent = 'Guardar registro';
+                btn.disabled = false;
+            }, 3000);
+        }).catch(err => {
+            showToast('Error: ' + err.message, true);
             btn.textContent = 'Guardar registro';
             btn.disabled = false;
-        }, 3000);
-    })
-    .catch(err => {
-        showToast('Error: ' + err.message, true);
+        });
+    } else {
+        showToast('Error: backend no disponible', true);
         btn.textContent = 'Guardar registro';
         btn.disabled = false;
-    });
+    }
 }
 
 // ==================== HISTORY ====================
@@ -688,9 +701,11 @@ function loadHistory() {
         section.style.display = 'block';
         list.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:20px;">Cargando...</div>';
 
-        fetch(APPS_SCRIPT_URL + '?action=getRecords&sheet=limpieza&dias=7')
-        .then(r => r.json())
-        .then(records => {
+        // Consultar historial via backend v2
+        const queryPromise = (typeof RIA !== 'undefined')
+            ? RIA.registros('ld_diario').then(r => r?.registros || [])
+            : Promise.resolve([]);
+        queryPromise.then(records => {
             if (!records || records.length === 0) {
                 list.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:20px;">No hay registros recientes</div>';
                 return;
@@ -729,5 +744,6 @@ function showToast(msg, isError) {
     setTimeout(() => { t.className = 'toast'; }, 3000);
 }
 </script>
+<script src="ria-backend-v2.js"></script>
 </body>
 </html>
