@@ -97,12 +97,13 @@ const RIA = (() => {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(payload),
-          mode: 'no-cors'
+          redirect: 'follow'
         });
 
-        console.log(`✅ RIA: ${tipo} enviado (intento ${attempt})`);
+        const result = await response.json().catch(() => ({ status: 'ok' }));
+        console.log(`✅ RIA: ${tipo} enviado (intento ${attempt})`, result);
         markSynced(tipo, payload);
-        return { status: 'ok', tipo: tipo };
+        return { status: 'ok', tipo: tipo, ...result };
 
       } catch (err) {
         console.warn(`⚠️ RIA: Intento ${attempt}/${MAX_RETRIES}:`, err.message);
@@ -248,7 +249,7 @@ const RIA = (() => {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(entry),
-          mode: 'no-cors'
+          redirect: 'follow'
         });
 
         entry._synced = true;
