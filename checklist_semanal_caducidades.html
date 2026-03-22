@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Control Semanal de Caducidades — RIA-FORM-CD-001</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;color:#333;line-height:1.5}
+        .header{background:#1B5E20;color:#fff;padding:1rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+        .header h1{font-size:1.1rem;font-weight:600}
+        .header p{font-size:.8rem;opacity:.9}
+        .form-code{font-size:.65rem;margin-top:.3rem;opacity:.7}
+        .container{max-width:600px;margin:0 auto;padding:.75rem}
+        .meta-section{background:#fff;border-radius:8px;padding:1rem;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .meta-row{display:flex;gap:.75rem;margin-bottom:.75rem}
+        .meta-row:last-child{margin-bottom:0}
+        .meta-field{flex:1}
+        .meta-field label{display:block;font-size:.8rem;font-weight:600;color:#1B5E20;margin-bottom:.25rem}
+        .meta-field select,.meta-field input{width:100%;padding:.6rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem;background:#fff}
+        .alert-box{background:#fff3e0;border-left:4px solid #e65100;padding:.75rem 1rem;margin-bottom:.75rem;border-radius:0 8px 8px 0;font-size:.8rem;color:#e65100}
+        .section{background:#fff;border-radius:8px;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden}
+        .section-header{padding:.75rem 1rem;font-weight:700;font-size:.85rem;color:#fff;display:flex;align-items:center;gap:.5rem;justify-content:space-between}
+        .section-header.cam-frio{background:#1565c0}
+        .section-header.cam-cong{background:#6A1B9A}
+        .section-header.almacen{background:#e65100}
+        .section-header .badge{background:rgba(255,255,255,.25);padding:2px 8px;border-radius:10px;font-size:.7rem}
+        .zone-info{padding:.5rem 1rem;background:#f9f9f9;font-size:.75rem;color:#666;border-bottom:1px solid #eee}
+        .product-row{padding:.75rem 1rem;border-bottom:1px solid #f0f0f0}
+        .product-row:last-of-type{border-bottom:none}
+        .prod-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+        .prod-name{font-size:.85rem;font-weight:600}
+        .prod-status{display:flex;gap:.4rem}
+        .status-btn{width:40px;height:40px;border-radius:8px;border:2px solid #ddd;background:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .status-btn:active{transform:scale(.9)}
+        .status-btn.ok{border-color:#1B5E20;background:#E8F5E9}
+        .status-btn.warning{border-color:#e65100;background:#fff3e0}
+        .status-btn.fail{border-color:#d32f2f;background:#ffebee}
+        .prod-details{display:flex;gap:.5rem;flex-wrap:wrap}
+        .prod-detail{font-size:.75rem;color:#666}
+        .prod-detail input{width:90px;padding:.3rem .4rem;border:1px solid #ddd;border-radius:4px;font-size:.8rem}
+        .prod-detail select{padding:.3rem;border:1px solid #ddd;border-radius:4px;font-size:.75rem}
+        .add-product{padding:.75rem 1rem}
+        .add-btn{display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;padding:.6rem;border:2px dashed #ccc;border-radius:8px;background:#fafafa;cursor:pointer;font-size:.8rem;color:#666}
+        .add-btn:active{background:#f0f0f0}
+        .obs-field{padding:.5rem 1rem}
+        .obs-field textarea{width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;font-size:.85rem;resize:vertical;min-height:50px}
+        .summary-section{background:#fff;border-radius:8px;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.1);padding:1rem}
+        .summary-title{font-size:.85rem;font-weight:700;color:#1B5E20;margin-bottom:.5rem}
+        .summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.75rem}
+        .summary-card{text-align:center;padding:.5rem;border-radius:6px}
+        .summary-card.green{background:#E8F5E9;color:#1B5E20}
+        .summary-card.orange{background:#fff3e0;color:#e65100}
+        .summary-card.red{background:#ffebee;color:#c62828}
+        .summary-card .num{font-size:1.3rem;font-weight:700}
+        .summary-card .label{font-size:.7rem}
+        .action-field{margin-top:.5rem}
+        .action-field label{display:block;font-size:.8rem;font-weight:600;margin-bottom:.25rem}
+        .action-field textarea{width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;font-size:.85rem;resize:vertical;min-height:60px}
+        .submit-section{padding:1rem}
+        .btn-submit{width:100%;padding:1rem;background:#1B5E20;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s}
+        .btn-submit:active{background:#0d3a13;transform:scale(.98)}
+        .timestamp{text-align:center;font-size:.75rem;color:#999;margin-top:.5rem}
+        .hidden{display:none}
+        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
+        .modal-overlay.active{display:flex}
+        .modal{background:#fff;border-radius:12px;padding:1.25rem;width:100%;max-width:400px}
+        .modal h3{font-size:.95rem;margin-bottom:.75rem}
+        .modal .field{margin-bottom:.6rem}
+        .modal .field label{display:block;font-size:.8rem;font-weight:600;margin-bottom:.2rem}
+        .modal .field input,.modal .field select{width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;font-size:.85rem}
+        .modal-btns{display:flex;gap:.5rem;margin-top:.75rem}
+        .modal-btns button{flex:1;padding:.6rem;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer;border:none}
+        .modal-btns .cancel{background:#eee;color:#333}
+        .modal-btns .confirm{background:#1B5E20;color:#fff}
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>📅 Control Semanal de Caducidades</h1>
+    <p>Revisión FEFO — First Expired First Out</p>
+    <div class="form-code">RIA-FORM-CD-001 · Sesión 4 Formación Pablo</div>
+</div>
+<div class="container">
+    <div class="alert-box">
+        ⚠️ <strong>Protocolo FEFO:</strong> Lo primero que caduca, lo primero que sale. Si encuentras producto caducado: SEGREGAR → ETIQUETAR (SATO NC) → AVISAR a Cristina.
+    </div>
+
+    <div class="meta-section">
+        <div class="meta-row">
+            <div class="meta-field">
+                <label>Fecha revisión</label>
+                <input type="date" id="fecha">
+            </div>
+            <div class="meta-field">
+                <label>Responsable</label>
+                <select id="responsable">
+                    <option value="">Seleccionar...</option>
+                    <option>Diego</option>
+                    <option>Isabel</option>
+                    <option>Gerónimo</option>
+                    <option>Christophe</option>
+                    <option>Cristina</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="summary" class="summary-section hidden">
+        <div class="summary-title">Resumen revisión</div>
+        <div class="summary-grid">
+            <div class="summary-card green"><div class="num" id="count-ok">0</div><div class="label">OK</div></div>
+            <div class="summary-card orange"><div class="num" id="count-prox">0</div><div class="label">Próx. caducar (&lt;7d)</div></div>
+            <div class="summary-card red"><div class="num" id="count-cad">0</div><div class="label">Caducado</div></div>
+        </div>
+    </div>
+
+    <!-- CÁMARAS REFRIGERACIÓN -->
+    <div class="section" id="zone-cam-ref">
+        <div class="section-header cam-frio">
+            <span>🧊 Cámaras 1-2-3 (Refrigeración)</span>
+            <span class="badge">0–5 °C</span>
+        </div>
+        <div class="zone-info">MP recepcionada, semielaborados, producto terminado refrigerado. Verificar orden FEFO en estanterías.</div>
+        <div class="product-list" data-zone="cam-ref">
+            <div class="product-row" data-pid="r1">
+                <div class="prod-header">
+                    <div class="prod-name">Revisar productos (añadir abajo)</div>
+                    <div class="prod-status"></div>
+                </div>
+            </div>
+        </div>
+        <div class="add-product">
+            <div class="add-btn" onclick="openAdd('cam-ref')">+ Añadir producto encontrado</div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Cámaras 1-2-3..." data-zone="cam-ref"></textarea></div>
+    </div>
+
+    <!-- CÁMARA 5 -->
+    <div class="section" id="zone-cam5">
+        <div class="section-header cam-cong">
+            <span>❄️ Cámara 5 (Congelación)</span>
+            <span class="badge">≤ −18 °C</span>
+        </div>
+        <div class="zone-info">Producto congelado, MP congelada (langostinos, etc.). Verificar que no hay escarcha excesiva ni rotura de envase.</div>
+        <div class="product-list" data-zone="cam5"></div>
+        <div class="add-product">
+            <div class="add-btn" onclick="openAdd('cam5')">+ Añadir producto encontrado</div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Cámara 5..." data-zone="cam5"></textarea></div>
+    </div>
+
+    <!-- CÁMARA 6 -->
+    <div class="section" id="zone-cam6">
+        <div class="section-header cam-cong">
+            <span>❄️ Cámara 6 (Congelación)</span>
+            <span class="badge">≤ −18 °C</span>
+        </div>
+        <div class="zone-info">Producto terminado congelado para expedición. Verificar FEFO y que esté correctamente identificado.</div>
+        <div class="product-list" data-zone="cam6"></div>
+        <div class="add-product">
+            <div class="add-btn" onclick="openAdd('cam6')">+ Añadir producto encontrado</div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Cámara 6..." data-zone="cam6"></textarea></div>
+    </div>
+
+    <!-- CÁMARAS 7-8 -->
+    <div class="section" id="zone-cam78">
+        <div class="section-header cam-cong">
+            <span>❄️ Cámaras 7-8 (Congelación)</span>
+            <span class="badge">≤ −18 °C</span>
+        </div>
+        <div class="zone-info">Stock congelado adicional. Revisar fondo de estanterías.</div>
+        <div class="product-list" data-zone="cam78"></div>
+        <div class="add-product">
+            <div class="add-btn" onclick="openAdd('cam78')">+ Añadir producto encontrado</div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Cámaras 7-8..." data-zone="cam78"></textarea></div>
+    </div>
+
+    <!-- ALMACÉN SECO -->
+    <div class="section" id="zone-almacen">
+        <div class="section-header almacen">
+            <span>🏪 Almacén Seco</span>
+            <span class="badge">T° ambiente</span>
+        </div>
+        <div class="zone-info">Arroz, especias, envases, film, barquetas. Verificar FEFO y ausencia de plagas.</div>
+        <div class="product-list" data-zone="almacen"></div>
+        <div class="add-product">
+            <div class="add-btn" onclick="openAdd('almacen')">+ Añadir producto encontrado</div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Almacén seco..." data-zone="almacen"></textarea></div>
+    </div>
+
+    <!-- CHECKS GENERALES -->
+    <div class="section">
+        <div class="section-header" style="background:#1B5E20">
+            <span>✅ Verificación general</span>
+        </div>
+        <div style="padding:.75rem 1rem">
+            <div class="check-item" style="display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid #f0f0f0">
+                <div style="flex:1;font-size:.85rem">Rotación FEFO correcta en todas las zonas<br><small style="color:#888">Producto más próximo a caducar delante/arriba</small></div>
+                <div class="prod-status">
+                    <button class="status-btn" onclick="toggleCheck(this,'ok')" data-check="fefo">✓</button>
+                    <button class="status-btn" onclick="toggleCheck(this,'fail')" data-check="fefo">✗</button>
+                </div>
+            </div>
+            <div class="check-item" style="display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid #f0f0f0">
+                <div style="flex:1;font-size:.85rem">Todo el producto está identificado (lote + caducidad)<br><small style="color:#888">Sin producto "anónimo" en cámaras</small></div>
+                <div class="prod-status">
+                    <button class="status-btn" onclick="toggleCheck(this,'ok')" data-check="id">✓</button>
+                    <button class="status-btn" onclick="toggleCheck(this,'fail')" data-check="id">✗</button>
+                </div>
+            </div>
+            <div class="check-item" style="display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid #f0f0f0">
+                <div style="flex:1;font-size:.85rem">Zonas señalizadas respetadas<br><small style="color:#888">APTO / NO CONFORME / MUESTRAS separados</small></div>
+                <div class="prod-status">
+                    <button class="status-btn" onclick="toggleCheck(this,'ok')" data-check="zonas">✓</button>
+                    <button class="status-btn" onclick="toggleCheck(this,'fail')" data-check="zonas">✗</button>
+                </div>
+            </div>
+            <div class="check-item" style="display:flex;align-items:center;gap:.75rem;padding:.5rem 0">
+                <div style="flex:1;font-size:.85rem">Sin signos de plagas en almacén seco<br><small style="color:#888">Excrementos, mordeduras, insectos</small></div>
+                <div class="prod-status">
+                    <button class="status-btn" onclick="toggleCheck(this,'ok')" data-check="plagas">✓</button>
+                    <button class="status-btn" onclick="toggleCheck(this,'fail')" data-check="plagas">✗</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-section">
+        <div class="action-field">
+            <label>Acciones tomadas con producto próximo a caducar</label>
+            <textarea id="acciones-prox" placeholder="Ej: Caldo pescado lote RIA-CP-140326 → priorizado para producción lunes..."></textarea>
+        </div>
+        <div class="action-field" style="margin-top:.5rem">
+            <label>Acciones tomadas con producto caducado / NC</label>
+            <textarea id="acciones-cad" placeholder="Ej: 2 barquetas arroz negro caducadas → segregadas en zona NC, etiqueta SATO NC, avisado a Cristina..."></textarea>
+        </div>
+    </div>
+
+    <div class="submit-section">
+        <button class="btn-submit" onclick="enviar()">Enviar control semanal</button>
+        <div class="timestamp" id="timestamp"></div>
+    </div>
+</div>
+
+<!-- MODAL AÑADIR PRODUCTO -->
+<div class="modal-overlay" id="modal-add">
+    <div class="modal">
+        <h3>Añadir producto</h3>
+        <div class="field">
+            <label>Producto</label>
+            <input type="text" id="add-nombre" placeholder="Ej: Caldo Pescado 20L">
+        </div>
+        <div class="field">
+            <label>Lote</label>
+            <input type="text" id="add-lote" placeholder="RIA-XXXX-DDMMYY">
+        </div>
+        <div class="field">
+            <label>Fecha caducidad / consumo preferente</label>
+            <input type="date" id="add-caducidad">
+        </div>
+        <div class="field">
+            <label>Cantidad</label>
+            <input type="text" id="add-cantidad" placeholder="Ej: 4 barquetas, 2 cubos">
+        </div>
+        <div class="field">
+            <label>Estado</label>
+            <select id="add-estado">
+                <option value="ok">✅ OK — Dentro de fecha</option>
+                <option value="proximo">⚠️ Próximo a caducar (&lt;7 días)</option>
+                <option value="caducado">🔴 CADUCADO</option>
+            </select>
+        </div>
+        <div class="modal-btns">
+            <button class="cancel" onclick="closeAdd()">Cancelar</button>
+            <button class="confirm" onclick="confirmAdd()">Añadir</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentZone = '';
+let productCount = 0;
+const products = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const now = new Date();
+    document.getElementById('fecha').value = now.toISOString().split('T')[0];
+    // Remove placeholder row
+    const placeholder = document.querySelector('[data-pid="r1"]');
+    if (placeholder) placeholder.remove();
+});
+
+function toggleCheck(btn, val) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.status-btn').forEach(b => b.classList.remove('ok','fail','warning'));
+    btn.classList.add(val);
+}
+
+function openAdd(zone) {
+    currentZone = zone;
+    document.getElementById('add-nombre').value = '';
+    document.getElementById('add-lote').value = '';
+    document.getElementById('add-caducidad').value = '';
+    document.getElementById('add-cantidad').value = '';
+    document.getElementById('add-estado').value = 'ok';
+    document.getElementById('modal-add').classList.add('active');
+}
+
+function closeAdd() {
+    document.getElementById('modal-add').classList.remove('active');
+}
+
+function confirmAdd() {
+    const nombre = document.getElementById('add-nombre').value.trim();
+    const lote = document.getElementById('add-lote').value.trim();
+    const caducidad = document.getElementById('add-caducidad').value;
+    const cantidad = document.getElementById('add-cantidad').value.trim();
+    const estado = document.getElementById('add-estado').value;
+
+    if (!nombre) { alert('Introduce el nombre del producto'); return; }
+    if (!caducidad) { alert('Introduce la fecha de caducidad'); return; }
+
+    productCount++;
+    const pid = 'p' + productCount;
+    const prod = { pid, zone: currentZone, nombre, lote, caducidad, cantidad, estado };
+    products.push(prod);
+
+    const list = document.querySelector(`.product-list[data-zone="${currentZone}"]`);
+    const row = document.createElement('div');
+    row.className = 'product-row';
+    row.dataset.pid = pid;
+
+    const estadoIcons = { ok: '✅', proximo: '⚠️', caducado: '🔴' };
+    const estadoColors = { ok: '#1B5E20', proximo: '#e65100', caducado: '#c62828' };
+    const estadoLabels = { ok: 'OK', proximo: 'Próx. caducar', caducado: 'CADUCADO' };
+
+    const cadDate = new Date(caducidad);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const diffDays = Math.ceil((cadDate - today) / (1000*60*60*24));
+
+    // Auto-detect if user said OK but it's actually close or expired
+    let finalEstado = estado;
+    if (diffDays < 0) finalEstado = 'caducado';
+    else if (diffDays <= 7 && estado === 'ok') finalEstado = 'proximo';
+
+    prod.estado = finalEstado;
+
+    const cadFormatted = cadDate.toLocaleDateString('es-ES', {day:'2-digit', month:'short', year:'numeric'});
+
+    row.innerHTML = `
+        <div class="prod-header">
+            <div>
+                <div class="prod-name">${nombre}</div>
+                <div class="prod-details">
+                    ${lote ? `<span class="prod-detail">Lote: ${lote}</span>` : ''}
+                    <span class="prod-detail">Cad: ${cadFormatted}</span>
+                    ${diffDays >= 0 ? `<span class="prod-detail">(${diffDays}d)</span>` : `<span class="prod-detail" style="color:#c62828;font-weight:600">(VENCIDO hace ${Math.abs(diffDays)}d)</span>`}
+                    ${cantidad ? `<span class="prod-detail">Cant: ${cantidad}</span>` : ''}
+                </div>
+            </div>
+            <div style="font-size:.9rem;font-weight:700;color:${estadoColors[finalEstado]}">${estadoIcons[finalEstado]} ${estadoLabels[finalEstado]}</div>
+        </div>
+    `;
+    list.appendChild(row);
+    closeAdd();
+    updateSummary();
+}
+
+function updateSummary() {
+    const ok = products.filter(p => p.estado === 'ok').length;
+    const prox = products.filter(p => p.estado === 'proximo').length;
+    const cad = products.filter(p => p.estado === 'caducado').length;
+
+    document.getElementById('count-ok').textContent = ok;
+    document.getElementById('count-prox').textContent = prox;
+    document.getElementById('count-cad').textContent = cad;
+
+    const summary = document.getElementById('summary');
+    if (products.length > 0) {
+        summary.classList.remove('hidden');
+    }
+}
+
+function enviar() {
+    if (!document.getElementById('responsable').value) {
+        alert('Selecciona responsable'); return;
+    }
+
+    const checks = document.querySelectorAll('.check-item');
+    let allChecked = true;
+    checks.forEach(item => {
+        const btns = item.querySelectorAll('.status-btn');
+        const hasSelection = Array.from(btns).some(b => b.classList.contains('ok') || b.classList.contains('fail'));
+        if (!hasSelection) allChecked = false;
+    });
+    if (!allChecked) {
+        alert('Completa todas las verificaciones generales'); return;
+    }
+
+    const caducados = products.filter(p => p.estado === 'caducado');
+    if (caducados.length > 0 && !document.getElementById('acciones-cad').value.trim()) {
+        alert('Has registrado producto caducado — describe las acciones tomadas'); return;
+    }
+
+    const ts = new Date().toLocaleString('es-ES');
+    document.getElementById('timestamp').textContent = `Enviado: ${ts}`;
+
+    const prox = products.filter(p => p.estado === 'proximo').length;
+    const cad = caducados.length;
+    let msg = `✅ Control semanal de caducidades enviado\n${ts}\n\nProductos revisados: ${products.length}`;
+    if (prox > 0) msg += `\n⚠️ Próximos a caducar: ${prox}`;
+    if (cad > 0) msg += `\n🔴 Caducados: ${cad}`;
+    msg += '\n\n(En producción se enviaría a Google Sheets y notificaría a Cristina)';
+    alert(msg);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Tareas Baja Producción — RIA Quality Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2d7a3a 100%);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .header-title { font-size: 16px; font-weight: 600; }
+        .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+        .header-right { display: flex; gap: 8px; align-items: center; }
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            border: none; color: #fff;
+            width: 36px; height: 36px; border-radius: 50%;
+            font-size: 16px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .header-btn:active { background: rgba(255,255,255,0.35); }
+
+        /* Login */
+        .login-screen { padding: 32px 16px; text-align: center; }
+        .logo { font-size: 48px; margin-bottom: 8px; }
+        .app-name { font-size: 20px; font-weight: 700; color: #1B5E20; }
+        .app-sub { font-size: 12px; color: #aaa; margin-top: 4px; }
+        .login-date { font-size: 13px; color: #888; margin: 16px 0 24px; }
+        .mode-selector { margin-bottom: 24px; }
+        .mode-label { font-size: 12px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .mode-toggle {
+            display: flex; gap: 0; border-radius: 8px; overflow: hidden;
+            border: 2px solid #1B5E20;
+        }
+        .mode-btn {
+            flex: 1; padding: 12px 8px; font-size: 13px; font-weight: 600;
+            background: transparent; border: none; color: #888; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mode-btn.active { background: #1B5E20; color: #fff; }
+        .operator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .op-btn {
+            background: linear-gradient(135deg, #2a2a4e, #3a3a5e);
+            border: 2px solid #1B5E20; color: #fff;
+            padding: 16px 12px; border-radius: 12px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .op-btn:active { transform: scale(0.97); }
+        .op-btn span { display: block; font-size: 11px; color: #aaa; font-weight: 400; margin-top: 4px; }
+        .op-btn.full-width { grid-column: 1 / -1; }
+
+        /* Content */
+        .content { padding: 12px 16px 100px; overflow-y: auto; }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 6px; margin-bottom: 16px;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px; scrollbar-width: none;
+        }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab {
+            flex: 0 0 auto; padding: 8px 12px; font-size: 11px; font-weight: 600;
+            background: rgba(255,255,255,0.08); border: none; color: #888; cursor: pointer;
+            border-radius: 16px; white-space: nowrap; transition: all 0.2s;
+        }
+        .tab.active { background: #1B5E20; color: #fff; }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex; gap: 8px; margin-bottom: 16px;
+        }
+        .stat {
+            flex: 1; background: rgba(255,255,255,0.05);
+            border-radius: 8px; padding: 10px; text-align: center;
+        }
+        .stat-num { font-size: 20px; font-weight: 700; color: #1B5E20; }
+        .stat-label { font-size: 10px; color: #888; margin-top: 2px; text-transform: uppercase; }
+
+        /* Task cards */
+        .section-title {
+            font-size: 12px; font-weight: 700; color: #1B5E20;
+            text-transform: uppercase; letter-spacing: 1px;
+            margin: 20px 0 10px; padding-left: 4px;
+        }
+        .task-pool-card {
+            background: linear-gradient(135deg, #2a2a4e 0%, #3a3a5e 100%);
+            border-left: 4px solid #555;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .task-pool-card.cleaning { border-left-color: #29B6F6; }
+        .task-pool-card.deep-clean { border-left-color: #FF7043; }
+        .task-pool-card.training { border-left-color: #AB47BC; }
+        .task-pool-card.maintenance { border-left-color: #FFD54F; }
+        .task-pool-card.expiry { border-left-color: #EF5350; }
+        .task-pool-card.nonconf { border-left-color: #FF1744; }
+        .task-pool-card.taken { border-left-color: #FF9800; background: linear-gradient(135deg, #4a3a2a 0%, #5a4a3a 100%); }
+        .task-pool-card.done { border-left-color: #1B5E20; background: linear-gradient(135deg, #2a4a2a 0%, #3a5a3a 100%); opacity: 0.7; }
+
+        .tpc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+        .tpc-title { font-size: 14px; font-weight: 600; flex: 1; }
+        .tpc-badge {
+            padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700;
+            white-space: nowrap;
+        }
+        .tpc-badge.pool { background: rgba(255,255,255,0.15); color: #ccc; }
+        .tpc-badge.taken-badge { background: #FF9800; color: #fff; }
+        .tpc-badge.done-badge { background: #1B5E20; color: #fff; }
+        .tpc-meta { font-size: 11px; color: #999; margin-top: 6px; display: flex; gap: 12px; flex-wrap: wrap; }
+        .tpc-desc { font-size: 12px; color: #bbb; margin-top: 6px; line-height: 1.4; }
+        .tpc-product { font-size: 11px; color: #29B6F6; margin-top: 4px; font-style: italic; }
+
+        .tpc-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-take {
+            background: #1B5E20; border: none; color: #fff;
+            padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+            cursor: pointer; flex: 1; transition: all 0.2s;
+        }
+        .btn-take:active { background: #0d3a13; transform: scale(0.95); }
+        .btn-done-sm {
+            background: transparent; border: 1px solid #1B5E20; color: #1B5E20;
+            padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-done-sm:active { background: rgba(27,94,32,0.2); }
+
+        /* Assign modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7); display: none;
+            align-items: flex-end; z-index: 200;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-sheet {
+            background: #1a1a2e; width: 100%; max-width: 420px; margin: 0 auto;
+            border-radius: 16px 16px 0 0; padding: 20px 16px 32px;
+            max-height: 70vh; overflow-y: auto;
+        }
+        .modal-handle { width: 36px; height: 4px; background: #555; border-radius: 2px; margin: 0 auto 16px; }
+        .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+        .assign-btn {
+            display: block; width: 100%;
+            background: linear-gradient(135deg, #2a2a4e, #3a3a5e);
+            border: 1px solid rgba(255,255,255,0.1); color: #fff;
+            padding: 14px; border-radius: 10px; margin-bottom: 8px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            text-align: left; transition: all 0.2s;
+        }
+        .assign-btn:active { background: rgba(27,94,32,0.3); border-color: #1B5E20; }
+        .assign-btn span { display: block; font-size: 11px; color: #888; font-weight: 400; margin-top: 2px; }
+
+        /* Empty state */
+        .empty { text-align: center; padding: 40px 16px; color: #888; }
+        .empty-icon { font-size: 40px; margin-bottom: 8px; }
+
+        /* Filter chips */
+        .filter-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+        .chip {
+            padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 600;
+            background: rgba(255,255,255,0.08); color: #999; border: none; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chip.active { background: #1B5E20; color: #fff; }
+
+        /* Frequency tag */
+        .tpc-freq {
+            display: inline-block;
+            font-size: 10px; font-weight: 700;
+            padding: 2px 8px; border-radius: 10px;
+            background: rgba(41,182,246,0.15); color: #29B6F6;
+            margin-top: 4px;
+        }
+        .tpc-freq.adelantable {
+            background: rgba(255,167,38,0.15); color: #FFA726;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: #1B5E20; color: #fff; padding: 10px 20px; border-radius: 8px;
+            font-size: 13px; font-weight: 600; z-index: 300;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="view-login">
+    <div class="login-screen">
+        <div class="logo">🍚</div>
+        <div class="app-name">Rice in Action</div>
+        <div class="app-sub">Tareas Baja Producción</div>
+        <div class="login-date" id="login-date"></div>
+
+        <div class="mode-selector">
+            <div class="mode-label">Modo</div>
+            <div class="mode-toggle">
+                <button class="mode-btn active" onclick="setMode('operario')" id="mode-op">👷 Operario</button>
+                <button class="mode-btn" onclick="setMode('gestion')" id="mode-mg">👩‍💼 Gestión</button>
+            </div>
+        </div>
+
+        <div class="operator-grid">
+            <button class="op-btn" onclick="login('diego')">👨‍🔧 Diego<span>Producción</span></button>
+            <button class="op-btn" onclick="login('isabel')">👩‍🍳 Isabel<span>Caldos / L+D</span></button>
+            <button class="op-btn" onclick="login('geronimo')">📦 Gerónimo<span>Envasado</span></button>
+            <button class="op-btn" onclick="login('christophe')">🚚 Christophe<span>Apoyo</span></button>
+            <button class="op-btn full-width" onclick="login('cristina')" id="btn-cristina" style="display:none;">
+                👩‍💼 Cristina<span>Gestión / Calidad</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN VIEW -->
+<div id="view-main" style="display:none;">
+    <div class="header">
+        <div>
+            <div class="header-title" id="main-title"></div>
+            <div class="header-sub" id="main-sub"></div>
+        </div>
+        <div class="header-right">
+            <button class="header-btn" onclick="logout()">👤</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat"><div class="stat-num" id="stat-pool">0</div><div class="stat-label">Disponibles</div></div>
+            <div class="stat"><div class="stat-num" id="stat-taken" style="color:#FF9800">0</div><div class="stat-label">En curso</div></div>
+            <div class="stat"><div class="stat-num" id="stat-done">0</div><div class="stat-label">Hechas hoy</div></div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="setTab('all')" id="tab-all">Todas</button>
+            <button class="tab" onclick="setTab('cleaning')" id="tab-cleaning">🧹 Limpieza</button>
+            <button class="tab" onclick="setTab('maintenance')" id="tab-maintenance">🔧 Mantenim.</button>
+            <button class="tab" onclick="setTab('expiry')" id="tab-expiry">📅 Caducidades</button>
+            <button class="tab" onclick="setTab('nonconf')" id="tab-nonconf">🔴 No Conformes</button>
+            <button class="tab" onclick="setTab('training')" id="tab-training">📚 Formación</button>
+        </div>
+
+        <!-- Filters (zone) -->
+        <div class="filter-row" id="zone-filters"></div>
+
+        <!-- Task list -->
+        <div id="task-list"></div>
+    </div>
+</div>
+
+<!-- Assign modal -->
+<div class="modal-overlay" id="assign-modal">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title" id="assign-title">Asignar tarea a...</div>
+        <div id="assign-options"></div>
+        <button class="assign-btn" onclick="closeModal()" style="background:transparent;border-color:#ff4444;color:#ff4444;text-align:center;margin-top:8px;">Cancelar</button>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────
+const OPERATORS = {
+    diego:      { name: 'Diego', emoji: '👨‍🔧', role: 'Producción' },
+    isabel:     { name: 'Isabel', emoji: '👩‍🍳', role: 'Caldos / L+D' },
+    geronimo:   { name: 'Gerónimo', emoji: '📦', role: 'Envasado' },
+    christophe: { name: 'Christophe', emoji: '🚚', role: 'Apoyo' },
+    cristina:   { name: 'Cristina', emoji: '👩‍💼', role: 'Gestión' }
+};
+
+// Catálogo completo de tareas para días de baja producción
+const TASK_CATALOG = [
+    // ── LIMPIEZAS DEL PLAN L+D (semanales/quincenales/mensuales — se pueden adelantar) ──
+    { id: 'ld01', cat: 'cleaning', zone: 'Cuarto Frío', title: 'Limpieza profunda Cuarto Frío', desc: 'Paredes, techos, estanterías. Vaciar, limpiar suelo/paredes/estantes.', product: 'VIXCLOR SE 4-6%, aclarado obligatorio', time: 60, who: ['isabel','diego'], freq: 'Quincenal' },
+    { id: 'ld02', cat: 'cleaning', zone: 'Cuarto Frío', title: 'Bajomesas Cuarto Frío', desc: 'Limpiar parte inferior de mesas de trabajo.', product: 'VIXCLOR SE 4-6%, aclarado', time: 20, who: ['isabel','diego'], freq: 'Semanal' },
+    { id: 'ld03', cat: 'cleaning', zone: 'Cuarto Frío', title: 'Desagües Cuarto Frío', desc: 'Verter solución, dejar actuar 15 min, aclarar.', product: 'VIXCLOR SE 6%, aclarado', time: 20, who: ['isabel','diego'], freq: 'Semanal' },
+    { id: 'ld04', cat: 'cleaning', zone: 'Office', title: 'Limpieza profunda Office', desc: 'Paredes, techos, estanterías.', product: 'VIXCLOR SE 4-6%, aclarado', time: 45, who: ['isabel','diego','christophe'], freq: 'Quincenal' },
+    { id: 'ld05', cat: 'cleaning', zone: 'Office', title: 'Cubos basura Office', desc: 'Vaciar, limpiar interior y exterior.', product: 'VIXCLOR SE 4-6%, aclarado', time: 15, who: ['isabel','diego','christophe'], freq: 'Semanal' },
+    { id: 'ld06', cat: 'cleaning', zone: 'Bunker', title: 'Cámaras 1-2-3 limpieza profunda', desc: 'Vaciar, limpiar suelo/paredes/estantes. Reorganizar producto.', product: 'VIXCLOR SE 4-6%, aclarado', time: 90, who: ['diego','christophe'], freq: 'Quincenal' },
+    { id: 'ld07', cat: 'cleaning', zone: 'Bunker', title: 'Cámara 5 limpieza profunda', desc: 'Vaciar, limpiar suelo/paredes/estantes.', product: 'VIXCLOR SE 4-6%, aclarado', time: 45, who: ['diego','christophe'], freq: 'Quincenal' },
+    { id: 'ld08', cat: 'cleaning', zone: 'Bunker', title: 'Cámara 6 limpieza profunda', desc: 'Vaciar, limpiar suelo/paredes/estantes.', product: 'VIXCLOR SE 4-6%, aclarado', time: 45, who: ['diego','christophe'], freq: 'Quincenal' },
+    { id: 'ld09', cat: 'cleaning', zone: 'Bunker', title: 'Cámaras 7-8 limpieza profunda', desc: 'Vaciar, limpiar suelo/paredes/estantes.', product: 'VIXCLOR SE 4-6%, aclarado', time: 60, who: ['diego','christophe'], freq: 'Quincenal' },
+    { id: 'ld10', cat: 'cleaning', zone: 'Bunker', title: 'Cuarto basura', desc: 'Vaciar, limpiar suelo y paredes.', product: 'VIXCLOR SE 4-6%, aclarado', time: 30, who: ['christophe','diego'], freq: 'Semanal' },
+    { id: 'ld11', cat: 'cleaning', zone: 'Bunker', title: 'Limpieza profunda Bunker (techos, luminarias)', desc: 'Techos, luminarias, zonas altas de almacén y pasillos.', product: 'VIXCLOR SE 4-6%, aclarado', time: 60, who: ['christophe','diego'], freq: 'Quincenal' },
+    { id: 'ld12', cat: 'cleaning', zone: 'Envasado', title: 'Desagües zona envasado', desc: 'Verter solución en desagües, 15 min, aclarar.', product: 'VIXCLOR SE 6%, aclarado', time: 20, who: ['geronimo'], freq: 'Semanal' },
+    { id: 'ld13', cat: 'cleaning', zone: 'Envasado', title: 'Estanterías envases', desc: 'Retirar envases, limpiar estanterías. Aclarar. Secar.', product: 'VIXCLOR SE 4-6%, aclarado', time: 30, who: ['geronimo'], freq: 'Semanal' },
+    { id: 'ld14', cat: 'cleaning', zone: 'Envasado', title: 'Techos y paredes envasado', desc: 'Espuma o bayeta húmeda en techos y paredes.', product: 'VIXCLOR SE 4-6%, aclarado', time: 45, who: ['geronimo','diego'], freq: 'Quincenal' },
+    { id: 'ld15', cat: 'cleaning', zone: 'Envasado', title: 'Cubos basura envasado', desc: 'Vaciar, limpiar interior/exterior.', product: 'VIXCLOR SE 4-6%, aclarado', time: 15, who: ['geronimo'], freq: 'Mensual' },
+    { id: 'ld16', cat: 'cleaning', zone: 'Envasado', title: 'Termoselladora limpieza completa', desc: 'Desmontar molde, limpiar con SUPERL, desinfectar con ASEPCOL.', product: 'SUPERL + ASEPCOL PLUS', time: 30, who: ['geronimo'], freq: 'Cada 3 días' },
+    { id: 'ld17', cat: 'cleaning', zone: 'Cuarto Frío', title: 'Lavadora arroz (ciclo L+D)', desc: 'Inmersión o recirculación con ECOPLUS D tras servicio. Día de baja producción = oportunidad de hacer ciclo largo.', product: 'ECOPLUS D 2-5%, 40-60°C, 5 min mín, aclarado', time: 25, who: ['isabel','diego'], freq: 'Tras cada servicio' },
+    { id: 'ld18', cat: 'cleaning', zone: 'Envasado', title: 'Molino limpieza completa', desc: 'Desmontar, lavar con SUPERL, aclarar, desinfectar con ASEPCOL PLUS.', product: 'SUPERL + ASEPCOL PLUS', time: 25, who: ['geronimo'], freq: 'Diario (si se usa)' },
+    { id: 'ld19', cat: 'cleaning', zone: 'Bunker', title: 'Abatidor limpieza profunda', desc: 'Limpiar interior a fondo (paredes, bandejas, rejillas). Aclarar. Secar.', product: 'VIXCLOR SE 4-6%, aclarado', time: 30, who: ['diego','christophe'], freq: 'Diario (si se usa)' },
+    { id: 'ld20', cat: 'cleaning', zone: 'Bunker', title: 'Desagües Bunker/almacén', desc: 'Verter solución en desagües zona almacén y pasillos. 15 min. Aclarar.', product: 'VIXCLOR SE 6%, aclarado', time: 20, who: ['christophe','diego'], freq: 'Quincenal' },
+
+    // ── LIMPIEZAS EXTRA (no están en Plan L+D habitual) ──
+    { id: 'ex01', cat: 'deep-clean', zone: 'Cuarto Frío', title: 'Desmontar y limpiar lavadora arroz', desc: 'Desmontar mallas, limpiar todas las piezas, filtros y interior.', product: 'ECOPLUS D 2-5%, 40-60°C, aclarado', time: 60, who: ['isabel','diego'] },
+    { id: 'ex02', cat: 'deep-clean', zone: 'Envasado', title: 'Desmontar y limpiar bomba dosificadora', desc: 'Desmontar completamente, limpiar juntas, verificar estado O-rings.', product: 'SUPERL + ASEPCOL PLUS', time: 45, who: ['geronimo','diego'] },
+    { id: 'ex03', cat: 'deep-clean', zone: 'Envasado', title: 'Desmontar y limpiar máquina salsas', desc: 'Desmontar tuberías, boquillas. Limpiar con SUPERL, desinfectar.', product: 'SUPERL + ASEPCOL PLUS', time: 45, who: ['geronimo'] },
+    { id: 'ex04', cat: 'deep-clean', zone: 'Envasado', title: 'Limpieza interior Klastein', desc: 'Desmontaje parcial, limpieza profunda interior y exterior.', product: 'SUPERL + ASEPCOL PLUS', time: 40, who: ['geronimo','diego'] },
+    { id: 'ex05', cat: 'deep-clean', zone: 'Bunker', title: 'Detrás y debajo de cámaras frigoríficas', desc: 'Mover lo posible, limpiar polvo acumulado, rejillas condensador.', product: 'Sin producto (polvo seco + VIXCLOR SE suelo)', time: 60, who: ['diego','christophe'] },
+    { id: 'ex06', cat: 'deep-clean', zone: 'Bunker', title: 'Limpiar rejillas de ventilación y extractores', desc: 'Desmontar filtros, lavar, limpiar carcasas.', product: 'VIXCLOR SE 4-6%, aclarado', time: 45, who: ['christophe','diego'] },
+    { id: 'ex07', cat: 'deep-clean', zone: 'Cuarto Frío', title: 'Revisión y limpieza mixers (interior cuchillas)', desc: 'Desmontar cuchillas, limpiar restos incrustados, verificar filo.', product: 'SUPERL + ASEPCOL PLUS', time: 30, who: ['isabel'] },
+    { id: 'ex08', cat: 'deep-clean', zone: 'General', title: 'Limpieza zona exterior / muelle carga', desc: 'Barrer, fregar si procede. Retirar residuos y cajas vacías.', product: 'Sin producto específico', time: 30, who: ['christophe','diego'] },
+    { id: 'ex09', cat: 'deep-clean', zone: 'General', title: 'Ordenar almacén de productos químicos', desc: 'Verificar stock Proquimia, ordenar, comprobar fechas caducidad, reponer dosificadores.', product: 'N/A', time: 30, who: ['isabel','cristina'] },
+    { id: 'ex10', cat: 'deep-clean', zone: 'General', title: 'Inventario y orden almacén envases/embalaje', desc: 'Contar stock barquetas, film, cajas. Anotar necesidades de pedido.', product: 'N/A', time: 45, who: ['geronimo','christophe'] },
+
+    // ── MANTENIMIENTO PREVENTIVO ──
+    { id: 'mp01', cat: 'maintenance', zone: 'Envasado', title: 'Revisar juntas y O-rings termoselladora', desc: 'Inspeccionar estado de juntas del molde, O-rings, resistencias. Anotar si hay que pedir recambios.', time: 20, who: ['geronimo','diego'], freq: 'Mensual' },
+    { id: 'mp02', cat: 'maintenance', zone: 'Envasado', title: 'Verificar testigos detector de metales', desc: 'Pasar los 3 testigos (ferroso, no ferroso, acero inox). Comprobar que detecta y rechaza correctamente. Registrar resultado.', time: 15, who: ['diego','geronimo'], freq: 'Semanal' },
+    { id: 'mp03', cat: 'maintenance', zone: 'Envasado', title: 'Revisar bomba dosificadora (estado mecánico)', desc: 'Verificar juntas, mangueras, presión. Comprobar que no gotea. Anotar horas de uso si hay contador.', time: 20, who: ['geronimo','diego'], freq: 'Quincenal' },
+    { id: 'mp04', cat: 'maintenance', zone: 'Bunker', title: 'Verificar temperaturas y alarmas de cámaras', desc: 'Comparar lectura display vs. termómetro sonda. Comprobar que alarma de puerta funciona. Anotar desviaciones.', time: 25, who: ['diego','christophe'], freq: 'Mensual' },
+    { id: 'mp05', cat: 'maintenance', zone: 'Bunker', title: 'Comprobar estado juntas puertas cámaras', desc: 'Inspeccionar gomas de cierre de todas las cámaras. Marcar las que tengan holgura o rotura para sustituir.', time: 20, who: ['diego','christophe'], freq: 'Mensual' },
+    { id: 'mp06', cat: 'maintenance', zone: 'Cuarto Frío', title: 'Revisar estado cuchillas y juntas mixers', desc: 'Comprobar filo de cuchillas, estado de juntas de estanqueidad. Anotar si hay que afilar o sustituir.', time: 15, who: ['isabel'], freq: 'Mensual' },
+    { id: 'mp07', cat: 'maintenance', zone: 'Envasado', title: 'Revisar estado Klastein (cintas, rodillos)', desc: 'Inspeccionar cintas transportadoras, rodillos, tensión. Comprobar que no hay desgaste excesivo.', time: 20, who: ['geronimo','diego'], freq: 'Mensual' },
+    { id: 'mp08', cat: 'maintenance', zone: 'General', title: 'Comprobar dosificadores jabón y gel (VITABAC)', desc: 'Verificar que todos los dispensadores funcionan, rellenar si están bajos, limpiar boquillas obstruidas.', time: 10, who: ['isabel','christophe'], freq: 'Semanal' },
+    { id: 'mp09', cat: 'maintenance', zone: 'Cuarto Frío', title: 'Revisar estado lavadora arroz (mallas, motor)', desc: 'Comprobar mallas (roturas, obstrucciones), funcionamiento motor, estanqueidad. Anotar si necesita mantenimiento.', time: 20, who: ['diego','isabel'], freq: 'Mensual' },
+    { id: 'mp10', cat: 'maintenance', zone: 'Envasado', title: 'Verificar báscula / balanza (calibración visual)', desc: 'Pesar un patrón conocido (pesa de 1kg). Comprobar que la lectura es correcta. Registrar resultado.', time: 10, who: ['geronimo','diego'], freq: 'Semanal' },
+
+    // ── REVISIÓN DE CADUCIDADES ──
+    { id: 'cd01', cat: 'expiry', zone: 'Bunker', title: 'Revisión caducidades cámara 1-2-3 (MP refrigerada)', desc: 'Revisar TODAS las materias primas refrigeradas. Apuntar las que caducan en los próximos 7 días. Sacar a producción o segregar.', time: 30, who: ['diego','christophe'], freq: 'Semanal' },
+    { id: 'cd02', cat: 'expiry', zone: 'Bunker', title: 'Revisión caducidades cámara 5 (producto semielaborado)', desc: 'Revisar caldos, salsas y preelaboraciones. Verificar fecha etiqueta SATO. Aplicar FIFO. Segregar si está fuera de vida útil.', time: 25, who: ['isabel','diego'], freq: 'Semanal' },
+    { id: 'cd03', cat: 'expiry', zone: 'Bunker', title: 'Revisión caducidades cámara 6 (producto terminado)', desc: 'Revisar producto terminado envasado. Comprobar fecha de caducidad. Identificar lotes próximos a vencer para priorizar en expedición.', time: 25, who: ['geronimo','christophe'], freq: 'Semanal' },
+    { id: 'cd04', cat: 'expiry', zone: 'Bunker', title: 'Revisión caducidades cámaras 7-8 (congelado)', desc: 'Revisar producto congelado. Comprobar etiquetas de congelación (fecha, lote). Verificar que no hay escarcha excesiva.', time: 30, who: ['diego','christophe'], freq: 'Quincenal' },
+    { id: 'cd05', cat: 'expiry', zone: 'Bunker', title: 'Revisión stock almacén seco (arroces, envases, especias)', desc: 'Revisar caducidades de arroces, especias, productos secos. Comprobar estado de envases. Aplicar FIFO.', time: 30, who: ['christophe','diego'], freq: 'Mensual' },
+    { id: 'cd06', cat: 'expiry', zone: 'General', title: 'Verificar caducidad productos Proquimia', desc: 'Comprobar fechas de caducidad de VIXCLOR SE, ASEPCOL PLUS, ECOPLUS D, SUPERL, VITABAC. Anotar si hay que pedir.', time: 10, who: ['isabel','christophe'], freq: 'Mensual' },
+    { id: 'cd07', cat: 'expiry', zone: 'Bunker', title: 'Fotografiar estado general de cámaras', desc: 'Hacer foto de cada cámara por dentro (para registro y seguimiento del orden). Guardar en carpeta compartida.', time: 15, who: ['diego','christophe'] },
+
+    // ── REVISIÓN DE NO CONFORMES ──
+    { id: 'nc01', cat: 'nonconf', zone: 'Bunker', title: 'Revisar zona de No Conformes en cámara', desc: 'Inspeccionar producto segregado con etiqueta NC. Verificar que está correctamente identificado (etiqueta SATO NC, fecha, motivo). Informar a Cristina del estado.', time: 20, who: ['diego','isabel','geronimo'] },
+    { id: 'nc02', cat: 'nonconf', zone: 'General', title: 'Revisar registro de NCs abiertas', desc: 'Comprobar si hay No Conformidades sin cerrar. Verificar que tienen acción correctiva definida y fecha límite. Avisar a Cristina si alguna lleva más de 7 días abierta.', time: 15, who: ['diego','isabel','geronimo','cristina'] },
+    { id: 'nc03', cat: 'nonconf', zone: 'General', title: 'Verificar acciones correctivas de NCs cerradas', desc: 'Repasar las últimas NCs cerradas. Comprobar que la acción correctiva se implementó realmente. Documentar evidencia.', time: 20, who: ['cristina','diego'] },
+    { id: 'nc04', cat: 'nonconf', zone: 'General', title: 'Actualizar listado de incidencias recurrentes', desc: 'Revisar NCs del último mes. Identificar patrones (mismo producto, mismo equipo, misma hora). Proponer mejora a Cristina.', time: 25, who: ['cristina','diego','isabel'] },
+    { id: 'nc05', cat: 'nonconf', zone: 'Bunker', title: 'Destruir/dar salida a NCs caducadas', desc: 'Producto NC que ha superado el plazo de decisión: preparar para destrucción o donación según protocolo. Registrar salida con foto.', time: 20, who: ['diego','christophe','cristina'] },
+
+    // ── FORMACIONES PLAN PABLO (Inspección 05/03/2026) — refuerzo con Excalidraw ──
+    { id: 'fp01', cat: 'training', zone: 'Formación', title: '📐 Sesión 1: Registros APPCC y temperaturas PCC', desc: 'Repasar con Excalidraw: flujo de registro de pasteurización (≥70°C) y abatimiento (<10°C). Dibujar qué pasa si la T° no se alcanza. Practicar con el formulario produccion.html.', time: 20, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'fp02', cat: 'training', zone: 'Formación', title: '📐 Sesión 2: Trazabilidad — lotes de MP', desc: 'Dibujar en Excalidraw el mapa de lotes: cada MP → campo de lote en formulario → lote producto final. Practicar con escáner OCR de etiquetas SATO. Regla: NUNCA dejar campo vacío.', time: 15, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'fp03', cat: 'training', zone: 'Formación', title: '📐 Sesión 3: NC, muestras e identificación SATO', desc: 'Dibujar el mapa de zonas en cámara (APTO / NO CONFORME / MUESTRAS). Practicar el circuito: detectar NC → etiqueta SATO NC → segregar → avisar Cristina. Repasar carteles de cámaras.', time: 20, who: ['diego','isabel','geronimo','christophe'], excalidraw: true },
+    { id: 'fp04', cat: 'training', zone: 'Formación', title: '📐 Sesión 4: Caducidades y rotación FEFO', desc: 'Dibujar layout de cada cámara con regla FEFO: lo que caduca antes, delante. Simular: encontrar producto caducado → retirar → etiqueta NC → avisar Calidad. Control semanal lunes.', time: 15, who: ['diego','isabel','geronimo','christophe'], excalidraw: true },
+    { id: 'fp05', cat: 'training', zone: 'Formación', title: '📐 Sesión 5: ECOPLUS D en lavadora arroz', desc: 'Dibujar en Excalidraw el protocolo: concentración 2-5%, T° 40-60°C, mínimo 5 min, SIEMPRE aclarar. Incompatibilidades. Cuándo usar guantes. Registrar en formulario L+D.', time: 15, who: ['diego','isabel','geronimo','christophe'], excalidraw: true },
+
+    // ── FORMACIONES EXCALIDRAW ── APPCC + SEGURIDAD ALIMENTARIA ──
+    { id: 'tr01', cat: 'training', zone: 'Formación', title: '📐 Diagrama de flujo APPCC', desc: 'Dibujar juntos en Excalidraw el diagrama de flujo de nuestro proceso: recepción → almacenamiento → producción → envasado → expedición. Identificar cada PCC.', time: 30, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'tr02', cat: 'training', zone: 'Formación', title: '📐 Árbol de decisiones PCC', desc: 'Repasar el árbol de decisiones del Codex: ¿Es una medida preventiva? ¿Se puede eliminar el peligro? Cada operario dibuja un ejemplo real.', time: 25, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'tr03', cat: 'training', zone: 'Formación', title: '📐 Tabla de alérgenos cruzados', desc: 'Construir en Excalidraw la matriz de productos × alérgenos de Rice in Action. Identificar riesgos de contaminación cruzada.', time: 30, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'tr04', cat: 'training', zone: 'Formación', title: '📐 ¿Qué hago si se rompe la cadena de frío?', desc: 'Simular una incidencia: la cámara sube a 8°C. Dibujar en Excalidraw el flujo de decisiones: avisar, medir, segregar, registrar NC.', time: 20, who: ['diego','isabel','geronimo','christophe'], excalidraw: true },
+    { id: 'tr05', cat: 'training', zone: 'Formación', title: '📐 Gestión de No Conformes', desc: 'Dibujar el circuito completo: detección → etiqueta SATO NC → segregar en cámara → aviso Cristina → decisión → registro.', time: 25, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'tr06', cat: 'training', zone: 'Formación', title: '📐 Detector de metales: qué hacer cuando pita', desc: 'Dibujar el protocolo paso a paso: rechazar unidad, repasar, verificar testigo, anotar en registro de producción.', time: 20, who: ['diego','geronimo'], excalidraw: true },
+
+    // ── FORMACIONES EXCALIDRAW ── OPERATIVA ──
+    { id: 'tr07', cat: 'training', zone: 'Formación', title: '📐 Flujo de producción diario', desc: 'Dibujar quién hace qué, en qué orden, y las dependencias entre puestos (Diego → Isabel → Gerónimo). Identificar cuellos de botella.', time: 25, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'tr08', cat: 'training', zone: 'Formación', title: '📐 Mapa de zonas y productos L+D', desc: 'Dibujar el plano del obrador y asignar a cada zona su producto Proquimia, dosis y si necesita aclarado. Colgar luego en pared.', time: 30, who: ['diego','isabel','geronimo','christophe'], excalidraw: true },
+    { id: 'tr09', cat: 'training', zone: 'Formación', title: '📐 Circuito de etiquetado (SATO + Videojet)', desc: 'Dibujar el flujo: producto intermedio → etiqueta SATO → producto final → etiqueta Videojet. Cuándo se pone cada una.', time: 20, who: ['diego','geronimo'], excalidraw: true },
+    { id: 'tr10', cat: 'training', zone: 'Formación', title: '📐 Recepción de materias primas', desc: 'Dibujar el protocolo: verificar albarán, comprobar temperatura, inspeccionar estado, registrar lote, almacenar.', time: 20, who: ['christophe','diego'], excalidraw: true },
+    { id: 'tr11', cat: 'training', zone: 'Formación', title: '📐 Trazabilidad: del lote MP al producto final', desc: 'Elegir un producto y rastrear desde la materia prima hasta la barqueta. Dibujar el mapa de lotes en Excalidraw.', time: 30, who: ['diego','isabel','geronimo'], excalidraw: true },
+    { id: 'tr12', cat: 'training', zone: 'Formación', title: '📐 Orden en cámaras: regla FIFO + separación', desc: 'Dibujar layout de cámaras, dónde va cada tipo de producto, sentido de rotación FIFO, separación crudo/cocido.', time: 25, who: ['diego','christophe'], excalidraw: true },
+];
+
+// ─── STATE ──────────────────────────────────────────────────────────────
+let mode = 'operario';    // 'operario' | 'gestion'
+let currentUser = null;
+let currentTab = 'all';
+let zoneFilter = null;
+let taskState = {};        // { taskId: { status: 'pool'|'taken'|'done', takenBy: 'id', takenAt: ts, doneAt: ts } }
+let assigningTaskId = null;
+
+// Load persisted state
+try { taskState = JSON.parse(localStorage.getItem('ria_bp_tasks') || '{}'); } catch(e) {}
+
+// ─── INIT ───────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const d = new Date();
+    const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    document.getElementById('login-date').textContent =
+        d.toLocaleDateString('es-ES', opts).replace(/^./, s => s.toUpperCase());
+});
+
+// ─── MODE ───────────────────────────────────────────────────────────────
+function setMode(m) {
+    mode = m;
+    document.getElementById('mode-op').classList.toggle('active', m === 'operario');
+    document.getElementById('mode-mg').classList.toggle('active', m === 'gestion');
+    document.getElementById('btn-cristina').style.display = m === 'gestion' ? 'block' : 'none';
+}
+
+// ─── LOGIN / LOGOUT ─────────────────────────────────────────────────────
+function login(userId) {
+    if (mode === 'gestion' && userId !== 'cristina') {
+        // In gestion mode only Cristina can log in — but allow any for flexibility
+    }
+    currentUser = userId;
+    const u = OPERATORS[userId];
+    document.getElementById('main-title').textContent = `${u.emoji} ${u.name}`;
+    document.getElementById('main-sub').textContent = mode === 'gestion' ? 'Modo Gestión — asignar tareas' : 'Tareas disponibles';
+    document.getElementById('view-login').style.display = 'none';
+    document.getElementById('view-main').style.display = 'block';
+    renderAll();
+}
+
+function logout() {
+    currentUser = null;
+    document.getElementById('view-login').style.display = 'block';
+    document.getElementById('view-main').style.display = 'none';
+}
+
+// ─── TABS & FILTERS ────────────────────────────────────────────────────
+function setTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    zoneFilter = null;
+    renderAll();
+}
+
+function setZone(z) {
+    zoneFilter = zoneFilter === z ? null : z;
+    renderAll();
+}
+
+// ─── RENDER ─────────────────────────────────────────────────────────────
+function renderAll() {
+    renderZoneFilters();
+    renderStats();
+    renderTasks();
+}
+
+function getVisibleTasks() {
+    let tasks = TASK_CATALOG;
+    // Tab filter
+    if (currentTab === 'cleaning') tasks = tasks.filter(t => t.cat === 'cleaning' || t.cat === 'deep-clean');
+    if (currentTab === 'maintenance') tasks = tasks.filter(t => t.cat === 'maintenance');
+    if (currentTab === 'expiry') tasks = tasks.filter(t => t.cat === 'expiry');
+    if (currentTab === 'nonconf') tasks = tasks.filter(t => t.cat === 'nonconf');
+    if (currentTab === 'training') tasks = tasks.filter(t => t.cat === 'training');
+    // In operario mode, show only tasks relevant to the user
+    if (mode === 'operario') {
+        tasks = tasks.filter(t => !t.who || t.who.includes(currentUser));
+    }
+    // Zone filter
+    if (zoneFilter) tasks = tasks.filter(t => t.zone === zoneFilter);
+    return tasks;
+}
+
+function renderZoneFilters() {
+    const tasks = getVisibleTasks();
+    const zones = [...new Set(tasks.map(t => t.zone))];
+    const container = document.getElementById('zone-filters');
+    container.innerHTML = zones.map(z =>
+        `<button class="chip ${zoneFilter === z ? 'active' : ''}" onclick="setZone('${z}')">${z}</button>`
+    ).join('');
+}
+
+function renderStats() {
+    const tasks = getVisibleTasks();
+    let pool = 0, taken = 0, done = 0;
+    tasks.forEach(t => {
+        const s = taskState[t.id];
+        if (s && s.status === 'done') done++;
+        else if (s && s.status === 'taken') taken++;
+        else pool++;
+    });
+    document.getElementById('stat-pool').textContent = pool;
+    document.getElementById('stat-taken').textContent = taken;
+    document.getElementById('stat-done').textContent = done;
+}
+
+function renderTasks() {
+    const tasks = getVisibleTasks();
+    const container = document.getElementById('task-list');
+
+    // Group: taken by me first, then pool, then done
+    const myTaken = tasks.filter(t => taskState[t.id]?.status === 'taken' && taskState[t.id]?.takenBy === currentUser);
+    const otherTaken = tasks.filter(t => taskState[t.id]?.status === 'taken' && taskState[t.id]?.takenBy !== currentUser);
+    const pool = tasks.filter(t => !taskState[t.id] || taskState[t.id].status === 'pool');
+    const done = tasks.filter(t => taskState[t.id]?.status === 'done');
+
+    let html = '';
+
+    if (myTaken.length) {
+        html += `<div class="section-title">🔧 Mis tareas en curso</div>`;
+        myTaken.forEach(t => html += renderCard(t));
+    }
+
+    if (otherTaken.length && mode === 'gestion') {
+        html += `<div class="section-title">👥 Asignadas a otros</div>`;
+        otherTaken.forEach(t => html += renderCard(t));
+    }
+
+    if (pool.length) {
+        html += `<div class="section-title">📋 Disponibles para coger</div>`;
+        pool.forEach(t => html += renderCard(t));
+    }
+
+    if (done.length) {
+        html += `<div class="section-title">✅ Completadas hoy</div>`;
+        done.forEach(t => html += renderCard(t));
+    }
+
+    if (!tasks.length) {
+        html = '<div class="empty"><div class="empty-icon">🎉</div>No hay tareas en esta categoría</div>';
+    }
+
+    container.innerHTML = html;
+}
+
+function renderCard(t) {
+    const s = taskState[t.id] || { status: 'pool' };
+    const catClass = s.status === 'done' ? 'done' : s.status === 'taken' ? 'taken' : t.cat;
+
+    let badge = '';
+    if (s.status === 'done') badge = '<span class="tpc-badge done-badge">HECHA ✓</span>';
+    else if (s.status === 'taken') {
+        const who = OPERATORS[s.takenBy]?.name || s.takenBy;
+        badge = `<span class="tpc-badge taken-badge">${who}</span>`;
+    } else {
+        badge = '<span class="tpc-badge pool">LIBRE</span>';
+    }
+
+    const catIcons = { training: '📚', 'deep-clean': '🔧', cleaning: '🧹', maintenance: '⚙️', expiry: '📅', nonconf: '🔴' };
+    const catIcon = catIcons[t.cat] || '📋';
+    const timeStr = t.time >= 60 ? `${Math.floor(t.time/60)}h ${t.time%60 ? t.time%60 + 'min' : ''}` : `${t.time} min`;
+
+    let actions = '';
+    if (s.status === 'pool') {
+        if (mode === 'gestion') {
+            actions = `<div class="tpc-actions">
+                <button class="btn-take" onclick="openAssign('${t.id}')">👩‍💼 Asignar</button>
+            </div>`;
+        } else {
+            actions = `<div class="tpc-actions">
+                <button class="btn-take" onclick="takeTask('${t.id}')">🙋 La cojo yo</button>
+            </div>`;
+        }
+    } else if (s.status === 'taken' && (s.takenBy === currentUser || mode === 'gestion')) {
+        actions = `<div class="tpc-actions">
+            <button class="btn-take" onclick="doneTask('${t.id}')">✅ Hecha</button>
+            <button class="btn-done-sm" onclick="releaseTask('${t.id}')">↩ Soltar</button>
+        </div>`;
+    }
+
+    return `<div class="task-pool-card ${catClass}">
+        <div class="tpc-header">
+            <div class="tpc-title">${catIcon} ${t.title}</div>
+            ${badge}
+        </div>
+        <div class="tpc-desc">${t.desc}</div>
+        ${t.freq ? `<div class="tpc-freq adelantable">📅 ${t.freq} — adelantable</div>` : ''}
+        ${t.product ? `<div class="tpc-product">💧 ${t.product}</div>` : ''}
+        ${t.excalidraw ? '<div class="tpc-product">🖊️ Actividad con Excalidraw</div>' : ''}
+        <div class="tpc-meta">
+            <span>⏱ ${timeStr}</span>
+            <span>📍 ${t.zone}</span>
+        </div>
+        ${actions}
+    </div>`;
+}
+
+// ─── ACTIONS ────────────────────────────────────────────────────────────
+function takeTask(id) {
+    taskState[id] = { status: 'taken', takenBy: currentUser, takenAt: Date.now() };
+    save();
+    renderAll();
+    toast(`👍 Has cogido: ${TASK_CATALOG.find(t=>t.id===id).title}`);
+    if (navigator.vibrate) navigator.vibrate(100);
+}
+
+function doneTask(id) {
+    if (!taskState[id]) taskState[id] = {};
+    taskState[id].status = 'done';
+    taskState[id].doneAt = Date.now();
+    save();
+    renderAll();
+    toast(`✅ Completada!`);
+    if (navigator.vibrate) navigator.vibrate([100,50,100]);
+}
+
+function releaseTask(id) {
+    delete taskState[id];
+    save();
+    renderAll();
+    toast('↩ Tarea liberada');
+}
+
+// Gestion: assign
+function openAssign(id) {
+    assigningTaskId = id;
+    const task = TASK_CATALOG.find(t => t.id === id);
+    document.getElementById('assign-title').textContent = `Asignar: ${task.title}`;
+    const candidates = task.who || Object.keys(OPERATORS);
+    document.getElementById('assign-options').innerHTML = candidates.map(uid => {
+        const u = OPERATORS[uid];
+        return `<button class="assign-btn" onclick="assignTo('${uid}')">${u.emoji} ${u.name}<span>${u.role}</span></button>`;
+    }).join('');
+    document.getElementById('assign-modal').classList.add('active');
+}
+
+function assignTo(uid) {
+    taskState[assigningTaskId] = { status: 'taken', takenBy: uid, takenAt: Date.now() };
+    save();
+    closeModal();
+    renderAll();
+    toast(`📌 Asignada a ${OPERATORS[uid].name}`);
+}
+
+function closeModal() {
+    document.getElementById('assign-modal').classList.remove('active');
+    assigningTaskId = null;
+}
+
+// ─── PERSIST ────────────────────────────────────────────────────────────
+function save() {
+    try { localStorage.setItem('ria_bp_tasks', JSON.stringify(taskState)); } catch(e) {}
+}
+
+// ─── TOAST ──────────────────────────────────────────────────────────────
+function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>

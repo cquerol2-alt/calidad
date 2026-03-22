@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Registro Pre-Operativo Diario — RIA-FORM-PO-001</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;color:#333;line-height:1.5}
+        .header{background:#1B5E20;color:#fff;padding:1rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+        .header h1{font-size:1.1rem;font-weight:600}
+        .header p{font-size:.8rem;opacity:.9}
+        .form-code{font-size:.65rem;margin-top:.3rem;opacity:.7}
+        .container{max-width:600px;margin:0 auto;padding:.75rem}
+        .meta-section{background:#fff;border-radius:8px;padding:1rem;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .meta-row{display:flex;gap:.75rem;margin-bottom:.75rem}
+        .meta-row:last-child{margin-bottom:0}
+        .meta-field{flex:1}
+        .meta-field label{display:block;font-size:.8rem;font-weight:600;color:#1B5E20;margin-bottom:.25rem}
+        .meta-field select,.meta-field input{width:100%;padding:.6rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem;background:#fff}
+        .section{background:#fff;border-radius:8px;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden}
+        .section-header{background:#E8F5E9;padding:.75rem 1rem;font-weight:700;font-size:.85rem;color:#1B5E20;display:flex;align-items:center;gap:.5rem}
+        .check-row{padding:.75rem 1rem;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:.75rem}
+        .check-row:last-child{border-bottom:none}
+        .check-label{flex:1;font-size:.85rem}
+        .check-label small{display:block;color:#888;font-size:.75rem;margin-top:2px}
+        .check-options{display:flex;gap:.5rem}
+        .check-btn{width:44px;height:44px;border-radius:8px;border:2px solid #ddd;background:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .check-btn.ok{border-color:#1B5E20;background:#E8F5E9}
+        .check-btn.fail{border-color:#d32f2f;background:#ffebee}
+        .check-btn:active{transform:scale(.9)}
+        .obs-field{padding:.5rem 1rem}
+        .obs-field textarea{width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;font-size:.85rem;resize:vertical;min-height:60px}
+        .submit-section{padding:1rem}
+        .btn-submit{width:100%;padding:1rem;background:#1B5E20;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s}
+        .btn-submit:active{background:#0d3a13;transform:scale(.98)}
+        .btn-submit:disabled{background:#999;cursor:not-allowed}
+        .summary-bar{background:#fff3e0;padding:.75rem 1rem;border-radius:8px;margin-bottom:.75rem;font-size:.85rem;font-weight:600;color:#e65100;text-align:center;display:none}
+        .timestamp{text-align:center;font-size:.75rem;color:#999;margin-top:.5rem}
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Registro Pre-Operativo Diario</h1>
+    <p>Inspección visual antes del inicio de actividad</p>
+    <div class="form-code">RIA-FORM-PO-001 · Plan L+D Rev.2</div>
+</div>
+<div class="container">
+    <div class="meta-section">
+        <div class="meta-row">
+            <div class="meta-field">
+                <label>Fecha</label>
+                <input type="date" id="fecha">
+            </div>
+            <div class="meta-field">
+                <label>Hora</label>
+                <input type="time" id="hora">
+            </div>
+        </div>
+        <div class="meta-row">
+            <div class="meta-field">
+                <label>Responsable</label>
+                <select id="responsable">
+                    <option value="">Seleccionar...</option>
+                    <option>Diego</option>
+                    <option>Isabel</option>
+                    <option>Gerónimo</option>
+                    <option>Christophe</option>
+                    <option>Cristina</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="summary-bar" class="summary-bar"></div>
+
+    <div class="section">
+        <div class="section-header">🧊 Cuarto Frío</div>
+        <div class="check-row" data-id="cf1">
+            <div class="check-label">Suelos limpios, sin restos<small>Sin charcos, sin restos de alimentos</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')" data-val="ok">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')" data-val="fail">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="cf2">
+            <div class="check-label">Superficies de trabajo limpias<small>Mesas, tablas, utensilios</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="cf3">
+            <div class="check-label">Utensilios en su sitio, limpios<small>Mixers, cuchillos, recipientes</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="cf4">
+            <div class="check-label">Lavamanos con jabón y gel (VITABAC)<small>Dosificador funciona, papel disponible</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="cf5">
+            <div class="check-label">Sin olores anormales</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Cuarto Frío..." data-zone="cf"></textarea></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">📦 Zona Envasado</div>
+        <div class="check-row" data-id="ev1">
+            <div class="check-label">Suelos limpios<small>Sin restos ni charcos</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="ev2">
+            <div class="check-label">Máquinas limpias (termoselladora, tolva, bomba)<small>Sin restos de producto del día anterior</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="ev3">
+            <div class="check-label">Detector de metales encendido y operativo</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="ev4">
+            <div class="check-label">Báscula limpia y encendida</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="ev5">
+            <div class="check-label">Lavamanos con jabón y gel (VITABAC)</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Envasado..." data-zone="ev"></textarea></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">🏪 Almacén / Bunker</div>
+        <div class="check-row" data-id="bk1">
+            <div class="check-label">Suelos de pasillos limpios</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="bk2">
+            <div class="check-label">Cámaras: puertas cierran correctamente<small>Sin escarcha excesiva en juntas</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="bk3">
+            <div class="check-label">Zonas señalizadas visibles (APTO / NC / MUESTRAS)<small>Carteles en su sitio, no tapados</small></div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="bk4">
+            <div class="check-label">Cuarto de basura: cerrado y limpio</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Almacén..." data-zone="bk"></textarea></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">🚿 Aseos y vestuarios</div>
+        <div class="check-row" data-id="as1">
+            <div class="check-label">Baños limpios</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="check-row" data-id="as2">
+            <div class="check-label">Jabón y gel disponibles</div>
+            <div class="check-options">
+                <button class="check-btn" onclick="toggle(this,'ok')">✓</button>
+                <button class="check-btn" onclick="toggle(this,'fail')">✗</button>
+            </div>
+        </div>
+        <div class="obs-field"><textarea placeholder="Observaciones Aseos..." data-zone="as"></textarea></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">⚠️ Resultado global</div>
+        <div style="padding:1rem">
+            <div class="meta-field">
+                <label>Resultado</label>
+                <select id="resultado">
+                    <option value="">Seleccionar...</option>
+                    <option value="conforme">✅ CONFORME — Se puede iniciar la actividad</option>
+                    <option value="condicional">⚠️ CONDICIONAL — Iniciar tras corregir incidencias</option>
+                    <option value="no-conforme">🔴 NO CONFORME — No se puede iniciar hasta corrección</option>
+                </select>
+            </div>
+            <div class="meta-field" style="margin-top:.75rem">
+                <label>Acciones correctivas (si procede)</label>
+                <textarea id="acciones" style="width:100%;padding:.5rem;border:1px solid #ddd;border-radius:6px;font-size:.85rem;resize:vertical;min-height:60px" placeholder="Describir acciones inmediatas tomadas..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="submit-section">
+        <button class="btn-submit" onclick="enviar()">Enviar registro pre-operativo</button>
+        <div class="timestamp" id="timestamp"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const now = new Date();
+    document.getElementById('fecha').value = now.toISOString().split('T')[0];
+    document.getElementById('hora').value = now.toTimeString().slice(0,5);
+});
+
+function toggle(btn, val) {
+    const row = btn.closest('.check-options');
+    row.querySelectorAll('.check-btn').forEach(b => b.classList.remove('ok','fail'));
+    btn.classList.add(val);
+    updateSummary();
+}
+
+function updateSummary() {
+    const fails = document.querySelectorAll('.check-btn.fail').length;
+    const bar = document.getElementById('summary-bar');
+    if (fails > 0) {
+        bar.style.display = 'block';
+        bar.textContent = `⚠️ ${fails} punto${fails>1?'s':''} NO conforme${fails>1?'s':''}`;
+    } else {
+        bar.style.display = 'none';
+    }
+}
+
+function enviar() {
+    const checks = document.querySelectorAll('.check-row');
+    let allDone = true;
+    checks.forEach(row => {
+        const btns = row.querySelectorAll('.check-btn');
+        if (!btns[0].classList.contains('ok') && !btns[0].classList.contains('fail') &&
+            !btns[1].classList.contains('ok') && !btns[1].classList.contains('fail')) {
+            allDone = false;
+        }
+    });
+
+    if (!document.getElementById('responsable').value) {
+        alert('Selecciona responsable'); return;
+    }
+    if (!allDone) {
+        alert('Completa todos los puntos de inspección'); return;
+    }
+    if (!document.getElementById('resultado').value) {
+        alert('Selecciona resultado global'); return;
+    }
+
+    const ts = new Date().toLocaleString('es-ES');
+    document.getElementById('timestamp').textContent = `Enviado: ${ts}`;
+    alert(`✅ Registro pre-operativo enviado\n${ts}\n\n(En producción se enviaría a Google Sheets)`);
+}
+</script>
+</body>
+</html>

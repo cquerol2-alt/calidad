@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Registro de Incidencias y AC — RIA-FORM-NC-001</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;color:#333;line-height:1.5}
+        .header{background:#c62828;color:#fff;padding:1rem;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+        .header h1{font-size:1.1rem;font-weight:600}
+        .header p{font-size:.8rem;opacity:.9}
+        .form-code{font-size:.65rem;margin-top:.3rem;opacity:.7}
+        .container{max-width:600px;margin:0 auto;padding:.75rem}
+        .section{background:#fff;border-radius:8px;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden}
+        .section-header{padding:.75rem 1rem;font-weight:700;font-size:.85rem;color:#fff;display:flex;align-items:center;gap:.5rem}
+        .section-header.red{background:#c62828}
+        .section-header.orange{background:#e65100}
+        .section-header.green{background:#1B5E20}
+        .section-header.blue{background:#1565c0}
+        .field-group{padding:.75rem 1rem}
+        .field-group label{display:block;font-size:.8rem;font-weight:600;color:#333;margin-bottom:.25rem}
+        .field-group label .required{color:#c62828}
+        .field-group input,.field-group select,.field-group textarea{width:100%;padding:.6rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem;background:#fff}
+        .field-group textarea{resize:vertical;min-height:80px}
+        .field-row{display:flex;gap:.75rem}
+        .field-row .field-group{flex:1}
+        .severity-btns{display:flex;gap:.5rem;margin-top:.25rem}
+        .sev-btn{flex:1;padding:.6rem .5rem;border:2px solid #ddd;border-radius:8px;background:#fff;font-size:.8rem;font-weight:600;cursor:pointer;text-align:center;transition:all .15s}
+        .sev-btn:active{transform:scale(.95)}
+        .sev-btn.critical.active{border-color:#c62828;background:#ffebee;color:#c62828}
+        .sev-btn.major.active{border-color:#e65100;background:#fff3e0;color:#e65100}
+        .sev-btn.minor.active{border-color:#f9a825;background:#fffde7;color:#f57f17}
+        .photo-area{padding:.75rem 1rem}
+        .photo-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem;border:2px dashed #ccc;border-radius:8px;background:#fafafa;cursor:pointer;font-size:.85rem;color:#666;transition:all .15s}
+        .photo-btn:active{background:#f0f0f0;border-color:#999}
+        .photo-preview{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+        .photo-preview img{width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #ddd}
+        .submit-section{padding:1rem}
+        .btn-submit{width:100%;padding:1rem;background:#c62828;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s}
+        .btn-submit:active{background:#8e0000;transform:scale(.98)}
+        .alert-box{background:#fff3e0;border-left:4px solid #e65100;padding:.75rem 1rem;margin-bottom:.75rem;border-radius:0 8px 8px 0;font-size:.8rem;color:#e65100}
+        .timestamp{text-align:center;font-size:.75rem;color:#999;margin-top:.5rem}
+        .divider{height:1px;background:#eee;margin:0 1rem}
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🔴 Registro de Incidencia / NC</h1>
+    <p>No Conformidades y Acciones Correctivas</p>
+    <div class="form-code">RIA-FORM-NC-001 · Ref. P.CA.03</div>
+</div>
+<div class="container">
+    <div class="alert-box">
+        ⚠️ <strong>Recuerda:</strong> Si detectas producto no conforme: PARAR → ETIQUETAR (SATO NC) → SEGREGAR → AVISAR a Cristina.
+    </div>
+
+    <!-- DETECCIÓN -->
+    <div class="section">
+        <div class="section-header red">1. Detección de la incidencia</div>
+        <div class="field-row">
+            <div class="field-group">
+                <label>Fecha <span class="required">*</span></label>
+                <input type="date" id="fecha">
+            </div>
+            <div class="field-group">
+                <label>Hora <span class="required">*</span></label>
+                <input type="time" id="hora">
+            </div>
+        </div>
+        <div class="field-group">
+            <label>Detectado por <span class="required">*</span></label>
+            <select id="detectado">
+                <option value="">Seleccionar...</option>
+                <option>Diego</option>
+                <option>Isabel</option>
+                <option>Gerónimo</option>
+                <option>Christophe</option>
+                <option>Cristina</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Tipo de incidencia <span class="required">*</span></label>
+            <select id="tipo">
+                <option value="">Seleccionar...</option>
+                <option value="temp-pcc">Temperatura PCC fuera de rango</option>
+                <option value="detector">Detector metales: rechazo</option>
+                <option value="caducidad">Producto caducado encontrado</option>
+                <option value="aspecto">Aspecto/olor/color anormal</option>
+                <option value="sin-id">Producto sin identificar</option>
+                <option value="analitica">Resultado analítico adverso</option>
+                <option value="reclamacion">Reclamación de cliente</option>
+                <option value="ld">Incidencia L+D</option>
+                <option value="equipo">Avería o mal funcionamiento de equipo</option>
+                <option value="otra">Otra</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Zona / equipo <span class="required">*</span></label>
+            <select id="zona">
+                <option value="">Seleccionar...</option>
+                <option>Cuarto Frío</option>
+                <option>Office</option>
+                <option>Zona Envasado</option>
+                <option>Cámara 1-2-3</option>
+                <option>Cámara 5</option>
+                <option>Cámara 6</option>
+                <option>Cámaras 7-8</option>
+                <option>Almacén seco</option>
+                <option>Abatidor</option>
+                <option>Lavadora arroz</option>
+                <option>Detector metales</option>
+                <option>Termoselladora</option>
+                <option>Otra</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Descripción de la incidencia <span class="required">*</span></label>
+            <textarea id="descripcion" placeholder="Describe qué ha pasado con el mayor detalle posible..."></textarea>
+        </div>
+    </div>
+
+    <!-- PRODUCTO AFECTADO -->
+    <div class="section">
+        <div class="section-header orange">2. Producto afectado</div>
+        <div class="field-group">
+            <label>Producto</label>
+            <input type="text" id="producto" placeholder="Nombre del producto (ej: Caldo Pescado 20L)">
+        </div>
+        <div class="field-row">
+            <div class="field-group">
+                <label>Lote</label>
+                <input type="text" id="lote" placeholder="RIA-XXXX-DDMMYY">
+            </div>
+            <div class="field-group">
+                <label>Cantidad</label>
+                <input type="text" id="cantidad" placeholder="Ej: 4 barquetas">
+            </div>
+        </div>
+        <div class="field-group">
+            <label>Severidad <span class="required">*</span></label>
+            <div class="severity-btns">
+                <button class="sev-btn critical" onclick="setSeverity(this,'critica')">🔴 Crítica</button>
+                <button class="sev-btn major" onclick="setSeverity(this,'mayor')">🟠 Mayor</button>
+                <button class="sev-btn minor" onclick="setSeverity(this,'menor')">🟡 Menor</button>
+            </div>
+        </div>
+        <div class="photo-area">
+            <label style="display:block;font-size:.8rem;font-weight:600;margin-bottom:.25rem">Foto de evidencia</label>
+            <input type="file" id="foto-input" accept="image/*" capture="environment" style="display:none" onchange="addPhoto(this)">
+            <div class="photo-btn" onclick="document.getElementById('foto-input').click()">📸 Añadir foto</div>
+            <div class="photo-preview" id="photo-preview"></div>
+        </div>
+    </div>
+
+    <!-- ACCIÓN INMEDIATA -->
+    <div class="section">
+        <div class="section-header blue">3. Acción inmediata</div>
+        <div class="field-group">
+            <label>¿Se ha segregado el producto?</label>
+            <select id="segregado">
+                <option value="">Seleccionar...</option>
+                <option value="si">Sí — en zona NC de cámara</option>
+                <option value="no-procede">No procede (no es producto)</option>
+                <option value="no">No — pendiente</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>¿Etiqueta SATO NC colocada?</label>
+            <select id="etiqueta">
+                <option value="">Seleccionar...</option>
+                <option value="si">Sí</option>
+                <option value="no-procede">No procede</option>
+                <option value="no">No — pendiente</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Acción inmediata tomada</label>
+            <textarea id="accion-inmediata" placeholder="Describir qué se ha hecho inmediatamente..."></textarea>
+        </div>
+    </div>
+
+    <!-- SECCIÓN CALIDAD (solo si es Cristina) -->
+    <div class="section" id="section-calidad" style="display:none">
+        <div class="section-header green">4. Evaluación Calidad (solo Cristina)</div>
+        <div class="field-group">
+            <label>Análisis de causa raíz</label>
+            <textarea id="causa-raiz" placeholder="¿Por qué ha ocurrido? (5 Porqués)"></textarea>
+        </div>
+        <div class="field-group">
+            <label>Destino del producto NC</label>
+            <select id="destino">
+                <option value="">Seleccionar...</option>
+                <option value="reprocesar">Reprocesar</option>
+                <option value="devolver">Devolver al proveedor</option>
+                <option value="destruir">Destruir / eliminar</option>
+                <option value="liberar">Liberación excepcional (justificar)</option>
+                <option value="na">No aplica</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Acción correctiva</label>
+            <textarea id="accion-correctiva" placeholder="Acción para que no se repita..."></textarea>
+        </div>
+        <div class="field-row">
+            <div class="field-group">
+                <label>Responsable AC</label>
+                <select id="resp-ac">
+                    <option value="">Seleccionar...</option>
+                    <option>Diego</option>
+                    <option>Isabel</option>
+                    <option>Gerónimo</option>
+                    <option>Christophe</option>
+                    <option>Cristina</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>Fecha límite AC</label>
+                <input type="date" id="fecha-limite">
+            </div>
+        </div>
+        <div class="field-group">
+            <label>Estado</label>
+            <select id="estado-nc">
+                <option value="abierta">🔴 Abierta</option>
+                <option value="en-curso">🟠 Acción en curso</option>
+                <option value="cerrada">🟢 Cerrada — verificada</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="submit-section">
+        <button class="btn-submit" onclick="enviar()">Registrar incidencia</button>
+        <div class="timestamp" id="timestamp"></div>
+    </div>
+</div>
+
+<script>
+let severity = '';
+document.addEventListener('DOMContentLoaded', () => {
+    const now = new Date();
+    document.getElementById('fecha').value = now.toISOString().split('T')[0];
+    document.getElementById('hora').value = now.toTimeString().slice(0,5);
+
+    document.getElementById('detectado').addEventListener('change', function() {
+        document.getElementById('section-calidad').style.display =
+            this.value === 'Cristina' ? 'block' : 'none';
+    });
+});
+
+function setSeverity(btn, val) {
+    document.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    severity = val;
+}
+
+function addPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            document.getElementById('photo-preview').appendChild(img);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function enviar() {
+    const required = ['detectado','tipo','zona','descripcion'];
+    for (const id of required) {
+        if (!document.getElementById(id).value) {
+            alert('Completa todos los campos obligatorios (*)');
+            return;
+        }
+    }
+    if (!severity) { alert('Selecciona la severidad'); return; }
+
+    const ts = new Date().toLocaleString('es-ES');
+    document.getElementById('timestamp').textContent = `Registrado: ${ts}`;
+    alert(`🔴 Incidencia registrada\nSeveridad: ${severity.toUpperCase()}\n${ts}\n\n(En producción se enviaría a Google Sheets y notificaría a Cristina)`);
+}
+</script>
+</body>
+</html>
