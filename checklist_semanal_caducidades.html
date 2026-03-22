@@ -412,12 +412,29 @@ function enviar() {
 
     const prox = products.filter(p => p.estado === 'proximo').length;
     const cad = caducados.length;
+
+    // Recopilar datos del formulario
+    const payload = {
+        fecha: new Date().toISOString().split('T')[0],
+        responsable: document.getElementById('responsable').value,
+        productos: products,
+        acciones: document.getElementById('acciones-cad') ? document.getElementById('acciones-cad').value : '',
+        resumen: { total: products.length, proximos: prox, caducados: cad }
+    };
+
+    // Enviar via ria-backend-v2.js
+    if (typeof RIA !== 'undefined' && RIA.getToken()) {
+        RIA.enviar('checklist_caducidades', payload)
+            .then(r => console.log('✅ Caducidades enviadas:', r))
+            .catch(err => console.warn('Error:', err));
+    }
+
     let msg = `✅ Control semanal de caducidades enviado\n${ts}\n\nProductos revisados: ${products.length}`;
     if (prox > 0) msg += `\n⚠️ Próximos a caducar: ${prox}`;
     if (cad > 0) msg += `\n🔴 Caducados: ${cad}`;
-    msg += '\n\n(En producción se enviaría a Google Sheets y notificaría a Cristina)';
     alert(msg);
 }
 </script>
+<script src="ria-backend-v2.js"></script>
 </body>
 </html>

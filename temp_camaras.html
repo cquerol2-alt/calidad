@@ -322,8 +322,7 @@
         { id: 'refrig3', nombre: 'Cámara 3', min: 0, max: 5, tipo: 'refrigeracion' }
     ];
 
-    // URL del Apps Script (rellenar al desplegar)
-    const APPS_SCRIPT_URL = '';
+    // Backend v2 via ria-backend-v2.js (se carga al final del body)
 
     // === Estado ===
     let turnoSeleccionado = 'manana';
@@ -485,14 +484,11 @@
         registrosPrevios[datos.fecha][turnoSeleccionado] = datos.camaras;
         localStorage.setItem('tempCamarasHoy', JSON.stringify(registrosPrevios));
 
-        // Enviar a Apps Script
-        if (APPS_SCRIPT_URL) {
-            fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datos)
-            }).catch(err => console.warn('Error enviando a Sheets:', err));
+        // Enviar via ria-backend-v2.js
+        if (typeof RIA !== 'undefined' && RIA.getToken()) {
+            RIA.enviar('temperaturas', datos)
+                .then(r => console.log('✅ Temperaturas enviadas:', r))
+                .catch(err => console.warn('Error enviando a Sheets:', err));
         }
 
         // Mostrar confirmación
@@ -537,5 +533,6 @@
     // Inicializar
     init();
     </script>
+    <script src="ria-backend-v2.js"></script>
 </body>
 </html>

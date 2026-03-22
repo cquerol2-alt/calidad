@@ -856,7 +856,7 @@ function closeModal() {
     document.getElementById("confirmModal").classList.remove("show");
 }
 
-function doSubmit() {
+async function doSubmit() {
     closeModal();
     const btn = document.getElementById("btnSubmit");
     btn.disabled = true;
@@ -864,43 +864,34 @@ function doSubmit() {
 
     const payload = buildPayload();
 
-    // Send to Google Apps Script
-    const APPS_SCRIPT_URL = ""; // ← Pegar URL del deployment de Apps Script
-
-    if (!APPS_SCRIPT_URL) {
-        // Demo mode: save to localStorage
-        const key = `ria_ld_${payload.fecha}_${payload.operario}`;
-        localStorage.setItem(key, JSON.stringify(payload));
-        console.log("Registro L+D (modo demo):", payload);
-        showToast("Registro guardado (modo local — conectar Apps Script)", "success");
-        btn.disabled = false;
-        btn.textContent = "Enviar registro L+D";
-        return;
-    }
-
-    fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    })
-    .then(() => {
-        showToast("Registro de L+D enviado correctamente", "success");
-        btn.textContent = "✓ Enviado";
-        setTimeout(() => {
+    // Enviar via ria-backend-v2.js (token desde URL param)
+    if (typeof RIA !== 'undefined' && RIA.getToken()) {
+        try {
+            const result = await RIA.enviar('ld_diario', payload);
+            if (result.status === 'ok' || result.status === 'queued') {
+                showToast("Registro de L+D enviado correctamente", "success");
+                btn.textContent = "✓ Enviado";
+                setTimeout(() => { btn.disabled = false; btn.textContent = "Enviar registro L+D"; }, 3000);
+            } else {
+                showToast("Guardado localmente — se reenviará", "warning");
+                btn.disabled = false;
+                btn.textContent = "Enviar registro L+D";
+            }
+        } catch (err) {
+            console.error("Error RIA:", err);
+            showToast("Error de red. Guardado localmente.", "error");
             btn.disabled = false;
             btn.textContent = "Enviar registro L+D";
-        }, 3000);
-    })
-    .catch(err => {
-        console.error("Error:", err);
-        // Fallback: save locally
+        }
+    } else {
+        // Sin token: guardar solo en localStorage
         const key = `ria_ld_${payload.fecha}_${payload.operario}`;
         localStorage.setItem(key, JSON.stringify(payload));
-        showToast("Error de red. Guardado localmente, se reenviará.", "error");
+        console.log("Registro L+D (sin token):", payload);
+        showToast("Registro guardado localmente (sin conexión)", "success");
         btn.disabled = false;
         btn.textContent = "Enviar registro L+D";
-    });
+    }
 }
 
 function buildPayload() {
@@ -956,5 +947,6 @@ function showToast(msg, type) {
 // ============================================================
 init();
 </script>
+<script src="ria-backend-v2.js"></script>
 </body>
 </html>

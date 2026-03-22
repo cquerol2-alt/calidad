@@ -1001,7 +1001,7 @@
 
     <script>
         // Configuración
-        const SHEETS_ENDPOINT = 'https://script.google.com/macros/d/YOUR_SCRIPT_ID/usercontent'; // Cambiar por tu endpoint
+        // Backend v2 via ria-backend-v2.js
         const STORAGE_KEY = 'ria_inspection_form_';
         const ZONES = ['camaraRefrigeracion', 'camaraCongelacion', 'almacenSeco', 'zonaEnvasado'];
         const ZONE_LABELS = {
@@ -1402,17 +1402,16 @@
             console.log('Datos a enviar:', data);
 
             try {
-                // Descomentar cuando tengas el endpoint configurado
-                // const response = await fetch(SHEETS_ENDPOINT, {
-                //     method: 'POST',
-                //     body: JSON.stringify(data)
-                // });
-
-                // Por ahora, simular envío
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                if (typeof RIA !== 'undefined' && RIA.getToken()) {
+                    const result = await RIA.enviar('checklist_camaras', data);
+                    console.log('Resultado envío:', result);
+                } else {
+                    // Sin token: guardar solo local
+                    console.log('Sin token — guardado solo en localStorage');
+                }
 
                 loading.style.display = 'none';
-                showMessage('Registro enviado exitosamente a Google Sheets', 'success');
+                showMessage('Registro enviado exitosamente', 'success');
 
                 // Limpiar localStorage
                 localStorage.removeItem(STORAGE_KEY + document.getElementById('date').value);
@@ -1444,5 +1443,6 @@
             }
         }
     </script>
+    <script src="ria-backend-v2.js"></script>
 </body>
 </html>
