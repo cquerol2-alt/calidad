@@ -244,8 +244,8 @@
                     <input type="text" id="provNombre" placeholder="Nombre del proveedor" oninput="clearProvChips()">
                 </div>
                 <div class="field">
-                    <label>Nº Albarán <span class="required">*</span></label>
-                    <input type="text" id="albaran" placeholder="Ej: ALB-2026-0342" inputmode="text">
+                    <label>Nº Albarán</label>
+                    <input type="text" id="albaran" placeholder="Ej: ALB-2026-0342 (opcional)" inputmode="text">
                 </div>
             </div>
         </div>
@@ -350,7 +350,7 @@
 
         <!-- ========== FOTO ========== -->
         <div class="section">
-            <div class="section-title"><span>📸 Foto (opcional)</span></div>
+            <div class="section-title"><span>📸 Foto del albarán <span class="required">*</span></span></div>
             <div class="section-content">
                 <div class="foto-area" onclick="document.getElementById('fotoInput').click()">
                     <div class="icon">📷</div>
@@ -725,6 +725,7 @@
                 document.getElementById('fotoImg').src = e.target.result;
                 document.getElementById('fotoName').textContent = input.files[0].name;
                 document.getElementById('fotoPreview').style.display = 'block';
+                updateResumen(); // Re-validar al añadir foto
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -750,10 +751,12 @@
         // ¿Requiere temperatura?
         const needsTemp = (state.tipo === 'refrigerado' || state.tipo === 'congelado');
 
-        // Validación mínima
+        // Validación mínima — foto obligatoria, albarán opcional
+        const fotoInput = document.getElementById('fotoInput');
+        const tieneFoto = fotoInput && fotoInput.files && fotoInput.files.length > 0;
         const valid = state.operario &&
                       (proveedor || '').trim() &&
-                      (albaran || '').trim() &&
+                      tieneFoto &&
                       (producto || '').trim() &&
                       (lote || '').trim() &&
                       state.tipo &&
