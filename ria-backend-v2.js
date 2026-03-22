@@ -30,7 +30,7 @@ const RIA = (() => {
   // =============================================
   // CONFIG
   // =============================================
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqkYGH8emMVcngEBZZHfm9ry713twhnhPW64NzBJ4M4uDHxLcw52F9XNCLrNRr125Y/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwNP4oWJV7KD-G7YKtkSIYVXQ5Gno0iRm8wQzD8gsCYlrAdHd4VomJ5QryRwTtfeINN/exec';
 
   const MAX_RETRIES = 3;
   const RETRY_DELAY = 2000;
