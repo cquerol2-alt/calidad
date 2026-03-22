@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIA — Lotes Disponibles</title>
+    <title>RIA — Lotes para OV</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -13,80 +13,140 @@
             --red: #D32F2F;
             --orange: #F57C00;
             --gray: #F5F5F5;
+            --border: #E0E0E0;
             --text: #212121;
             --text-light: #757575;
         }
         html, body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: white; color: var(--text);
+            -webkit-tap-highlight-color: transparent;
         }
+
+        /* ===== AUTH SCREEN ===== */
+        .auth-screen {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; padding: 20px;
+            background: linear-gradient(135deg, var(--green) 0%, #2E7D32 100%);
+            color: white;
+        }
+        .auth-screen h1 { font-size: 22px; margin-bottom: 6px; }
+        .auth-screen p { opacity: 0.8; font-size: 14px; margin-bottom: 24px; }
+        .auth-input {
+            width: 100%; max-width: 300px; padding: 14px 16px; font-size: 18px;
+            border: 2px solid rgba(255,255,255,0.3); border-radius: 12px;
+            background: rgba(255,255,255,0.15); color: white;
+            text-align: center; letter-spacing: 2px; outline: none;
+        }
+        .auth-input::placeholder { color: rgba(255,255,255,0.5); letter-spacing: 0; }
+        .auth-input:focus { border-color: white; background: rgba(255,255,255,0.25); }
+        .auth-error { color: #FFCDD2; font-size: 13px; margin-top: 10px; display: none; }
+        .auth-hint { font-size: 12px; opacity: 0.6; margin-top: 16px; }
+
+        /* ===== MAIN APP ===== */
+        .app { display: none; }
         .header {
             background: var(--green); color: white;
-            padding: 16px; text-align: center;
+            padding: 14px 16px; text-align: center;
             position: sticky; top: 0; z-index: 10;
         }
-        .header h1 { font-size: 20px; margin-bottom: 4px; }
-        .header small { opacity: 0.8; font-size: 12px; }
+        .header h1 { font-size: 18px; font-weight: 700; }
+        .header small { opacity: 0.8; font-size: 11px; }
         .container { padding: 12px; max-width: 600px; margin: 0 auto; }
 
-        /* Search */
-        .search-box {
-            position: sticky; top: 68px; z-index: 9;
-            background: white; padding: 8px 0 12px;
+        /* ===== SEARCH ===== */
+        .search-area {
+            position: sticky; top: 52px; z-index: 9;
+            background: white; padding: 10px 0 8px;
         }
-        .search-box input {
-            width: 100%; padding: 12px 16px; font-size: 16px;
-            border: 2px solid #E0E0E0; border-radius: 12px;
-            outline: none; transition: border 0.2s;
+        .search-input {
+            width: 100%; padding: 14px 16px 14px 44px; font-size: 17px;
+            border: 2px solid var(--border); border-radius: 14px;
+            outline: none; background: var(--gray);
+            transition: border 0.2s, background 0.2s;
         }
-        .search-box input:focus { border-color: var(--green); }
+        .search-input:focus { border-color: var(--green); background: white; }
+        .search-icon {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            font-size: 20px; color: var(--text-light); pointer-events: none;
+        }
+        .search-wrapper { position: relative; }
+        .search-hint {
+            font-size: 12px; color: var(--text-light); margin-top: 6px;
+            text-align: center;
+        }
 
-        /* Product cards */
-        .product-group { margin-bottom: 16px; }
-        .product-header {
-            background: var(--pale-green); padding: 10px 14px;
-            border-radius: 10px 10px 0 0; font-weight: 700;
-            font-size: 15px; color: var(--green);
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer;
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            display: flex; gap: 8px; margin: 8px 0 12px;
+            font-size: 12px; color: var(--text-light);
+            align-items: center; justify-content: space-between;
         }
-        .product-header .badge {
+        .stats-bar .count { font-weight: 700; color: var(--green); }
+        .btn-small {
+            background: var(--pale-green); color: var(--green); border: none;
+            padding: 5px 12px; border-radius: 6px; font-size: 12px;
+            font-weight: 600; cursor: pointer;
+        }
+        .btn-small:active { opacity: 0.7; }
+
+        /* ===== PRODUCT CARDS ===== */
+        .product-card { margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+        .product-head {
+            background: var(--pale-green); padding: 12px 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; -webkit-user-select: none; user-select: none;
+        }
+        .product-head .name { font-weight: 700; font-size: 15px; color: var(--green); }
+        .product-head .code { font-size: 13px; color: var(--text-light); margin-top: 1px; }
+        .product-head .badge {
             background: var(--green); color: white;
-            border-radius: 12px; padding: 2px 10px; font-size: 13px;
+            border-radius: 20px; padding: 3px 12px; font-size: 13px;
+            font-weight: 700; white-space: nowrap;
         }
-        .lot-list {
-            border: 1px solid #E0E0E0; border-top: none;
-            border-radius: 0 0 10px 10px; overflow: hidden;
-        }
-        .lot-item {
-            padding: 10px 14px; border-bottom: 1px solid #F0F0F0;
+        .lot-list { display: none; }
+        .lot-list.open { display: block; }
+
+        .lot-row {
+            padding: 10px 14px; border-top: 1px solid #F0F0F0;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .lot-item:last-child { border-bottom: none; }
-        .lot-item .lot-code { font-weight: 600; font-size: 14px; }
-        .lot-item .lot-date { color: var(--text-light); font-size: 13px; }
-        .lot-item .lot-qty {
-            background: var(--gray); padding: 4px 10px;
-            border-radius: 8px; font-size: 13px; font-weight: 600;
-        }
-        .lot-item .lot-expiry { font-size: 12px; margin-top: 2px; }
-        .lot-item .lot-expiry.warning { color: var(--orange); font-weight: 600; }
-        .lot-item .lot-expiry.expired { color: var(--red); font-weight: 700; }
-        .lot-item .lot-expiry.ok { color: var(--light-green); }
+        .lot-info { flex: 1; min-width: 0; }
+        .lot-code { font-weight: 700; font-size: 15px; font-family: 'SF Mono', 'Menlo', monospace; }
+        .lot-meta { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+        .lot-expiry { font-size: 12px; margin-top: 1px; }
+        .lot-expiry.ok { color: var(--light-green); }
+        .lot-expiry.warning { color: var(--orange); font-weight: 600; }
+        .lot-expiry.expired { color: var(--red); font-weight: 700; }
 
-        /* Actions */
-        .lot-actions { display: flex; gap: 8px; align-items: center; }
-        .btn-delete {
-            background: none; border: none; color: var(--red);
-            font-size: 18px; cursor: pointer; padding: 4px 8px;
+        .btn-copy {
+            background: var(--green); color: white; border: none;
+            padding: 8px 14px; border-radius: 8px; font-size: 13px;
+            font-weight: 600; cursor: pointer; white-space: nowrap;
+            margin-left: 10px; flex-shrink: 0;
         }
+        .btn-copy:active { opacity: 0.7; }
+        .btn-copy.copied { background: var(--light-green); }
 
-        /* Add form */
-        .add-section {
-            background: var(--gray); border-radius: 12px;
-            padding: 16px; margin-bottom: 20px;
+        /* ===== EMPTY ===== */
+        .empty { text-align: center; padding: 40px 20px; color: var(--text-light); }
+        .empty .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+        .empty p { font-size: 14px; line-height: 1.5; }
+
+        /* ===== ADD LOT (collapsible) ===== */
+        .add-toggle {
+            width: 100%; padding: 12px; margin-top: 16px;
+            background: var(--gray); border: 1px dashed var(--border);
+            border-radius: 12px; font-size: 14px; color: var(--text-light);
+            cursor: pointer; text-align: center; font-weight: 600;
         }
-        .add-section h3 { font-size: 15px; margin-bottom: 12px; color: var(--green); }
+        .add-toggle:active { background: #EEEEEE; }
+        .add-form { display: none; margin-top: 12px; }
+        .add-form.open { display: block; }
+        .add-form-inner {
+            background: var(--gray); border-radius: 12px; padding: 16px;
+        }
+        .add-form h3 { font-size: 15px; margin-bottom: 12px; color: var(--green); }
         .form-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
         .form-row select, .form-row input {
             padding: 10px 12px; border: 1px solid #CCC;
@@ -94,7 +154,6 @@
         }
         .form-row select { flex: 2; }
         .form-row input[type="number"] { flex: 0.7; }
-        .form-row input[type="date"] { flex: 1; }
         .btn-add {
             background: var(--green); color: white; border: none;
             padding: 10px 20px; border-radius: 8px; font-size: 14px;
@@ -102,169 +161,262 @@
         }
         .btn-add:active { opacity: 0.8; }
 
-        /* Sync banner */
-        .sync-banner {
-            background: var(--pale-green); padding: 8px 14px;
-            border-radius: 8px; margin-bottom: 12px; font-size: 13px;
-            display: flex; justify-content: space-between; align-items: center;
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center; padding: 20px; font-size: 11px;
+            color: var(--text-light); margin-top: 20px;
         }
-        .sync-banner .btn-sync {
-            background: var(--green); color: white; border: none;
-            padding: 6px 14px; border-radius: 6px; font-size: 12px;
-            cursor: pointer;
+        .footer a { color: var(--green); }
+
+        /* ===== ACTIONS BAR ===== */
+        .actions-bar {
+            display: flex; gap: 8px; margin-bottom: 12px;
         }
-
-        /* Empty state */
-        .empty { text-align: center; padding: 40px 20px; color: var(--text-light); }
-        .empty .icon { font-size: 48px; margin-bottom: 12px; }
-
-        /* Hidden */
-        .hidden { display: none; }
-
-        /* Tabs */
-        .tabs { display: flex; gap: 4px; margin-bottom: 12px; }
-        .tab {
-            flex: 1; padding: 8px; text-align: center; border-radius: 8px;
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            background: var(--gray); color: var(--text-light); border: none;
+        .btn-action {
+            flex: 1; padding: 10px; border: 1px solid var(--border);
+            border-radius: 10px; background: white; font-size: 13px;
+            font-weight: 600; cursor: pointer; text-align: center;
+            color: var(--green);
         }
-        .tab.active { background: var(--green); color: white; }
+        .btn-action:active { background: var(--pale-green); }
+        .btn-action .emoji { font-size: 18px; display: block; margin-bottom: 4px; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #333; color: white; padding: 10px 20px; border-radius: 10px;
+            font-size: 14px; font-weight: 600; z-index: 100;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .toast.show { opacity: 1; }
+
+        /* Delete btn */
+        .btn-del {
+            background: none; border: none; color: #BDBDBD; font-size: 16px;
+            cursor: pointer; padding: 4px; margin-left: 6px;
+        }
+        .btn-del:active { color: var(--red); }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>Lotes Disponibles</h1>
-    <small>Rice in Action — Consulta para OV</small>
+<!-- ===== AUTH SCREEN ===== -->
+<div class="auth-screen" id="authScreen">
+    <h1>Rice in Action</h1>
+    <p>Consulta de lotes para OV</p>
+    <input type="password" class="auth-input" id="authToken"
+           placeholder="Token de acceso" autocomplete="off"
+           onkeyup="if(event.key==='Enter')doAuth()">
+    <div class="auth-error" id="authError">Token incorrecto</div>
+    <div class="auth-hint">Usa tu token del Quality Hub</div>
 </div>
 
-<div class="container">
+<!-- ===== MAIN APP ===== -->
+<div class="app" id="app">
 
-    <div class="sync-banner">
-        <span id="syncStatus">Manual — <span id="lotCount">0</span> lotes</span>
-        <button class="btn-sync" onclick="syncFromHub()">Sincronizar Hub</button>
+    <div class="header">
+        <h1>Lotes para OV</h1>
+        <small>Busca el lote, copia y pega en Holded</small>
     </div>
 
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Buscar producto o lote..." oninput="renderLots()">
+    <div class="container">
+
+        <!-- Search -->
+        <div class="search-area">
+            <div class="search-wrapper">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" class="search-input" id="searchInput"
+                       placeholder="Buscar producto o lote..."
+                       oninput="renderLots()" autofocus>
+            </div>
+            <div class="search-hint" id="searchHint">Escribe un c&oacute;digo (810, 740...) o nombre (negro, pollo...)</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <span><span class="count" id="lotCount">0</span> lotes activos</span>
+            <div>
+                <button class="btn-small" onclick="syncFromHub();" id="syncBtn">Sincronizar Hub</button>
+            </div>
+        </div>
+
+        <!-- Quick filter buttons -->
+        <div class="actions-bar" id="familyFilters">
+            <button class="btn-action" onclick="filterFamily('la santa')"><span class="emoji">&#127834;</span>La Santa</button>
+            <button class="btn-action" onclick="filterFamily('cremoso')"><span class="emoji">&#129472;</span>Cremosos</button>
+            <button class="btn-action" onclick="filterFamily('maestro')"><span class="emoji">&#127806;</span>Maestro</button>
+            <button class="btn-action" onclick="filterFamily('salsa')"><span class="emoji">&#129379;</span>Salsas</button>
+        </div>
+
+        <!-- Lot listing -->
+        <div id="lotListing"></div>
+
+        <!-- Add lot toggle -->
+        <div class="add-toggle" onclick="toggleAddForm()">+ A&ntilde;adir lote manualmente</div>
+        <div class="add-form" id="addForm">
+            <div class="add-form-inner">
+                <h3>Registrar lote nuevo</h3>
+                <div class="form-row">
+                    <select id="addProduct" onchange="autoFillLotCode()">
+                        <option value="">Producto...</option>
+                        <optgroup label="LA SANTA 260g">
+                            <option value="740-1">740-1 Arroz Negro</option>
+                            <option value="748-1">748-1 Pescado y Marisco</option>
+                            <option value="749-1">749-1 Arroz de Pollo</option>
+                            <option value="750-1">750-1 Arroz de Verduras</option>
+                            <option value="741-1">741-1 Risotto</option>
+                        </optgroup>
+                        <optgroup label="LA SANTA 1300g">
+                            <option value="740-3">740-3 Negro 1300g</option>
+                            <option value="748-3">748-3 Pescado 1300g</option>
+                            <option value="750-3">750-3 Verduras 1300g</option>
+                        </optgroup>
+                        <optgroup label="ENDURANCE">
+                            <option value="740-E">740-E Negro Endurance</option>
+                            <option value="748-E">748-E Pescado Endurance</option>
+                            <option value="749-E">749-E Pollo Endurance</option>
+                            <option value="750-E">750-E Verduras Endurance</option>
+                        </optgroup>
+                        <optgroup label="SALSAS">
+                            <option value="745">745 Salsa Negra</option>
+                            <option value="755">755 Salsa Boletus</option>
+                        </optgroup>
+                        <optgroup label="CREMOSOS">
+                            <option value="781-1">781-1 Ib&eacute;rico 210g</option>
+                            <option value="781-2">781-2 Ib&eacute;rico 300g</option>
+                            <option value="782-1">782-1 Tartufato 210g</option>
+                            <option value="782-2">782-2 Tartufato 300g</option>
+                            <option value="783-2">783-2 Queso 300g</option>
+                            <option value="784-2">784-2 Setas 300g</option>
+                        </optgroup>
+                        <optgroup label="MAESTRO SECO">
+                            <option value="810-1">810-1 MC 190g</option>
+                            <option value="810-2">810-2 MC 380g</option>
+                            <option value="810-4">810-4 MC 450g</option>
+                            <option value="810-7">810-7 MC 1330g</option>
+                            <option value="810-B1">810-B1 Bah&iacute;a 190g</option>
+                            <option value="810-B2">810-B2 Bah&iacute;a 380g</option>
+                            <option value="810-B7">810-B7 Bah&iacute;a 1330g</option>
+                            <option value="810-B-CO">810-B-CO Bah&iacute;a CO</option>
+                        </optgroup>
+                        <optgroup label="MAESTRO MELOSO">
+                            <option value="811-1">811-1 Risotto Blanco 190g</option>
+                            <option value="811-2">811-2 Risotto Blanco 225g</option>
+                            <option value="812-1">812-1 Meloso Azafranado 190g</option>
+                            <option value="812-2">812-2 Meloso Azafranado 225g</option>
+                        </optgroup>
+                        <optgroup label="OTROS">
+                            <option value="760-1">760-1 Arroz Blanco</option>
+                            <option value="770-1">770-1 Arancini</option>
+                            <option value="ANM">ANM Negro Meloso combo</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <input type="text" id="addLot" placeholder="N.&ordm; lote (ej: L-810-2-260322)">
+                    <input type="number" id="addQty" placeholder="Uds" min="1">
+                </div>
+                <div class="form-row">
+                    <input type="date" id="addProdDate">
+                    <input type="date" id="addExpiry">
+                </div>
+                <button class="btn-add" onclick="addLot()">Guardar lote</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            Rice in Action &mdash; Quality Hub<br>
+            <span id="lastSync">Sin sincronizar</span>
+        </div>
     </div>
-
-    <!-- Add lot form -->
-    <div class="add-section" id="addSection">
-        <h3>+ Registrar lote</h3>
-        <div class="form-row">
-            <select id="addProduct">
-                <option value="">Producto...</option>
-                <optgroup label="LA SANTA 260g">
-                    <option value="740-1">740-1 Arroz Negro</option>
-                    <option value="748-1">748-1 Pescado y Marisco</option>
-                    <option value="749-1">749-1 Arroz de Pollo</option>
-                    <option value="750-1">750-1 Arroz de Verduras</option>
-                    <option value="741-1">741-1 Risotto</option>
-                </optgroup>
-                <optgroup label="LA SANTA 1300g">
-                    <option value="740-3">740-3 Negro 1300g</option>
-                    <option value="748-3">748-3 Pescado 1300g</option>
-                    <option value="750-3">750-3 Verduras 1300g</option>
-                </optgroup>
-                <optgroup label="ENDURANCE">
-                    <option value="740-E">740-E Negro Endurance</option>
-                    <option value="748-E">748-E Pescado Endurance</option>
-                    <option value="749-E">749-E Pollo Endurance</option>
-                    <option value="750-E">750-E Verduras Endurance</option>
-                </optgroup>
-                <optgroup label="SALSAS">
-                    <option value="745">745 Salsa Negra</option>
-                    <option value="755">755 Salsa Boletus</option>
-                </optgroup>
-                <optgroup label="CREMOSOS">
-                    <option value="781-1">781-1 Ibérico 210g</option>
-                    <option value="781-2">781-2 Ibérico 300g</option>
-                    <option value="782-1">782-1 Tartufato 210g</option>
-                    <option value="782-2">782-2 Tartufato 300g</option>
-                    <option value="783-2">783-2 Queso 300g</option>
-                    <option value="784-2">784-2 Setas 300g</option>
-                </optgroup>
-                <optgroup label="MAESTRO SECO">
-                    <option value="810-1">810-1 MC 190g</option>
-                    <option value="810-2">810-2 MC 380g</option>
-                    <option value="810-4">810-4 MC 450g</option>
-                    <option value="810-7">810-7 MC 1330g</option>
-                    <option value="810-B1">810-B1 Bahía 190g</option>
-                    <option value="810-B2">810-B2 Bahía 380g</option>
-                    <option value="810-B7">810-B7 Bahía 1330g</option>
-                    <option value="810-B-CO">810-B-CO Bahía CO</option>
-                </optgroup>
-                <optgroup label="MAESTRO MELOSO">
-                    <option value="811-1">811-1 Risotto Blanco 190g</option>
-                    <option value="811-2">811-2 Risotto Blanco 225g</option>
-                    <option value="812-1">812-1 Meloso Azafranado 190g</option>
-                    <option value="812-2">812-2 Meloso Azafranado 225g</option>
-                </optgroup>
-                <optgroup label="OTROS">
-                    <option value="760-1">760-1 Arroz Blanco</option>
-                    <option value="770-1">770-1 Arancini</option>
-                    <option value="ANM">ANM Negro Meloso combo</option>
-                </optgroup>
-            </select>
-        </div>
-        <div class="form-row">
-            <input type="text" id="addLot" placeholder="N.º lote (ej: L-810-2-260322)">
-            <input type="number" id="addQty" placeholder="Uds" min="1">
-        </div>
-        <div class="form-row">
-            <input type="date" id="addProdDate" placeholder="Fecha producción">
-            <input type="date" id="addExpiry" placeholder="Caducidad">
-        </div>
-        <button class="btn-add" onclick="addLot()">Registrar lote</button>
-    </div>
-
-    <!-- Lot listing -->
-    <div id="lotListing"></div>
-
 </div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
 // ============================================================
-// DATA
+// CONFIG
 // ============================================================
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQIPDWwHtATQwBRXM0LgnFajuYRHKHthPaQuiSw9QEKKiVGuiGFtIBngDBfqUt3FoW/exec';
 
-const PRODUCT_NAMES = {
-    '740-1': 'Arroz Negro 260g', '740-3': 'Arroz Negro 1300g', '740-E': 'Negro Endurance',
-    '741-1': 'Risotto 260g',
-    '745': 'Salsa Negra 75g', '748-1': 'Pescado y Marisco 260g',
-    '748-3': 'Pescado 1300g', '748-E': 'Pescado Endurance',
-    '749-1': 'Arroz de Pollo 260g', '749-E': 'Pollo Endurance',
-    '750-1': 'Verduras 260g', '750-3': 'Verduras 1300g', '750-E': 'Verduras Endurance',
-    '755': 'Salsa Boletus 80g', '760-1': 'Arroz Blanco 260g', '770-1': 'Arancini 225g',
-    '781-1': 'Cremoso Ibérico 210g', '781-2': 'Cremoso Ibérico 300g',
-    '782-1': 'Cremoso Tartufato 210g', '782-2': 'Cremoso Tartufato 300g',
-    '783-2': 'Cremoso Queso 300g', '784-2': 'Cremoso Setas 300g',
-    '810-1': 'MC 190g', '810-2': 'MC 380g', '810-4': 'MC 450g', '810-7': 'MC 1330g',
-    '810-B1': 'Bahía 190g', '810-B2': 'Bahía 380g', '810-B7': 'Bahía 1330g',
-    '810-B-CO': 'Bahía CO 380g',
-    '811-1': 'Risotto Blanco 190g', '811-2': 'Risotto Blanco 225g',
-    '812-1': 'Meloso Azafranado 190g', '812-2': 'Meloso Azafranado 225g',
-    'ANM': 'Negro Meloso combo'
-};
+// Valid tokens (same as Quality Hub)
+const VALID_TOKENS = ['RIA-diego-2024', 'RIA-isabel-2024', 'RIA-geronimo-2024', 'RIA-cristina-2024'];
 
-// Shelf life in days (approximate - DO NOT use for food safety decisions)
-const SHELF_LIFE = {
-    '740-1': 365, '740-3': 365, '740-E': 365,
-    '741-1': 365, '745': 365, '748-1': 365,
-    '748-3': 365, '748-E': 365, '749-1': 365, '749-E': 365,
-    '750-1': 365, '750-3': 365, '750-E': 365, '755': 365,
-    '760-1': 365, '770-1': 180, '781-1': 365, '781-2': 365,
-    '782-1': 365, '782-2': 365, '783-2': 365, '784-2': 365,
-    '810-1': 545, '810-2': 545, '810-4': 545, '810-7': 545,
-    '810-B1': 545, '810-B2': 545, '810-B7': 545, '810-B-CO': 545,
-    '811-1': 365, '811-2': 365, '812-1': 365, '812-2': 365,
-    'ANM': 365
+const PRODUCTS = {
+    '740-1': { name: 'Arroz Negro 260g', family: 'la santa', shelfLife: 365 },
+    '740-3': { name: 'Arroz Negro 1300g', family: 'la santa', shelfLife: 365 },
+    '740-E': { name: 'Negro Endurance', family: 'endurance', shelfLife: 365 },
+    '741-1': { name: 'Risotto 260g', family: 'la santa', shelfLife: 365 },
+    '745':   { name: 'Salsa Negra 75g', family: 'salsa', shelfLife: 365 },
+    '748-1': { name: 'Pescado y Marisco 260g', family: 'la santa', shelfLife: 365 },
+    '748-3': { name: 'Pescado y Marisco 1300g', family: 'la santa', shelfLife: 365 },
+    '748-E': { name: 'Pescado Endurance', family: 'endurance', shelfLife: 365 },
+    '749-1': { name: 'Arroz de Pollo 260g', family: 'la santa', shelfLife: 365 },
+    '749-E': { name: 'Pollo Endurance', family: 'endurance', shelfLife: 365 },
+    '750-1': { name: 'Verduras 260g', family: 'la santa', shelfLife: 365 },
+    '750-3': { name: 'Verduras 1300g', family: 'la santa', shelfLife: 365 },
+    '750-E': { name: 'Verduras Endurance', family: 'endurance', shelfLife: 365 },
+    '755':   { name: 'Salsa Boletus 80g', family: 'salsa', shelfLife: 365 },
+    '760-1': { name: 'Arroz Blanco 260g', family: 'otros', shelfLife: 365 },
+    '770-1': { name: 'Arancini 225g', family: 'otros', shelfLife: 180 },
+    '781-1': { name: 'Cremoso Ib\u00e9rico 210g', family: 'cremoso', shelfLife: 365 },
+    '781-2': { name: 'Cremoso Ib\u00e9rico 300g', family: 'cremoso', shelfLife: 365 },
+    '782-1': { name: 'Cremoso Tartufato 210g', family: 'cremoso', shelfLife: 365 },
+    '782-2': { name: 'Cremoso Tartufato 300g', family: 'cremoso', shelfLife: 365 },
+    '783-2': { name: 'Cremoso Queso 300g', family: 'cremoso', shelfLife: 365 },
+    '784-2': { name: 'Cremoso Setas 300g', family: 'cremoso', shelfLife: 365 },
+    '810-1': { name: 'Maestro Cl\u00e1sico 190g', family: 'maestro', shelfLife: 545 },
+    '810-2': { name: 'Maestro Cl\u00e1sico 380g', family: 'maestro', shelfLife: 545 },
+    '810-4': { name: 'Maestro Cl\u00e1sico 450g', family: 'maestro', shelfLife: 545 },
+    '810-7': { name: 'Maestro Cl\u00e1sico 1330g', family: 'maestro', shelfLife: 545 },
+    '810-B1': { name: 'Maestro Bah\u00eda 190g', family: 'maestro', shelfLife: 545 },
+    '810-B2': { name: 'Maestro Bah\u00eda 380g', family: 'maestro', shelfLife: 545 },
+    '810-B7': { name: 'Maestro Bah\u00eda 1330g', family: 'maestro', shelfLife: 545 },
+    '810-B-CO': { name: 'Maestro Bah\u00eda CO 380g', family: 'maestro', shelfLife: 545 },
+    '811-1': { name: 'Risotto Blanco 190g', family: 'maestro', shelfLife: 365 },
+    '811-2': { name: 'Risotto Blanco 225g', family: 'maestro', shelfLife: 365 },
+    '812-1': { name: 'Meloso Azafranado 190g', family: 'maestro', shelfLife: 365 },
+    '812-2': { name: 'Meloso Azafranado 225g', family: 'maestro', shelfLife: 365 },
+    'ANM':   { name: 'Negro Meloso combo', family: 'otros', shelfLife: 365 }
 };
 
 // ============================================================
-// LOCAL STORAGE
+// AUTH
+// ============================================================
+function doAuth() {
+    const token = document.getElementById('authToken').value.trim();
+    if (VALID_TOKENS.includes(token)) {
+        sessionStorage.setItem('ria_lot_token', token);
+        showApp();
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authToken').value = '';
+    }
+}
+
+function showApp() {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    renderLots();
+}
+
+function checkAuth() {
+    const saved = sessionStorage.getItem('ria_lot_token');
+    if (saved && VALID_TOKENS.includes(saved)) {
+        showApp();
+    }
+    // Auto-submit on input
+    document.getElementById('authToken').addEventListener('input', function() {
+        const v = this.value.trim();
+        if (v.length >= 10 && VALID_TOKENS.includes(v)) {
+            doAuth();
+        }
+    });
+}
+
+// ============================================================
+// LOCAL STORAGE (lot data persists; auth does not)
 // ============================================================
 function getLots() {
     try { return JSON.parse(localStorage.getItem('ria_lotes') || '[]'); }
@@ -275,8 +427,202 @@ function saveLots(lots) {
 }
 
 // ============================================================
-// ADD LOT
+// RENDER LOTS
 // ============================================================
+function renderLots() {
+    const lots = getLots();
+    const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+
+    // Filter lots by search
+    const filtered = lots.filter(l => {
+        const p = PRODUCTS[l.product] || {};
+        const haystack = `${l.product} ${p.name || ''} ${p.family || ''} ${l.lot}`.toLowerCase();
+        if (!search) return true;
+        // Match each word separately
+        return search.split(/\s+/).every(w => haystack.includes(w));
+    });
+
+    // Group by product
+    const grouped = {};
+    filtered.forEach(l => {
+        if (!grouped[l.product]) grouped[l.product] = [];
+        grouped[l.product].push(l);
+    });
+
+    // Sort: products with most recent lots first
+    const sortedProducts = Object.keys(grouped).sort((a, b) => {
+        const aDate = grouped[a].reduce((max, l) => l.prodDate > max ? l.prodDate : max, '');
+        const bDate = grouped[b].reduce((max, l) => l.prodDate > max ? l.prodDate : max, '');
+        return bDate.localeCompare(aDate);
+    });
+
+    const container = document.getElementById('lotListing');
+    document.getElementById('lotCount').textContent = lots.length;
+
+    // Update search hint
+    const hint = document.getElementById('searchHint');
+    if (search) {
+        hint.textContent = filtered.length + ' lote' + (filtered.length !== 1 ? 's' : '') + ' encontrado' + (filtered.length !== 1 ? 's' : '');
+    } else {
+        hint.textContent = lots.length > 0
+            ? 'Escribe un c\u00f3digo (810, 740...) o nombre (negro, pollo...)'
+            : 'A\u00fan no hay lotes. Sincroniza desde el Hub o a\u00f1ade uno manualmente.';
+    }
+
+    if (sortedProducts.length === 0) {
+        if (lots.length === 0) {
+            container.innerHTML = `
+                <div class="empty">
+                    <div class="icon">&#128230;</div>
+                    <p><b>No hay lotes registrados</b></p>
+                    <p style="margin-top:8px">
+                        Cuando registr&eacute;is producciones en el Quality Hub,
+                        aparecer&aacute;n aqu&iacute; al pulsar <b>Sincronizar Hub</b>.<br><br>
+                        Tambi&eacute;n puedes a&ntilde;adir lotes manualmente con el bot&oacute;n de abajo.
+                    </p>
+                </div>`;
+        } else {
+            container.innerHTML = `
+                <div class="empty">
+                    <div class="icon">&#128270;</div>
+                    <p>Sin resultados para &ldquo;${search}&rdquo;</p>
+                </div>`;
+        }
+        return;
+    }
+
+    let html = '';
+    sortedProducts.forEach(product => {
+        const p = PRODUCTS[product] || { name: product, family: '' };
+        const productLots = grouped[product].sort((a, b) => (b.prodDate || '').localeCompare(a.prodDate || ''));
+
+        html += `<div class="product-card">`;
+        html += `<div class="product-head" onclick="toggleProduct(this)">
+            <div>
+                <div class="name">${p.name}</div>
+                <div class="code">${product}</div>
+            </div>
+            <span class="badge">${productLots.length} lote${productLots.length > 1 ? 's' : ''}</span>
+        </div>`;
+        html += `<div class="lot-list${sortedProducts.length <= 3 || search ? ' open' : ''}">`;
+
+        productLots.forEach(l => {
+            const exp = getExpiryInfo(l.expiry);
+            html += `<div class="lot-row">
+                <div class="lot-info">
+                    <div class="lot-code">${l.lot}</div>
+                    <div class="lot-meta">
+                        Prod: ${formatDate(l.prodDate)}
+                        ${l.qty ? ' &middot; ' + l.qty + ' uds' : ''}
+                        ${l.source === 'hub' ? ' &middot; Hub' : ''}
+                    </div>
+                    ${l.expiry ? '<div class="lot-expiry ' + exp.cls + '">' + exp.text + '</div>' : ''}
+                </div>
+                <button class="btn-copy" onclick="copyLot('${l.lot}', this)">Copiar</button>
+                <button class="btn-del" onclick="deleteLot('${l.lot}', '${l.product}')" title="Eliminar">&times;</button>
+            </div>`;
+        });
+
+        html += `</div></div>`;
+    });
+
+    container.innerHTML = html;
+}
+
+function toggleProduct(el) {
+    const list = el.nextElementSibling;
+    list.classList.toggle('open');
+}
+
+// ============================================================
+// COPY LOT CODE
+// ============================================================
+function copyLot(lotCode, btn) {
+    navigator.clipboard.writeText(lotCode).then(() => {
+        btn.textContent = 'Copiado';
+        btn.classList.add('copied');
+        showToast('Lote copiado: ' + lotCode);
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = lotCode;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = 'Copiado';
+        showToast('Lote copiado: ' + lotCode);
+        setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+    });
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// FAMILY FILTER
+// ============================================================
+function filterFamily(family) {
+    const input = document.getElementById('searchInput');
+    if (input.value.toLowerCase().trim() === family) {
+        input.value = '';
+    } else {
+        input.value = family;
+    }
+    renderLots();
+    input.focus();
+}
+
+// ============================================================
+// EXPIRY HELPERS
+// ============================================================
+function getExpiryInfo(expiry) {
+    if (!expiry) return { text: '', cls: '' };
+    const today = new Date(); today.setHours(0,0,0,0);
+    const exp = new Date(expiry);
+    const days = Math.ceil((exp - today) / 86400000);
+    if (days < 0) return { text: 'CADUCADO (' + formatDate(expiry) + ')', cls: 'expired' };
+    if (days <= 30) return { text: 'Caduca en ' + days + 'd', cls: 'warning' };
+    if (days <= 90) return { text: 'Cad: ' + formatDate(expiry) + ' (' + days + 'd)', cls: 'warning' };
+    return { text: 'Cad: ' + formatDate(expiry), cls: 'ok' };
+}
+
+function formatDate(d) {
+    if (!d) return '\u2014';
+    const p = d.split('-');
+    return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0].slice(2) : d;
+}
+
+// ============================================================
+// ADD LOT (manual)
+// ============================================================
+function toggleAddForm() {
+    document.getElementById('addForm').classList.toggle('open');
+}
+
+function autoFillLotCode() {
+    const product = document.getElementById('addProduct').value;
+    if (!product) return;
+    const today = new Date();
+    const yy = String(today.getFullYear()).slice(2);
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    document.getElementById('addLot').value = 'L-' + product + '-' + yy + mm + dd;
+    if (!document.getElementById('addProdDate').value) {
+        document.getElementById('addProdDate').value = today.toISOString().slice(0, 10);
+    }
+    const days = (PRODUCTS[product] || {}).shelfLife || 365;
+    const exp = new Date(today.getTime() + days * 86400000);
+    if (!document.getElementById('addExpiry').value) {
+        document.getElementById('addExpiry').value = exp.toISOString().slice(0, 10);
+    }
+}
+
 function addLot() {
     const product = document.getElementById('addProduct').value;
     const lot = document.getElementById('addLot').value.trim();
@@ -284,23 +630,15 @@ function addLot() {
     const prodDate = document.getElementById('addProdDate').value;
     const expiry = document.getElementById('addExpiry').value;
 
-    if (!product || !lot) {
-        alert('Producto y n.º de lote son obligatorios');
-        return;
-    }
+    if (!product || !lot) { alert('Producto y lote son obligatorios'); return; }
 
     const lots = getLots();
-
-    // Check duplicate
     if (lots.find(l => l.lot === lot && l.product === product)) {
-        alert('Este lote ya existe');
-        return;
+        alert('Este lote ya existe'); return;
     }
 
     lots.push({
-        product,
-        lot,
-        qty: qty || null,
+        product, lot, qty: qty || null,
         prodDate: prodDate || new Date().toISOString().slice(0, 10),
         expiry: expiry || null,
         source: 'manual',
@@ -309,175 +647,54 @@ function addLot() {
 
     saveLots(lots);
     renderLots();
+    showToast('Lote a\u00f1adido: ' + lot);
 
-    // Clear form
+    // Clear
     document.getElementById('addLot').value = '';
     document.getElementById('addQty').value = '';
     document.getElementById('addProdDate').value = '';
     document.getElementById('addExpiry').value = '';
-
-    // Auto-generate next lot code suggestion
-    autoFillLotCode();
 }
 
 function deleteLot(lotCode, product) {
-    if (!confirm('¿Eliminar lote ' + lotCode + '?')) return;
+    if (!confirm('\u00bfEliminar lote ' + lotCode + '?')) return;
     let lots = getLots();
     lots = lots.filter(l => !(l.lot === lotCode && l.product === product));
     saveLots(lots);
     renderLots();
-}
-
-// ============================================================
-// AUTO-FILL LOT CODE
-// ============================================================
-function autoFillLotCode() {
-    const product = document.getElementById('addProduct').value;
-    if (!product) return;
-    const today = new Date();
-    const yy = String(today.getFullYear()).slice(2);
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    document.getElementById('addLot').value = `L-${product}-${yy}${mm}${dd}`;
-
-    // Auto-fill production date
-    if (!document.getElementById('addProdDate').value) {
-        document.getElementById('addProdDate').value = today.toISOString().slice(0, 10);
-    }
-
-    // Auto-fill expiry based on shelf life
-    const days = SHELF_LIFE[product] || 365;
-    const expiry = new Date(today.getTime() + days * 86400000);
-    if (!document.getElementById('addExpiry').value) {
-        document.getElementById('addExpiry').value = expiry.toISOString().slice(0, 10);
-    }
-}
-
-document.getElementById('addProduct').addEventListener('change', autoFillLotCode);
-
-// ============================================================
-// RENDER
-// ============================================================
-function renderLots() {
-    const lots = getLots();
-    const search = (document.getElementById('searchInput').value || '').toLowerCase();
-
-    // Group by product
-    const grouped = {};
-    lots.forEach(l => {
-        // Filter
-        const name = PRODUCT_NAMES[l.product] || l.product;
-        const searchStr = `${l.product} ${name} ${l.lot}`.toLowerCase();
-        if (search && !searchStr.includes(search)) return;
-
-        if (!grouped[l.product]) grouped[l.product] = [];
-        grouped[l.product].push(l);
-    });
-
-    // Sort products
-    const sortedProducts = Object.keys(grouped).sort();
-
-    const container = document.getElementById('lotListing');
-
-    if (sortedProducts.length === 0) {
-        container.innerHTML = `
-            <div class="empty">
-                <div class="icon">📦</div>
-                <p>${search ? 'Sin resultados para "' + search + '"' : 'No hay lotes registrados'}</p>
-                <p style="margin-top:8px; font-size:13px">Registra lotes arriba o sincroniza desde el Quality Hub</p>
-            </div>`;
-        document.getElementById('lotCount').textContent = lots.length;
-        return;
-    }
-
-    let html = '';
-    sortedProducts.forEach(product => {
-        const productLots = grouped[product].sort((a, b) => (b.prodDate || '').localeCompare(a.prodDate || ''));
-        const name = PRODUCT_NAMES[product] || product;
-
-        html += `<div class="product-group">`;
-        html += `<div class="product-header">
-            <span>${product} — ${name}</span>
-            <span class="badge">${productLots.length}</span>
-        </div>`;
-        html += `<div class="lot-list">`;
-
-        productLots.forEach(l => {
-            const expiryInfo = getExpiryInfo(l.expiry);
-            html += `<div class="lot-item">
-                <div>
-                    <div class="lot-code">${l.lot}</div>
-                    <div class="lot-date">Prod: ${formatDate(l.prodDate)}${l.source === 'hub' ? ' · Hub' : ''}</div>
-                    ${l.expiry ? `<div class="lot-expiry ${expiryInfo.cls}">${expiryInfo.text}</div>` : ''}
-                </div>
-                <div class="lot-actions">
-                    ${l.qty ? `<span class="lot-qty">${l.qty} uds</span>` : ''}
-                    <button class="btn-delete" onclick="deleteLot('${l.lot}', '${l.product}')">&times;</button>
-                </div>
-            </div>`;
-        });
-
-        html += `</div></div>`;
-    });
-
-    container.innerHTML = html;
-    document.getElementById('lotCount').textContent = lots.length;
-}
-
-function getExpiryInfo(expiry) {
-    if (!expiry) return { text: '', cls: '' };
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const exp = new Date(expiry);
-    const days = Math.ceil((exp - today) / 86400000);
-
-    if (days < 0) return { text: `CADUCADO (${formatDate(expiry)})`, cls: 'expired' };
-    if (days <= 30) return { text: `Caduca en ${days}d (${formatDate(expiry)})`, cls: 'warning' };
-    if (days <= 90) return { text: `Cad: ${formatDate(expiry)} (${days}d)`, cls: 'warning' };
-    return { text: `Cad: ${formatDate(expiry)}`, cls: 'ok' };
-}
-
-function formatDate(d) {
-    if (!d) return '—';
-    const parts = d.split('-');
-    if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0].slice(2)}`;
-    return d;
+    showToast('Lote eliminado');
 }
 
 // ============================================================
 // SYNC FROM QUALITY HUB
 // ============================================================
 async function syncFromHub() {
-    const btn = document.querySelector('.btn-sync');
+    const btn = document.getElementById('syncBtn');
     btn.textContent = 'Sincronizando...';
     btn.disabled = true;
 
     try {
-        // Fetch production records for last 60 days
         const lots = getLots();
         const hubLots = [];
         const today = new Date();
 
+        // Fetch production records for last 30 days
         for (let i = 0; i < 30; i++) {
             const d = new Date(today.getTime() - i * 86400000);
             const dateStr = d.toISOString().slice(0, 10);
-
             try {
-                const url = `${APPS_SCRIPT_URL}?action=producciones_hoy&fecha=${dateStr}`;
+                const url = APPS_SCRIPT_URL + '?action=producciones_hoy&fecha=' + dateStr;
                 const r = await fetch(url);
                 if (!r.ok) continue;
                 const data = await r.json();
-
                 if (data.producciones && data.producciones.length > 0) {
                     data.producciones.forEach(p => {
                         if (p.Producto) {
-                            // Map product name to code
                             const code = findProductCode(p.Producto, p.Variante);
                             if (code) {
-                                const lotCode = `L-${code}-${dateStr.slice(2).replace(/-/g, '')}`;
+                                const lotCode = 'L-' + code + '-' + dateStr.slice(2).replace(/-/g, '');
                                 hubLots.push({
-                                    product: code,
-                                    lot: lotCode,
+                                    product: code, lot: lotCode,
                                     qty: (parseInt(p.Jarras) || 0) + (parseInt(p.Redes) || 0) || null,
                                     prodDate: dateStr,
                                     expiry: calcExpiry(code, dateStr),
@@ -488,12 +705,10 @@ async function syncFromHub() {
                         }
                     });
                 }
-            } catch (err) {
-                // Skip dates with no data
-            }
+            } catch (err) { /* skip */ }
         }
 
-        // Merge hub lots with existing (don't duplicate)
+        // Merge
         let merged = [...lots];
         hubLots.forEach(hl => {
             if (!merged.find(m => m.lot === hl.lot && m.product === hl.product)) {
@@ -505,14 +720,18 @@ async function syncFromHub() {
         renderLots();
 
         const added = merged.length - lots.length;
-        document.getElementById('syncStatus').innerHTML =
-            `Sincronizado — <span id="lotCount">${merged.length}</span> lotes` +
-            (added > 0 ? ` (+${added} nuevos)` : ' (sin cambios)');
+        const now = new Date().toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('lastSync').textContent = 'Sincronizado a las ' + now;
+
+        if (added > 0) {
+            showToast(added + ' lote' + (added > 1 ? 's' : '') + ' nuevo' + (added > 1 ? 's' : '') + ' del Hub');
+        } else {
+            showToast('Sin lotes nuevos en el Hub');
+        }
 
     } catch (err) {
         console.error('Sync error:', err);
-        document.getElementById('syncStatus').innerHTML =
-            `Error al sincronizar — <span id="lotCount">${getLots().length}</span> lotes`;
+        showToast('Error al sincronizar');
     }
 
     btn.textContent = 'Sincronizar Hub';
@@ -520,24 +739,21 @@ async function syncFromHub() {
 }
 
 function findProductCode(producto, variante) {
-    // Map from production form product names to SKU codes
     const nameMap = {
         'arroz negro': '740-1', 'negro': '740-1',
         'pescado': '748-1', 'marisco': '748-1',
-        'pollo': '749-1',
-        'verduras': '750-1',
+        'pollo': '749-1', 'verduras': '750-1',
         'risotto': '741-1',
-        'cremoso ibérico': '781-2', 'ibérico': '781-2',
+        'cremoso ib\u00e9rico': '781-2', 'ib\u00e9rico': '781-2',
         'cremoso tartufato': '782-2', 'tartufato': '782-2',
         'cremoso queso': '783-2', 'queso': '783-2',
         'cremoso setas': '784-2', 'setas': '784-2',
-        'maestro clásico': '810-2', 'clásico': '810-2', 'maestro': '810-2',
-        'maestro bahía': '810-B2', 'bahía': '810-B2',
+        'maestro cl\u00e1sico': '810-2', 'cl\u00e1sico': '810-2', 'maestro': '810-2',
+        'maestro bah\u00eda': '810-B2', 'bah\u00eda': '810-B2',
         'arancini': '770-1',
         'meloso azafranado': '812-2', 'azafranado': '812-2',
         'risotto blanco': '811-2',
     };
-
     const search = (producto + ' ' + (variante || '')).toLowerCase().trim();
     for (const [key, code] of Object.entries(nameMap)) {
         if (search.includes(key)) return code;
@@ -546,7 +762,7 @@ function findProductCode(producto, variante) {
 }
 
 function calcExpiry(code, prodDate) {
-    const days = SHELF_LIFE[code] || 365;
+    const days = (PRODUCTS[code] || {}).shelfLife || 365;
     const d = new Date(prodDate);
     d.setDate(d.getDate() + days);
     return d.toISOString().slice(0, 10);
@@ -555,7 +771,7 @@ function calcExpiry(code, prodDate) {
 // ============================================================
 // INIT
 // ============================================================
-renderLots();
+checkAuth();
 </script>
 </body>
 </html>
