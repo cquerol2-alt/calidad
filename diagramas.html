@@ -35,6 +35,26 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f
 </style>
 </head>
 <body>
+<script>
+// Acceso restringido: solo Cristina, Pablo, Christophe
+(function() {
+    const token = new URLSearchParams(window.location.search).get('token') || '';
+    const allowed = token.startsWith('ria_cristina_') || token.startsWith('ria_pablo_') || token.startsWith('ria_christophe_');
+    if (!allowed) {
+        document.documentElement.innerHTML = '<body style="background:#0f172a;color:#e2e8f0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center"><div><h2 style="margin-bottom:12px">🔒 Acceso restringido</h2><p style="color:#94a3b8">Los diagramas de flujo solo están disponibles para responsables de calidad.<br>Contacta con Cristina si necesitas acceso.</p></div></body>';
+    } else {
+        // Propagar token a todos los enlaces internos
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a[href]').forEach(a => {
+                const href = a.getAttribute('href');
+                if (href && !href.startsWith('http') && !href.includes('token=')) {
+                    a.href = href + (href.includes('?') ? '&' : '?') + 'token=' + token;
+                }
+            });
+        });
+    }
+})();
+</script>
 <div class="header">
 <h1>Diagramas de Productos, Productos intermedios, y Materias primas</h1>
 <p>Rice in Action S.L. — Flujos para APPCC / IFS</p>

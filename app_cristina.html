@@ -62,10 +62,29 @@
         return `${BASE}/${page}?token=${TOKEN}`;
     }
 
+    // Roles por prefijo de token
+    function getRole() {
+        if (!TOKEN) return null;
+        if (TOKEN.startsWith('ria_cristina_')) return { name: 'Cristina', role: 'admin' };
+        if (TOKEN.startsWith('ria_pablo_')) return { name: 'Pablo', role: 'calidad' };
+        if (TOKEN.startsWith('ria_christophe_')) return { name: 'Christophe', role: 'equipo' };
+        if (TOKEN.startsWith('ria_diego_')) return { name: 'Diego', role: 'equipo' };
+        if (TOKEN.startsWith('ria_isabel_')) return { name: 'Isabel', role: 'equipo' };
+        if (TOKEN.startsWith('ria_geronimo_')) return { name: 'Gerónimo', role: 'equipo' };
+        return { name: 'Operario', role: 'equipo' };
+    }
+
+    // Tokens con acceso a diagramas de flujo
+    function canSeeDiagramas() {
+        const r = getRole();
+        return r && (r.role === 'admin' || r.role === 'calidad');
+    }
+
     function render() {
         const hoy = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+        const user = getRole();
 
-        if (!TOKEN) {
+        if (!TOKEN || !user) {
             document.getElementById('app').innerHTML = `
                 <div class="header">
                     <h1>🌾 Rice in Action</h1>
@@ -75,21 +94,23 @@
                     <div class="icon">🔑</div>
                     <h2>Token no encontrado</h2>
                     <p>Accede con tu URL personalizada:<br>
-                    <code style="color:#4CAF50;font-size:12px">app_cristina.html?token=ria_cristina_xxx</code></p>
+                    <code style="color:#4CAF50;font-size:12px">app_cristina.html?token=tu_token</code></p>
                 </div>
             `;
             return;
         }
 
+        const rolLabel = user.role === 'admin' ? 'Admin' : user.role === 'calidad' ? 'Calidad' : 'Equipo';
+
         document.getElementById('app').innerHTML = `
             <div class="header">
                 <h1>🌾 Rice in Action</h1>
-                <div class="sub">Panel de Cristina · Admin</div>
+                <div class="sub">Panel de ${user.name} · ${rolLabel}</div>
                 <div class="date">${hoy}</div>
             </div>
 
             <div class="status">
-                <span class="chip ok">✓ Conectada</span>
+                <span class="chip ok">✓ Conectado</span>
                 <span class="chip">v2.0</span>
             </div>
 
@@ -163,13 +184,14 @@
 
                 <div class="section-title">🔍 Consulta</div>
                 <div class="grid">
+                    ${canSeeDiagramas() ? `
                     <a class="card full" href="${link('diagramas.html')}">
                         <div class="icon">🔄</div>
                         <div>
                             <div class="name">Diagramas de flujo</div>
                             <div class="desc">Todos los productos — ingredientes, alérgenos, trazabilidad</div>
                         </div>
-                    </a>
+                    </a>` : ''}
                     <a class="card full" href="${link('lotes.html')}">
                         <div class="icon">🏷️</div>
                         <div>
@@ -182,7 +204,7 @@
 
             <div class="footer">
                 Rice in Action · Quality Hub v2.0<br>
-                Token activo · Rol admin
+                ${user.name} · ${rolLabel}
             </div>
         `;
     }

@@ -46,6 +46,15 @@ svg.L{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 </style>
 </head>
 <body>
+<script>
+(function(){
+  var t=new URLSearchParams(window.location.search).get('token')||'';
+  if(!t.startsWith('ria_cristina_')&&!t.startsWith('ria_pablo_')&&!t.startsWith('ria_christophe_')){
+    document.documentElement.innerHTML='<body style="background:#111;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center"><div><h1 style="font-size:48px">🔒</h1><h2>Acceso restringido</h2><p style="color:#888;margin-top:8px">Este contenido requiere autorización.</p></div></body>';
+  }
+})();
+</script>
+
 <a class="back" href="diagramas.html">&larr; Menú</a>
 <h1>Arroz de Pescado</h1>
 <p class="sub">Rice in Action S.L. — Flujo completo de materias primas y productos intermedios</p>
