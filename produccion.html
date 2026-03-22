@@ -2813,34 +2813,46 @@
 
         // === ENVÍO A GOOGLE SHEETS via Backend v2 ===
         function enviarASheets(datos) {
-            // Mapear campos del form de producción a lo que espera handleProduccion en v2
-            const lotesMPArr = [];
-            if (datos.loteArroz) lotesMPArr.push('Arroz: ' + datos.loteArroz);
-            if (datos.loteCaldo) lotesMPArr.push('Caldo: ' + datos.loteCaldo);
-            if (datos.loteSalsa) lotesMPArr.push('Salsa: ' + datos.loteSalsa);
-            if (datos.loteSalsaSobre) lotesMPArr.push('Salsa sobre: ' + datos.loteSalsaSobre);
-            if (datos.loteIngrExtra) lotesMPArr.push(datos.ingredienteExtra + ': ' + datos.loteIngrExtra);
-
+            // Enviar todos los campos tal cual para que registros-pdf.html pueda generar PDFs completos
             const payload = {
                 fecha: datos.fecha,
-                producto: datos.producto || '',
-                variante: datos.formato || '',
-                lotes_mp: lotesMPArr.join('; '),
-                jarras: datos.cantidadEnvases || '',
-                redes: datos.numRedes || '',
-                pcc_temp: datos.pastTempFinal ? parseFloat(datos.pastTempFinal) : '',
-                detector_ok: datos.metalDetector ? true : false,
-                dm_fe: '',
-                dm_nfe: '',
-                dm_ss: '',
-                etiquetado_ok: datos.verifEtiqueta === 'OK' || datos.verifEtiqueta === true,
-                observaciones: [
-                    datos.incidencias || '',
-                    datos.notasEtiqueta || '',
-                    datos.disponibilidadCaldo ? 'Caldo: ' + datos.disponibilidadCaldo : '',
-                    datos.modoSalsa ? 'Salsa: ' + datos.modoSalsa : '',
-                    datos.abatTemp ? 'Abat: ' + datos.abatTemp + '°C' : ''
-                ].filter(Boolean).join(' | ')
+                horaInicio: datos.horaInicio,
+                producto: datos.producto,
+                formato: datos.formato,
+                loteProduccion: datos.loteProduccion,
+                tipoEnvase: datos.tipoEnvase,
+                formatoEnvase: datos.formatoEnvase,
+                loteEnvase: datos.loteEnvase,
+                cantidadEnvases: datos.cantidadEnvases,
+                tipoArroz: datos.tipoArroz,
+                loteArroz: datos.loteArroz,
+                numRedes: datos.numRedes,
+                loteCaldo: datos.loteCaldo,
+                tempCaldo: datos.tempCaldo,
+                disponibilidadCaldo: datos.disponibilidadCaldo,
+                tipoSalsa: datos.tipoSalsa,
+                loteSalsa: datos.loteSalsa,
+                pesoSalsa: datos.pesoSalsa,
+                modoSalsa: datos.modoSalsa,
+                loteSalsaSobre: datos.loteSalsaSobre,
+                cantSalsaSobre: datos.cantSalsaSobre,
+                ingredienteExtra: datos.ingredienteExtra,
+                loteIngrExtra: datos.loteIngrExtra,
+                pesoIngrExtra: datos.pesoIngrExtra,
+                ingredientesJarra: datos.ingredientesJarra,
+                pastHoraInicio: datos.pastHoraInicio,
+                pastHoraFin: datos.pastHoraFin,
+                pastTempFinal: datos.pastTempFinal,
+                abatHoraInicio: datos.abatHoraInicio,
+                abatHoraFin: datos.abatHoraFin,
+                abatTemp: datos.abatTemp,
+                metalDetector: datos.metalDetector,
+                selladoOK: datos.selladoOK,
+                selladoNOK: datos.selladoNOK,
+                fechaEtiqueta: datos.fechaEtiqueta,
+                verifEtiqueta: datos.verifEtiqueta,
+                notasEtiqueta: datos.notasEtiqueta,
+                incidencias: datos.incidencias
             };
 
             if (typeof RIA !== 'undefined') {

@@ -114,8 +114,7 @@
     </div>
 
 <script>
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiYEXd1pXMNx2j3PrL3R1mfNQFVykbk3QGKmrZpbW7Ug2kWIelInGWUDN7UtPe1vxa/exec';
-
+// Backend v2 — usa ria-backend-v2.js cargado al final del body
 let allRecords = [];
 
 // Default: today
@@ -126,14 +125,15 @@ function fetchRecords() {
     const container = document.getElementById('recordsContainer');
     container.innerHTML = '<div class="loading"><div class="spinner"></div><br>Cargando registros...</div>';
 
-    let url = APPS_SCRIPT_URL + '?action=getRecords&sheet=produccion';
-    if (fecha) url += '&fecha=' + fecha;
+    if (typeof RIA === 'undefined' || !RIA.getToken()) {
+        container.innerHTML = '<div class="error">Error: token no configurado. Abre desde la app con ?token=xxx</div>';
+        return;
+    }
 
-    fetch(url)
-        .then(r => r.json())
+    RIA.registros('produccion', fecha)
         .then(data => {
-            if (!data.exitoso) {
-                container.innerHTML = '<div class="error">Error: ' + (data.mensaje || 'desconocido') + '</div>';
+            if (!data || data.error) {
+                container.innerHTML = '<div class="error">Error: ' + (data?.error || 'sin respuesta') + '</div>';
                 return;
             }
             allRecords = data.registros || [];
@@ -160,9 +160,9 @@ function renderRecords(records, fecha) {
     records.forEach(function(rec, idx) {
         const producto = rec['Producto'] || 'Sin producto';
         const fecha = rec['Fecha'] || '';
-        const lote = rec['Lote Producción'] || '';
-        const formato = rec['Formato'] || '';
-        const operador = rec['Operador'] || '';
+        const lote = rec['Lotes MP'] || rec['Lote Producción'] || '';
+        const formato = rec['Variante'] || rec['Formato'] || '';
+        const operador = rec['Operario'] || rec['Operador'] || '';
         html += '<div class="record-card">';
         html += '  <div class="record-info">';
         html += '    <div class="record-product">' + producto + (formato ? ' — ' + formato : '') + '</div>';
@@ -466,5 +466,6 @@ function buildAndDownloadPDF(rec) {
     doc.save(filename);
 }
 </script>
+<script src="ria-backend-v2.js"></script>
 </body>
 </html>
