@@ -76,11 +76,15 @@ const RIA = (() => {
       return { status: 'error', message: 'Token no configurado' };
     }
 
+    // Generar clave de idempotencia para evitar duplicados en backend
+    const idempotencyKey = data._idempotency_key || _generateId();
+
     const payload = {
       tipo: tipo,
       token: token,
       timestamp: new Date().toISOString(),
       fecha: data.fecha || new Date().toISOString().split('T')[0],
+      _idempotency_key: idempotencyKey,
       ...data
     };
 
@@ -314,6 +318,13 @@ const RIA = (() => {
     };
   }
 
+  /** Genera un ID único corto (suficiente para deduplicar en ventana de minutos) */
+  function _generateId() {
+    const ts = Date.now().toString(36);
+    const rnd = Math.random().toString(36).substring(2, 8);
+    return `${ts}-${rnd}`;
+  }
+
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -328,11 +339,40 @@ const RIA = (() => {
     });
   }
 
+  /**
+   * Wrapper para enviar desde un botón evitando doble clic.
+   * Uso: <button onclick="RIA.enviarConBloqueo(this, 'recepcion_mp', datos)">Enviar</button>
+   * Desactiva el botón durante el envío, lo reactiva si hay error.
+   */
+  async function enviarConBloqueo(btn, tipo, data, options = {}) {
+    if (btn && btn.disabled) return { status: 'blocked', message: 'Envío en curso' };
+    if (btn) {
+      btn.disabled = true;
+      btn._textoOriginal = btn.textContent;
+      btn.textContent = 'Enviando...';
+    }
+    try {
+      const result = await enviar(tipo, data, options);
+      if (btn && result.status !== 'ok') {
+        btn.disabled = false;
+        btn.textContent = btn._textoOriginal || 'Enviar';
+      }
+      return result;
+    } catch (err) {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = btn._textoOriginal || 'Enviar';
+      }
+      throw err;
+    }
+  }
+
   // API pública
   return {
     setToken,
     getToken,
     enviar,
+    enviarConBloqueo,
     get,
     actualizar,
     produccionesHoy,
@@ -340,7 +380,7 @@ const RIA = (() => {
     reenviarPendientes,
     limpiarAntiguos,
     estado,
-    VERSION: '2.0'
+    VERSION: '2.1'
   };
 
 })();
