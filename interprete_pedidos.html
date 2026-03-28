@@ -705,6 +705,10 @@
               <input type="text" id="pc-code" style="padding:12px;font-size:15px;border:1.5px solid #ddd;border-radius:6px;width:100%;">
             </div>
           </div>
+          <div class="form-group" style="margin-top:10px;">
+            <label style="font-size:13px;font-weight:600;color:#555;">Aliases <span style="font-weight:400;color:#999;">(separados por comas, para búsqueda)</span></label>
+            <input type="text" id="pc-aliases" style="padding:12px;font-size:15px;border:1.5px solid #ddd;border-radius:6px;width:100%;" placeholder="Ej: pescadores, los pescadores, pescadores playa">
+          </div>
 
           <div style="margin-top:14px;padding-top:14px;border-top:1px solid #eee;">
             <div style="font-size:12px;font-weight:700;color:#1B5E20;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Dirección fiscal</div>
@@ -827,7 +831,7 @@
 // Cambiar a la URL real del Cloudflare Worker una vez desplegado.
 // Si está vacío o el Worker no responde, se usa el parser regex local.
 // ============================================================
-const WORKER_URL = ''; // ej: 'https://ria-interpretar.tu-cuenta.workers.dev'
+const WORKER_URL = 'https://ria-interpretar.cquerol-b02.workers.dev';
 
 // ============================================================
 // HOJA DE CARGA DEL DÍA — Acumulativa con persistencia
@@ -2524,6 +2528,21 @@ const CLIENTS_DATA = [
     "n_pedidos": 1,
     "holded_name": "Yanni, gastronómica S.L.",
     "holded_id": "69ad54ac8baf3d36430addcb"
+  },
+  {
+    "customer_code": "ESPERON",
+    "nombre": "Esperon Hosteleria SL",
+    "aliases": ["esperon", "esperon hosteleria", "berberecho sanxenxo", "berberechosanxenxo"],
+    "direccion": "Praia dos Barcos 4",
+    "cp": "36960",
+    "ciudad": "Sanxenxo",
+    "provincia": "Pontevedra",
+    "telefono": "625 45 86 83",
+    "email": "info@berberechosanxenxo.com",
+    "nif": "B94135662",
+    "n_pedidos": 0,
+    "holded_name": "Esperon Hosteleria SL",
+    "holded_id": "69c809e371dc34922c042c8a"
   }
 ];
 
@@ -2531,20 +2550,28 @@ const CLIENTS_DATA = [
 // DATA: Products (from catalogo_productos.json)
 // ============================================================
 const PRODUCTS_DATA = [
-  { codigo: "748", nombre: "Pescado y Marisco", alias: ["pescado", "marisco", "arroz pescado", "pescado y marisco", "arroz marisco", "arroz de marisco", "arroz de pescado", "arroz de pescado y marisco"], peso_kg: 7 },
-  { codigo: "749", nombre: "Pollo", alias: ["pollo", "arroz pollo", "arroz de pollo"], peso_kg: 7 },
-  { codigo: "740", nombre: "Negro", alias: ["negro", "arroz negro", "arroz de negro"], peso_kg: 7 },
-  { codigo: "750", nombre: "Verdura", alias: ["verduras", "verdura", "arroz verduras", "arroz verdura", "arroz vegetal", "vegetal", "arroz de verdura", "arroz de verduras", "arroz de vegetal"], peso_kg: 7 },
-  { codigo: "741-P", nombre: "Risotto Pollo", alias: ["risotto pollo", "risotto de pollo"], peso_kg: 7 },
-  { codigo: "741-V", nombre: "Risotto Verduras", alias: ["risotto verduras", "risotto de verduras", "risotto vegetal"], peso_kg: 7 },
-  { codigo: "741", nombre: "Risotto", alias: ["risotto"], peso_kg: 7 },
-  { codigo: "784", nombre: "Cremoso Setas", alias: ["cremoso setas", "setas", "cremoso de setas"], peso_kg: 7 },
-  { codigo: "782", nombre: "Cremoso Tartufata", alias: ["cremoso tartufata", "tartufata", "tartufatta", "risotto tartufata", "risotto tartufatta", "trufa", "trufata"], peso_kg: 7 },
-  { codigo: "781", nombre: "Cremoso Ibérico", alias: ["cremoso ibérico", "ibérico", "cremoso iberico", "iberico"], peso_kg: 7 },
-  { codigo: "ANM", nombre: "Negro Meloso", alias: ["negro meloso", "meloso negro", "meloso", "arroz meloso"], peso_kg: 7 },
-  { codigo: "CQ", nombre: "Cremoso Queso", alias: ["cremoso queso", "queso", "cremoso de queso"], peso_kg: 7 },
-  { codigo: "810-B", nombre: "Maestro Bahía", alias: ["maestro", "maestro bahía", "maestro bahia", "arroz maestro", "maestro 450", "maestro 380"], peso_kg: 7 },
-  { codigo: "810", nombre: "Maestro Marisma", alias: ["maestro marisma"], peso_kg: 7 }
+  // --- Familia Maestro Seco (marca MAESTRO) ---
+  { codigo: "810-B-CO", sku_holded: "810-B-CO", nombre: "Cook Obsession Bahía Ed. Limitada", alias: ["cook obsession", "cookobsession", "cookobession", "co bahia", "co bahía", "cook obsession bahía", "cook obsession bahia", "maestro cook obsession", "maestro cookobsession", "cook"], peso_kg: 7, uds_caja: 20 },
+  { codigo: "810-B", sku_holded: "810-B1", nombre: "Maestro Bahía", alias: ["maestro bahía", "maestro bahia", "maestro", "arroz maestro", "bahia", "bahía", "maestro 450", "maestro 380", "mb"], peso_kg: 7, uds_caja: 20 },
+  { codigo: "810", sku_holded: "810-1", nombre: "Maestro Clásico", alias: ["maestro clásico", "maestro clasico", "maestro marisma", "marisma", "clasico", "clásico", "mc"], peso_kg: 7, uds_caja: 20 },
+  // --- Familia Maestro Meloso (marca MAESTRO) ---
+  { codigo: "811", sku_holded: "811-1", nombre: "Risotto Blanco", alias: ["risotto blanco", "maestro risotto blanco", "mrb"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "812", sku_holded: "812-1", nombre: "Meloso Azafranado", alias: ["meloso azafranado", "azafranado", "maestro meloso", "maestro azafranado", "ma"], peso_kg: 7, uds_caja: 24 },
+  // --- Familia La Santa ---
+  { codigo: "748", sku_holded: "748-1", nombre: "Arroz Pescado y Marisco", alias: ["pescado", "marisco", "arroz pescado", "pescado y marisco", "arroz marisco", "arroz de marisco", "arroz de pescado", "arroz de pescado y marisco", "apm"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "750", sku_holded: "750-1", nombre: "Arroz de Verduras", alias: ["verduras", "verdura", "arroz verduras", "arroz verdura", "arroz vegetal", "vegetal", "arroz de verdura", "arroz de verduras", "arroz de vegetal", "av"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "740", sku_holded: "740-1", nombre: "Arroz Negro", alias: ["negro", "arroz negro", "arroz de negro", "an"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "749", sku_holded: "749-1", nombre: "Arroz de Pollo", alias: ["pollo", "arroz pollo", "arroz de pollo", "ap"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "741", sku_holded: "741-1", nombre: "Risotto", alias: ["risotto", "risotto pollo", "risotto de pollo", "risotto verduras", "risotto de verduras", "risotto vegetal", "r"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "760", sku_holded: "760-1", nombre: "Arroz Blanco", alias: ["arroz blanco", "blanco", "ab"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "770", sku_holded: "770-1", nombre: "Arancini", alias: ["arancini", "arancinis", "arc"], peso_kg: 7, uds_caja: 24 },
+  // --- Familia Cremosos (marca La Santa) ---
+  { codigo: "782", sku_holded: "782-1", nombre: "Cremoso Tartufato", alias: ["cremoso tartufato", "tartufato", "tartufata", "tartufatta", "risotto tartufata", "risotto tartufatta", "trufa", "trufata", "ct"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "781", sku_holded: "781-1", nombre: "Cremoso Ibérico", alias: ["cremoso ibérico", "ibérico", "cremoso iberico", "iberico", "ci"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "783", sku_holded: "783-2", nombre: "Cremoso Queso", alias: ["cremoso queso", "queso", "cremoso de queso", "cq"], peso_kg: 7, uds_caja: 24 },
+  { codigo: "784", sku_holded: "784-2", nombre: "Cremoso Setas", alias: ["cremoso setas", "setas", "cremoso de setas", "cs"], peso_kg: 7, uds_caja: 24 },
+  // --- Combo (740 + 745 servidos juntos) ---
+  { codigo: "ANM", sku_holded: "ANM", nombre: "Negro Meloso", alias: ["negro meloso", "meloso negro", "meloso", "arroz meloso"], peso_kg: 7, uds_caja: 24 }
 ];
 
 // ============================================================
@@ -2867,6 +2894,11 @@ function saveClientLastOrder(customerCode, products) {
   localStorage.setItem('ria_last_orders', JSON.stringify(lastOrders));
 }
 
+// Alias — el flujo de envío usa este nombre
+function saveOrderToHistory(customerCode, products) {
+  saveClientLastOrder(customerCode, products);
+}
+
 // Words that are TOO generic to match a product — need client preference
 const AMBIGUOUS_TERMS = new Set(['arroz', 'cajas', 'caja', 'producto', 'productos', 'lo de siempre',
   'lo mismo', 'lo habitual', 'igual que siempre', 'como el ultimo', 'como el último',
@@ -2905,8 +2937,60 @@ function resolveAmbiguousProduct(text, customerCode) {
   return null;
 }
 
-// Local storage for new clients
-let dynamicClients = JSON.parse(localStorage.getItem('ria_dynamic_clients') || '[]');
+// Generate short aliases from a business name
+// "Esperon Hosteleria SL" → ["esperon hosteleria sl", "esperon hosteleria", "esperon"]
+function generateAliasesFromName(nombre) {
+  const LEGAL_SUFFIXES = /\b(S\.?L\.?U?\.?|S\.?A\.?|S\.?C\.?|C\.?B\.?|UNIPERSONAL|SOCIEDAD|LIMITADA|ANONIMA)\b/gi;
+  const clean = nombre.replace(LEGAL_SUFFIXES, '').replace(/[,.\-]+$/, '').trim();
+  const words = clean.split(/\s+/).filter(w => w.length > 0);
+  const aliases = new Set();
+  aliases.add(nombre.toLowerCase());
+  if (clean.toLowerCase() !== nombre.toLowerCase()) aliases.add(clean.toLowerCase());
+  // Progressive word combinations: "esperon hosteleria", "esperon"
+  for (let i = words.length - 1; i >= 1; i--) {
+    const partial = words.slice(0, i).join(' ').toLowerCase();
+    if (partial.length >= 3) aliases.add(partial);
+  }
+  // First word alone if >= 4 chars (avoid "la", "el", etc.)
+  if (words.length > 0 && words[0].length >= 4) aliases.add(words[0].toLowerCase());
+  return [...aliases];
+}
+
+// Local storage for new clients — with robust error handling
+function loadDynamicClients() {
+  try {
+    const raw = localStorage.getItem('ria_dynamic_clients');
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) { console.warn('ria_dynamic_clients no es un array, reseteando'); return []; }
+    // Migrate: ensure all dynamic clients have short aliases
+    let migrated = false;
+    for (const c of parsed) {
+      const generated = generateAliasesFromName(c.nombre);
+      const existing = new Set((c.aliases || []).map(a => a.toLowerCase()));
+      const missing = generated.filter(a => !existing.has(a));
+      if (missing.length > 0) {
+        c.aliases = [...(c.aliases || []), ...missing];
+        migrated = true;
+      }
+    }
+    if (migrated) {
+      localStorage.setItem('ria_dynamic_clients', JSON.stringify(parsed));
+      console.log('[RIA] Migrados aliases cortos para clientes dinámicos');
+    }
+    console.log(`[RIA] ${parsed.length} clientes dinámicos cargados de localStorage`);
+    return parsed;
+  } catch(e) {
+    console.error('[RIA] Error leyendo clientes dinámicos:', e);
+    return [];
+  }
+}
+function refreshAllClients() {
+  dynamicClients = loadDynamicClients();
+  allClients = [...CLIENTS_DATA, ...dynamicClients];
+  console.log(`[RIA] allClients: ${allClients.length} total (${CLIENTS_DATA.length} fijos + ${dynamicClients.length} dinámicos)`);
+}
+let dynamicClients = loadDynamicClients();
 let allClients = [...CLIENTS_DATA, ...dynamicClients];
 
 // ============================================================
@@ -3505,6 +3589,8 @@ function parseGenericErpPDF(text) {
 // ============================================================
 
 function interpretOrder() {
+  // Refresh dynamic clients before each search to catch newly added clients
+  refreshAllClients();
   const text = document.getElementById('order-text').value.trim();
   if (!text) {
     showToast('Por favor introduce un pedido', 'error');
@@ -4144,35 +4230,237 @@ function renderSummary(orders) {
     </div>`
   ).join('');
 
+  // Build editable shipping table rows
+  const opColors = { logista: '#1B5E20', stef: '#1565C0', 'mascaró': '#6A1B9A', mascaro: '#6A1B9A' };
+  const tableRows = orders.map((o, idx) => {
+    const c = o.client || {};
+    const opName = o.operador ? o.operador.operador : 'Logista';
+    const opKey = opName.toLowerCase();
+    const opColor = opColors[opKey] || '#666';
+    const bultos = (o.products || []).reduce((s, p) => s + (p.cantidad || 0), 0);
+    const peso = (o.totalWeight || 0).toFixed(1);
+    const dir = c.dir_envio || c.direccion || '';
+    const cp = c.cp_envio || c.cp || '';
+    const ciudad = c.ciudad_envio || c.ciudad || '';
+    const obs = o._observaciones || c.notas || '';
+    const enviado = o._enviadoHolded;
+    const rowBg = enviado ? '#f0f9f0' : 'white';
+    const statusIcon = enviado ? '✅' : '⏳';
+    return `<tr data-row-idx="${idx}" style="background:${rowBg};">
+      <td style="padding:6px 4px;text-align:center;font-size:12px;color:#888;">${statusIcon}</td>
+      <td style="padding:4px 2px;"><input type="text" data-field="destinatario" data-idx="${idx}" value="${(c.nombre||'').replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" style="width:100%;min-width:100px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
+      <td style="padding:4px 2px;"><input type="text" data-field="direccion" data-idx="${idx}" value="${dir.replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" style="width:100%;min-width:120px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
+      <td style="padding:4px 2px;"><input type="text" data-field="cp" data-idx="${idx}" value="${cp}" onchange="updateShipRow(this)" style="width:60px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;text-align:center;"></td>
+      <td style="padding:4px 2px;"><input type="text" data-field="ciudad" data-idx="${idx}" value="${ciudad.replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" style="width:100%;min-width:80px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
+      <td style="padding:4px 2px;"><input type="number" data-field="bultos" data-idx="${idx}" value="${bultos}" onchange="updateShipRow(this)" style="width:50px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;text-align:center;" min="0"></td>
+      <td style="padding:4px 2px;"><input type="number" data-field="peso" data-idx="${idx}" value="${peso}" onchange="updateShipRow(this)" step="0.1" style="width:60px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;text-align:center;" min="0"></td>
+      <td style="padding:4px 2px;"><input type="text" data-field="obs" data-idx="${idx}" value="${obs.replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" placeholder="—" style="width:100%;min-width:80px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
+      <td style="padding:4px;text-align:center;"><span style="background:${opColor};color:white;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap;">${opName}</span></td>
+      <td style="padding:4px;text-align:center;"><button onclick="removeShipRow(${idx})" title="Quitar de Logista" style="background:none;border:none;cursor:pointer;font-size:16px;color:#c62828;">✕</button></td>
+    </tr>`;
+  }).join('');
+
   const html = `
     <div class="summary-section">
       <div class="summary-title">📊 RESUMEN DEL ENVÍO</div>
       <div class="summary-grid">
         <div class="summary-item">
           <div class="summary-label">Pedidos</div>
-          <div class="summary-value">${totalOrders}</div>
+          <div class="summary-value" id="kpi-pedidos">${totalOrders}</div>
         </div>
         <div class="summary-item">
           <div class="summary-label">Cajas</div>
-          <div class="summary-value">${totalBoxes}</div>
+          <div class="summary-value" id="kpi-cajas">${totalBoxes}</div>
         </div>
         <div class="summary-item">
           <div class="summary-label">Peso Total</div>
-          <div class="summary-value">${totalWeight.toFixed(1)}kg</div>
+          <div class="summary-value" id="kpi-peso">${totalWeight.toFixed(1)}kg</div>
         </div>
         <div class="summary-item">
           <div class="summary-label">Coste Est. Total</div>
-          <div class="summary-value" style="color:#1B5E20">${totalCoste.toFixed(2)}€</div>
+          <div class="summary-value" id="kpi-coste" style="color:#1B5E20">${totalCoste.toFixed(2)}€</div>
         </div>
       </div>
       <div style="margin-top:12px;padding:8px 12px;background:#f5f5f5;border-radius:6px;">
         <div style="font-weight:600;color:#1B5E20;margin-bottom:6px;">Desglose por operador:</div>
         ${opBreakdown}
       </div>
+
+      ${totalOrders > 0 ? `
+      <div style="margin-top:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table id="ship-table" style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:#1B5E20;color:white;">
+              <th style="padding:8px 4px;font-size:11px;width:30px;"></th>
+              <th style="padding:8px 4px;text-align:left;font-size:11px;">Destinatario</th>
+              <th style="padding:8px 4px;text-align:left;font-size:11px;">Dirección</th>
+              <th style="padding:8px 4px;text-align:center;font-size:11px;">CP</th>
+              <th style="padding:8px 4px;text-align:left;font-size:11px;">Ciudad</th>
+              <th style="padding:8px 4px;text-align:center;font-size:11px;">Bult.</th>
+              <th style="padding:8px 4px;text-align:center;font-size:11px;">Peso</th>
+              <th style="padding:8px 4px;text-align:left;font-size:11px;">Obs.</th>
+              <th style="padding:8px 4px;text-align:center;font-size:11px;">Op.</th>
+              <th style="padding:8px 4px;width:30px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+      </div>
+      ` : ''}
+
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button onclick="imprimirEtiquetas()" style="flex:1;min-width:140px;padding:10px;border:2px solid #1B5E20;background:white;color:#1B5E20;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;">
+          🏷️ Etiquetas del día
+        </button>
+        <button onclick="imprimirHojaCarga()" style="flex:1;min-width:140px;padding:10px;border:2px solid #FF8F00;background:white;color:#FF8F00;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;">
+          📋 Hoja de carga
+        </button>
+        <button onclick="mostrarImportOV()" style="flex:1;min-width:140px;padding:10px;border:2px solid #0277BD;background:white;color:#0277BD;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;">
+          ➕ Añadir OV manual
+        </button>
+      </div>
     </div>
   `;
 
   document.getElementById('summary-container').innerHTML = html;
+}
+
+// Update RENDERED_ORDERS when a shipping table field is edited
+function updateShipRow(input) {
+  const idx = parseInt(input.dataset.idx);
+  const field = input.dataset.field;
+  const val = input.value;
+  if (idx < 0 || idx >= RENDERED_ORDERS.length) return;
+  const o = RENDERED_ORDERS[idx];
+  switch (field) {
+    case 'destinatario': o.client.nombre = val; break;
+    case 'direccion': o.client.direccion = val; if (o.client.dir_envio) o.client.dir_envio = val; break;
+    case 'cp': o.client.cp = val; if (o.client.cp_envio) o.client.cp_envio = val; break;
+    case 'ciudad': o.client.ciudad = val; if (o.client.ciudad_envio) o.client.ciudad_envio = val; break;
+    case 'bultos':
+      // Redistribute: scale all product quantities proportionally
+      o._override_bultos = parseInt(val) || 0;
+      break;
+    case 'peso':
+      o.totalWeight = parseFloat(val) || 0;
+      break;
+    case 'obs':
+      o._observaciones = val;
+      break;
+  }
+  // Update KPIs
+  recalcKPIs();
+}
+
+function recalcKPIs() {
+  const orders = RENDERED_ORDERS;
+  const totalOrders = orders.length;
+  const totalBoxes = orders.reduce((s, o) => {
+    if (o._override_bultos !== undefined) return s + o._override_bultos;
+    return s + (o.products || []).reduce((ss, p) => ss + (p.cantidad || 0), 0);
+  }, 0);
+  const totalWeight = orders.reduce((s, o) => s + (o.totalWeight || 0), 0);
+  const el = (id) => document.getElementById(id);
+  if (el('kpi-pedidos')) el('kpi-pedidos').textContent = totalOrders;
+  if (el('kpi-cajas')) el('kpi-cajas').textContent = totalBoxes;
+  if (el('kpi-peso')) el('kpi-peso').textContent = totalWeight.toFixed(1) + 'kg';
+}
+
+// Remove a row from the shipping table
+function removeShipRow(idx) {
+  if (idx < 0 || idx >= RENDERED_ORDERS.length) return;
+  const nombre = RENDERED_ORDERS[idx].client.nombre;
+  if (!confirm(`¿Quitar "${nombre}" de la hoja de envíos?`)) return;
+  RENDERED_ORDERS.splice(idx, 1);
+  guardarHojaDelDia();
+  renderOrders(RENDERED_ORDERS);
+  renderSummary(RENDERED_ORDERS);
+  showToast(`"${nombre}" eliminado de la hoja`, 'info');
+}
+
+// Show modal to import a manual Holded OV
+function mostrarImportOV() {
+  const modal = document.createElement('div');
+  modal.id = 'import-ov-modal';
+  modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;';
+  modal.innerHTML = `
+    <div style="background:white;border-radius:12px;max-width:400px;width:100%;padding:24px;">
+      <h3 style="margin:0 0 16px;color:#1B5E20;">➕ Importar OV de Holded</h3>
+      <p style="font-size:13px;color:#666;margin:0 0 12px;">Introduce el ID de la orden de venta de Holded para importarla a la hoja de envíos.</p>
+      <input type="text" id="ov-import-id" placeholder="ID de la OV (ej: 6614a3b...)" style="width:100%;padding:10px 12px;border:2px solid #1B5E20;border-radius:8px;font-size:14px;box-sizing:border-box;">
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button onclick="document.getElementById('import-ov-modal').remove()" style="flex:1;padding:10px;border:2px solid #999;background:white;color:#666;border-radius:8px;font-weight:700;cursor:pointer;">Cancelar</button>
+        <button onclick="importarOV()" style="flex:1;padding:10px;border:none;background:#1B5E20;color:white;border-radius:8px;font-weight:700;cursor:pointer;">Importar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  setTimeout(() => document.getElementById('ov-import-id').focus(), 100);
+}
+
+async function importarOV() {
+  const input = document.getElementById('ov-import-id');
+  const ovId = (input ? input.value : '').trim();
+  if (!ovId) { showToast('Introduce un ID de OV', 'error'); return; }
+
+  const modal = document.getElementById('import-ov-modal');
+  if (modal) modal.remove();
+
+  showToast('Importando OV de Holded...', 'success');
+
+  try {
+    const r = await fetch(`${MIDDLEWARE_URL}/api/holded/ov/${ovId}`, {
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${r.status}`);
+    }
+    const data = await r.json();
+
+    // Build order object from OV data
+    const client = data.client || {};
+    const products = (data.products || []).map(p => ({
+      codigo: p.codigo || p.sku || '',
+      nombre: p.nombre || p.name || '',
+      cantidad: p.cantidad || p.qty || 1,
+      peso_unitario: 7
+    }));
+    const totalWeight = products.reduce((s, p) => s + (p.cantidad * p.peso_unitario), 0);
+    const boxes = products.reduce((s, p) => s + p.cantidad, 0);
+
+    const order = {
+      client: {
+        customer_code: client.customer_code || client.customId || ovId.substring(0,10),
+        nombre: client.nombre || client.name || 'OV Manual',
+        direccion: client.direccion || client.address || '',
+        cp: client.cp || client.postalCode || '',
+        ciudad: client.ciudad || client.city || '',
+        provincia: client.provincia || client.province || '',
+        holded_id: client.holded_id || client.id || '',
+        dir_envio: client.dir_envio || '',
+        cp_envio: client.cp_envio || '',
+        ciudad_envio: client.ciudad_envio || '',
+      },
+      products,
+      totalWeight,
+      boxes,
+      operador: seleccionarOperador(client, totalWeight),
+      warnings: ['Importado manualmente desde OV Holded: ' + ovId],
+      _ovHoldedId: ovId
+    };
+
+    RENDERED_ORDERS.push(order);
+    guardarHojaDelDia();
+    renderOrders(RENDERED_ORDERS);
+    renderSummary(RENDERED_ORDERS);
+    showToast(`OV importada: ${client.nombre || ovId}`, 'success');
+  } catch (e) {
+    showToast(`Error importando OV: ${e.message}`, 'error');
+  }
 }
 
 function clearOrderText() {
@@ -4388,10 +4676,10 @@ function parseClientText() {
   // ── 1b. PRE-SPLIT: romper líneas largas en sub-líneas inteligentes ──
   // "María extremera Jiménez  Avenida Gran Capitan 46..." → split antes de keyword dirección
   // "...14006.  3 melosos y 3 maestros..." → split después de CP cuando sigue un pedido
-  text = text.replace(/\s{2,}/g, ' '); // normalizar espacios múltiples
+  text = text.replace(/[^\S\n]{2,}/g, ' '); // normalizar espacios múltiples SIN tocar saltos de línea
 
   // Insert newline BEFORE address keywords when preceded by non-address text
-  text = text.replace(/([a-záéíóúñA-ZÁÉÍÓÚÑ])\s+((?:Avenida|Avda?\.?|Calle|C\/|Paseo|Passeig|Plaza|Pza|Carretera|Ctra|Pol[ií]gono|Carrer|Ronda|Travesía|Moll)\s)/gi, '$1\n$2');
+  text = text.replace(/([a-záéíóúñA-ZÁÉÍÓÚÑ])\s+((?:Avenida|Avda?\.?|Calle|C\/|Paseo|Passeig|Plaza|Pza|Carretera|Ctra|Pol[ií]gono|Carrer|Ronda|Travesía|Moll|Ruela|R[uú]a|Lugar|Lg\.?|Urbanizaci[oó]n|Urb\.?|Partida|Pla[cç]a|Baixada|Travessera|Praia|Praza|Estrada|Alameda|Glorieta|Bulevar|Blvd)\s)/gi, '$1\n$2');
 
   // Insert newline BEFORE section keywords glued to previous text (no space): "07800Dirección" → "07800\nDirección"
   text = text.replace(/(\d)(Direcci[oó]n|Datos?\s|Facturaci[oó]n|Env[ií]o|Entrega)/gi, '$1\n$2');
@@ -4402,6 +4690,25 @@ function parseClientText() {
 
   // Insert newline BEFORE "entrega" / "horario" / "lunes a" delivery schedule
   text = text.replace(/,\s*(entrega\s|horario\s|de\s+lunes\s)/gi, '\n$1');
+
+  // ── 1c. JOIN SPLIT LINES: merge lines ending with preposition/article with the next line ──
+  // "SANTIAGO DE\nCOMPOSTELA" → "SANTIAGO DE COMPOSTELA"
+  // "ALEN DA\nTIXOLA" → "ALEN DA TIXOLA"
+  const preJoinLines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const joinedLines = [];
+  for (let i = 0; i < preJoinLines.length; i++) {
+    let line = preJoinLines[i];
+    // While line ends with a dangling preposition/article AND next line is short alpha text
+    while (i + 1 < preJoinLines.length
+           && /\b(DE|DEL|DE LA|DA|DO|DOS|DAS|DES|EL|LA|LAS|LOS|AL|EN|Y|E|I)\s*$/i.test(line)
+           && preJoinLines[i + 1].length < 30
+           && /^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$/.test(preJoinLines[i + 1])) {
+      i++;
+      line = line + ' ' + preJoinLines[i];
+    }
+    joinedLines.push(line);
+  }
+  text = joinedLines.join('\n');
 
   // ── 2. PREPARAR LÍNEAS: quitar bullets, inline labels, headers de sección ──
   const rawLines = text.split('\n').map(l => l.trim()).filter(Boolean);
@@ -4483,14 +4790,41 @@ function parseClientText() {
   // Regexes
   const NIF_RX = /\b([A-HJ-NP-SUVW]\d{7}[0-9A-J]|\d{8}[A-Z]|[XYZ]\d{7}[A-Z])\b/i;
   const EMAIL_RX = /[\w.+-]+@[\w.-]+\.\w{2,}/;
-  const PHONE_RX = /\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{3,4}/;
+  // Spanish phones: 625458683, 625 458 683, 625 45 86 83, 625-45-86-83, 93 123 45 67
+  const PHONE_RX = /\(?\d{2,3}\)?[\s.-]?\d{2,3}[\s.-]?\d{2,3}[\s.-]?\d{2,4}/;
   const CP_RX = /\b(0[1-9]|[1-4]\d|5[0-2])\d{3}\b/;
   const LEGAL_RX = /(?:\b|(?<=\d))(S\.?L\.?U?\.?|S\.?A\.?|S\.?C\.?|SC|CB|COOP)\b/i; // matches "BEMAUS SL" and "2000s.l"
-  const ADDR_START_RX = /^(C\/|Calle|Avda?\.?|Avenida|Paseo|Passeig|Plaza|Pza|Carretera|Ctra|Camino|Ronda|Travesía|Carrer|Pol[ií]gono)/i;
+  const ADDR_START_RX = /^(C\/|Calle|Avda?\.?|Avenida|Paseo|Passeig|Plaza|Pza|Carretera|Ctra|Camino|Ronda|Travesía|Carrer|Pol[ií]gono|Ruela|R[uú]a|Lugar|Lg\.?|Urbanizaci[oó]n|Urb\.?|Partida|Moll|Pla[cç]a|Baixada|Travessera|Praia|Praza|Estrada|Alameda|Glorieta|Bulevar|Blvd)/i;
 
   const allEmails = [];
   const allPhones = [];
   const provinceNames = (typeof SPANISH_PROVINCES !== 'undefined') ? SPANISH_PROVINCES.map(p => p.toLowerCase()) : [];
+
+  // Province variant map: common short forms → official name
+  const PROVINCE_VARIANTS = {
+    'coruña': 'A Coruña', 'la coruña': 'A Coruña', 'corunna': 'A Coruña',
+    'baleares': 'Islas Baleares', 'illes balears': 'Islas Baleares', 'balears': 'Islas Baleares', 'mallorca': 'Islas Baleares',
+    'rioja': 'La Rioja',
+    'orense': 'Orense', 'ourense': 'Orense',
+    'lérida': 'Lérida', 'lleida': 'Lérida',
+    'gerona': 'Girona', 'girona': 'Girona',
+    'guipúzcoa': 'Guipúzcoa', 'gipuzkoa': 'Guipúzcoa',
+    'vizcaya': 'Vizcaya', 'bizkaia': 'Vizcaya',
+    'álava': 'Álava', 'araba': 'Álava',
+    'castellón': 'Castellón', 'castelló': 'Castellón',
+    'alicante': 'Alicante', 'alacant': 'Alicante',
+    'valencia': 'Valencia', 'valència': 'Valencia',
+    'asturias': 'Asturias', 'oviedo': 'Asturias',
+    'cantabria': 'Cantabria', 'santander': 'Cantabria',
+    'navarra': 'Navarra', 'nafarroa': 'Navarra',
+  };
+  // Helper: resolve province from text (official list or variant)
+  function resolveProvince(txt) {
+    const lower = txt.trim().toLowerCase();
+    if (provinceNames.includes(lower)) return txt.trim();
+    if (PROVINCE_VARIANTS[lower]) return PROVINCE_VARIANTS[lower];
+    return null;
+  }
 
   // Unclassified lines per section
   const unclassified = { fiscal: [], envio: [], both: [] };
@@ -4506,9 +4840,43 @@ function parseClientText() {
       if (/email.*factur|correo.*factur/.test(label)) { const m = text.match(EMAIL_RX); if (m) r.email_facturas = m[0]; continue; }
       if (/email|correo/.test(label)) { const m = text.match(EMAIL_RX); if (m) allEmails.push(m[0]); continue; }
       if (/direcci/.test(label)) {
-        // Address value from label
-        if (section === 'envio' || section === 'both') { if (!r.dir_envio) r.dir_envio = text; }
-        else { if (!r.direccion) r.direccion = text; }
+        // Address value from label — also extract CP/city/province if embedded
+        let addrVal = text;
+        let addrCp = '', addrCity = '', addrProv = '';
+        // Pattern: "calle X n27 R5 29620 Torremolinos Málaga" — CP embedded in address
+        const cpInAddr = text.match(/\b(\d{5})\s+(.+?)$/);
+        if (cpInAddr) {
+          addrVal = text.substring(0, text.indexOf(cpInAddr[0])).trim();
+          addrCp = cpInAddr[1];
+          let cityPart = cpInAddr[2].trim();
+          // Split province from city
+          const cityWords = cityPart.split(/\s+/);
+          if (cityWords.length >= 2 && provinceNames.length > 0) {
+            for (let n = 1; n <= Math.min(3, cityWords.length - 1); n++) {
+              const cand = cityWords.slice(-n).join(' ');
+              const rpAddr = resolveProvince(cand);
+              if (rpAddr) {
+                addrProv = rpAddr;
+                cityPart = cityWords.slice(0, -n).join(' ');
+                break;
+              }
+            }
+          }
+          if (!addrProv) addrProv = guessProvinceFromCP(addrCp);
+          addrCity = cityPart;
+        }
+        const tgt = (section === 'envio' || section === 'both') ? 'envio' : 'fiscal';
+        if (tgt === 'envio') {
+          if (!r.dir_envio) r.dir_envio = addrVal;
+          if (addrCp && !r.cp_envio) r.cp_envio = addrCp;
+          if (addrCity && !r.ciudad_envio) r.ciudad_envio = addrCity;
+          if (addrProv && !r.prov_envio) r.prov_envio = addrProv;
+        } else {
+          if (!r.direccion) r.direccion = addrVal;
+          if (addrCp && !r.cp) r.cp = addrCp;
+          if (addrCity && !r.ciudad) r.ciudad = addrCity;
+          if (addrProv && !r.provincia) r.provincia = addrProv;
+        }
         continue;
       }
       if (/hora|horario|atenci/.test(label)) { r.notas += (r.notas ? '. ' : '') + text; continue; }
@@ -4528,20 +4896,27 @@ function parseClientText() {
 
     // ── Teléfono: línea que es solo teléfono(s) ──
     if (PHONE_RX.test(text) && text.replace(/[\d\s().+\-\/]/g, '').length < 5) {
-      const phones = text.match(/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{3,4}/g) || [];
+      const phones = text.match(new RegExp(PHONE_RX.source, 'g')) || [];
       phones.forEach(p => allPhones.push(p.replace(/[()]/g, '').trim()));
       continue;
     }
 
     // ── Nombre + Teléfono en misma línea: "Mariano Frías 671 937 732" ──
+    // Also handles: "609859294  Recepción de mercancía:lunes a viernes de 10:00 a 13:00"
     if (PHONE_RX.test(text)) {
-      const phones = text.match(/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{3,4}/g) || [];
+      const phones = text.match(new RegExp(PHONE_RX.source, 'g')) || [];
       phones.forEach(p => allPhones.push(p.replace(/[()]/g, '').trim()));
-      const namePart = text.replace(/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{3,4}/g, '').replace(/[\-:,]/g, '').trim();
-      if (namePart && namePart.length > 2 && namePart.length < 40
-          && /^[A-ZÁÉÍÓÚÑa-záéíóúñ\s.]+$/.test(namePart)
-          && !LEGAL_RX.test(namePart) && !ADDR_START_RX.test(namePart)) {
-        if (!r.contacto) r.contacto = namePart;
+      const remainder = text.replace(new RegExp(PHONE_RX.source, 'g'), '').trim();
+      if (remainder && remainder.length > 2) {
+        // Check if remainder is a delivery note / schedule
+        const cleanRemainder = remainder.replace(/^[\-:,]\s*/, '').trim();
+        if (/recepci[oó]n|horario|entrega|lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|acceso|cerrado/i.test(cleanRemainder)) {
+          r.notas += (r.notas ? '. ' : '') + cleanRemainder;
+        } else if (cleanRemainder.length < 40
+            && /^[A-ZÁÉÍÓÚÑa-záéíóúñ\s.]+$/.test(cleanRemainder)
+            && !LEGAL_RX.test(cleanRemainder) && !ADDR_START_RX.test(cleanRemainder)) {
+          if (!r.contacto) r.contacto = cleanRemainder;
+        }
       }
       continue;
     }
@@ -4554,7 +4929,7 @@ function parseClientText() {
     }
 
     // ── Observaciones: líneas entre paréntesis, horario, acceso, cerrado, entrega ──
-    if (/^\(|horario|acceso|cerrado|prohibido|apertura|d[ií]as?\s+de\s+recepci|^entrega\s/i.test(text)) {
+    if (/^\(|horario|acceso|cerrado|prohibido|apertura|d[ií]as?\s+de\s+recepci|recepci[oó]n\s+de\s+mercanc|^entrega\s|lunes\s+a\s+viernes|de\s+\d{1,2}:\d{2}\s+a\s+\d{1,2}:\d{2}/i.test(text)) {
       r.notas += (r.notas ? '. ' : '') + text.replace(/^\(|\)$/g, '').trim();
       continue;
     }
@@ -4567,10 +4942,11 @@ function parseClientText() {
       continue;
     }
 
-    // ── Provincia: línea que es exactamente un nombre de provincia ──
-    if (text.length < 30 && provinceNames.includes(text.trim().toLowerCase())) {
-      if ((section === 'envio' || section === 'both') && !r.prov_envio) r.prov_envio = text.trim();
-      else if (!r.provincia) r.provincia = text.trim();
+    // ── Provincia: línea que es exactamente un nombre de provincia (or variant) ──
+    const resolvedProv = (text.length < 30) ? resolveProvince(text) : null;
+    if (resolvedProv) {
+      if ((section === 'envio' || section === 'both') && !r.prov_envio) r.prov_envio = resolvedProv;
+      else if (!r.provincia) r.provincia = resolvedProv;
       continue;
     }
 
@@ -4581,7 +4957,9 @@ function parseClientText() {
     }
 
     // ── Dirección suplementaria: ya tenemos dirección y esta línea empieza con PORTAL/LOCAL/PISO o es solo CP ──
-    const isSupplement = /^(portal|local|piso|planta|nave|bajo|entresuelo|pta|puerta)\s/i.test(text);
+    // Also match short lines like "4 BJ", "2º D", "3 IZQ" that are floor/door numbers
+    const isSupplement = /^(portal|local|piso|planta|nave|bajo|bj|entresuelo|entr|pta|puerta|dcha|izq|izda|int|interior)\b/i.test(text)
+      || /^\d{1,2}\s*(bj|bajo|local|dcha|izq|izda|pta|puerta|int|interior|entresuelo|entr|[º°ª]?\s*[a-d]?)$/i.test(text);
     if (isSupplement) {
       const cpInSupp = text.match(/\b(\d{5})\b/);
       const suppText = cpInSupp ? text.replace(cpInSupp[0], '').trim() : text;
@@ -4634,8 +5012,9 @@ function parseClientText() {
         if (cityCp) { cityFound = cityCp[1]; cpFound = cityCp[2]; continue; }
         // Just CP
         if (/^\d{5}$/.test(pt)) { cpFound = pt; continue; }
-        // City or province (check if it's a known province)
-        if (provinceNames.includes(pt.toLowerCase())) { provFound = pt; continue; }
+        // City or province (check if it's a known province or variant)
+        const rp = resolveProvince(pt);
+        if (rp) { provFound = rp; continue; }
         // "(Ciudad) Provincia" pattern like "(Chinchon) Madrid" or "7(Chinchon) Madrid"
         const parenCity = pt.match(/\(?([A-ZÁÉÍÓÚÑa-záéíóúñ][A-ZÁÉÍÓÚÑa-záéíóúñ\s]+)\)?\s+(.*)/);
         if (parenCity && parenCity[1].length > 2) { cityFound = parenCity[1].trim(); if (parenCity[2]) provFound = parenCity[2].trim(); continue; }
@@ -4673,15 +5052,42 @@ function parseClientText() {
       continue;
     }
 
-    // ── "CP Ciudad" en una línea: "28750 San Agustín de Guadalix" o "30380 La Manga del Mar menor" ──
+    // ── "CP Ciudad" en una línea: "28750 San Agustín de Guadalix" o "29620 Torremolinos Málaga" ──
     const cpCityLine = text.match(/^(\d{5})\s+(.+)/);
     if (cpCityLine) {
       const cp = cpCityLine[1];
-      const rest = cpCityLine[2].trim();
-      if ((section === 'envio' || section === 'both') && !r.cp_envio) {
-        r.cp_envio = cp; r.ciudad_envio = rest;
-      } else if (!r.cp) {
-        r.cp = cp; r.ciudad = rest;
+      let rest = cpCityLine[2].trim();
+      let cityParsed = rest, provParsed = '';
+      // Check for "Ciudad (Provincia)" pattern: "Sanxenxo (Pontevedra)"
+      const cpCityProv = rest.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+      if (cpCityProv) {
+        cityParsed = cpCityProv[1].trim();
+        const rpParen = resolveProvince(cpCityProv[2].trim());
+        provParsed = rpParen || cpCityProv[2].trim();
+      }
+      // Intentar separar provincia del final: "Torremolinos Málaga" → city "Torremolinos", prov "Málaga"
+      const words = rest.split(/\s+/);
+      if (words.length >= 2) {
+        // Probar con última palabra, luego últimas 2 palabras (ej: "Ciudad Real", "Las Palmas")
+        for (let n = 1; n <= Math.min(3, words.length - 1); n++) {
+          const candidate = words.slice(-n).join(' ');
+          const rpCand = resolveProvince(candidate);
+          if (rpCand) {
+            provParsed = rpCand;
+            cityParsed = words.slice(0, -n).join(' ');
+            break;
+          }
+        }
+      }
+      // Si no se encontró provincia por nombre, derivar del CP
+      if (!provParsed) provParsed = guessProvinceFromCP(cp);
+      const target = (section === 'envio' || section === 'both') ? 'envio' : 'fiscal';
+      if (target === 'envio' && !r.cp_envio) {
+        r.cp_envio = cp; r.ciudad_envio = cityParsed;
+        if (provParsed && !r.prov_envio) r.prov_envio = provParsed;
+      } else if (target === 'fiscal' && !r.cp) {
+        r.cp = cp; r.ciudad = cityParsed;
+        if (provParsed && !r.provincia) r.provincia = provParsed;
       }
       continue;
     }
@@ -4691,10 +5097,14 @@ function parseClientText() {
     if (cityCpLine && cityCpLine[1].length > 2) {
       const city = cityCpLine[1].trim();
       const cp = cityCpLine[2];
-      if ((section === 'envio' || section === 'both') && !r.cp_envio) {
+      const provDerived = guessProvinceFromCP(cp);
+      const target = (section === 'envio' || section === 'both') ? 'envio' : 'fiscal';
+      if (target === 'envio' && !r.cp_envio) {
         r.cp_envio = cp; r.ciudad_envio = city;
-      } else if (!r.cp) {
+        if (provDerived && !r.prov_envio) r.prov_envio = provDerived;
+      } else if (target === 'fiscal' && !r.cp) {
         r.cp = cp; r.ciudad = city;
+        if (provDerived && !r.provincia) r.provincia = provDerived;
       }
       continue;
     }
@@ -4720,6 +5130,16 @@ function parseClientText() {
     unclassified[section].push(text);
   }
 
+  // ── 3b. CONCATENAR "UNIPERSONAL" a razón social si S.L. ──
+  if (r.razon && /S\.?L\.?\s*$/i.test(r.razon)) {
+    const uncFiscal = unclassified.fiscal || [];
+    const uniIdx = uncFiscal.findIndex(l => /^UNIPERSONAL$/i.test(l.trim ? l.trim() : l));
+    if (uniIdx !== -1) {
+      r.razon = r.razon.replace(/S\.?L\.?\s*$/i, 'S.L.U.');
+      uncFiscal.splice(uniIdx, 1);
+    }
+  }
+
   // ── 4. POST-PROCESAR LÍNEAS NO CLASIFICADAS ──
   // First unclassified fiscal line without numbers = nombre comercial
   // Second unclassified = could be city (short, alpha)
@@ -4728,8 +5148,9 @@ function parseClientText() {
     if (!r.ciudad && line.length < 30 && /^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$/.test(line)
         && !ADDR_START_RX.test(line) && !LEGAL_RX.test(line)
         && r.direccion && r.cp) {
-      // Check if it's a province
-      if (provinceNames.includes(line.trim().toLowerCase())) { r.provincia = line.trim(); }
+      // Check if it's a province (including variants)
+      const rpLine = resolveProvince(line);
+      if (rpLine) { r.provincia = rpLine; }
       else { r.ciudad = line.trim(); }
       continue;
     }
@@ -4741,7 +5162,7 @@ function parseClientText() {
     }
   }
 
-  // First unclassified line BEFORE any section header → contacto
+  // First unclassified line BEFORE any section header → contacto (multi-word name)
   if (!r.contacto) {
     for (const item of cleanedLines) {
       if (item.text === cleanedLines[0]?.text && !item.label
@@ -4754,6 +5175,20 @@ function parseClientText() {
         r.contacto = item.text;
       }
       break;
+    }
+  }
+
+  // Fallback: look for a short single-word name in remaining unclassified lines (e.g. "Felix")
+  if (!r.contacto) {
+    const allUnc = [...(unclassified.fiscal || []), ...(unclassified.envio || []), ...(unclassified.both || [])];
+    for (const line of allUnc) {
+      if (/^[A-ZÁÉÍÓÚÑa-záéíóúñ][a-záéíóúñ]{2,20}$/.test(line.trim())
+          && !resolveProvince(line)
+          && line.trim() !== r.nombre && line.trim() !== r.razon
+          && line.trim().toLowerCase() !== 'unipersonal') {
+        r.contacto = line.trim();
+        break;
+      }
     }
   }
 
@@ -4789,7 +5224,9 @@ function parseClientText() {
   if (senderMatch && !r.origen) r.origen = senderMatch[1].trim();
 
   // Código cliente: nombre comercial (o razón social) + ciudad
-  const baseCode = (r.nombre || r.razon || '').toUpperCase().replace(/[^A-Z0-9\s]/g, '').trim();
+  // Quitar prefijos genéricos: Restaurante, Hotel, Bar, Café, Cafetería, Mesón, Taberna, Cervecería, Gastrobar
+  const GENERIC_PREFIXES = /^(restaurante?|hotel|bar|caf[eé](?:ter[ií]a)?|mes[oó]n|taberna|cervecer[ií]a|gastrobar|sidrería|bodega|chiringuito|pizzer[ií]a|marisquer[ií]a|arrocer[ií]a|asador|pub|disco(?:teca)?|sala|sal[oó]n)\s+/i;
+  const baseCode = (r.nombre || r.razon || '').replace(GENERIC_PREFIXES, '').toUpperCase().replace(/[^A-Z0-9\s]/g, '').trim();
   const cityCode = (r.ciudad || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   const codeName = cityCode
     ? (baseCode.replace(/\s+/g, '').substring(0, 10) + cityCode.substring(0, 5)).substring(0, 15)
@@ -4804,6 +5241,17 @@ function parseClientText() {
   setVal('pc-razon', r.razon);
   setVal('pc-nif', r.nif);
   setVal('pc-code', codeName);
+  // Generar aliases automáticos: nombre comercial, nombre sin prefijo, nombre corto
+  const autoAliases = new Set();
+  if (r.nombre) {
+    autoAliases.add(r.nombre.toLowerCase());
+    const sinPrefijo = r.nombre.replace(GENERIC_PREFIXES, '').trim();
+    if (sinPrefijo && sinPrefijo !== r.nombre) autoAliases.add(sinPrefijo.toLowerCase());
+    // Palabras significativas (>3 chars, no artículos)
+    const palabras = sinPrefijo.split(/\s+/).filter(w => w.length > 3 && !/^(los|las|del|para|por|con|una|uno)$/i.test(w));
+    if (palabras.length >= 1) autoAliases.add(palabras[0].toLowerCase());
+  }
+  setVal('pc-aliases', [...autoAliases].join(', '));
   setVal('pc-direccion', r.direccion);
   setVal('pc-cp', r.cp);
   setVal('pc-ciudad', r.ciudad);
@@ -4862,7 +5310,7 @@ function guessProvinceFromCP(cp) {
 
 function clearClientPreview() {
   document.getElementById('parsed-client').style.display = 'none';
-  ['pc-nombre','pc-razon','pc-nif','pc-code','pc-direccion','pc-cp','pc-ciudad','pc-provincia','pc-telefono',
+  ['pc-nombre','pc-razon','pc-nif','pc-code','pc-aliases','pc-direccion','pc-cp','pc-ciudad','pc-provincia','pc-telefono',
    'pc-email','pc-email-facturas','pc-contacto','pc-notas','pc-origen','pc-dir-envio','pc-cp-envio',
    'pc-ciudad-envio','pc-prov-envio','pc-operador'].forEach(id => {
     const el = document.getElementById(id);
@@ -5093,25 +5541,36 @@ function saveClient() {
     return; 
   }
   
-  const aliasStr = document.getElementById('pc-aliases').value;
-  const aliases = aliasStr ? aliasStr.split(',').map(a => a.trim()).filter(a => a) : [nombre];
+  const aliasEl = document.getElementById('pc-aliases');
+  const aliasStr = aliasEl ? aliasEl.value : '';
+  const manualAliases = aliasStr ? aliasStr.split(',').map(a => a.trim()).filter(a => a) : [];
+  // Auto-generate short aliases from nombre + merge with manual ones
+  const autoAliases = generateAliasesFromName(nombre);
+  const aliasSet = new Set([...manualAliases.map(a => a.toLowerCase()), ...autoAliases]);
+  const aliases = [...aliasSet];
   
-  const opTipo = document.querySelector('input[name="pc-op"]:checked');
-  
+  const operador = document.getElementById('pc-operador').value || 'segun_tarifa';
+
   const client = {
     customer_code: document.getElementById('pc-code').value || nombre.toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,15),
     nombre: nombre,
     aliases: aliases,
     holded_name: document.getElementById('pc-razon').value || '',
+    nif: document.getElementById('pc-nif').value || '',
     direccion: document.getElementById('pc-direccion').value || '',
     cp: document.getElementById('pc-cp').value || '',
     ciudad: document.getElementById('pc-ciudad').value || '',
     provincia: document.getElementById('pc-provincia').value || '',
+    dir_envio: document.getElementById('pc-dir-envio').value || '',
+    cp_envio: document.getElementById('pc-cp-envio').value || '',
+    ciudad_envio: document.getElementById('pc-ciudad-envio').value || '',
+    prov_envio: document.getElementById('pc-prov-envio').value || '',
     telefono: document.getElementById('pc-telefono').value || '',
     email: document.getElementById('pc-email').value || '',
+    email_facturas: document.getElementById('pc-email-facturas').value || '',
     contacto: document.getElementById('pc-contacto').value || '',
-    operador_tipo: opTipo ? opTipo.value : 'segun_tarifa',
-    operador_fijo: document.getElementById('pc-operador-fijo').value || '',
+    operador: operador,
+    origen: document.getElementById('pc-origen').value || '',
     notas: document.getElementById('pc-notas').value || '',
     n_pedidos: 0,
     fecha_alta: new Date().toISOString().split('T')[0]
@@ -5120,8 +5579,36 @@ function saveClient() {
   dynamicClients.push(client);
   localStorage.setItem('ria_dynamic_clients', JSON.stringify(dynamicClients));
   allClients = [...CLIENTS_DATA, ...dynamicClients];
-  
-  showToast(`Cliente "${nombre}" guardado (${allClients.length} clientes totales)`, 'success');
+
+  showToast(`Cliente "${nombre}" guardado localmente. Creando en Holded...`, 'success');
+
+  // Crear contacto en Holded via middleware
+  createClientInHolded(client);
+}
+
+async function createClientInHolded(client) {
+  try {
+    const r = await fetch(`${MIDDLEWARE_URL}/api/clientes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(client),
+    });
+    const data = await r.json();
+    if (data.ok) {
+      // Guardar holded_id en el cliente local
+      const idx = dynamicClients.findIndex(c => c.customer_code === client.customer_code);
+      if (idx >= 0) {
+        dynamicClients[idx].holded_id = data.holded_id;
+        localStorage.setItem('ria_dynamic_clients', JSON.stringify(dynamicClients));
+        allClients = [...CLIENTS_DATA, ...dynamicClients];
+      }
+      showToast(`Cliente creado en Holded (ID: ${data.holded_id})`, 'success');
+    } else {
+      showToast(`Error Holded: ${data.error || 'desconocido'}`, 'error');
+    }
+  } catch (e) {
+    showToast(`No se pudo conectar con el middleware: ${e.message}`, 'error');
+  }
 }
 
 // ============================================================
@@ -5137,7 +5624,7 @@ function copyClientJSON() {
   const client = {
     customer_code: document.getElementById('pc-code').value,
     nombre: nombre,
-    aliases: document.getElementById('pc-aliases').value.split(',').map(a => a.trim()).filter(a => a),
+    aliases: (document.getElementById('pc-aliases')?.value || '').split(',').map(a => a.trim()).filter(a => a),
     direccion: document.getElementById('pc-direccion').value,
     cp: document.getElementById('pc-cp').value,
     ciudad: document.getElementById('pc-ciudad').value,
@@ -5402,7 +5889,7 @@ function getHistoryProducts(customerCode, currentProducts) {
 // ============================================================
 // MIDDLEWARE — Conexión con servidor local Flask
 // ============================================================
-const MIDDLEWARE_URL = 'http://127.0.0.1:5000';
+const MIDDLEWARE_URL = 'http://100.79.129.44:5000';
 
 async function checkMiddleware() {
   try {
@@ -5415,6 +5902,25 @@ async function checkMiddleware() {
   } catch (e) {
     return { ok: false, message: 'Middleware no disponible. Arranca servidor.py' };
   }
+}
+
+// ── Generador de referencias cortas para Logista (max 9 chars principal) ──
+// Formato: MDDCCC (6-8 chars) donde M=mes hex (1-C), DD=día, CCC=cliente 3 letras
+// Ej: Muva 26 marzo → "326MUV", segundo envío → "326MUV2"
+const _usedRefs = {};
+function generateShortRef(customerCode) {
+  const now = new Date();
+  const m = (now.getMonth() + 1).toString(16).toUpperCase();  // 1-9,A,B,C
+  const dd = String(now.getDate()).padStart(2, '0');
+  const prefix = customerCode.replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase() || 'X';
+  const base = `${m}${dd}${prefix}`;
+  // Evitar duplicados el mismo día
+  if (!_usedRefs[base]) {
+    _usedRefs[base] = 1;
+    return base;  // "326MUV" (6 chars) — cabe en 9 de Logista
+  }
+  _usedRefs[base]++;
+  return `${base}${_usedRefs[base]}`;  // "326MUV2" (7 chars)
 }
 
 function buildMiddlewarePayload(order) {
@@ -5435,12 +5941,19 @@ function buildMiddlewarePayload(order) {
       customer_code_logista: client.customer_code_logista || '',
       operador: (op.operador || 'logista').toLowerCase()
     },
-    productos: products.map(p => ({
-      nombre: p.nombre,
-      codigo: p.codigo || '',
-      cantidad: p.cantidad
-    })),
-    referencia: `RIA-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${(client.customer_code || 'X').slice(0,6)}`,
+    productos: products.map(p => {
+      // Convertir cajas a unidades para Holded + enviar sku_holded para precio y productId
+      const prod = PRODUCTS_DATA.find(pd => pd.codigo === p.codigo);
+      const udsCaja = (prod && prod.uds_caja) ? prod.uds_caja : 24;
+      return {
+        nombre: p.nombre,
+        codigo: p.codigo || '',
+        sku_holded: (prod && prod.sku_holded) ? prod.sku_holded : p.codigo || '',
+        cantidad_cajas: p.cantidad,
+        cantidad: p.cantidad * udsCaja
+      };
+    }),
+    referencia: generateShortRef(client.customer_code || 'X'),
     notas: '',
     fecha_envio: order.shipDate || getNextBusinessDay(),
     acciones: {
@@ -5605,11 +6118,13 @@ function showMiddlewareResult(result, order) {
 
   const anyOk = Object.values(acciones).some(a => a.ok);
 
-  // Guardar datos para impresión
+  // Guardar datos para impresión — ACUMULAR etiquetas del día
   window._lastResult = result;
   window._lastOrder = order;
   if (acciones.etiquetas && acciones.etiquetas.ok) {
-    window._lastEtiquetas = acciones.etiquetas.etiquetas;
+    if (!window._allEtiquetasDia) window._allEtiquetasDia = [];
+    window._allEtiquetasDia = window._allEtiquetasDia.concat(acciones.etiquetas.etiquetas);
+    window._lastEtiquetas = window._allEtiquetasDia;
   }
 
   // Botones de impresión
@@ -5681,7 +6196,11 @@ async function enviarSoloHolded(idx) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contact_id: order.client.holded_id,
-        productos: order.products.map(p => ({ nombre: p.nombre, codigo: p.codigo || '', cantidad: p.cantidad })),
+        productos: order.products.map(p => {
+          const prod = PRODUCTS_DATA.find(pd => pd.codigo === p.codigo);
+          const udsCaja = (prod && prod.uds_caja) ? prod.uds_caja : 24;
+          return { nombre: p.nombre, codigo: p.codigo || '', sku_holded: (prod && prod.sku_holded) ? prod.sku_holded : p.codigo || '', cantidad_cajas: p.cantidad, cantidad: p.cantidad * udsCaja };
+        }),
         notas: ''
       }),
       signal: AbortSignal.timeout(15000)
@@ -5796,21 +6315,28 @@ async function imprimirHojaCarga() {
   const lastOrder = window._lastOrder;
   const targetOp = ((lastOrder && lastOrder.operador && lastOrder.operador.operador) || 'logista').toLowerCase();
 
-  // Incluir TODOS los pedidos renderizados del mismo operador
+  // Build envios from RENDERED_ORDERS, using edited values from the table
   const envios = RENDERED_ORDERS
     .filter(o => ((o.operador && o.operador.operador) || 'logista').toLowerCase() === targetOp)
-    .map(o => ({
-      referencia: `RIA-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${(o.client.customer_code || 'X').slice(0,6)}`,
-      cliente: o.client.nombre || '',
-      direccion: o.client.direccion || '',
-      cp: o.client.cp || '',
-      ciudad: o.client.ciudad || '',
-      bultos: (o.products || []).reduce((s, p) => s + (p.cantidad || 0), 0),
-      peso_kg: o.totalWeight || 0,
-      servicio: 'REFRIGERADO',
-      operador: targetOp,
-      delegacion: '',
-    }));
+    .map(o => {
+      const c = o.client || {};
+      const bultos = o._override_bultos !== undefined
+        ? o._override_bultos
+        : (o.products || []).reduce((s, p) => s + (p.cantidad || 0), 0);
+      return {
+        referencia: generateShortRef(c.customer_code || 'X'),
+        cliente: c.nombre || '',
+        direccion: c.dir_envio || c.direccion || '',
+        cp: c.cp_envio || c.cp || '',
+        ciudad: c.ciudad_envio || c.ciudad || '',
+        bultos,
+        peso_kg: o.totalWeight || 0,
+        servicio: 'REFRIGERADO',
+        operador: targetOp,
+        delegacion: '',
+        observaciones: o._observaciones || '',
+      };
+    });
 
   if (!envios.length) {
     showToast('No hay envios de ' + targetOp.toUpperCase() + ' para la hoja', 'error');
