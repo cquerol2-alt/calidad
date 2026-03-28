@@ -4256,7 +4256,10 @@ function renderSummary(orders) {
       <td style="padding:4px 2px;"><input type="number" data-field="peso" data-idx="${idx}" value="${peso}" onchange="updateShipRow(this)" step="0.1" style="width:60px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;text-align:center;" min="0"></td>
       <td style="padding:4px 2px;"><input type="text" data-field="obs" data-idx="${idx}" value="${obs.replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" placeholder="—" style="width:100%;min-width:80px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
       <td style="padding:4px;text-align:center;"><span style="background:${opColor};color:white;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap;">${opName}</span></td>
-      <td style="padding:4px;text-align:center;"><button onclick="removeShipRow(${idx})" title="Quitar de Logista" style="background:none;border:none;cursor:pointer;font-size:16px;color:#c62828;">✕</button></td>
+      <td style="padding:4px;text-align:center;white-space:nowrap;">
+        <button onclick="reenviarLogista(${idx})" title="Re-enviar a Logista" style="background:none;border:none;cursor:pointer;font-size:14px;color:#0277BD;">🔄</button>
+        <button onclick="removeShipRow(${idx})" title="Quitar de Logista" style="background:none;border:none;cursor:pointer;font-size:16px;color:#c62828;">✕</button>
+      </td>
     </tr>`;
   }).join('');
 
@@ -4300,7 +4303,7 @@ function renderSummary(orders) {
               <th style="padding:8px 4px;text-align:center;font-size:11px;">Peso</th>
               <th style="padding:8px 4px;text-align:left;font-size:11px;">Obs.</th>
               <th style="padding:8px 4px;text-align:center;font-size:11px;">Op.</th>
-              <th style="padding:8px 4px;width:30px;"></th>
+              <th style="padding:8px 4px;width:50px;"></th>
             </tr>
           </thead>
           <tbody>
@@ -6275,10 +6278,59 @@ async function descargarOV(ovId) {
 // ============================================================
 
 async function imprimirEtiquetas() {
-  const etiquetas = window._lastEtiquetas;
+  // Try cached etiquetas first; if empty, generate from RENDERED_ORDERS via middleware
+  let etiquetas = window._lastEtiquetas;
+
   if (!etiquetas || !etiquetas.length) {
-    showToast('No hay etiquetas para imprimir', 'error');
-    return;
+    // Generate etiquetas on the fly from all Logista orders in RENDERED_ORDERS
+    const logOrders = RENDERED_ORDERS.filter(o =>
+      ((o.operador && o.operador.operador) || 'logista').toLowerCase() === 'logista'
+    );
+    if (!logOrders.length) {
+      showToast('No hay pedidos de Logista para generar etiquetas', 'error');
+      return;
+    }
+
+    showToast('Generando etiquetas desde pedidos actuales...', 'success');
+    try {
+      const r = await fetch(`${MIDDLEWARE_URL}/api/etiquetas/generar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pedidos: logOrders.map(o => {
+            const c = o.client || {};
+            const bultos = o._override_bultos !== undefined
+              ? o._override_bultos
+              : (o.products || []).reduce((s, p) => s + (p.cantidad || 0), 0);
+            return {
+              cliente: {
+                nombre: c.nombre || '',
+                direccion: c.dir_envio || c.direccion || '',
+                cp: c.cp_envio || c.cp || '',
+                ciudad: c.ciudad_envio || c.ciudad || '',
+                telefono: c.telefono || '',
+                customer_code_logista: c.customer_code_logista || '',
+              },
+              referencia: generateShortRef(c.customer_code || 'X'),
+              bultos: bultos,
+            };
+          })
+        }),
+        signal: AbortSignal.timeout(20000)
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+      if (data.ok && data.etiquetas && data.etiquetas.length) {
+        etiquetas = data.etiquetas;
+        window._lastEtiquetas = etiquetas;
+        window._allEtiquetasDia = etiquetas;
+      } else {
+        throw new Error(data.error || 'No se generaron etiquetas');
+      }
+    } catch (e) {
+      showToast(`Error generando etiquetas: ${e.message}`, 'error');
+      return;
+    }
   }
 
   try {
@@ -6302,6 +6354,54 @@ async function imprimirEtiquetas() {
     showToast(`${etiquetas.length} etiquetas descargadas`, 'success');
   } catch (e) {
     showToast(`Error generando etiquetas: ${e.message}`, 'error');
+  }
+}
+
+// Re-enviar datos corregidos de un envío a Logista
+async function reenviarLogista(idx) {
+  const order = RENDERED_ORDERS[idx];
+  if (!order) { showToast('Pedido no encontrado', 'error'); return; }
+  const c = order.client || {};
+  const bultos = order._override_bultos !== undefined
+    ? order._override_bultos
+    : (order.products || []).reduce((s, p) => s + (p.cantidad || 0), 0);
+
+  if (!confirm(`¿Re-enviar datos corregidos de "${c.nombre}" a Logista?`)) return;
+
+  showToast('Re-enviando a Logista...', 'success');
+  try {
+    const payload = {
+      consignee: {
+        customer_code: c.customer_code_logista || '',
+        name: c.nombre || '',
+        address: c.dir_envio || c.direccion || '',
+        city: c.ciudad_envio || c.ciudad || '',
+        postal_code: c.cp_envio || c.cp || '',
+        country_id: 'ES',
+        nif: c.nif || '',
+        phone: c.telefono || '',
+        email: c.email || '',
+      },
+      packages: bultos,
+      weight_kg: order.totalWeight || bultos * 7,
+      reference: generateShortRef(c.customer_code || 'X'),
+      comments: order._observaciones || '',
+    };
+
+    const r = await fetch(`${MIDDLEWARE_URL}/api/logista/envio`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(15000)
+    });
+    const data = await r.json();
+    if (data.ok) {
+      showToast(`Logista actualizado: ${c.nombre}`, 'success');
+    } else {
+      showToast(`Error Logista: ${data.message || data.error || 'desconocido'}`, 'error');
+    }
+  } catch (e) {
+    showToast(`Error: ${e.message}`, 'error');
   }
 }
 
