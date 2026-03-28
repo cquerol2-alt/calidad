@@ -4243,9 +4243,10 @@ function renderSummary(orders) {
     const cp = c.cp_envio || c.cp || '';
     const ciudad = c.ciudad_envio || c.ciudad || '';
     const obs = o._observaciones || c.notas || '';
-    const enviado = o._enviadoHolded;
-    const rowBg = enviado ? '#f0f9f0' : 'white';
-    const statusIcon = enviado ? '✅' : '⏳';
+    const enviadoH = o._enviadoHolded;
+    const enviadoL = o._enviadoLogista;
+    const rowBg = enviadoL ? '#e8f5e9' : enviadoH ? '#f0f9f0' : 'white';
+    const statusIcon = enviadoL ? '✅' : enviadoH ? '📋' : '⏳';
     return `<tr data-row-idx="${idx}" style="background:${rowBg};">
       <td style="padding:6px 4px;text-align:center;font-size:12px;color:#888;">${statusIcon}</td>
       <td style="padding:4px 2px;"><input type="text" data-field="destinatario" data-idx="${idx}" value="${(c.nombre||'').replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" style="width:100%;min-width:100px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
@@ -4254,6 +4255,12 @@ function renderSummary(orders) {
       <td style="padding:4px 2px;"><input type="text" data-field="ciudad" data-idx="${idx}" value="${ciudad.replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" style="width:100%;min-width:80px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
       <td style="padding:4px 2px;"><input type="number" data-field="bultos" data-idx="${idx}" value="${bultos}" onchange="updateShipRow(this)" style="width:50px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;text-align:center;" min="0"></td>
       <td style="padding:4px 2px;"><input type="number" data-field="peso" data-idx="${idx}" value="${peso}" onchange="updateShipRow(this)" step="0.1" style="width:60px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;text-align:center;" min="0"></td>
+      <td style="padding:4px 2px;">
+        <select data-field="tipo_envio" data-idx="${idx}" onchange="updateShipRow(this)" style="width:70px;border:1px solid #ddd;border-radius:4px;padding:4px 2px;font-size:11px;background:white;">
+          <option value="caja"${(o._tipo_envio||'caja')==='caja'?' selected':''}>📦 Caja</option>
+          <option value="palet"${(o._tipo_envio||'caja')==='palet'?' selected':''}>🏗️ Palet</option>
+        </select>
+      </td>
       <td style="padding:4px 2px;"><input type="text" data-field="obs" data-idx="${idx}" value="${obs.replace(/"/g,'&quot;')}" onchange="updateShipRow(this)" placeholder="—" style="width:100%;min-width:80px;border:1px solid #ddd;border-radius:4px;padding:4px 6px;font-size:12px;"></td>
       <td style="padding:4px;text-align:center;"><span style="background:${opColor};color:white;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap;">${opName}</span></td>
       <td style="padding:4px;text-align:center;white-space:nowrap;">
@@ -4301,6 +4308,7 @@ function renderSummary(orders) {
               <th style="padding:8px 4px;text-align:left;font-size:11px;">Ciudad</th>
               <th style="padding:8px 4px;text-align:center;font-size:11px;">Bult.</th>
               <th style="padding:8px 4px;text-align:center;font-size:11px;">Peso</th>
+              <th style="padding:8px 4px;text-align:center;font-size:11px;">Tipo</th>
               <th style="padding:8px 4px;text-align:left;font-size:11px;">Obs.</th>
               <th style="padding:8px 4px;text-align:center;font-size:11px;">Op.</th>
               <th style="padding:8px 4px;width:50px;"></th>
@@ -4314,6 +4322,11 @@ function renderSummary(orders) {
       ` : ''}
 
       <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button onclick="enviarTodoLogista()" id="btn-enviar-logista" style="flex:1;min-width:140px;padding:12px;border:none;background:#1B5E20;color:white;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.9rem;box-shadow:0 2px 4px rgba(0,0,0,0.2);">
+          🚛 Enviar todo a Logista
+        </button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
         <button onclick="imprimirEtiquetas()" style="flex:1;min-width:140px;padding:10px;border:2px solid #1B5E20;background:white;color:#1B5E20;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;">
           🏷️ Etiquetas del día
         </button>
@@ -4348,6 +4361,9 @@ function updateShipRow(input) {
       break;
     case 'peso':
       o.totalWeight = parseFloat(val) || 0;
+      break;
+    case 'tipo_envio':
+      o._tipo_envio = val;  // 'caja' o 'palet'
       break;
     case 'obs':
       o._observaciones = val;
@@ -5961,8 +5977,8 @@ function buildMiddlewarePayload(order) {
     fecha_envio: order.shipDate || getNextBusinessDay(),
     acciones: {
       crear_ov_holded: true,
-      crear_envio_logista: (op.operador || '').toLowerCase() === 'logista',
-      generar_etiqueta: (op.operador || '').toLowerCase() === 'logista',
+      crear_envio_logista: false,  // NO enviar automáticamente — se envía desde la tabla tras revisar
+      generar_etiqueta: false,     // Se generan al pulsar "Etiquetas del día"
       notificar_stef: (op.operador || '').toLowerCase() === 'stef'
     }
   };
@@ -6358,47 +6374,131 @@ async function imprimirEtiquetas() {
 }
 
 // Re-enviar datos corregidos de un envío a Logista
-async function reenviarLogista(idx) {
-  const order = RENDERED_ORDERS[idx];
-  if (!order) { showToast('Pedido no encontrado', 'error'); return; }
+function buildLogistaPayload(order) {
   const c = order.client || {};
   const bultos = order._override_bultos !== undefined
     ? order._override_bultos
     : (order.products || []).reduce((s, p) => s + (p.cantidad || 0), 0);
+  const tipo = order._tipo_envio || 'caja';  // 'caja' o 'palet'
+  const peso = order.totalWeight || bultos * 7;
 
-  if (!confirm(`¿Re-enviar datos corregidos de "${c.nombre}" a Logista?`)) return;
+  const payload = {
+    consignee: {
+      customer_code: c.customer_code_logista || '',
+      name: c.nombre || '',
+      address: c.dir_envio || c.direccion || '',
+      city: c.ciudad_envio || c.ciudad || '',
+      postal_code: c.cp_envio || c.cp || '',
+      country_id: 'ES',
+      nif: c.nif || '',
+      phone: c.telefono || '',
+      email: c.email || '',
+    },
+    packages: bultos,
+    weight_kg: peso,
+    reference: generateShortRef(c.customer_code || 'X'),
+    comments: order._observaciones || '',
+    tipo_envio: tipo,  // 'caja' o 'palet' — el middleware lo traduce a campos Logista
+  };
 
-  showToast('Re-enviando a Logista...', 'success');
-  try {
-    const payload = {
-      consignee: {
-        customer_code: c.customer_code_logista || '',
-        name: c.nombre || '',
-        address: c.dir_envio || c.direccion || '',
-        city: c.ciudad_envio || c.ciudad || '',
-        postal_code: c.cp_envio || c.cp || '',
-        country_id: 'ES',
-        nif: c.nif || '',
-        phone: c.telefono || '',
-        email: c.email || '',
-      },
-      packages: bultos,
-      weight_kg: order.totalWeight || bultos * 7,
-      reference: generateShortRef(c.customer_code || 'X'),
-      comments: order._observaciones || '',
-    };
+  // Si es palet, informar campos específicos
+  if (tipo === 'palet') {
+    payload.palets = bultos;  // nº de palets = lo que hay en "bultos"
+  }
 
-    const r = await fetch(`${MIDDLEWARE_URL}/api/logista/envio`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(15000)
+  return payload;
+}
+
+async function enviarUnoLogista(order, idx) {
+  const c = order.client || {};
+  const payload = buildLogistaPayload(order);
+
+  const r = await fetch(`${MIDDLEWARE_URL}/api/logista/envio`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(20000)
+  });
+  const data = await r.json();
+  if (data.ok) {
+    order._enviadoLogista = true;
+    return { ok: true, nombre: c.nombre, idx };
+  } else {
+    return { ok: false, nombre: c.nombre, idx, error: data.message || data.error || 'desconocido' };
+  }
+}
+
+async function enviarTodoLogista() {
+  // Filtrar solo pedidos Logista no enviados aún
+  const pendientes = RENDERED_ORDERS
+    .map((o, idx) => ({ order: o, idx }))
+    .filter(({ order }) => {
+      const op = (order.operador && order.operador.operador || 'logista').toLowerCase();
+      return op === 'logista' && !order._enviadoLogista;
     });
-    const data = await r.json();
-    if (data.ok) {
-      showToast(`Logista actualizado: ${c.nombre}`, 'success');
+
+  if (pendientes.length === 0) {
+    showToast('No hay envíos Logista pendientes', 'info');
+    return;
+  }
+
+  // Check middleware
+  const status = await checkMiddleware();
+  if (!status.ok) {
+    showToast('Middleware no disponible. Arráncalo primero.', 'error');
+    return;
+  }
+
+  const nombres = pendientes.map(p => p.order.client?.nombre || '?').join(', ');
+  if (!confirm(`¿Enviar ${pendientes.length} envío(s) a Logista?\n\n${nombres}`)) return;
+
+  const btn = document.getElementById('btn-enviar-logista');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Enviando...'; }
+
+  let ok = 0, fail = 0;
+  const errores = [];
+  for (const { order, idx } of pendientes) {
+    try {
+      const result = await enviarUnoLogista(order, idx);
+      if (result.ok) {
+        ok++;
+      } else {
+        fail++;
+        errores.push(`${result.nombre}: ${result.error}`);
+      }
+    } catch (e) {
+      fail++;
+      errores.push(`${order.client?.nombre || '?'}: ${e.message}`);
+    }
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = '🚛 Enviar todo a Logista'; }
+
+  // Refresh table to show green rows for sent ones
+  renderSummary(RENDERED_ORDERS);
+
+  if (fail === 0) {
+    showToast(`✅ ${ok} envío(s) creados en Logista`, 'success');
+  } else {
+    showToast(`${ok} OK, ${fail} errores:\n${errores.join('\n')}`, 'error');
+  }
+}
+
+async function reenviarLogista(idx) {
+  const order = RENDERED_ORDERS[idx];
+  if (!order) { showToast('Pedido no encontrado', 'error'); return; }
+  const c = order.client || {};
+
+  if (!confirm(`¿Enviar/re-enviar "${c.nombre}" a Logista?`)) return;
+
+  showToast('Enviando a Logista...', 'success');
+  try {
+    const result = await enviarUnoLogista(order, idx);
+    if (result.ok) {
+      showToast(`Logista OK: ${c.nombre}`, 'success');
+      renderSummary(RENDERED_ORDERS);
     } else {
-      showToast(`Error Logista: ${data.message || data.error || 'desconocido'}`, 'error');
+      showToast(`Error Logista: ${result.error}`, 'error');
     }
   } catch (e) {
     showToast(`Error: ${e.message}`, 'error');
