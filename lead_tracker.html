@@ -540,10 +540,8 @@ body {
 
   <!-- Botones rápidos de importación -->
   <div class="btn-row" style="margin-bottom:8px;">
-    <label class="btn btn-secondary btn-sm" style="cursor:pointer;display:flex;align-items:center;gap:4px;">
-      📇 Importar contacto (.vcf)
-      <input type="file" id="vcfInput" accept=".vcf,text/vcard,text/x-vcard" style="display:none" onchange="importVCard(event)">
-    </label>
+    <input type="file" id="vcfInput" accept=".vcf,text/vcard,text/x-vcard,.txt" style="position:absolute;opacity:0;width:0;height:0;" onchange="importVCard(event)">
+    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('vcfInput').click()" style="display:flex;align-items:center;gap:4px;">📇 Importar contacto</button>
     <button class="btn btn-secondary btn-sm" onclick="pasteFromClipboard()" style="display:flex;align-items:center;gap:4px;">📋 Pegar portapapeles</button>
   </div>
 
@@ -863,6 +861,7 @@ function importVCard(event) {
     document.getElementById('fEmpresa').value = parsed.empresa || '';
     document.getElementById('fTelefono').value = parsed.telefono || '';
     document.getElementById('fEmail').value = parsed.email || '';
+    document.getElementById('fDireccion').value = parsed.direccion || '';
     document.getElementById('fNotas').value = parsed.notas || '';
     document.getElementById('parsedForm').style.display = 'block';
     document.getElementById('parsedForm').scrollIntoView({ behavior: 'smooth' });
@@ -873,48 +872,63 @@ function importVCard(event) {
 }
 
 function parseVCard(vcf) {
-  const result = { nombre: '', empresa: '', telefono: '', email: '', notas: '' };
-  const lines = vcf.split(/\r?\n/);
+  const result = { nombre: '', empresa: '', telefono: '', email: '', direccion: '', notas: '' };
+
+  // iOS a veces exporta vCards con líneas plegadas (línea larga continúa con espacio)
+  // Desplegar primero
+  const unfolded = vcf.replace(/\r?\n[ \t]/g, '');
+  const lines = unfolded.split(/\r?\n/);
 
   for (const line of lines) {
     // Nombre completo
-    if (line.startsWith('FN:') || line.startsWith('FN;')) {
+    if (/^FN[;:]/i.test(line)) {
       result.nombre = line.split(':').slice(1).join(':').trim();
     }
     // Nombre estructurado (fallback)
-    if (!result.nombre && line.startsWith('N:')) {
-      const parts = line.split(':')[1]?.split(';') || [];
-      result.nombre = [parts[1], parts[0]].filter(Boolean).join(' ').trim();
+    if (!result.nombre && /^N[;:]/i.test(line)) {
+      const parts = line.split(':').slice(1).join(':').split(';');
+      result.nombre = [parts[1], parts[0], parts[2]].filter(Boolean).join(' ').trim();
     }
     // Empresa
-    if (line.startsWith('ORG:') || line.startsWith('ORG;')) {
+    if (/^ORG[;:]/i.test(line)) {
       result.empresa = line.split(':').slice(1).join(':').replace(/;/g, ' ').trim();
     }
-    // Teléfono (prioridad: CELL > WORK > cualquiera)
-    if (line.match(/^TEL/i)) {
-      const phone = line.split(':').slice(1).join(':').trim();
-      if (!result.telefono || line.toUpperCase().includes('CELL') || line.toUpperCase().includes('MOBILE')) {
+    // Teléfono (prioridad: CELL/MOBILE > cualquiera)
+    if (/^TEL[;:]/i.test(line)) {
+      const phone = line.split(':').slice(1).join(':').replace(/[ \-()]/g, '').trim();
+      if (!result.telefono || /CELL|MOBILE|IPHONE/i.test(line)) {
         result.telefono = phone;
       }
     }
     // Email
-    if (line.match(/^EMAIL/i)) {
-      result.email = line.split(':').slice(1).join(':').trim();
+    if (/^EMAIL[;:]/i.test(line)) {
+      if (!result.email) {
+        result.email = line.split(':').slice(1).join(':').trim();
+      }
     }
-    // Dirección (como nota)
-    if (line.startsWith('ADR')) {
-      const addr = line.split(':').slice(1).join(':').replace(/;/g, ', ').replace(/^[, ]+/, '').trim();
-      if (addr) result.notas += (result.notas ? ' | ' : '') + 'Dir: ' + addr;
+    // Dirección → campo separado
+    if (/^ADR[;:]/i.test(line)) {
+      // ADR tiene 7 componentes separados por ; : PO Box;Ext;Calle;Ciudad;Provincia;CP;País
+      const addrPart = line.split(':').slice(1).join(':');
+      const parts = addrPart.split(';');
+      // Filtrar vacíos y juntar con coma
+      const addr = parts.filter(p => p.trim()).join(', ').replace(/^[, ]+/, '').trim();
+      if (addr && !result.direccion) result.direccion = addr;
     }
     // Notas
-    if (line.startsWith('NOTE:')) {
-      const note = line.split(':').slice(1).join(':').trim();
+    if (/^NOTE[;:]/i.test(line)) {
+      const note = line.split(':').slice(1).join(':').replace(/\\n/g, ' ').trim();
       if (note) result.notas += (result.notas ? ' | ' : '') + note;
     }
     // Cargo
-    if (line.startsWith('TITLE:')) {
+    if (/^TITLE[;:]/i.test(line)) {
       const title = line.split(':').slice(1).join(':').trim();
       if (title) result.notas += (result.notas ? ' | ' : '') + 'Cargo: ' + title;
+    }
+    // URL
+    if (/^URL[;:]/i.test(line)) {
+      const url = line.split(':').slice(1).join(':').trim();
+      if (url) result.notas += (result.notas ? ' | ' : '') + 'Web: ' + url;
     }
   }
   return result;
@@ -957,6 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('fEmpresa').value = parsed.empresa || '';
       document.getElementById('fTelefono').value = parsed.telefono || '';
       document.getElementById('fEmail').value = parsed.email || '';
+      document.getElementById('fDireccion').value = parsed.direccion || '';
       document.getElementById('fNotas').value = parsed.notas || '';
       document.getElementById('parsedForm').style.display = 'block';
       toast('Contacto detectado automáticamente');
