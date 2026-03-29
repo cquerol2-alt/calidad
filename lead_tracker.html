@@ -540,16 +540,13 @@ body {
 
   <!-- Botones rápidos de importación -->
   <div class="btn-row" style="margin-bottom:8px;">
-    <input type="file" id="vcfInput" accept=".vcf,text/vcard,text/x-vcard,.txt" style="position:absolute;opacity:0;width:0;height:0;" onchange="importVCard(event)">
-    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('vcfInput').click()" style="display:flex;align-items:center;gap:4px;">📇 Importar contacto</button>
     <button class="btn btn-secondary btn-sm" onclick="pasteFromClipboard()" style="display:flex;align-items:center;gap:4px;">📋 Pegar portapapeles</button>
   </div>
 
   <textarea id="rawInput" class="paste-area" placeholder="Opciones:
 • Pega un mensaje de WhatsApp (texto copiado)
-• Pega un contacto compartido desde iPhone
-• Escribe a mano: nombre, empresa, teléfono...
-• O importa un .vcf con el botón de arriba"></textarea>
+• Pega un contacto (Contactos → Compartir → Copiar)
+• Escribe a mano: nombre, empresa, teléfono..."></textarea>
   <div class="btn-row">
     <button class="btn btn-primary" onclick="parseInput()">Interpretar</button>
     <button class="btn btn-secondary" onclick="document.getElementById('rawInput').value='';clearForm()">Limpiar</button>
