@@ -449,6 +449,35 @@ body {
   text-decoration: underline;
 }
 
+/* ── CARD WORKFLOW MINI-LOG ── */
+.card-log {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border);
+  font-size: 11px;
+  color: var(--text-mid);
+}
+.card-log-item {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 1px 0;
+  line-height: 1.4;
+}
+.card-log-item .log-date {
+  color: var(--text-light);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.card-log-item .log-action {
+  font-weight: 500;
+}
+.card-log-more {
+  color: var(--text-light);
+  font-size: 10px;
+  font-style: italic;
+}
+
 /* ── ADDRESS FIELD ── */
 .form-group.full-width { min-width: 100%; flex-basis: 100%; }
 
@@ -1428,6 +1457,22 @@ function renderCard(lead, isHistory = false) {
     phoneLink = `<div class="lead-phone"><a href="tel:${cleanPhone}">📞 ${lead.telefono}</a> · <a href="https://wa.me/${cleanPhone.replace('+','')}">💬 WA</a></div>`;
   }
 
+  // Workflow mini-log (últimos 3 pasos visibles en la tarjeta)
+  const wf = lead.workflow || [];
+  let workflowHtml = '';
+  if (wf.length > 0) {
+    const show = wf.slice(-3); // últimos 3
+    const hidden = wf.length - show.length;
+    workflowHtml = '<div class="card-log">';
+    if (hidden > 0) {
+      workflowHtml += `<div class="card-log-more">+${hidden} paso${hidden > 1 ? 's' : ''} anterior${hidden > 1 ? 'es' : ''}</div>`;
+    }
+    for (const step of show) {
+      workflowHtml += `<div class="card-log-item"><span class="log-date">${formatDate(step.fecha)}</span> <span class="log-action">${esc(step.accion)}</span>${step.nota ? ' <span>· ' + esc(step.nota).substring(0, 40) + '</span>' : ''}</div>`;
+    }
+    workflowHtml += '</div>';
+  }
+
   return `
     <div class="lead-card" draggable="true" ondragstart="onDragStart(event,'${lead.id}')"
          style="border-left: 4px solid ${borderColor};${overdue ? 'background:#FFF8E1;' : ''}${lead.estado==='hecho' ? 'opacity:0.6;' : ''}"
@@ -1437,6 +1482,7 @@ function renderCard(lead, isHistory = false) {
       ${phoneLink}
       ${lead.accion ? `<span class="lead-action">${esc(lead.accion)}</span>` : ''}
       ${lead.fecha_limite ? `<span class="lead-date">${formatDate(lead.fecha_limite)}</span>` : ''}
+      ${workflowHtml}
       <div class="card-actions" onclick="event.stopPropagation()">
         ${!isHistory ? `
           <button class="card-btn" onclick="openMovePopup('${lead.id}')">Mover</button>
