@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Leads RIA">
+<meta name="theme-color" content="#1B5E20">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
+<title>Lead Tracker — Rice in Action</title>
+<style>
+:root {
+  --ria-green: #1B5E20;
+  --ria-green-light: #E8F5E9;
+  --ria-green-mid: #4CAF50;
+  --q1-color: #C62828;   /* Urgente+Importante: rojo */
+  --q1-bg: #FFEBEE;
+  --q2-color: #1565C0;   /* Importante: azul */
+  --q2-bg: #E3F2FD;
+  --q3-color: #E65100;   /* Urgente: naranja */
+  --q3-bg: #FFF3E0;
+  --q4-color: #616161;   /* Ni uno ni otro: gris */
+  --q4-bg: #F5F5F5;
+  --text-dark: #212121;
+  --text-mid: #616161;
+  --text-light: #9E9E9E;
+  --bg-light: #FAFAFA;
+  --border: #E0E0E0;
+  --shadow: 0 2px 8px rgba(0,0,0,0.1);
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--ria-green);
+  color: #fff;
+  padding: 14px 16px 0;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.header h1 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.header h1 span { font-weight: 300; opacity: 0.8; }
+.tabs { display: flex; gap: 0; }
+.tab {
+  flex: 1;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  color: rgba(255,255,255,0.7);
+}
+.tab.active { color: #fff; border-bottom-color: #fff; }
+.tab:hover { color: #fff; }
+.sync-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  margin-left: 6px; vertical-align: middle;
+}
+.sync-dot.ok { background: #81C784; }
+.sync-dot.pending { background: #FFB74D; }
+.sync-dot.error { background: #E57373; }
+
+/* ── CONTENT ── */
+.content { max-width: 900px; margin: 0 auto; padding: 16px; }
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── TAB 1: NUEVO LEAD ── */
+.paste-area {
+  width: 100%;
+  min-height: 120px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  font-size: 15px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s;
+  background: #fff;
+}
+.paste-area:focus {
+  outline: none;
+  border-color: var(--ria-green);
+  background: var(--ria-green-light);
+}
+.paste-area::placeholder { color: var(--text-light); font-size: 14px; }
+.btn-row { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--ria-green); color: #fff; flex: 1; }
+.btn-primary:hover { background: #2E7D32; }
+.btn-secondary { background: #fff; color: var(--ria-green); border: 2px solid var(--ria-green); }
+.btn-secondary:hover { background: var(--ria-green-light); }
+.btn-danger { background: #fff; color: var(--q1-color); border: 2px solid var(--q1-color); }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+
+/* ── PARSED FORM ── */
+.form-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 12px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.3s;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.form-group { flex: 1; min-width: 140px; }
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-mid);
+  margin-bottom: 4px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  background: #fff;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: var(--ria-green);
+}
+.form-group textarea { min-height: 60px; resize: vertical; }
+
+/* ── QUADRANT SELECTOR ── */
+.quadrant-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+.q-option {
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.q-option:hover { transform: scale(1.02); }
+.q-option.selected { transform: scale(1.02); }
+.q-option[data-q="q1"] { color: var(--q1-color); }
+.q-option[data-q="q1"].selected { background: var(--q1-bg); border-color: var(--q1-color); }
+.q-option[data-q="q2"] { color: var(--q2-color); }
+.q-option[data-q="q2"].selected { background: var(--q2-bg); border-color: var(--q2-color); }
+.q-option[data-q="q3"] { color: var(--q3-color); }
+.q-option[data-q="q3"].selected { background: var(--q3-bg); border-color: var(--q3-color); }
+.q-option[data-q="q4"] { color: var(--q4-color); }
+.q-option[data-q="q4"].selected { background: var(--q4-bg); border-color: var(--q4-color); }
+
+/* ── QUICK ACTIONS ── */
+.quick-actions { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  transition: all 0.2s;
+}
+.chip.selected { background: var(--ria-green); color: #fff; border-color: var(--ria-green); }
+.chip:hover { border-color: var(--ria-green); }
+
+/* ── TAB 2: TABLERO EISENHOWER ── */
+.board-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
+.board-header h2 { font-size: 16px; color: var(--text-dark); }
+.counter-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; border-radius: 11px;
+  font-size: 12px; font-weight: 700; color: #fff;
+  padding: 0 6px; margin-left: 6px;
+}
+.eisenhower {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 10px;
+}
+.quadrant {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 10px;
+  min-height: 160px;
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+.quadrant.drag-over { background: #F1F8E9; }
+.q-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.q1 .q-title { background: var(--q1-bg); color: var(--q1-color); }
+.q2 .q-title { background: var(--q2-bg); color: var(--q2-color); }
+.q3 .q-title { background: var(--q3-bg); color: var(--q3-color); }
+.q4 .q-title { background: var(--q4-bg); color: var(--q4-color); }
+
+/* ── LEAD CARDS ── */
+.lead-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: grab;
+  transition: all 0.2s;
+  position: relative;
+}
+.lead-card:active { cursor: grabbing; }
+.lead-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
+.lead-card.dragging { opacity: 0.4; }
+.lead-card .lead-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.lead-card .lead-company { font-size: 12px; color: var(--text-mid); margin-bottom: 4px; }
+.lead-card .lead-action {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--ria-green-light);
+  color: var(--ria-green);
+  display: inline-block;
+  font-weight: 500;
+}
+.lead-card .lead-date {
+  font-size: 11px; color: var(--text-light);
+  position: absolute; top: 10px; right: 10px;
+}
+.lead-card .lead-phone {
+  font-size: 12px; color: var(--text-mid); margin-bottom: 4px;
+}
+.lead-card .lead-phone a { color: var(--ria-green); text-decoration: none; }
+.card-actions {
+  display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap;
+}
+.card-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.15s;
+}
+.card-btn:hover { background: var(--ria-green-light); }
+.card-btn.done-btn { color: var(--ria-green-mid); border-color: var(--ria-green-mid); }
+.card-btn.del-btn { color: var(--q1-color); border-color: #FFCDD2; }
+
+/* ── TAB 3: DETALLE / EDICIÓN ── */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.detail-overlay.open { display: flex; }
+.detail-sheet {
+  background: #fff;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  border-radius: 16px 16px 0 0;
+  padding: 20px 16px;
+  overflow-y: auto;
+  animation: slideUp 0.3s;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+.detail-sheet h3 { font-size: 18px; margin-bottom: 16px; }
+.detail-close {
+  position: absolute; top: 16px; right: 16px;
+  font-size: 24px; cursor: pointer; color: var(--text-mid);
+  background: none; border: none;
+}
+
+/* ── MOVE POPUP ── */
+.move-popup {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  z-index: 300;
+  display: none;
+  animation: slideUp 0.25s;
+}
+.move-popup.open { display: block; }
+.move-popup h4 { text-align: center; margin-bottom: 12px; color: var(--text-mid); font-size: 14px; }
+.move-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.move-option {
+  padding: 14px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+.move-option[data-q="q1"] { background: var(--q1-bg); color: var(--q1-color); }
+.move-option[data-q="q2"] { background: var(--q2-bg); color: var(--q2-color); }
+.move-option[data-q="q3"] { background: var(--q3-bg); color: var(--q3-color); }
+.move-option[data-q="q4"] { background: var(--q4-bg); color: var(--q4-color); }
+.move-option:hover { transform: scale(1.03); }
+.move-cancel {
+  display: block; width: 100%; margin-top: 10px;
+  padding: 12px; text-align: center; border: none;
+  background: var(--bg-light); border-radius: 10px;
+  font-size: 14px; cursor: pointer; color: var(--text-mid);
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #333; color: #fff;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 500;
+  animation: toastIn 0.3s;
+  max-width: 90%;
+  text-align: center;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%); } }
+
+/* ── FILTERS ── */
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.filter-chip {
+  padding: 6px 12px; border-radius: 20px;
+  font-size: 12px; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--border);
+  transition: all 0.15s;
+}
+.filter-chip.active { background: var(--ria-green); color: #fff; border-color: var(--ria-green); }
+
+/* ── WORKFLOW TIMELINE ── */
+.timeline { margin: 12px 0; padding-left: 16px; border-left: 2px solid var(--ria-green-mid); }
+.timeline-item {
+  position: relative;
+  padding: 8px 0 8px 12px;
+  font-size: 13px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -21px; top: 12px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--ria-green-mid);
+  border: 2px solid #fff;
+}
+.timeline-item .tl-date { color: var(--text-light); font-size: 11px; }
+.timeline-item .tl-action { font-weight: 600; color: var(--text-dark); }
+.timeline-item .tl-note { color: var(--text-mid); font-size: 12px; }
+
+/* ── ADD STEP FORM ── */
+.add-step {
+  background: var(--bg-light);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 10px;
+}
+.add-step select, .add-step input, .add-step textarea {
+  width: 100%; padding: 8px 10px; border: 1.5px solid var(--border);
+  border-radius: 6px; font-size: 14px; font-family: inherit;
+  margin-bottom: 6px;
+}
+
+/* ── COPY BUTTONS ── */
+.copy-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bg-light);
+}
+.copy-row .copy-label { font-size: 11px; color: var(--text-light); min-width: 60px; }
+.copy-row .copy-value { flex: 1; font-size: 14px; word-break: break-all; }
+.copy-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  background: #fff;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.copy-btn:active { background: var(--ria-green-light); }
+
+/* ── REMINDER BANNER ── */
+.reminder-banner {
+  background: #FFF3E0;
+  border-left: 4px solid #E65100;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  animation: fadeIn 0.3s;
+}
+.reminder-banner strong { color: #E65100; }
+.reminder-banner .lead-link {
+  color: var(--ria-green);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ── ADDRESS FIELD ── */
+.form-group.full-width { min-width: 100%; flex-basis: 100%; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 30px 16px;
+  color: var(--text-light);
+  font-size: 13px;
+}
+.empty-state .emoji { font-size: 32px; margin-bottom: 8px; display: block; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .eisenhower { grid-template-columns: 1fr; }
+  .form-row { flex-direction: column; gap: 8px; }
+  .form-group { min-width: 100%; }
+  .quadrant-selector { grid-template-columns: 1fr; }
+}
+@media (min-width: 601px) {
+  .detail-overlay { align-items: center; }
+  .detail-sheet { border-radius: 16px; max-height: 80vh; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN SCREEN ══════════ -->
+<div id="loginScreen" style="display:flex; justify-content:center; align-items:center; min-height:100vh; background:var(--bg-light);">
+  <div style="background:#fff; padding:32px; border-radius:16px; box-shadow:var(--shadow); max-width:340px; width:90%; text-align:center;">
+    <div style="font-size:40px; margin-bottom:12px;">🍚</div>
+    <h2 style="color:var(--ria-green); margin-bottom:4px;">Lead Tracker</h2>
+    <p style="color:var(--text-mid); font-size:13px; margin-bottom:20px;">Rice in Action — Acceso privado</p>
+    <input type="password" id="tokenInput" placeholder="Tu token de acceso"
+      style="width:100%; padding:12px; border:2px solid var(--border); border-radius:8px; font-size:16px; text-align:center; margin-bottom:12px;"
+      onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">Entrar</button>
+    <p id="loginError" style="color:var(--q1-color); font-size:13px; margin-top:10px; display:none;">Token no válido</p>
+    <p style="color:var(--text-light); font-size:11px; margin-top:16px;">Pide tu token a Cristina</p>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<div class="header" id="appHeader" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h1>Lead Tracker <span>· Rice in Action</span></h1>
+    <button onclick="logout()" style="background:none;border:1px solid rgba(255,255,255,0.4);color:rgba(255,255,255,0.8);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;" id="logoutBtn">Salir</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-view="new">+ Nuevo</div>
+    <div class="tab" data-view="board">Tablero <span id="totalBadge" class="counter-badge" style="background:var(--ria-green)">0</span></div>
+    <div class="tab" data-view="history">Historial</div>
+  </div>
+</div>
+
+<!-- ══════════ TAB 1: NUEVO LEAD ══════════ -->
+<div class="content" id="appContent" style="display:none;">
+<div id="view-new" class="view active">
+  <p style="font-size:13px;color:var(--text-mid);margin-bottom:10px;">Pega texto de WhatsApp, un contacto del iPhone, o importa una vCard:</p>
+
+  <!-- Botones rápidos de importación -->
+  <div class="btn-row" style="margin-bottom:8px;">
+    <label class="btn btn-secondary btn-sm" style="cursor:pointer;display:flex;align-items:center;gap:4px;">
+      📇 Importar contacto (.vcf)
+      <input type="file" id="vcfInput" accept=".vcf,text/vcard,text/x-vcard" style="display:none" onchange="importVCard(event)">
+    </label>
+    <button class="btn btn-secondary btn-sm" onclick="pasteFromClipboard()" style="display:flex;align-items:center;gap:4px;">📋 Pegar portapapeles</button>
+  </div>
+
+  <textarea id="rawInput" class="paste-area" placeholder="Opciones:
+• Pega un mensaje de WhatsApp (texto copiado)
+• Pega un contacto compartido desde iPhone
+• Escribe a mano: nombre, empresa, teléfono...
+• O importa un .vcf con el botón de arriba"></textarea>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="parseInput()">Interpretar</button>
+    <button class="btn btn-secondary" onclick="document.getElementById('rawInput').value='';clearForm()">Limpiar</button>
+  </div>
+
+  <div id="parsedForm" class="form-card" style="display:none;">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" id="fNombre" placeholder="Juan García">
+      </div>
+      <div class="form-group">
+        <label>Empresa</label>
+        <input type="text" id="fEmpresa" placeholder="Restaurante La Mar">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" id="fTelefono" placeholder="+34 666 123 456">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="fEmail" placeholder="juan@restaurante.com">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Origen</label>
+        <select id="fOrigen">
+          <option value="whatsapp">WhatsApp</option>
+          <option value="llamada">Llamada</option>
+          <option value="email">Email</option>
+          <option value="feria">Feria / Evento</option>
+          <option value="referido">Referido</option>
+          <option value="web">Web / RRSS</option>
+          <option value="visita">Visita</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Producto interés</label>
+        <select id="fProducto">
+          <option value="">— Seleccionar —</option>
+          <option value="cremoso-marisco">Cremoso de Marisco</option>
+          <option value="cremoso-setas">Cremoso de Setas y Boletus</option>
+          <option value="cremoso-verduras">Cremoso de Verduras</option>
+          <option value="negro-sepia">Negro con Sepia</option>
+          <option value="paella-pollo">Paella de Pollo</option>
+          <option value="paella-marisco">Paella de Marisco</option>
+          <option value="paella-mixta">Paella Mixta</option>
+          <option value="paella-verduras">Paella de Verduras</option>
+          <option value="varios">Varios / Toda la gama</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Volumen estimado</label>
+        <input type="text" id="fVolumen" placeholder="200 uds/mes, 1 palet...">
+      </div>
+      <div class="form-group">
+        <label>Fecha límite</label>
+        <input type="date" id="fFechaLimite">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group full-width">
+        <label>Dirección (para envío muestras)</label>
+        <input type="text" id="fDireccion" placeholder="Calle, nº, CP, Ciudad, Provincia">
+      </div>
+    </div>
+
+    <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-mid);margin-bottom:6px;display:block;">Próxima acción</label>
+    <div class="quick-actions" id="actionChips">
+      <span class="chip" data-action="Enviar muestra">Enviar muestra</span>
+      <span class="chip" data-action="Llamar">Llamar</span>
+      <span class="chip" data-action="Enviar presupuesto">Presupuesto</span>
+      <span class="chip" data-action="Reunión">Reunión</span>
+      <span class="chip" data-action="Enviar catálogo">Catálogo</span>
+      <span class="chip" data-action="Seguimiento">Seguimiento</span>
+    </div>
+
+    <div class="form-row" style="margin-top:4px;">
+      <div class="form-group" style="flex:2;">
+        <label>Notas</label>
+        <textarea id="fNotas" placeholder="Contexto, detalles de la conversación..."></textarea>
+      </div>
+    </div>
+
+    <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-mid);margin:12px 0 6px;display:block;">Prioridad (Eisenhower)</label>
+    <div class="quadrant-selector">
+      <div class="q-option" data-q="q1" onclick="selectQuadrant('q1')">🔴 Hacer ya<br><small>Urgente + Importante</small></div>
+      <div class="q-option" data-q="q2" onclick="selectQuadrant('q2')">🔵 Planificar<br><small>Importante</small></div>
+      <div class="q-option" data-q="q3" onclick="selectQuadrant('q3')">🟠 Delegar<br><small>Urgente</small></div>
+      <div class="q-option" data-q="q4" onclick="selectQuadrant('q4')">⚪ Aparcar<br><small>Puede esperar</small></div>
+    </div>
+
+    <div class="btn-row" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="saveLead()">Guardar lead</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TAB 2: TABLERO ══════════ -->
+<div id="view-board" class="view">
+  <div class="filters">
+    <span class="filter-chip active" data-filter="all" onclick="setFilter('all')">Todos</span>
+    <span class="filter-chip" data-filter="pendiente" onclick="setFilter('pendiente')">Pendientes</span>
+    <span class="filter-chip" data-filter="hecho" onclick="setFilter('hecho')">Hechos</span>
+  </div>
+  <div class="eisenhower">
+    <div class="quadrant q1" id="quad-q1"
+         ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'q1')">
+      <div class="q-title">🔴 Hacer ya <span id="count-q1">0</span></div>
+      <div class="card-container" id="cards-q1"></div>
+    </div>
+    <div class="quadrant q2" id="quad-q2"
+         ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'q2')">
+      <div class="q-title">🔵 Planificar <span id="count-q2">0</span></div>
+      <div class="card-container" id="cards-q2"></div>
+    </div>
+    <div class="quadrant q3" id="quad-q3"
+         ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'q3')">
+      <div class="q-title">🟠 Delegar <span id="count-q3">0</span></div>
+      <div class="card-container" id="cards-q3"></div>
+    </div>
+    <div class="quadrant q4" id="quad-q4"
+         ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'q4')">
+      <div class="q-title">⚪ Aparcar <span id="count-q4">0</span></div>
+      <div class="card-container" id="cards-q4"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TAB 3: HISTORIAL ══════════ -->
+<div id="view-history" class="view">
+  <div class="board-header">
+    <h2>Leads cerrados / archivados</h2>
+  </div>
+  <div id="historyList"></div>
+</div>
+</div>
+
+<!-- ── MOVE POPUP (móvil) ── -->
+<div class="move-popup" id="movePopup">
+  <h4>Mover a...</h4>
+  <div class="move-grid">
+    <div class="move-option" data-q="q1" onclick="confirmMove('q1')">🔴 Hacer ya</div>
+    <div class="move-option" data-q="q2" onclick="confirmMove('q2')">🔵 Planificar</div>
+    <div class="move-option" data-q="q3" onclick="confirmMove('q3')">🟠 Delegar</div>
+    <div class="move-option" data-q="q4" onclick="confirmMove('q4')">⚪ Aparcar</div>
+  </div>
+  <button class="move-cancel" onclick="closeMovePopup()">Cancelar</button>
+</div>
+
+<!-- ── DETAIL OVERLAY ── -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail(event)">
+  <div class="detail-sheet" id="detailSheet"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   CONFIG
+   ══════════════════════════════════════════ */
+const CONFIG = {
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwNP4oWJV7KD-G7YKtkSIYVXQ5Gno0iRm8wQzD8gsCYlrAdHd4VomJ5QryRwTtfeINN/exec',
+  LS_KEY: 'ria_leads_v1',
+  LS_TOKEN_KEY: 'ria_leads_token',
+};
+
+/* ══════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════ */
+let leads = [];
+let selectedQuadrant = 'q2';   // default: importante
+let selectedAction = '';
+let currentFilter = 'all';
+let movingLeadId = null;
+let editingLeadId = null;
+let currentUser = '';   // 'Cristina' o 'Christophe'
+let currentToken = '';
+
+/* ══════════════════════════════════════════
+   AUTH — Login por token
+   ══════════════════════════════════════════ */
+// Auth: validación 100% server-side (tokens nunca en el HTML)
+async function doLogin() {
+  const input = document.getElementById('tokenInput').value.trim();
+  if (!input) return;
+
+  const loginBtn = document.querySelector('#loginScreen .btn-primary');
+  loginBtn.textContent = 'Validando...';
+  loginBtn.disabled = true;
+
+  try {
+    const resp = await fetch(CONFIG.APPS_SCRIPT_URL + '?action=validate_token&token=' + encodeURIComponent(input));
+    const data = await resp.json();
+    if (data.status === 'ok' && data.operario) {
+      currentUser = data.operario;
+      currentToken = input;
+      try { localStorage.setItem(CONFIG.LS_TOKEN_KEY, input); } catch(e) {}
+      showApp();
+      return;
+    }
+  } catch(e) {
+    console.warn('Validación server falló:', e);
+  }
+
+  loginBtn.textContent = 'Entrar';
+  loginBtn.disabled = false;
+  document.getElementById('loginError').style.display = 'block';
+  document.getElementById('tokenInput').style.borderColor = 'var(--q1-color)';
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appHeader').style.display = '';
+  document.getElementById('appContent').style.display = '';
+  initApp();
+}
+
+function logout() {
+  try { localStorage.removeItem(CONFIG.LS_TOKEN_KEY); } catch(e) {}
+  currentUser = '';
+  currentToken = '';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appHeader').style.display = 'none';
+  document.getElementById('appContent').style.display = 'none';
+}
+
+/* ══════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if already logged in (revalidar server-side)
+  try {
+    const savedToken = localStorage.getItem(CONFIG.LS_TOKEN_KEY);
+    if (savedToken) {
+      currentToken = savedToken;
+      // Validar el token guardado contra el server
+      fetch(CONFIG.APPS_SCRIPT_URL + '?action=validate_token&token=' + encodeURIComponent(savedToken))
+        .then(r => r.json())
+        .then(data => {
+          if (data.status === 'ok' && data.operario) {
+            currentUser = data.operario;
+            showApp();
+          } else {
+            localStorage.removeItem(CONFIG.LS_TOKEN_KEY);
+            document.getElementById('loginScreen').style.display = 'flex';
+          }
+        })
+        .catch(() => {
+          // Si no hay red, permitir acceso con localStorage
+          currentUser = 'Offline';
+          showApp();
+        });
+      return;
+    }
+  } catch(e) {}
+  document.getElementById('loginScreen').style.display = 'flex';
+});
+
+function initApp() {
+  loadLeads();
+  renderBoard();
+  setupTabs();
+  setupChips();
+  selectQuadrant('q2');
+  document.getElementById('fFechaLimite').value = getFutureDate(3);
+  checkReminders();
+  // Intentar cargar del server
+  syncFromServer();
+}
+
+function setupTabs() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('view-' + tab.dataset.view).classList.add('active');
+    });
+  });
+}
+
+function setupChips() {
+  document.querySelectorAll('#actionChips .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#actionChips .chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      selectedAction = chip.dataset.action;
+    });
+  });
+}
+
+/* ══════════════════════════════════════════
+   vCARD IMPORT (iPhone contacts / .vcf)
+   ══════════════════════════════════════════ */
+function importVCard(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const vcf = e.target.result;
+    const parsed = parseVCard(vcf);
+    document.getElementById('fNombre').value = parsed.nombre || '';
+    document.getElementById('fEmpresa').value = parsed.empresa || '';
+    document.getElementById('fTelefono').value = parsed.telefono || '';
+    document.getElementById('fEmail').value = parsed.email || '';
+    document.getElementById('fNotas').value = parsed.notas || '';
+    document.getElementById('parsedForm').style.display = 'block';
+    document.getElementById('parsedForm').scrollIntoView({ behavior: 'smooth' });
+    toast('Contacto importado');
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // reset para permitir reimportar
+}
+
+function parseVCard(vcf) {
+  const result = { nombre: '', empresa: '', telefono: '', email: '', notas: '' };
+  const lines = vcf.split(/\r?\n/);
+
+  for (const line of lines) {
+    // Nombre completo
+    if (line.startsWith('FN:') || line.startsWith('FN;')) {
+      result.nombre = line.split(':').slice(1).join(':').trim();
+    }
+    // Nombre estructurado (fallback)
+    if (!result.nombre && line.startsWith('N:')) {
+      const parts = line.split(':')[1]?.split(';') || [];
+      result.nombre = [parts[1], parts[0]].filter(Boolean).join(' ').trim();
+    }
+    // Empresa
+    if (line.startsWith('ORG:') || line.startsWith('ORG;')) {
+      result.empresa = line.split(':').slice(1).join(':').replace(/;/g, ' ').trim();
+    }
+    // Teléfono (prioridad: CELL > WORK > cualquiera)
+    if (line.match(/^TEL/i)) {
+      const phone = line.split(':').slice(1).join(':').trim();
+      if (!result.telefono || line.toUpperCase().includes('CELL') || line.toUpperCase().includes('MOBILE')) {
+        result.telefono = phone;
+      }
+    }
+    // Email
+    if (line.match(/^EMAIL/i)) {
+      result.email = line.split(':').slice(1).join(':').trim();
+    }
+    // Dirección (como nota)
+    if (line.startsWith('ADR')) {
+      const addr = line.split(':').slice(1).join(':').replace(/;/g, ', ').replace(/^[, ]+/, '').trim();
+      if (addr) result.notas += (result.notas ? ' | ' : '') + 'Dir: ' + addr;
+    }
+    // Notas
+    if (line.startsWith('NOTE:')) {
+      const note = line.split(':').slice(1).join(':').trim();
+      if (note) result.notas += (result.notas ? ' | ' : '') + note;
+    }
+    // Cargo
+    if (line.startsWith('TITLE:')) {
+      const title = line.split(':').slice(1).join(':').trim();
+      if (title) result.notas += (result.notas ? ' | ' : '') + 'Cargo: ' + title;
+    }
+  }
+  return result;
+}
+
+/* ══════════════════════════════════════════
+   CLIPBOARD PASTE (botón para iOS)
+   ══════════════════════════════════════════ */
+async function pasteFromClipboard() {
+  try {
+    // iOS Safari soporta navigator.clipboard.readText() con gesto de usuario
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        document.getElementById('rawInput').value = text;
+        parseInput();
+        return;
+      }
+    }
+  } catch(e) {
+    // Fallback: pedir que pegue manualmente
+  }
+  // Si no funciona el clipboard API, focus en el textarea
+  const ta = document.getElementById('rawInput');
+  ta.focus();
+  toast('Mantén pulsado y pega');
+}
+
+/* ══════════════════════════════════════════
+   AUTO-DETECT: si pegan vCard como texto
+   ══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('rawInput');
+  ta.addEventListener('input', () => {
+    const val = ta.value;
+    // Si detectamos que pegaron un vCard como texto
+    if (val.includes('BEGIN:VCARD')) {
+      const parsed = parseVCard(val);
+      document.getElementById('fNombre').value = parsed.nombre || '';
+      document.getElementById('fEmpresa').value = parsed.empresa || '';
+      document.getElementById('fTelefono').value = parsed.telefono || '';
+      document.getElementById('fEmail').value = parsed.email || '';
+      document.getElementById('fNotas').value = parsed.notas || '';
+      document.getElementById('parsedForm').style.display = 'block';
+      toast('Contacto detectado automáticamente');
+      ta.value = ''; // limpiar el vCard del textarea
+    }
+  });
+});
+
+/* ══════════════════════════════════════════
+   PARSER — Extrae datos de texto bruto
+   ══════════════════════════════════════════ */
+function parseInput() {
+  const raw = document.getElementById('rawInput').value.trim();
+  if (!raw) { toast('Pega algo primero'); return; }
+
+  const parsed = parseRawText(raw);
+
+  document.getElementById('fNombre').value = parsed.nombre || '';
+  document.getElementById('fEmpresa').value = parsed.empresa || '';
+  document.getElementById('fTelefono').value = parsed.telefono || '';
+  document.getElementById('fEmail').value = parsed.email || '';
+  document.getElementById('fNotas').value = parsed.notas || '';
+
+  if (parsed.origen) {
+    document.getElementById('fOrigen').value = parsed.origen;
+  }
+  if (parsed.producto) {
+    const sel = document.getElementById('fProducto');
+    for (let opt of sel.options) {
+      if (opt.text.toLowerCase().includes(parsed.producto.toLowerCase()) ||
+          opt.value.toLowerCase().includes(parsed.producto.toLowerCase())) {
+        sel.value = opt.value;
+        break;
+      }
+    }
+  }
+  if (parsed.accion) {
+    document.querySelectorAll('#actionChips .chip').forEach(c => {
+      c.classList.remove('selected');
+      if (c.dataset.action.toLowerCase().includes(parsed.accion.toLowerCase())) {
+        c.classList.add('selected');
+        selectedAction = c.dataset.action;
+      }
+    });
+  }
+
+  // Dirección
+  if (parsed.direccion) {
+    document.getElementById('fDireccion').value = parsed.direccion;
+  }
+
+  // Fecha natural interpretada
+  if (parsed.fecha_interpretada) {
+    document.getElementById('fFechaLimite').value = parsed.fecha_interpretada;
+    const dateObj = new Date(parsed.fecha_interpretada + 'T00:00:00');
+    const dayName = dateObj.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+    toast('Fecha detectada: ' + dayName);
+  }
+
+  document.getElementById('parsedForm').style.display = 'block';
+  document.getElementById('parsedForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function parseRawText(text) {
+  const result = { nombre: '', empresa: '', telefono: '', email: '', origen: '', producto: '', accion: '', notas: '' };
+
+  // ── Pre-proceso: detectar formato WhatsApp reenviado ──
+  // Formato "[22/3/26, 14:30:15] Juan García: mensaje"
+  text = text.replace(/^\[\d{1,2}\/\d{1,2}\/\d{2,4},?\s*\d{1,2}:\d{2}(?::\d{2})?\]\s*/gm, '');
+  // Formato "22/3/26 14:30 - Juan García: mensaje"
+  text = text.replace(/^\d{1,2}\/\d{1,2}\/\d{2,4}\s+\d{1,2}:\d{2}\s*-\s*/gm, '');
+
+  // Detectar contacto compartido de WhatsApp: "📇 Contacto: Nombre"
+  const waContactMatch = text.match(/(?:📇|contacto)\s*[:]\s*(.+)/i);
+  if (waContactMatch) {
+    result.nombre = waContactMatch[1].trim();
+  }
+
+  const lines = text.split(/\n/).map(l => l.trim()).filter(Boolean);
+  const fullText = text.toLowerCase();
+
+  // ── Teléfono ──
+  const phonePatterns = [
+    /(?:\+34\s?)?[6-9]\d{2}[\s.-]?\d{3}[\s.-]?\d{3}/g,
+    /(?:\+34\s?)?[6-9]\d{8}/g,
+    /\+\d{1,3}\s?\d[\d\s.-]{6,14}/g,
+  ];
+  for (const pat of phonePatterns) {
+    const match = text.match(pat);
+    if (match) {
+      result.telefono = match[0].trim();
+      break;
+    }
+  }
+
+  // ── Email ──
+  const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if (emailMatch) result.email = emailMatch[0];
+
+  // ── Origen ──
+  if (fullText.includes('whatsapp') || fullText.includes('wa.me')) result.origen = 'whatsapp';
+  else if (fullText.includes('llamad') || fullText.includes('me ha llamado') || fullText.includes('por teléfono')) result.origen = 'llamada';
+  else if (fullText.includes('feria') || fullText.includes('evento') || fullText.includes('salón')) result.origen = 'feria';
+  else if (fullText.includes('email') || fullText.includes('correo') || fullText.includes('mail')) result.origen = 'email';
+  else if (fullText.includes('referid') || fullText.includes('de parte de') || fullText.includes('me ha pasado')) result.origen = 'referido';
+  else result.origen = 'whatsapp'; // default
+
+  // ── Producto RIA ──
+  const prodMap = {
+    'cremoso': 'cremoso', 'marisco': 'cremoso-marisco', 'setas': 'cremoso-setas', 'boletus': 'cremoso-setas',
+    'verdura': 'cremoso-verduras', 'negro': 'negro-sepia', 'sepia': 'negro-sepia', 'tinta': 'negro-sepia',
+    'paella': 'paella-pollo', 'pollo': 'paella-pollo', 'mixta': 'paella-mixta',
+    'arroz': 'varios', 'gama': 'varios', 'carta': 'varios', 'catálogo': 'varios',
+  };
+  for (const [kw, val] of Object.entries(prodMap)) {
+    if (fullText.includes(kw)) { result.producto = val; break; }
+  }
+
+  // ── Acción ──
+  if (fullText.includes('muestra') || fullText.includes('probar') || fullText.includes('cata')) result.accion = 'enviar muestra';
+  else if (fullText.includes('precio') || fullText.includes('presupuesto') || fullText.includes('tarifa')) result.accion = 'enviar presupuesto';
+  else if (fullText.includes('llam') && !fullText.includes('me ha llamado')) result.accion = 'llamar';
+  else if (fullText.includes('reunión') || fullText.includes('quedamos') || fullText.includes('visita')) result.accion = 'reunión';
+  else if (fullText.includes('catálogo') || fullText.includes('información')) result.accion = 'enviar catálogo';
+
+  // ── Nombre y Empresa ──
+  // Limpiamos líneas de teléfono/email para buscar nombre
+  const cleanLines = lines.map(l => {
+    let cl = l;
+    if (result.telefono) cl = cl.replace(result.telefono, '').trim();
+    if (result.email) cl = cl.replace(result.email, '').trim();
+    // Quitar asteriscos de WhatsApp bold
+    cl = cl.replace(/\*/g, '').trim();
+    // Quitar prefijos tipo "Nombre:" "Empresa:"
+    cl = cl.replace(/^(nombre|contacto|cliente|de)\s*[:;-]\s*/i, '').trim();
+    return cl;
+  }).filter(l => l.length > 1 && l.length < 80);
+
+  // Detectar si alguna línea tiene formato "etiqueta: valor"
+  for (const line of lines) {
+    const m = line.match(/^\*?(nombre|contacto|persona)\*?\s*[:;-]\s*(.+)/i);
+    if (m) result.nombre = m[2].replace(/\*/g, '').trim();
+    const m2 = line.match(/^\*?(empresa|restaurante|hotel|negocio|local|establecimiento|razón social)\*?\s*[:;-]\s*(.+)/i);
+    if (m2) result.empresa = m2[2].replace(/\*/g, '').trim();
+  }
+
+  // Si no se encontraron con etiqueta, inferir
+  if (!result.nombre && cleanLines.length > 0) {
+    // Primera línea que parezca un nombre (2-4 palabras, sin números)
+    for (const cl of cleanLines) {
+      const words = cl.split(/\s+/);
+      if (words.length >= 1 && words.length <= 5 && !/\d/.test(cl) && cl.length < 50) {
+        // No parece una frase larga
+        const lower = cl.toLowerCase();
+        const skipWords = ['hola', 'buenos', 'buenas', 'oye', 'mira', 'quiere', 'interesado', 'necesita'];
+        if (!skipWords.some(w => lower.startsWith(w))) {
+          result.nombre = cl;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!result.empresa) {
+    const empresaKeywords = ['restaurante', 'hotel', 'bar', 'catering', 'grupo', 'distribuidora', 'cocina', 'gastro', 'food', 'chef'];
+    for (const cl of cleanLines) {
+      if (cl === result.nombre) continue;
+      const lower = cl.toLowerCase();
+      if (empresaKeywords.some(kw => lower.includes(kw))) {
+        result.empresa = cl.replace(/^\*?(empresa)\*?\s*[:;-]\s*/i, '').replace(/\*/g, '').trim();
+        break;
+      }
+    }
+    // Si no, la segunda línea limpia
+    if (!result.empresa && cleanLines.length > 1) {
+      const candidate = cleanLines.find(l => l !== result.nombre && !/\d{6,}/.test(l));
+      if (candidate && candidate.length < 60) result.empresa = candidate;
+    }
+  }
+
+  // ── Notas: el texto restante ──
+  let noteParts = [];
+  for (const line of lines) {
+    const lower = line.toLowerCase().replace(/\*/g, '');
+    if (line === result.nombre || line === result.empresa) continue;
+    if (result.telefono && line.includes(result.telefono)) continue;
+    if (result.email && line.includes(result.email)) continue;
+    if (lower.length > 15) noteParts.push(line.replace(/\*/g, ''));
+  }
+  result.notas = noteParts.join(' · ') || text.substring(0, 200);
+
+  // ── Dirección ──
+  for (const line of lines) {
+    const m = line.match(/^\*?(dirección|direcci[oó]n|dir|enviar a|dirección de envío)\*?\s*[:;-]\s*(.+)/i);
+    if (m) { result.direccion = m[2].replace(/\*/g, '').trim(); break; }
+  }
+  // También detectar CP + Ciudad
+  if (!result.direccion) {
+    for (const line of lines) {
+      if (/\d{5}\s+\w/.test(line) && /calle|avda|av\.|plaza|paseo|c\//i.test(line)) {
+        result.direccion = line.replace(/\*/g, '').trim();
+        break;
+      }
+    }
+  }
+
+  // ── Fecha natural en español ──
+  result.fecha_interpretada = parseDateSpanish(fullText);
+
+  return result;
+}
+
+/**
+ * parseDateSpanish — Interpreta fechas naturales en español
+ * "mañana", "el martes", "la semana que viene", "en 3 días", "el 15 de abril"
+ */
+function parseDateSpanish(text) {
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const dias = { 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, 'jueves': 4, 'viernes': 5, 'sábado': 6, 'sabado': 6, 'domingo': 0 };
+  const meses = { 'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3, 'mayo': 4, 'junio': 5, 'julio': 6, 'agosto': 7, 'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11 };
+
+  // "hoy"
+  if (/\bhoy\b/.test(text)) return formatISO(todayStart);
+
+  // "mañana"
+  if (/\bma[ñn]ana\b/.test(text)) {
+    const d = new Date(todayStart); d.setDate(d.getDate() + 1);
+    return formatISO(d);
+  }
+
+  // "pasado mañana"
+  if (/\bpasado\s*ma[ñn]ana\b/.test(text)) {
+    const d = new Date(todayStart); d.setDate(d.getDate() + 2);
+    return formatISO(d);
+  }
+
+  // "en X días"
+  const enDias = text.match(/\ben\s+(\d+)\s*d[ií]as?\b/);
+  if (enDias) {
+    const d = new Date(todayStart); d.setDate(d.getDate() + parseInt(enDias[1]));
+    return formatISO(d);
+  }
+
+  // "la semana que viene" / "la próxima semana"
+  if (/\b(la\s+)?semana\s+que\s+viene\b|\bpr[oó]xima\s+semana\b/.test(text)) {
+    const d = new Date(todayStart); d.setDate(d.getDate() + 7);
+    return formatISO(d);
+  }
+
+  // "el lunes" / "el martes" / "este viernes" / "el próximo miércoles"
+  for (const [nombre, numDia] of Object.entries(dias)) {
+    const re = new RegExp(`\\b(el|este|pr[oó]ximo)?\\s*${nombre}\\b`);
+    if (re.test(text)) {
+      const hoyDia = todayStart.getDay();
+      let diff = numDia - hoyDia;
+      if (diff <= 0) diff += 7; // siempre hacia el futuro
+      const d = new Date(todayStart); d.setDate(d.getDate() + diff);
+      return formatISO(d);
+    }
+  }
+
+  // "el 15" / "el día 15" / "día 15"
+  const elDia = text.match(/\b(?:el\s+)?d[ií]a\s+(\d{1,2})\b/) || text.match(/\bel\s+(\d{1,2})\s+de\b/);
+  if (elDia) {
+    const day = parseInt(elDia[1]);
+    if (day >= 1 && day <= 31) {
+      let d = new Date(todayStart.getFullYear(), todayStart.getMonth(), day);
+      if (d < todayStart) d.setMonth(d.getMonth() + 1);
+      return formatISO(d);
+    }
+  }
+
+  // "15 de abril" / "el 3 de mayo"
+  for (const [nombre, numMes] of Object.entries(meses)) {
+    const re = new RegExp(`\\b(\\d{1,2})\\s+de\\s+${nombre}\\b`);
+    const m = text.match(re);
+    if (m) {
+      const day = parseInt(m[1]);
+      let d = new Date(todayStart.getFullYear(), numMes, day);
+      if (d < todayStart) d.setFullYear(d.getFullYear() + 1);
+      return formatISO(d);
+    }
+  }
+
+  // "esta tarde" / "esta mañana" → hoy
+  if (/\besta\s+(tarde|mañana|noche)\b/.test(text)) return formatISO(todayStart);
+
+  return null;
+}
+
+function formatISO(d) {
+  return d.toISOString().slice(0, 10);
+}
+
+/* ══════════════════════════════════════════
+   QUADRANT SELECTION
+   ══════════════════════════════════════════ */
+function selectQuadrant(q) {
+  selectedQuadrant = q;
+  document.querySelectorAll('.q-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.q === q);
+  });
+}
+
+/* ══════════════════════════════════════════
+   SAVE LEAD
+   ══════════════════════════════════════════ */
+function saveLead() {
+  const nombre = document.getElementById('fNombre').value.trim();
+  if (!nombre) { toast('Pon al menos un nombre'); return; }
+
+  const lead = {
+    id: editingLeadId || genId(),
+    fecha: new Date().toISOString().slice(0, 10),
+    nombre: nombre,
+    empresa: document.getElementById('fEmpresa').value.trim(),
+    telefono: document.getElementById('fTelefono').value.trim(),
+    email: document.getElementById('fEmail').value.trim(),
+    origen: document.getElementById('fOrigen').value,
+    producto: document.getElementById('fProducto').value,
+    producto_texto: document.getElementById('fProducto').selectedOptions[0]?.text || '',
+    volumen: document.getElementById('fVolumen').value.trim(),
+    direccion: document.getElementById('fDireccion').value.trim(),
+    accion: selectedAction,
+    fecha_limite: document.getElementById('fFechaLimite').value,
+    notas: document.getElementById('fNotas').value.trim(),
+    quadrant: selectedQuadrant,
+    estado: 'pendiente',
+    workflow: [],
+    timestamp: new Date().toISOString(),
+    synced: false,
+  };
+
+  if (editingLeadId) {
+    const idx = leads.findIndex(l => l.id === editingLeadId);
+    if (idx >= 0) {
+      lead.workflow = leads[idx].workflow || []; // preservar workflow existente
+      leads[idx] = { ...leads[idx], ...lead, synced: false };
+    }
+    editingLeadId = null;
+    toast('Lead actualizado');
+  } else {
+    leads.unshift(lead);
+    toast('Lead guardado');
+    sendTelegramAlert(lead);
+  }
+
+  saveLeads();
+  renderBoard();
+  clearForm();
+  syncToServer(lead);
+}
+
+/* ══════════════════════════════════════════
+   STORAGE (localStorage)
+   ══════════════════════════════════════════ */
+function saveLeads() {
+  try { localStorage.setItem(CONFIG.LS_KEY, JSON.stringify(leads)); } catch(e) {}
+  updateBadge();
+}
+
+function loadLeads() {
+  try {
+    const stored = localStorage.getItem(CONFIG.LS_KEY);
+    if (stored) leads = JSON.parse(stored);
+  } catch(e) { leads = []; }
+}
+
+/* ══════════════════════════════════════════
+   SYNC WITH APPS SCRIPT
+   ══════════════════════════════════════════ */
+async function syncToServer(lead) {
+  try {
+    const payload = {
+      tipo: 'leads',
+      operario: currentUser,
+      token: currentToken,
+      ...lead,
+    };
+    const resp = await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+    });
+    const data = await resp.json();
+    if (data.status === 'ok') {
+      lead.synced = true;
+      saveLeads();
+    }
+  } catch(e) {
+    console.warn('Sync failed, se reintentará:', e);
+  }
+}
+
+async function syncFromServer() {
+  try {
+    const url = CONFIG.APPS_SCRIPT_URL + '?tipo=leads&action=list';
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (data.status === 'ok' && Array.isArray(data.leads)) {
+      // Merge: server wins for conflicts, keep local unsynced
+      const serverIds = new Set(data.leads.map(l => l.id));
+      const localOnly = leads.filter(l => !l.synced && !serverIds.has(l.id));
+      leads = [...localOnly, ...data.leads];
+      saveLeads();
+      renderBoard();
+    }
+  } catch(e) {
+    console.warn('No se pudo cargar del servidor:', e);
+  }
+}
+
+/* ══════════════════════════════════════════
+   TELEGRAM
+   ══════════════════════════════════════════ */
+async function sendTelegramAlert(lead) {
+  // La alerta Telegram se envía a través del Apps Script (que tiene el token)
+  // El backend detecta tipo='leads' + lead nuevo → envía Telegram automáticamente
+  // Aquí solo hacemos un intento adicional vía el endpoint de alertas
+  try {
+    const emoji = { q1: '🔴', q2: '🔵', q3: '🟠', q4: '⚪' };
+    const qName = { q1: 'HACER YA', q2: 'Planificar', q3: 'Delegar', q4: 'Aparcar' };
+
+    let msg = `📋 *Nuevo Lead* (${currentUser})\n\n`;
+    msg += `👤 *${lead.nombre}*`;
+    if (lead.empresa) msg += ` — ${lead.empresa}`;
+    msg += `\n`;
+    if (lead.telefono) msg += `📞 ${lead.telefono}\n`;
+    if (lead.producto_texto && lead.producto_texto !== '— Seleccionar —') msg += `🍚 ${lead.producto_texto}\n`;
+    if (lead.accion) msg += `➡️ Acción: ${lead.accion}\n`;
+    if (lead.fecha_limite) msg += `📅 Límite: ${lead.fecha_limite}\n`;
+    msg += `\n${emoji[lead.quadrant] || '⚪'} Prioridad: *${qName[lead.quadrant] || ''}*`;
+    if (lead.notas) msg += `\n\n💬 ${lead.notas.substring(0, 200)}`;
+
+    await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        tipo: 'leads_telegram',
+        token: currentToken,
+        mensaje: msg,
+      }),
+    });
+  } catch(e) {
+    console.warn('Telegram alert failed:', e);
+  }
+}
+
+/* ══════════════════════════════════════════
+   RENDER BOARD
+   ══════════════════════════════════════════ */
+function renderBoard() {
+  const quadrants = ['q1', 'q2', 'q3', 'q4'];
+  const activeLeads = leads.filter(l => l.estado !== 'hecho' && l.estado !== 'archivado');
+
+  quadrants.forEach(q => {
+    const container = document.getElementById('cards-' + q);
+    let qLeads = activeLeads.filter(l => l.quadrant === q);
+    if (currentFilter === 'pendiente') qLeads = qLeads.filter(l => l.estado === 'pendiente');
+    if (currentFilter === 'hecho') qLeads = qLeads.filter(l => l.estado === 'hecho');
+
+    if (qLeads.length === 0) {
+      container.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>Sin leads</div>';
+    } else {
+      container.innerHTML = qLeads.map(l => renderCard(l)).join('');
+    }
+    document.getElementById('count-' + q).textContent = qLeads.length;
+  });
+
+  // History
+  const done = leads.filter(l => l.estado === 'hecho' || l.estado === 'archivado');
+  const histEl = document.getElementById('historyList');
+  if (done.length === 0) {
+    histEl.innerHTML = '<div class="empty-state"><span class="emoji">📂</span>Los leads cerrados aparecerán aquí</div>';
+  } else {
+    histEl.innerHTML = done.map(l => renderCard(l, true)).join('');
+  }
+
+  updateBadge();
+  // Refresh reminders (avoid infinite loop by checking if we're already rendering)
+  if (!renderBoard._rendering) {
+    renderBoard._rendering = true;
+    try { checkReminders(); } catch(e) {}
+    renderBoard._rendering = false;
+  }
+}
+
+function renderCard(lead, isHistory = false) {
+  const accentColors = { q1: 'var(--q1-color)', q2: 'var(--q2-color)', q3: 'var(--q3-color)', q4: 'var(--q4-color)' };
+  const borderColor = accentColors[lead.quadrant] || 'var(--border)';
+  const overdue = lead.fecha_limite && lead.fecha_limite < new Date().toISOString().slice(0,10) && lead.estado === 'pendiente';
+
+  let phoneLink = '';
+  if (lead.telefono) {
+    const cleanPhone = lead.telefono.replace(/[\s.-]/g, '');
+    phoneLink = `<div class="lead-phone"><a href="tel:${cleanPhone}">📞 ${lead.telefono}</a> · <a href="https://wa.me/${cleanPhone.replace('+','')}">💬 WA</a></div>`;
+  }
+
+  return `
+    <div class="lead-card" draggable="true" ondragstart="onDragStart(event,'${lead.id}')"
+         style="border-left: 4px solid ${borderColor};${overdue ? 'background:#FFF8E1;' : ''}${lead.estado==='hecho' ? 'opacity:0.6;' : ''}"
+         onclick="openDetail('${lead.id}')">
+      <div class="lead-name">${esc(lead.nombre)}${overdue ? ' ⚠️' : ''}</div>
+      ${lead.empresa ? `<div class="lead-company">${esc(lead.empresa)}</div>` : ''}
+      ${phoneLink}
+      ${lead.accion ? `<span class="lead-action">${esc(lead.accion)}</span>` : ''}
+      ${lead.fecha_limite ? `<span class="lead-date">${formatDate(lead.fecha_limite)}</span>` : ''}
+      <div class="card-actions" onclick="event.stopPropagation()">
+        ${!isHistory ? `
+          <button class="card-btn" onclick="openMovePopup('${lead.id}')">Mover</button>
+          <button class="card-btn done-btn" onclick="markDone('${lead.id}')">✓ Hecho</button>
+          <button class="card-btn del-btn" onclick="archiveLead('${lead.id}')">Archivar</button>
+        ` : `
+          <button class="card-btn" onclick="restoreLead('${lead.id}')">Restaurar</button>
+        `}
+      </div>
+    </div>`;
+}
+
+function updateBadge() {
+  const active = leads.filter(l => l.estado !== 'hecho' && l.estado !== 'archivado').length;
+  document.getElementById('totalBadge').textContent = active;
+}
+
+/* ══════════════════════════════════════════
+   DETAIL VIEW
+   ══════════════════════════════════════════ */
+function openDetail(id) {
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+
+  const qNames = { q1: '🔴 Hacer ya', q2: '🔵 Planificar', q3: '🟠 Delegar', q4: '⚪ Aparcar' };
+  const origenEmoji = { whatsapp: '💬', llamada: '📞', email: '📧', feria: '🎪', referido: '🤝', web: '🌐', visita: '🏢', otro: '📋' };
+
+  // ── Contact action buttons ──
+  let phoneActions = '';
+  if (lead.telefono) {
+    const clean = lead.telefono.replace(/[\s.-]/g, '');
+    phoneActions = `
+      <div class="btn-row">
+        <a href="tel:${clean}" class="btn btn-secondary btn-sm" style="text-decoration:none;text-align:center;">📞 Llamar</a>
+        <a href="https://wa.me/${clean.replace('+','')}" class="btn btn-secondary btn-sm" style="text-decoration:none;text-align:center;">💬 WhatsApp</a>
+        ${lead.email ? `<a href="mailto:${esc(lead.email)}" class="btn btn-secondary btn-sm" style="text-decoration:none;text-align:center;">📧 Email</a>` : ''}
+      </div>`;
+  }
+
+  // ── Copyable contact info ──
+  let copyRows = '';
+  const copyFields = [
+    { label: 'Teléfono', value: lead.telefono },
+    { label: 'Email', value: lead.email },
+    { label: 'Empresa', value: lead.empresa },
+    { label: 'Dirección', value: lead.direccion },
+  ];
+  for (const f of copyFields) {
+    if (f.value) {
+      copyRows += `
+        <div class="copy-row">
+          <span class="copy-label">${f.label}</span>
+          <span class="copy-value">${esc(f.value)}</span>
+          <button class="copy-btn" onclick="copyToClipboard('${esc(f.value).replace(/'/g, "\\'")}', this)">Copiar</button>
+        </div>`;
+    }
+  }
+
+  // ── Workflow timeline ──
+  const workflow = lead.workflow || [];
+  let timelineHtml = '';
+  if (workflow.length > 0) {
+    timelineHtml = '<div class="timeline">';
+    for (const step of workflow) {
+      timelineHtml += `
+        <div class="timeline-item">
+          <span class="tl-date">${formatDate(step.fecha)}</span>
+          <span class="tl-action">${esc(step.accion)}</span>
+          ${step.nota ? `<div class="tl-note">${esc(step.nota)}</div>` : ''}
+        </div>`;
+    }
+    timelineHtml += '</div>';
+  }
+
+  document.getElementById('detailSheet').innerHTML = `
+    <div style="position:relative;">
+      <button class="detail-close" onclick="closeDetail()">&times;</button>
+      <h3>${esc(lead.nombre)}</h3>
+      ${lead.empresa ? `<p style="color:var(--text-mid);margin-bottom:4px;">${esc(lead.empresa)}</p>` : ''}
+      <p style="font-size:12px;color:var(--text-light);">${origenEmoji[lead.origen] || ''} ${lead.origen} · ${qNames[lead.quadrant] || ''} · Creado ${formatDate(lead.fecha)}</p>
+
+      ${phoneActions}
+
+      <!-- Datos copiables -->
+      <div style="margin:12px 0;">
+        ${copyRows}
+      </div>
+
+      <div style="margin:12px 0;">
+        ${lead.producto_texto && lead.producto_texto !== '— Seleccionar —' ? `<p><strong>Producto:</strong> 🍚 ${esc(lead.producto_texto)}</p>` : ''}
+        ${lead.volumen ? `<p><strong>Volumen:</strong> ${esc(lead.volumen)}</p>` : ''}
+        ${lead.accion ? `<p><strong>Próxima acción:</strong> ${esc(lead.accion)}</p>` : ''}
+        ${lead.fecha_limite ? `<p><strong>Fecha límite:</strong> ${formatDate(lead.fecha_limite)}</p>` : ''}
+      </div>
+
+      ${lead.notas ? `<div style="background:var(--bg-light);padding:12px;border-radius:8px;margin:8px 0;font-size:14px;">${esc(lead.notas)}</div>` : ''}
+
+      <!-- Workflow / Timeline -->
+      <div style="margin-top:16px;">
+        <strong style="font-size:13px;">Seguimiento</strong>
+        ${workflow.length === 0 ? '<p style="font-size:12px;color:var(--text-light);margin:4px 0;">Sin pasos registrados</p>' : timelineHtml}
+      </div>
+
+      <!-- Añadir paso -->
+      <div class="add-step">
+        <select id="stepAction">
+          <option value="">— Añadir paso de seguimiento —</option>
+          <option value="Llamada realizada">📞 Llamada realizada</option>
+          <option value="Tarifa enviada">📄 Tarifa enviada</option>
+          <option value="Caja muestras enviada">📦 Caja muestras enviada</option>
+          <option value="Presupuesto enviado">💰 Presupuesto enviado</option>
+          <option value="Catálogo enviado">📋 Catálogo enviado</option>
+          <option value="Reunión realizada">🤝 Reunión realizada</option>
+          <option value="WhatsApp enviado">💬 WhatsApp enviado</option>
+          <option value="Email enviado">📧 Email enviado</option>
+          <option value="Muestra recibida por cliente">✅ Muestra recibida</option>
+          <option value="Feedback recibido">💬 Feedback recibido</option>
+          <option value="Pedido recibido">🎉 Pedido recibido</option>
+          <option value="Otro">📝 Otro</option>
+        </select>
+        <input type="text" id="stepNota" placeholder="Nota breve (opcional)...">
+        <button class="btn btn-primary btn-sm" style="width:100%;" onclick="addWorkflowStep('${lead.id}')">Añadir paso</button>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px;">
+        <button class="btn btn-secondary" onclick="editLead('${lead.id}')">✏️ Editar</button>
+        <button class="btn btn-primary" onclick="markDone('${lead.id}');closeDetail();">✓ Hecho</button>
+      </div>
+    </div>`;
+
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail(event) {
+  if (event && event.target !== event.currentTarget) return;
+  document.getElementById('detailOverlay').classList.remove('open');
+}
+
+function editLead(id) {
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  closeDetail();
+
+  // Switch to new tab
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector('[data-view="new"]').classList.add('active');
+  document.getElementById('view-new').classList.add('active');
+
+  // Fill form
+  editingLeadId = id;
+  document.getElementById('fNombre').value = lead.nombre || '';
+  document.getElementById('fEmpresa').value = lead.empresa || '';
+  document.getElementById('fTelefono').value = lead.telefono || '';
+  document.getElementById('fEmail').value = lead.email || '';
+  document.getElementById('fOrigen').value = lead.origen || 'whatsapp';
+  document.getElementById('fProducto').value = lead.producto || '';
+  document.getElementById('fVolumen').value = lead.volumen || '';
+  document.getElementById('fDireccion').value = lead.direccion || '';
+  document.getElementById('fFechaLimite').value = lead.fecha_limite || '';
+  document.getElementById('fNotas').value = lead.notas || '';
+  selectedAction = lead.accion || '';
+  document.querySelectorAll('#actionChips .chip').forEach(c => {
+    c.classList.toggle('selected', c.dataset.action === selectedAction);
+  });
+  selectQuadrant(lead.quadrant || 'q2');
+  document.getElementById('parsedForm').style.display = 'block';
+  document.getElementById('parsedForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════
+   ACTIONS
+   ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   WORKFLOW — Añadir pasos de seguimiento
+   ══════════════════════════════════════════ */
+function addWorkflowStep(leadId) {
+  const action = document.getElementById('stepAction').value;
+  if (!action) { toast('Selecciona una acción'); return; }
+  const nota = document.getElementById('stepNota').value.trim();
+
+  const lead = leads.find(l => l.id === leadId);
+  if (!lead) return;
+
+  if (!lead.workflow) lead.workflow = [];
+  lead.workflow.push({
+    fecha: new Date().toISOString().slice(0, 10),
+    accion: action,
+    nota: nota,
+    timestamp: new Date().toISOString(),
+  });
+  lead.synced = false;
+  saveLeads();
+  syncToServer(lead);
+
+  // Reabrir el detalle para ver el paso añadido
+  openDetail(leadId);
+  toast('Paso añadido: ' + action);
+}
+
+/* ══════════════════════════════════════════
+   COPY TO CLIPBOARD
+   ══════════════════════════════════════════ */
+async function copyToClipboard(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    btn.style.background = 'var(--ria-green-light)';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1500);
+  } catch(e) {
+    // Fallback para iOS
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓';
+    setTimeout(() => { btn.textContent = 'Copiar'; }, 1500);
+  }
+}
+
+/* ══════════════════════════════════════════
+   REMINDERS — Comprobar leads con fecha hoy
+   ══════════════════════════════════════════ */
+function checkReminders() {
+  const hoy = new Date().toISOString().slice(0, 10);
+  const due = leads.filter(l => l.fecha_limite === hoy && l.estado === 'pendiente');
+  const overdue = leads.filter(l => l.fecha_limite && l.fecha_limite < hoy && l.estado === 'pendiente');
+
+  if (due.length === 0 && overdue.length === 0) return;
+
+  const boardView = document.getElementById('view-board');
+  let html = '';
+
+  if (due.length > 0) {
+    html += `<div class="reminder-banner"><strong>📅 Hoy toca:</strong> `;
+    html += due.map(l => `<span class="lead-link" onclick="openDetail('${l.id}')">${esc(l.nombre)}${l.accion ? ' → ' + esc(l.accion) : ''}</span>`).join(' · ');
+    html += `</div>`;
+  }
+  if (overdue.length > 0) {
+    html += `<div class="reminder-banner" style="border-left-color:var(--q1-color);background:#FFEBEE;"><strong>⚠️ Atrasados:</strong> `;
+    html += overdue.map(l => `<span class="lead-link" onclick="openDetail('${l.id}')">${esc(l.nombre)} (${formatDate(l.fecha_limite)})</span>`).join(' · ');
+    html += `</div>`;
+  }
+
+  // Insertar antes del tablero
+  const existing = boardView.querySelectorAll('.reminder-banner');
+  existing.forEach(el => el.remove());
+  boardView.querySelector('.filters').insertAdjacentHTML('afterend', html);
+}
+
+/* ══════════════════════════════════════════
+   ACTIONS
+   ══════════════════════════════════════════ */
+function markDone(id) {
+  const lead = leads.find(l => l.id === id);
+  if (lead) {
+    lead.estado = 'hecho';
+    lead.synced = false;
+    saveLeads();
+    renderBoard();
+    toast('Lead marcado como hecho');
+    syncToServer(lead);
+  }
+}
+
+function archiveLead(id) {
+  const lead = leads.find(l => l.id === id);
+  if (lead) {
+    lead.estado = 'archivado';
+    lead.synced = false;
+    saveLeads();
+    renderBoard();
+    toast('Lead archivado');
+  }
+}
+
+function restoreLead(id) {
+  const lead = leads.find(l => l.id === id);
+  if (lead) {
+    lead.estado = 'pendiente';
+    lead.synced = false;
+    saveLeads();
+    renderBoard();
+    toast('Lead restaurado');
+  }
+}
+
+/* ══════════════════════════════════════════
+   DRAG & DROP (desktop)
+   ══════════════════════════════════════════ */
+let draggedId = null;
+
+function onDragStart(e, id) {
+  draggedId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.target.classList.add('dragging');
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e, quadrant) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (draggedId) {
+    moveLead(draggedId, quadrant);
+    draggedId = null;
+  }
+}
+
+/* ══════════════════════════════════════════
+   MOVE POPUP (móvil)
+   ══════════════════════════════════════════ */
+function openMovePopup(id) {
+  movingLeadId = id;
+  document.getElementById('movePopup').classList.add('open');
+}
+
+function closeMovePopup() {
+  movingLeadId = null;
+  document.getElementById('movePopup').classList.remove('open');
+}
+
+function confirmMove(quadrant) {
+  if (movingLeadId) {
+    moveLead(movingLeadId, quadrant);
+    closeMovePopup();
+  }
+}
+
+function moveLead(id, quadrant) {
+  const lead = leads.find(l => l.id === id);
+  if (lead) {
+    lead.quadrant = quadrant;
+    lead.synced = false;
+    saveLeads();
+    renderBoard();
+    const names = { q1: 'Hacer ya', q2: 'Planificar', q3: 'Delegar', q4: 'Aparcar' };
+    toast(`Movido a ${names[quadrant]}`);
+    syncToServer(lead);
+  }
+}
+
+/* ══════════════════════════════════════════
+   FILTERS
+   ══════════════════════════════════════════ */
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === f));
+  renderBoard();
+}
+
+/* ══════════════════════════════════════════
+   FORM HELPERS
+   ══════════════════════════════════════════ */
+function clearForm() {
+  editingLeadId = null;
+  document.getElementById('rawInput').value = '';
+  document.getElementById('parsedForm').style.display = 'none';
+  ['fNombre','fEmpresa','fTelefono','fEmail','fVolumen','fDireccion','fNotas'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('fOrigen').value = 'whatsapp';
+  document.getElementById('fProducto').value = '';
+  document.getElementById('fFechaLimite').value = getFutureDate(3);
+  selectedAction = '';
+  document.querySelectorAll('#actionChips .chip').forEach(c => c.classList.remove('selected'));
+  selectQuadrant('q2');
+}
+
+/* ══════════════════════════════════════════
+   UTILITIES
+   ══════════════════════════════════════════ */
+function genId() {
+  return 'lead_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 5);
+}
+
+function esc(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  } catch(e) { return dateStr; }
+}
+
+function getFutureDate(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+/* ══════════════════════════════════════════
+   PWA — Install prompt & service worker
+   ══════════════════════════════════════════ */
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  // Mostrar botón de instalar
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-secondary btn-sm';
+  btn.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+  btn.innerHTML = '📲 Instalar app';
+  btn.onclick = async () => {
+    deferredInstallPrompt.prompt();
+    const result = await deferredInstallPrompt.userChoice;
+    if (result.outcome === 'accepted') btn.remove();
+    deferredInstallPrompt = null;
+  };
+  document.body.appendChild(btn);
+});
+
+// Register minimal service worker for PWA install on supported browsers
+if ('serviceWorker' in navigator) {
+  const swBlob = new Blob([`
+    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
+  `], { type: 'application/javascript' });
+  // SW registration from blob only works on some browsers; silent fail is fine
+  try {
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  } catch(e) {}
+}
+
+function toast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+</script>
+</body>
+</html>
