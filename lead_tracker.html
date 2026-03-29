@@ -1575,7 +1575,9 @@ function openDetail(id) {
         ${lead.producto_texto && lead.producto_texto !== '— Seleccionar —' ? `<p><strong>Producto:</strong> 🍚 ${esc(lead.producto_texto)}</p>` : ''}
         ${lead.volumen ? `<p><strong>Volumen:</strong> ${esc(lead.volumen)}</p>` : ''}
         ${lead.accion ? `<p><strong>Próxima acción:</strong> ${esc(lead.accion)}</p>` : ''}
-        ${lead.fecha_limite ? `<p><strong>Fecha límite:</strong> ${formatDate(lead.fecha_limite)}</p>` : ''}
+        ${lead.fecha_limite ? `<p><strong>Fecha límite:</strong> ${formatDate(lead.fecha_limite)}
+          <a href="${buildCalendarUrl(lead)}" target="_blank" rel="noopener" style="display:inline-block;margin-left:8px;background:#1B5E20;color:#fff;font-size:12px;padding:3px 10px;border-radius:12px;text-decoration:none;vertical-align:middle;">📅 Añadir a calendario</a>
+        </p>` : ''}
       </div>
 
       ${lead.notas ? `<div style="background:var(--bg-light);padding:12px;border-radius:8px;margin:8px 0;font-size:14px;">${esc(lead.notas)}</div>` : ''}
@@ -1889,6 +1891,40 @@ function getFutureDate(days) {
   const d = new Date();
   d.setDate(d.getDate() + days);
   return d.toISOString().slice(0, 10);
+}
+
+function buildCalendarUrl(lead) {
+  // Genera URL de Google Calendar con los datos del lead
+  const titulo = encodeURIComponent(
+    (lead.accion || 'Seguimiento') + ' — ' + (lead.nombre || 'Lead') +
+    (lead.empresa ? ' (' + lead.empresa + ')' : '')
+  );
+
+  // Fecha: formato YYYYMMDD (evento de día completo)
+  let fechaStr = (lead.fecha_limite || '').replace(/-/g, '');
+  if (!fechaStr || fechaStr.length !== 8) {
+    const hoy = new Date();
+    fechaStr = hoy.toISOString().slice(0,10).replace(/-/g, '');
+  }
+  // Día siguiente para el fin (evento de día completo)
+  const y = parseInt(fechaStr.slice(0,4));
+  const m = parseInt(fechaStr.slice(4,6)) - 1;
+  const d = parseInt(fechaStr.slice(6,8));
+  const fin = new Date(y, m, d + 1);
+  const finStr = fin.toISOString().slice(0,10).replace(/-/g, '');
+
+  let detalles = '';
+  if (lead.telefono) detalles += 'Tel: ' + lead.telefono + '\\n';
+  if (lead.email) detalles += 'Email: ' + lead.email + '\\n';
+  if (lead.direccion) detalles += 'Dir: ' + lead.direccion + '\\n';
+  if (lead.producto_texto) detalles += 'Producto: ' + lead.producto_texto + '\\n';
+  if (lead.volumen) detalles += 'Volumen: ' + lead.volumen + '\\n';
+  if (lead.notas) detalles += '\\nNotas: ' + lead.notas;
+
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + titulo
+    + '&dates=' + fechaStr + '/' + finStr
+    + '&details=' + encodeURIComponent(detalles);
 }
 
 /* ══════════════════════════════════════════
